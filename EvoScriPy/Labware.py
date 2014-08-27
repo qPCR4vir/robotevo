@@ -39,10 +39,16 @@ class Labware:
             self.maxVol = maxVol
 
     class Location:
-        def __init__(self, grid=None, site=None, name=None):
+        def __init__(self, grid=None, site=None, label=None):
+            """
+
+            :param grid: int, 1-67.     labware location - carrier grid position
+            :param site: int, 0 - 127.  labware location - (site on carrier - 1) !!!!!
+            :param label:
+            """
             self.grid=grid
             self.site=site
-            self.name=name
+            self.label=label
 
     class Position:
         def __init__(self, row, col=1):
@@ -126,10 +132,32 @@ class Labware:
 
 
 
+Trough_100ml  = Labware.Type("Trough 100ml", 8, maxVol=100000)
+
+EppRack16_2mL = Labware.Type("Tube Eppendorf 2mL 16 Pos", 16, maxVol=2000)
+
+EppRack3x16R  = Labware.Type("Tube Eppendorf 3x 16 PosR", 3*16, maxVol=1500)
+
+EppRack3x16   = Labware.Type("Tube Eppendorf 3x 16 Pos", 3*16, maxVol=1500)
+
+TeMag48       = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
+
+CleanerSWS    = Labware.Type("Washstation 2Grid Cleaner short"  , 8, maxVol=100000)
+WashCleanerS  = Labware(CleanerSWS, Labware.Location(22,0))
+
+WasteWS       = Labware.Type("Washstation 2Grid Waste"          , 8, maxVol=100000)
+WashWaste     = Labware(WasteWS,    Labware.Location(22,1))
+
+CleanerLWS    = Labware.Type("Washstation 2Grid Cleaner long"   , 8, maxVol=100000)
+WashCleanerL  = Labware(CleanerLWS, Labware.Location(22,2))
+
+DiTi_Waste    = Labware.Type("Washstation 2Grid DiTi Waste"     , 8, maxVol=100000)
+
+DiTi_1000ul   = Labware.Type("DiTi 1000ul"     , 8, maxVol=970)
 
 
-EppRack16_2mL = Labware.Type("Epp 2 mL x 16", 16, maxVol=2000)
+
+
 EppRack16 = Labware.Type("Epp 1,5 mL x 16", 16, maxVol=1500)
-EppRack3x16 = Labware.Type("Epp 1,5 mL x 3x16", 3*16, maxVol=1500)
 MP96well = Labware.Type("MP 96 well 0,2 mL", 8,12, maxVol=200)
 Tip1000  = Labware.Type("DiTi 96 1000uL", 8,12, maxVol=970)
