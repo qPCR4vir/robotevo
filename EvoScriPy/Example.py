@@ -33,7 +33,7 @@ DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(11,2,"1000-3"))
 
 Asp = aspirate(volume=50.3, labware=ElutionBuffer)
 Asp.exec()
-Dsp = dispence(volume=40.3, labware=TeMag)
+Dsp = dispense(volume=40.3, labware=TeMag)
 Dsp.exec()
 
 

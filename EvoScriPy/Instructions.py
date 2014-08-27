@@ -29,7 +29,7 @@ class aspirate(Pippeting):
                             Well,
                             arm )
 
-class dispence(Pippeting):
+class dispense(Pippeting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
     """
     def __init__(self,  tipMask     = def_tipMask,
@@ -100,9 +100,9 @@ class wash_tips(Pippet):                     # TODO implement Arg 7-15
         Pippet.__init__(self, 'Wash',
                             tipMask,
                             labware=WashWaste,
-                            RackName,
-                            Well,
-                            arm )
+                            RackName=RackName,
+                            Well=Well,
+                            arm=arm )
         self.wasteVol = wasteVol
         self.WashCleaner = WashCleaner
         #self.WashWaste = WashWaste

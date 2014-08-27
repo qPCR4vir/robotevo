@@ -54,7 +54,7 @@ def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,
     :param RackName:
     :param Well:
     """
-    a = dispence( RackName , Well)
+    a = dispense( RackName , Well)
     a.tipMask       = tipMask
     a.liquidClass   = liquidClass
     a.volume        = volume
