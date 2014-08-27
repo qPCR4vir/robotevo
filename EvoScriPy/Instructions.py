@@ -2,196 +2,244 @@ __author__ = 'elisa.reader'
 
 import EvoMode
 import Labware
+from Instruction_Base import *
 
-class LoopOption:
-    def __init__(self, name, action, difference):
-        self.name=name
-        self.action=action
-        self.difference=difference
+class aspirate(Pippeting):
+    """ A.15.4.1 Aspirate command (Worklist: Aspirate)  A - 125
+    """
+    def __init__(self,  tipMask     = def_tipMask,
+                        liquidClass = def_liquidClass,
+                        volume      = def_vol,
+                        labware     = def_LabW,
+                        spacing     = 1,
+                        wellSelection= None,       # TODO implement
+                        LoopOptions = def_LoopOp,
+                        RackName    = None,        # TODO implement
+                        Well        = None,        # TODO implement
+                        arm         = Pippet.LiHa1):
+        Pippeting.__init__(self, 'Aspirate',
+                            tipMask,
+                            liquidClass,
+                            volume,
+                            labware,
+                            spacing,
+                            wellSelection,
+                            LoopOptions,
+                            RackName,
+                            Well,
+                            arm )
 
-    VaryColumn=0
-    VaryRow=1
-    VaryWell=2
-    VaryRack=3
+class dispence(Pippeting):
+    """ A.15.4.2 Dispense (Worklist: Dispense)
+    """
+    def __init__(self,  tipMask     = def_tipMask,
+                        liquidClass = def_liquidClass,
+                        volume      = def_vol,
+                        labware     = def_LabW,
+                        spacing     = 1,
+                        wellSelection= None,       # TODO implement
+                        LoopOptions = def_LoopOp,
+                        RackName    = None,        # TODO implement
+                        Well        = None,        # TODO implement
+                        arm         = Pippet.LiHa1):
+        Pippeting.__init__(self, 'Dispence',
+                            tipMask,
+                            liquidClass,
+                            volume,
+                            labware,
+                            spacing,
+                            wellSelection,
+                            LoopOptions,
+                            RackName,
+                            Well,
+                            arm )
 
-
-class Instruction:
-    def __init__(self, name):
-        self.name = name
-        self.arg = []
+class mix(Pippeting):
+    """ A.15.4.3 Mix (Worklist: Mix)
+    """
+    def __init__(self,  tipMask     = def_tipMask,
+                        liquidClass = def_liquidClass,
+                        volume      = def_vol,
+                        labware     = def_LabW,
+                        spacing     = 1,
+                        wellSelection= None,       # TODO implement
+                        cycles      = 3,
+                        LoopOptions = def_LoopOp,
+                        RackName    = None,        # TODO implement
+                        Well        = None,        # TODO implement
+                        arm         = Pippet.LiHa1):
+        Pippeting.__init__(self, 'Mix',
+                            tipMask,
+                            liquidClass,
+                            volume,
+                            labware,
+                            spacing,
+                            wellSelection,
+                            LoopOptions,
+                            RackName,
+                            Well,
+                            arm )
+        self.cycles = cycles
 
     def validateArg(self):
-        return False
-
-    def __repr__(self):
-        self.validateArg()
-        return self.name + "(" + ','.join([          ''   if    a is None
-                                           else '"'+a+'"' if isinstance(a,str)
-                                           else  str(a)       for a in self.arg]) + ")"
-
-
-def_tipMask=15
-def_liquidClass="Water"
-def_vol=[0]*12
-def_LabW = Labware.Labware(type=Labware.MP96well)
-def_LoopOp = []
-
-
-class Pippet(Instruction):
-    LiHa1 = 0
-    LiHa2 = 1
-    def __init__(self, name, tipMask     = def_tipMask,
-                             labware     = def_LabW,
-                             spacing     = 1,
-                             wellSelection = None,
-                             LoopOptions = def_LoopOp,
-                             RackName    = None,
-                             Well        = None,
-                             arm         = LiHa1):
-        Instruction.__init__(self, name)
-        self.tipMask=tipMask
-        self.labware=labware
-        self.spacing = spacing
-        self.loopOptions = LoopOptions
-        self.RackName = RackName
-        self.Well = Well
-        self.arm = arm
-                            # noOfLoopOptions,
-                            # loopName,
-                            # action,
-                            # difference,
-
-    def validateArg(self):
-        self.arg  =  [self.tipMask]
-        self.arg +=  [self.labware.location.grid, self.labware.location.site, self.spacing, self.labware.wellSelectionStr()]
-        self.arg +=  [len(self.loopOptions)]
-        for op in self.loopOptions:
-            self.arg +=  [op.name, op.action, op.difference ]
-        self.arg +=  [self.arm]
-
+        Pippeting.validateArg(self)
+        self.arg[18:18] = [self.cycles]                 # arg 19
         return True
 
 
-class Pippeting(Pippet):
-    def __init__(self, name, tipMask     = def_tipMask,
-                             liquidClass = def_liquidClass,
-                             volume      = def_vol,
-                             labware     = def_LabW,
-                             spacing     = 1,
-                             wellSelection= None,
-                             LoopOptions = def_LoopOp,
-                             RackName    = None,
-                             Well        = None,
-                             arm         = Pippet.LiHa1):
-        Pippet.__init__(self, name, tipMask    ,
-                             labware     ,
-                             spacing    ,
-                             wellSelection,
-                             LoopOptions,
-                             RackName    ,
-                             Well      ,
-                             arm       )
-        self.liquidClass=liquidClass
-        self.volume=volume
+class wash_tips(Pippet):                     # TODO implement Arg 7-15
+    """ A.15.4.4 Wash Tips (Worklist: Wash)
+    """
+    def __init__(self,  tipMask     = def_tipMask,
+                        WashWaste   = def_WashWaste,
+                        WashCleaner = def_WashCleaner,
+                        wasteVol    = 100,
+                        RackName    = None,        # TODO implement
+                        Well        = None,        # TODO implement
+                        arm         = Pippet.LiHa1):
+        Pippet.__init__(self, 'Wash',
+                            tipMask,
+                            labware=WashWaste,
+                            RackName,
+                            Well,
+                            arm )
+        self.wasteVol = wasteVol
+        self.WashCleaner = WashCleaner
+        #self.WashWaste = WashWaste
 
     def validateArg(self):
         Pippet.validateArg(self)
-
-        if not isinstance(self.volume,list):
-            vol=[str(self.volume)]*12
-        else:
-            d=12-len(self.volume)
-            assert (d<=12)
-            vol= [str(v) for v in self.volume+[0]*d]
-
-        self.arg[1:1] = [self.liquidClass] + vol
+        self.arg[3:-1] = [self.WashCleaner.location.grid,   # arg 4
+                          self.WashCleaner.location.site,   # arg 5
+                          str(self.wasteVol)                # arg 6
+                          ]
         return True
 
-
-
-class aspirate(Pippeting):
-    def __init__(self, RackName = None, Well = None):
-        Pippeting.__init__(self, 'Aspirate', RackName , Well)
-
-
-class dispence(Pippeting):
-    def __init__(self, RackName = None, Well = None):
-        Pippeting.__init__(self, 'Dispence', RackName , Well)
-
-
-class mix(Pippeting):
-    def __init__(self, RackName = None, Well = None):
-        Pippeting.__init__(self, 'Mix', RackName , Well)
-
-
-class wash_tips(Pippet):
     def __init__(self):
         Pippet.__init__(self, "Wash")
         assert False,"Wash() not implemented"
 
-
-class DITIs(Pippet):
-    def __init__(self, name, tipMask, type):
-        Pippet.__init__(self, name, tipMask)
+class getDITI(DITIs):
+    def __init__(self,  tipMask, type, options=0, arm= Pippet.LiHa1):
+        """
+        :param label:
+        :param tipMask:
+        :param type: int, 0-3. DITI index (see 9.4.5 “Labware Types and DITI Types”,  9-32, DITI Index).
+        """
+        DITIs.__init__(self, "GetDITI", tipMask, options, arm)
         self.type=type
-        
 
+    def validateArg(self):
+        DITIs.validateArg(self)
+        self.arg[1:1] = [self.type]
+        return True
 
-def Aspirate( tipMask,
-              liquidClass,
-              volume,
-              grid,
-              site,
-              spacing,
-              wellSelection,
-              noOfLoopOptions,
-              loopName,
-              action,
-              difference,
-              arm,
-              RackName=None,
-              Well=None):
+class getDITI2(DITIs):
+    def __init__(self,  tipMask, LabwareName, options=0, arm= Pippet.LiHa1, AirgapVolume=0, AirgapSpeed=None ):
+        """
+
+        :param label:
+        :param tipMask:
+        :param LabwareName:
+        :param options:
+        :param arm:
+        :param AirgapVolume: int. used to specify a system trailing airgap (STAG) which will be aspirated after
+                                  mounting the DITIs. Volume in μl
+        :param AirgapSpeed: int. Speed for the airgap in μl/s
+        """
+        DITIs.__init__(self, "GetDITI2", tipMask, options, arm)
+        self.LabwareName = LabwareName
+        self.AirgapSpeed = AirgapSpeed
+        self.AirgapVolume = AirgapVolume
+
+    def validateArg(self):
+        DITIs.validateArg(self)
+        self.arg[1:1] = [str(self.LabwareName)]
+        self.arg += [self.AirgapVolume,self.AirgapSpeed]
+
+        return True
+
+class dropDITI(Pippet):
+    """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """
+    def __init__(self,  AirgapVolume=0, AirgapSpeed=None , arm= Pippet.LiHa1):
+        Pippet.__init__(self, "DropDITI",  arm=arm)
+        self.AirgapSpeed = AirgapSpeed
+        self.AirgapVolume = AirgapVolume
+
+    def validateArg(self):
+        Pippet.validateArg(self)
+        self.arg[3:-1] = [self.AirgapVolume,self.AirgapSpeed]
+        return True
+
+class set_DITI_Counter(Pippet):
+    """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
+    def __init__(self, type, posInRack  ):
+        Pippet.__init__(self, "Set_DITI_Counter" )
+        self.type = type
+        self.posInRack = posInRack
+
+    def validateArg(self):
+        self.arg = [self.type, str(self.labware.location.grid),
+                               str(self.labware.location.site), str(self.posInRack)]
+        return True
+
+class pickUp_DITIs(Pippet):
+    """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI)
     """
-    :param difference:
-    :param action:
-    :param loopName:
-    :param site:
-    :param spacing:
-    :param wellSelection:
-    :param noOfLoopOptions:
-    :param tipMask: int 0 - 255, selected tips, bit-coded (tip1 = 1, tip8 = 128)
-    :param liquidClass: str,
-    :param volume: expr[12], 12 expressions which the volume for each tip. 0 for tips which are not used or not fitted.
-    :param grid: int, 1 - 67, labware location - carrier grid position
-    :param RackName:
-    :param Well:
+    def __init__(self, type ):
+        Pippet.__init__(self, 'PickUp_DITIs' )
+        self.type = type
+
+    def validateArg(self):
+        Pippet.validateArg(self)
+        self.arg[4:5] = []
+        self.arg[-1:-1] = [self.type]
+        return True
+
+class set_DITIs_Back(Pippet):
+    """ A.15.4.9 Set DITIs Back (Worklist: Set_DITIs_Back)
     """
-    a = aspirate( RackName , Well)
-    a.tipMask       = tipMask
-    a.liquidClass   = liquidClass
-    a.volume        = volume
-    a.labware.location = Labware.Labware.Location(grid,site)
+    def __init__(self ):
+        Pippet.__init__(self, 'Set_DITIs_Back' )
 
-    return a,EvoMode.CurEvo.exec(a)
+    def validateArg(self):
+        Pippet.validateArg(self)
+        self.arg[4:5] = []
+        return True
 
-def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,LoopOptions, RackName,Well):
+class PickUp_ZipTip(Pippet):
+    """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)
     """
-    :param tipMask: int 0 - 255, selected tips, bit-coded (tip1 = 1, tip8 = 128)
-    :param liquidClass: str,
-    :param volume: expr[12], 12 expressions which the volume for each tip. 0 for tips which are not used or not fitted.
-    :param grid: int, 1 - 67, labware location - carrier grid position
-    :param RackName:
-    :param Well:
+    def __init__(self ):
+        Pippet.__init__(self, 'PickUp_ZipTip' )
+        assert False, "PickUp_ZipTip not implemented"
+
+
+class detect_Liquid(Pippeting):
+    """ A.15.4.11 Detect Liquid (Worklist: Detect_Liquid)
     """
-    a = dispence( RackName , Well)
-    a.tipMask       = tipMask
-    a.liquidClass   = liquidClass
-    a.volume        = volume
-    a.labware.location = Labware.Labware.Location(grid,site)
-    a.loopOptions=LoopOptions
+    def __init__(self ):
+        Pippeting.__init__(self, 'Detect_Liquid' )
 
-    return a,EvoMode.CurEvo.exec(a)
+    def validateArg(self):
+        Pippet.validateArg(self)
+        self.arg[1:1] = [str(self.liquidClass)]
+        return True
 
+class moveLiha(Pippet ):
+    """ A.15.4.14 Move LiHa (Worklist: MoveLiha   - A - 135)
+    """
+    def __init__(self, zMove, zTarget, offset, speed  ):
+        Pippet.__init__(self, 'MoveLiha' )
+        self.speed = speed
+        self.offset = offset
+        self.zTarget = zTarget
+        self.zMove = zMove
+
+    def validateArg(self):
+        Pippet.validateArg(self)
+        self.arg[5:5] = [ self.zMove, self.zTarget, self.offset, self.speed]
+        return True
 
 
 
