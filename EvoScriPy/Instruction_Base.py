@@ -3,6 +3,35 @@ __author__ = 'Ariel'
 import EvoMode
 import Labware
 
+class EvoTypes:
+    def __init__(self, data):
+        self.data = data
+    #def __eq__(self, other):
+
+    def __str__(self):
+        return str(self.data)
+
+class string1(EvoTypes):
+    #def __init__(self, data):
+    #   EvoTypes.__init__(self,data)
+
+    def __str__(self):
+        return '"'+ str(self.data) + '"'
+
+class expression(EvoTypes):
+    pass
+
+
+class string2(EvoTypes):
+    pass
+
+
+class integer(EvoTypes):
+    pass
+
+class floating_point(EvoTypes):
+    pass
+
 
 class LoopOption:
     def __init__(self, name, action, difference):
@@ -15,7 +44,7 @@ class LoopOption:
     VaryWell=2
     VaryRack=3
 
-class Instruction:
+class Instruction:    # TODO implement EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, name):
         self.name = name
         self.arg = []
@@ -26,7 +55,7 @@ class Instruction:
     def exec(self, mode=EvoMode.CurEvo):
         mode.exec(self)
 
-    def __repr__(self):
+    def __str__(self):
         self.validateArg()
         return self.name + "(" + ','.join([          ''   if    a is None
                                            else '"'+a+'"' if isinstance(a,str)
@@ -65,13 +94,13 @@ class Pippet(Instruction):
                             # difference,
 
     def validateArg(self):
-        self.arg  =  [self.tipMask]                                               # arg 1
+        self.arg  =  [integer(self.tipMask)]                                               # arg 1
         self.arg +=  [self.labware.location.grid, self.labware.location.site,     # arg 2, 3
                       self.spacing,               self.labware.wellSelectionStr()]# arg 4, 5
         self.arg +=  [len(self.loopOptions)]                                      # arg 6
         for op in self.loopOptions:
-            self.arg +=  [str(op.name), op.action, op.difference ]                # arg 7, 8, 9
-        self.arg +=  [self.arm]                                                   # arg 10
+            self.arg +=  [string1(op.name), op.action, op.difference ]                # arg 7, 8, 9
+        self.arg +=  [integer(self.arm)]                                                   # arg 10
 
         return True
 
