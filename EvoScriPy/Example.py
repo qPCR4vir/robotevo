@@ -57,9 +57,9 @@ LOp+=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.Var
 Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pippet.LiHa1)
 
 
-EvoMode.CurEvo.f.write("\n" + MP.wellSelectionStr())
 
 
-EvoMode.CurEvo.f.close()
+
+
 
 
