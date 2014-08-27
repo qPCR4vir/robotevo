@@ -18,9 +18,21 @@ class string1(EvoTypes):
     def __str__(self):
         return '"'+ str(self.data) + '"'
 
-class expression(EvoTypes):
+class expression(string1):
     pass
 
+class expr(EvoTypes):
+    def __init__(self, dim, data):
+        self.dim = dim
+        self.data = data
+
+    def split(self):
+        if isinstance(self.data,list):
+            d=self.dim-len(self.data)
+            assert (d>=0)
+            return [expression(v) for v in self.data+[0]*d]
+        else:
+            return [expression(self.data)]*self.dim
 
 class string2(EvoTypes):
     pass
@@ -130,14 +142,7 @@ class Pippeting(Pippet):
     def validateArg(self):
         Pippet.validateArg(self)
 
-        if not isinstance(self.volume,list):
-            vol=[str(self.volume)]*12
-        else:
-            d=12-len(self.volume)
-            assert (d<=12)
-            vol= [str(v) for v in self.volume+[0]*d]
-
-        self.arg[1:1] = [str(self.liquidClass)] + vol                 # arg 2, 3 - 14
+        self.arg[1:1] = [str(self.liquidClass)] + expr(12,self.volume).split()          # arg 2, 3 - 14
         return True
 
 
