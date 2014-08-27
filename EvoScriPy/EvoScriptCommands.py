@@ -44,8 +44,8 @@ def Aspirate( tipMask,
     return a, EvoMode.CurEvo.exec(a)
 
 def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,
-             #LoopOptions,
-             RackName,Well):
+             LoopOptions,
+             arm):
     """
     :param tipMask: int 0 - 255, selected tips, bit-coded (tip1 = 1, tip8 = 128)
     :param liquidClass: str,
@@ -54,12 +54,12 @@ def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,
     :param RackName:
     :param Well:
     """
-    a = dispense( RackName , Well)
+    a = dispense( arm=arm)
     a.tipMask       = tipMask
     a.liquidClass   = liquidClass
     a.volume        = volume
     a.labware.location = Labware.Labware.Location(grid,site)
-    #a.loopOptions=LoopOptions
+    a.loopOptions=LoopOptions
 
     return a, a.exec()
 
