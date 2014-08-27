@@ -1,0 +1,25 @@
+[ScriptInfo]
+StartLine=1
+EndLine=170
+RobotMoveDirty=0
+CurrentLine=45
+[UserQueries]
+Queries=0
+[LoopCounters]
+Counters=3
+Counter1=LOOP_Fill MV2;1
+Counter2=LOOP_Fill Beads;1
+Counter3=LOOP_FillProben;1
+[Variables]
+VarCount=8
+Variable1=VolProb;414
+Variable2=AnzahlProb;2
+Variable3=SAMPLE_CNT;-1
+Variable4=detected_volume_1;-1
+Variable5=detected_volume_2;-1
+Variable6=detected_volume_3;-1
+Variable7=detected_volume_4;-1
+Variable8=LAST_ERROR_LINE;45
+[VarQueries]
+VolProb_Query1=414
+AnzahlProb_Query1=2
