@@ -3,12 +3,12 @@ __author__ = 'Ariel'
 import EvoMode
 import Labware
 
-class EvoTypes:
+class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
     #def __eq__(self, other):
 
-    def __str__(self):
+    def __str__(self): # todo implement exceptions
         return str(self.data)
 
 class string1(EvoTypes):
@@ -26,7 +26,7 @@ class expr(EvoTypes):
         self.dim = dim
         self.data = data
 
-    def split(self):
+    def split(self):  #TODO 0 instant "0" ???? ; split - is not an elegant solution
         if isinstance(self.data,list):
             d=self.dim-len(self.data)
             assert (d>=0)
@@ -56,7 +56,7 @@ class LoopOption:
     VaryWell=2
     VaryRack=3
 
-class Instruction:    # TODO implement EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
+class Instruction:
     def __init__(self, name):
         self.name = name
         self.arg = []
@@ -73,7 +73,8 @@ class Instruction:    # TODO implement EvoTypes: string1: "V[~i~]", string2: V[~
                                            else '"'+a+'"' if isinstance(a,str)
                                            else  str(a)       for a in self.arg]) + ")"
 
-def_tipMask=15
+def_TipMask=15
+curTipMask = def_TipMask
 def_liquidClass="Water free DITi 1000"
 def_vol=[0]*12
 def_LabW = Labware.Labware(type=Labware.MP96well)
@@ -84,7 +85,7 @@ def_WashCleaner = Labware.WashCleanerS
 class Pippet(Instruction):
     LiHa1 = 0
     LiHa2 = 1
-    def __init__(self, name, tipMask     = def_tipMask,
+    def __init__(self, name, tipMask     = curTipMask,
                              labware     = def_LabW,
                              spacing     = 1,
                              wellSelection = None,
@@ -106,19 +107,19 @@ class Pippet(Instruction):
                             # difference,
 
     def validateArg(self):
-        self.arg  =  [integer(self.tipMask)]                                               # arg 1
-        self.arg +=  [self.labware.location.grid, self.labware.location.site,     # arg 2, 3
-                      self.spacing,               self.labware.wellSelectionStr()]# arg 4, 5
-        self.arg +=  [len(self.loopOptions)]                                      # arg 6
+        self.arg  =  [integer(self.tipMask)]                                                    # arg 1
+        self.arg +=  [integer(self.labware.location.grid), integer(self.labware.location.site), # arg 2, 3
+                      integer(self.spacing),         string1( self.labware.wellSelectionStr()) ]# arg 4, 5
+        self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6
         for op in self.loopOptions:
-            self.arg +=  [string1(op.name), op.action, op.difference ]                # arg 7, 8, 9
-        self.arg +=  [integer(self.arm)]                                                   # arg 10
+            self.arg +=  [string1(op.name), integer(op.action), integer(op.difference) ]        # arg 7, 8, 9
+        self.arg +=  [integer(self.arm)]                                                        # arg 10
 
         return True
 
 
 class Pippeting(Pippet):
-    def __init__(self, name, tipMask     = def_tipMask,
+    def __init__(self, name, tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
                              labware     = def_LabW,
@@ -142,12 +143,12 @@ class Pippeting(Pippet):
     def validateArg(self):
         Pippet.validateArg(self)
 
-        self.arg[1:1] = [str(self.liquidClass)] + expr(12,self.volume).split()          # arg 2, 3 - 14
+        self.arg[1:1] = [string1(self.liquidClass)] + expr(12,self.volume).split()          # arg 2, 3 - 14
         return True
 
 
 class DITIs(Pippet):
-    def __init__(self, name, tipMask,  options=0, arm= Pippet.LiHa1):
+    def __init__(self, name, tipMask= curTipMask,  options=0, arm= Pippet.LiHa1):
         """
 
         :param name: str, instruction
