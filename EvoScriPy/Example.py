@@ -31,6 +31,8 @@ DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
 DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
 
+MP = Labware( MP96well, Labware.Location(1,1) )
+
 Asp = aspirate(volume=50.3, labware=ElutionBuffer)
 Asp.exec()
 Dsp = dispense(volume=40.3, labware=TeMag)
@@ -48,20 +50,22 @@ dropDITI().exec()
 sDiTi=set_DITI_Counter(2,labware = DiTi1000_2)
 sDiTi.exec()
 
+from Instructions_Te_MagS import *
+Te_MagS_MoveToPosition(T_Mag_Instr.Aspirate,22).exec()
 
 LOp=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]
 
 vol=list(def_vol)
 vol[0]=5.5
 
-MP = Labware( MP96well, Labware.Location(1,1) )
+
 MP.Wells[0].selFlag = True
 MP.Wells[MP.offset("F01")].selFlag = True
 
 
 from EvoScriptCommands import *
 
-Aspirate( 8, "BufferNewXDX", vol,1,1,1,"xwellSelectionxx",LOp, Pippet.LiHa1)
+Aspirate( 8, "BufferNewXDX", vol,1,1,1,MP.wellSelectionStr() ,LOp, Pippet.LiHa1)
 
 vol=[1.1,2.2]
 LOp+=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]

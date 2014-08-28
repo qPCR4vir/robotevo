@@ -12,7 +12,7 @@ def Aspirate( tipMask,
               grid,
               site,
               spacing,
-              wellSelection,
+              wellSelection,       # todo implement
               noOfLoopOptions,
               #loopName,
               #action,
@@ -41,9 +41,9 @@ def Aspirate( tipMask,
     a.volume        = volume
     a.labware.location = Labware.Labware.Location(grid,site)
 
-    return a, EvoMode.CurEvo.exec(a)
+    return a, a.exec()
 
-def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,
+def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,      # todo implement
              LoopOptions,
              arm):
     """

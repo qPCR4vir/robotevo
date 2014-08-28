@@ -354,7 +354,6 @@ class moveLiha(Pippet ): #todo convenient arg
         self.arg[5:5] = [ self.zMove, self.zTarget, self.offset, self.speed]
         return True
 
-
 class waste(Instruction):
     """ A.15.4.15 Waste (Worklist: Waste)
     """
@@ -550,7 +549,6 @@ class execute_VBscript(Instruction):    # todo declare const
         Instruction.validateArg(self)
         self.arg= [string1(self.filename), integer(self.action) ]
         return True
-
 
 class notification(Instruction):    # todo declare const
     """ A.15.4.25 Notification (Worklist: Notification)
