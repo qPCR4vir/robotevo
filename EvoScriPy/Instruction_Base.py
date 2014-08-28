@@ -37,12 +37,13 @@ class expr(EvoTypes):
 class string2(EvoTypes):
     pass
 
-
-class integer(EvoTypes):
-    pass
+class integer(EvoTypes):   # todo implement exceptions
+    def __str__(self):
+        return str(int(self.data))
 
 class floating_point(EvoTypes):
-    pass
+    def __str__(self):
+        return str(float(self.data))
 
 
 class LoopOption:
@@ -73,16 +74,40 @@ class Instruction:
                                            else '"'+a+'"' if isinstance(a,str)
                                            else  str(a)       for a in self.arg]) + ")"
 
-def_TipMask=15
-curTipMask = def_TipMask
-def_liquidClass="Water free DITi 1000"
-def_vol=[0]*12
-def_LabW = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
-def_LoopOp = []
-def_WashWaste = Labware.WashWaste
+class Device(Instruction):
+    def __init__(self, devicename, commandname):
+        Instruction.__init__(self, "FACTS")
+        self.commandname = commandname
+        self.devicename = devicename
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg += [string1(self.devicename),string1(self.commandname)]
+        return False
+
+class T_Mag_Instr(Device):
+    """ A.15.10 Advanced Worklist Commands for the Te-MagS
+    """
+    Dispense    = 0
+    Aspirate    = 1
+    Resuspension = 2
+    Incubation  = 3
+
+    def __init__(self,  commandname):
+        Device.__init__(self, "Te-MagS", commandname )
+
+
+
+def_TipMask     = 15
+curTipMask      = def_TipMask
+def_liquidClass = "Water free DITi 1000"
+def_vol         = [0]*12
+def_LabW        = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
+def_LoopOp      = []
+def_WashWaste   = Labware.WashWaste
 def_WashCleaner = Labware.WashCleanerS
-def_DiTiWaste = Labware.DiTiWaste
-def_AirgapSpeed= 300
+def_DiTiWaste   = Labware.DiTiWaste
+def_AirgapSpeed = 300
 
 class Pippet(Instruction):
     LiHa1 = 0
@@ -119,7 +144,6 @@ class Pippet(Instruction):
 
         return True
 
-
 class Pippeting(Pippet):
     def __init__(self, name, tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
@@ -147,7 +171,6 @@ class Pippeting(Pippet):
 
         self.arg[1:1] = [string1(self.liquidClass)] + expr(12,self.volume).split()          # arg 2, 3 - 14
         return True
-
 
 class DITIs(Instruction):
     def __init__(self, name, tipMask= curTipMask,  options=0, arm= Pippet.LiHa1):
