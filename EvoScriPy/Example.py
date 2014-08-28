@@ -52,6 +52,15 @@ sDiTi.exec()
 
 from Instructions_Te_MagS import *
 Te_MagS_MoveToPosition(T_Mag_Instr.Aspirate,22).exec()
+Te_MagS_ActivateHeater(50).exec()
+Te_MagS_DeactivateHeater().exec()
+
+exP= [Te_MagS_Execution.mix  (3,0,0,15,22),
+      Te_MagS_Execution.wait (0,0,25),
+      Te_MagS_Execution.incub(0,0,40),
+      Te_MagS_Execution.move (T_Mag_Instr.Aspirate,22)   ]
+
+Te_MagS_Execution(exP).exec()
 
 LOp=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]
 
