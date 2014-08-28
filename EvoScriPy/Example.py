@@ -35,6 +35,16 @@ Asp = aspirate(volume=50.3, labware=ElutionBuffer)
 Asp.exec()
 Dsp = dispense(volume=40.3, labware=TeMag)
 Dsp.exec()
+Mx= mix(labware=Proben)
+Mx.exec()
+# Wtips=wash_tips()
+gDITI=getDITI(8,0)
+gDITI.exec()
+gDITI2=getDITI2(LabwareName=DiTi1000_1)
+gDITI2.exec()
+dropTips=dropDITI(AirgapSpeed=100)
+dropTips.exec()
+dropDITI().exec()
 
 
 LOp=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]

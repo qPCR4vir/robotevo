@@ -156,7 +156,15 @@ class getDITI2(DITIs):
 
     def validateArg(self):
         DITIs.validateArg(self)
-        self.arg[1:1] = [str(self.LabwareName)]                              # arg 2 TODO string1 or 2 ? expression?
+
+        ln= self.LabwareName
+        if isinstance(ln,Labware.Labware):
+            ln= ln.location.label
+        else:
+            if isinstance(ln,Labware.Labware.location ):
+                ln= ln.label
+
+        self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or 2 ? expression?
         self.arg += [integer(self.AirgapVolume),integer(self.AirgapSpeed)]   # arg 5, 6
 
         return True
