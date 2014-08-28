@@ -88,13 +88,22 @@ class mix(Pippeting):
         self.arg[18:18] = [self.cycles]                 # arg 19
         return True
 
-class wash_tips(Pippet):                     # TODO implement Arg 7-15
+class wash_tips(Pippet):                     # TODO revise def values of arg
     """ A.15.4.4 Wash Tips (Worklist: Wash)
     """
     def __init__(self,  tipMask     = curTipMask,
                         WashWaste   = def_WashWaste,
                         WashCleaner = def_WashCleaner,
                         wasteVol    = 100,
+                        wasteDelay  = 50,
+                        cleanerVol  = 10,
+                        cleanerDelay= 50,
+                        Airgap      = 0.0,
+                        airgapSpeed = 50,
+                        retractSpeed= 100,
+                        FastWash    = False,
+                        lowVolume   = False,
+                        atFrequency = 0,
                         RackName    = None,        # TODO implement
                         Well        = None,        # TODO implement
                         arm         = Pippet.LiHa1):
@@ -104,16 +113,33 @@ class wash_tips(Pippet):                     # TODO implement Arg 7-15
                             RackName=RackName,
                             Well=Well,
                             arm=arm )
+        self.atFrequency = atFrequency
+        self.lowVolume = lowVolume
+        self.FastWash = FastWash
+        self.retractSpeed = retractSpeed
+        self.airgapSpeed = airgapSpeed
+        self.Airgap = Airgap
+        self.cleanerDelay = cleanerDelay
+        self.cleanerVol = cleanerVol
+        self.wasteDelay = wasteDelay
         self.wasteVol = wasteVol
         self.WashCleaner = WashCleaner
         #self.WashWaste = WashWaste
 
     def validateArg(self):
         Pippet.validateArg(self)
-        self.arg[3:-1] = [self.WashCleaner.location.grid,   # arg 4
-                          self.WashCleaner.location.site,   # arg 5
-                          str(self.wasteVol)                # arg 6
-                          ]
+        self.arg[3:-1] = [integer(self.WashCleaner.location.grid),   # arg 4
+                          integer(self.WashCleaner.location.site),   # arg 5
+                          expression(self.wasteVol),                 # arg 6
+                          integer(self.wasteDelay),
+                          expression(self.cleanerVol),
+                          integer(self.cleanerDelay),
+                          floating_point(self.Airgap),
+                          integer(self.airgapSpeed),
+                          integer(self.retractSpeed),
+                          integer(self.FastWash),
+                          integer(self.lowVolume),
+                          integer(self.atFrequency)]
         return True
 
     def __init__(self):
@@ -409,7 +435,7 @@ class startTimer(Instruction):
         :type timer: expression
         :param timer: expression, 1 - 100. number of timer to re-start. 1-1000?
         """
-        Instruction.__init__(self, "StartTimer(")
+        Instruction.__init__(self, "StartTimer")
         self.timer = timer
 
     def validateArg(self):
@@ -433,3 +459,119 @@ class waitTimer(Instruction):
     def validateArg(self):
         Instruction.validateArg(self)
         self.arg= [expression(self.timer),expression(self.timeSpan)]
+
+class execute(Instruction): # todo declare const
+    """ A.15.4.20 Execute Application (Worklist: Execute)
+    """
+    def __init__(self, application, options, responseVariable, scope =0  ):
+        """
+        """
+        Instruction.__init__(self, "Execute")
+        self.scope = scope
+        self.responseVariable = responseVariable
+        self.options = options
+        self.application = application
+
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string1(self.application),      integer(self.options),
+                   string1(self.responseVariable), integer(self.scope)   ]
+
+class comment(Instruction):
+    """ A.15.4.21 Comment (Worklist: Comment)
+    """
+    def __init__(self, text ):
+        """
+        """
+        Instruction.__init__(self, "Comment")
+        self.text = text
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string1(self.text)]
+        return True
+
+class userPrompt(Instruction):    # todo declare const
+    """ A.15.4.22 User Prompt (Worklist: UserPrompt)
+    """
+    def __init__(self, text, sound = 1, closeTime = -1 ):
+        """
+        """
+        Instruction.__init__(self, "UserPrompt")
+        self.closeTime = closeTime
+        self.sound = sound
+        self.text = text
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string1(self.text), integer(self.sound), integer(self.closeTime)]
+        return True
+
+class variable(Instruction):    # todo declare const
+    """ A.15.4.23 Set Variable (Worklist: Variable)
+    """
+    def __init__(self, name, default, queryFlag = False, queryString="", checkLimits  = False,
+                 lowerLimit=0.0, upperLimit=0.0, type=0, scope=0,InitMode=0, QueryAtStart=False):
+        """
+        """
+        Instruction.__init__(self, "Variable")
+        self.QueryAtStart = QueryAtStart
+        self.InitMode = InitMode
+        self.scope = scope
+        self.type = type
+        self.upperLimit = upperLimit
+        self.lowerLimit = lowerLimit
+        self.checkLimits = checkLimits
+        self.queryString = queryString
+        self.name = name
+        self.default = default
+        self.queryFlag = queryFlag
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string2(self.name), expression(self.default), integer(self.queryFlag)]
+        self.arg += [string1( self.queryString), integer(string1.checkLimits), floating_point(self.lowerLimit) ]
+        self.arg += [floating_point(self.upperLimit), integer(string1.type), integer(string1.scope)  ]
+        self.arg += [  integer(string1.InitMode), integer(string1.QueryAtStart)  ]
+        return True
+
+class execute_VBscript(Instruction):    # todo declare const
+    """ A.15.4.24 Execute VB Script (Worklist: Execute_VBscript)
+    """
+    def __init__(self, filename, action  = 0 ):
+        """
+        """
+        Instruction.__init__(self, "Execute_VBscript")
+        self.action = action
+        self.filename = filename
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string1(self.filename), integer(self.action) ]
+        return True
+
+
+class notification(Instruction):    # todo declare const
+    """ A.15.4.25 Notification (Worklist: Notification)
+    """
+    def __init__(self,receiverGroup, AttachScreen_ShotFlag = False, emailSubject="",emailMessage="", action  = 0 ):
+        """
+
+        :param receiverGroup:
+        :param AttachScreen_ShotFlag:
+        :param emailSubject:
+        :param action:
+        """
+        Instruction.__init__(self, "Notification")
+        self.emailMessage = emailMessage
+        self.emailSubject = emailSubject
+        self.AttachScreen_ShotFlag = AttachScreen_ShotFlag
+        self.action = action
+        self.receiverGroup = receiverGroup
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [integer(self.AttachScreen_ShotFlag), string1(self.receiverGroup),  string1(self.emailSubject),
+                    string1(self.emailMessage),integer(self.action) ]
+        return True
