@@ -15,8 +15,8 @@ class AdvancedWorkList (EvoMode):
         self.f = open (filename,'a')
 
     def exec(self, instr):
-        s="\n" + str(instr)
-        print (s)
+        s="\nB;" + str(instr) + ";"
+        #print (s)
         self.f.write(s)
 
     def done(self):
