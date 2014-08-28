@@ -77,7 +77,7 @@ def_TipMask=15
 curTipMask = def_TipMask
 def_liquidClass="Water free DITi 1000"
 def_vol=[0]*12
-def_LabW = Labware.Labware(type=Labware.MP96well)
+def_LabW = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
 def_LoopOp = []
 def_WashWaste = Labware.WashWaste
 def_WashCleaner = Labware.WashCleanerS

@@ -160,10 +160,7 @@ class getDITI2(DITIs):
 
         ln= self.LabwareName
         if isinstance(ln,Labware.Labware):
-            ln= ln.location.label
-        else:
-            if isinstance(ln,Labware.Labware.location ):
-                ln= ln.label
+            ln= ln.label
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or 2 ? expression?
         self.arg += [integer(self.AirgapVolume),integer(self.AirgapSpeed)]   # arg 5, 6

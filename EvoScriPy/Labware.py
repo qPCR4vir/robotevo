@@ -3,23 +3,58 @@ __author__ = 'Ariel'
 import EvoMode
 
 
-class WorkTable:
-    """ Collection of Racks """
+class WorkTable: # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
+    """ Collection of Racks.Types and Labware.Types and pos of instances """
 
     def __init__(self):
+        self.labTypes= {}  # typeName,type. The type mountain a list of labware (with locations)
         self.Racks = []
-        self.nGrid = 67   # TODO ver max
+        self.nGrid = 67   # max
         self.templateFile = ""
 
-class Rack:
-    """ Collection of Labwares places, filled with labwares... """
+    def addLabware(self, labware ):
 
-    def __init__(self, RackName=None):
-        self.Labwares = []
-        self.width = 1
-        self.nSite = 1
-        self.allowedLabwaresTypes = []
-        self.name = RackName
+        if labware.location.grid >= self.nGrid:
+            raise "This WT have only " + self.nGrid + " grid."
+
+        if  labware.type.name not in self.labTypes :
+            self.labTypes[labware.type.name]=[]
+        self.labTypes[labware.type.name] += [labware]
+
+
+curWorkTable = WorkTable()
+
+class Rack:
+    """ Collection of Labwares sites, filled with labwares... """
+    class Type:
+        def __init__(self,name, width = 1, nSite = 1):
+            self.width = width
+            self.nSite = nSite
+            self.allowedLabwaresTypes = []
+            self.name = name
+
+    def __init__(self, RackType, grid, label="", worktable=curWorkTable):
+        self.site = grid
+        self.type = RackType
+        self.labwares = [None] * self.nSite
+        self.label = label
+
+    def addLabware(self, labware, site):
+        if labware.type.name not in self.allowedLabwaresTypes:
+            raise "Labware not allowed"
+
+        if site >= self.Type.nSite:
+            raise "This rack " + self.Type.name + ":" + self.label + " have only " + self.Type.nSite + " sites."
+
+        if self.labwares[site] is not None:
+            print ("Warning: you replaced an existed labware")
+
+        self.labwares[site] = labware
+        if labware.location.grid !=self.grid:
+            if labware.location.grid is not None:
+                print ("Warning, original grid changed to that of the Rack.")
+            labware.location.grid=self.grid
+
 
 
 class Well:
@@ -39,27 +74,33 @@ class Labware:
             self.maxVol = maxVol
 
     class Location:
-        def __init__(self, grid=None, site=None, label=None):
+        def __init__(self, grid=None, site=None, rack=None, rack_site=None):
             """
 
             :param grid: int, 1-67.     labware location - carrier grid position
             :param site: int, 0 - 127.  labware location - (site on carrier - 1) !!!!!
             :param label:
             """
+
+            self.rack = rack
             self.grid=grid
             self.site=site
-            self.label=label
+            self.rack_site = rack_site
 
     class Position:
         def __init__(self, row, col=1):
             self.row=row
             self.col=col
 
-
-    def __init__(self, type, location=None):
+    def __init__(self, type, location, label=None, worktable=curWorkTable):
         self.type = type
+        self.label=label
         self.location = location
         self.Wells = [Well(self,offset) for offset in range(self.offset(self.type.nRow,self.type.nCol)+1)]
+        worktable.addLabware(self)
+        if location.rack:
+            location.rack.addLabware(self,location.rack_site)
+
 
     def clearSelection(self):
         for well in self.Wells:
