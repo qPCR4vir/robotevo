@@ -4,6 +4,7 @@ import EvoMode
 import Labware
 from Instruction_Base import *
 #todo organize the arg in each instruction according to the more common use
+# todo implement all the instruction, from all the devices !!
 
 class aspirate(Pippeting):
     """ A.15.4.1 Aspirate command (Worklist: Aspirate)  A - 125
@@ -191,17 +192,18 @@ class dropDITI(Pippet):
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
 
-class set_DITI_Counter(Pippet):
+class set_DITI_Counter(Pippet): # todo help determining the type,set other def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
 
-    def __init__(self, type, posInRack, labware = def_LabW  ):
+    def __init__(self, type, posInRack=0, labware = def_LabW  ):
         Pippet.__init__(self, "Set_DITI_Counter" , labware = labware)
         self.type = type
         self.posInRack = posInRack
 
     def validateArg(self):
         self.arg = [integer(self.type), string1(self.labware.location.grid),
-                                        string1(self.labware.location.site), string1(self.posInRack)]
+                                        string1(self.labware.location.site),
+                                        string1(self.posInRack)] # todo extract from Location
         return True
 
 class pickUp_DITIs(Pippet):

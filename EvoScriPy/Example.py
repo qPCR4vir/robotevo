@@ -26,9 +26,9 @@ Proben        = Labware(EppRack3x16, Labware.Location(11,0,"Proben"))
 TeMg_Heat     = Labware(TeMag48, Labware.Location(14,0,"48 Pos Heat"))
 TeMag         = Labware(TeMag48, Labware.Location(14,1,"48PosMagnet"))
 
-DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(11,0,"1000-1"))
-DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(11,1,"1000-2"))
-DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(11,2,"1000-3"))
+DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0,"1000-1"))
+DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1,"1000-2"))
+DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2,"1000-3"))
 
 
 Asp = aspirate(volume=50.3, labware=ElutionBuffer)
@@ -45,6 +45,8 @@ gDITI2.exec()
 dropTips=dropDITI(AirgapSpeed=100)
 dropTips.exec()
 dropDITI().exec()
+sDiTi=set_DITI_Counter(2,labware = DiTi1000_2)
+sDiTi.exec()
 
 
 LOp=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]
