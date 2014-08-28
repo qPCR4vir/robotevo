@@ -1,7 +1,8 @@
 __author__ = 'elisa.reader'
 
 import EvoMode
-EvoMode.CurEvo = EvoMode.AdvancedWorkList('AWL.txt')
+EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.txt'),
+                                   EvoMode.ScriptBody('EvoScript.esc.txt')])
 
 from Instructions import *
 from Labware import *

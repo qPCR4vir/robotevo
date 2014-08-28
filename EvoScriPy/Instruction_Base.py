@@ -65,7 +65,12 @@ class Instruction:
     def validateArg(self):
         return False
 
+    def allowed(self, mode):
+        return True
+
     def exec(self, mode=EvoMode.CurEvo):
+        if not self.allowed(mode):
+            return
         mode.exec(self)
 
     def __str__(self):
@@ -73,6 +78,10 @@ class Instruction:
         return self.name + "(" + ','.join([          ''   if    a is None
                                            else '"'+a+'"' if isinstance(a,str)
                                            else  str(a)       for a in self.arg]) + ")"
+
+class SriptONLY(Instruction):
+    def allowed(self, mode):
+        return not isinstance(mode,EvoMode.AdvancedWorkList)
 
 class Device(Instruction):
     def __init__(self, devicename, commandname):
