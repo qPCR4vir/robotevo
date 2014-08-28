@@ -81,6 +81,8 @@ def_LabW = Labware.Labware(type=Labware.MP96well)
 def_LoopOp = []
 def_WashWaste = Labware.WashWaste
 def_WashCleaner = Labware.WashCleanerS
+def_DiTiWaste = Labware.DiTiWaste
+def_AirgapSpeed= 300
 
 class Pippet(Instruction):
     LiHa1 = 0
@@ -147,7 +149,7 @@ class Pippeting(Pippet):
         return True
 
 
-class DITIs(Pippet):
+class DITIs(Instruction):
     def __init__(self, name, tipMask= curTipMask,  options=0, arm= Pippet.LiHa1):
         """
 
@@ -156,10 +158,14 @@ class DITIs(Pippet):
         :param options: int, 0-1. bit-coded 1 = if diti not fetched try 3 times then go to next position
         :param arm:
         """
-        Pippet.__init__(self, name, tipMask, arm=arm)
+        Instruction.__init__(self, name )
         self.options = options
+        self.tipMask=tipMask
+        self.arm = arm
 
     def validateArg(self):
-        Pippet.validateArg(self)
-        self.arg[1:-1] = [self.options]
+        Instruction.validateArg(self)
+        self.arg  =  [integer(self.tipMask)]                                                    # arg 1
+        self.arg += [integer(self.options)]
+        self.arg +=  [integer(self.arm)]                                                        # arg 10
         return True

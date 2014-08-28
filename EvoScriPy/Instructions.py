@@ -138,7 +138,7 @@ class getDITI2(DITIs):
     """ A.15.4.5 Get DITIs (Worklist: GetDITI)
     """
     def __init__(self,  tipMask=curTipMask, LabwareName=None, options=0,
-                          arm=Pippet.LiHa1, AirgapVolume=0,   AirgapSpeed=None ):
+                          arm=Pippet.LiHa1, AirgapVolume=0,   AirgapSpeed=def_AirgapSpeed ):
         """
 
         :param tipMask:
@@ -164,8 +164,8 @@ class getDITI2(DITIs):
 class dropDITI(Pippet):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """
 
-    def __init__(self,  tipMask= curTipMask, labware = def_LabW,
-                AirgapVolume=0, AirgapSpeed=None , arm= Pippet.LiHa1):
+    def __init__(self,  tipMask= curTipMask, labware = def_DiTiWaste,
+                AirgapVolume=0, AirgapSpeed=def_AirgapSpeed , arm= Pippet.LiHa1):
         """
 
         :param tipMask:

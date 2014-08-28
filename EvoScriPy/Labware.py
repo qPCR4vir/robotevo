@@ -152,6 +152,7 @@ CleanerLWS    = Labware.Type("Washstation 2Grid Cleaner long"   , 8, maxVol=1000
 WashCleanerL  = Labware(CleanerLWS, Labware.Location(22,2))
 
 DiTi_Waste    = Labware.Type("Washstation 2Grid DiTi Waste"     , 8, maxVol=100000)
+DiTiWaste     = Labware(DiTi_Waste,Labware.Location(22,6))
 
 DiTi_1000ul   = Labware.Type("DiTi 1000ul"     , 8, maxVol=970)
 
