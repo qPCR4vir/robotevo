@@ -1,4 +1,4 @@
-__author__ = 'elisa.reader'
+__author__ = 'qPCR4vir'
 
 import EvoMode
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.txt'),

@@ -1,4 +1,4 @@
-__author__ = 'Ariel'
+__author__ = 'qPCR4vir'
 """ A.15.10 Advanced Worklist Commands for the Te-MagS """
 
 import EvoMode
