@@ -1,4 +1,4 @@
-__author__ = 'elisa.reader'
+__author__ = 'qPCR4vir'
 
 #from Instruction_Base import SriptONLY
 
