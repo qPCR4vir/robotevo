@@ -36,10 +36,10 @@ class multiEvo(EvoMode):
 class inFile (EvoString):
     def __init__(self, filename):
         self.filename=filename
-        self.f = open (filename,'a')
+        self.f = open (filename,'w')
 
     def exec(self, instr):
-        s="\n" + EvoString.exec(self,instr)
+        s=EvoString.exec(self,instr) + "\n"
         self.f.write(s)
         return s   # or f ?
 
@@ -60,7 +60,7 @@ class inFile (EvoString):
 class AdvancedWorkList (inFile):
 
     def exec(self, instr):
-        s="\nB;" + EvoString.exec(self,instr) + ";"
+        s="B;" + EvoString.exec(self,instr) + ";\n"
         self.f.write(s)
         return s
 
