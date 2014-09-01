@@ -1,9 +1,9 @@
 __author__ = 'qPCR4vir'
 
-#from Instruction_Base import SriptONLY
+#from Instruction_Base import ScriptONLY
 
 class EvoMode:
-    Tip_tNum = 4
+    # Tip_tNum = 4
     def exec(self, instr):
         pass
 
@@ -12,6 +12,17 @@ class EvoMode:
 
     def __del__(self):
         pass
+
+class EvoString(EvoMode):
+    def exec(self, instr):
+        s= str(instr)
+        return s
+
+class EvoStdOut(EvoString):
+    def exec(self, instr):
+        s=EvoString.exec(self,instr)
+        print(s)
+        return s
 
 class multiEvo(EvoMode):
     def __init__(self, EvoList = []):
@@ -22,16 +33,15 @@ class multiEvo(EvoMode):
         for m in self.EvoList:
             instr.exec(m)
 
-class inFile (EvoMode):
+class inFile (EvoString):
     def __init__(self, filename):
         self.filename=filename
         self.f = open (filename,'a')
 
     def exec(self, instr):
-#        if not self.allowed(instr):
-#            return
-        s="\n" + str(instr)
+        s="\n" + EvoString.exec(self,instr)
         self.f.write(s)
+        return s   # or f ?
 
     def done(self):
         if self.f is not None:
@@ -50,14 +60,13 @@ class inFile (EvoMode):
 class AdvancedWorkList (inFile):
 
     def exec(self, instr):
-#        if not self.allowed(instr):
-#            return
-        s="\nB;" + str(instr) + ";"
-        #print (s)
+        s="\nB;" + EvoString.exec(self,instr) + ";"
         self.f.write(s)
+        return s
 
-    def allowed(self, instr):
-        return not isinstance(instr,SriptONLY)
+
+#    def allowed(self, instr):
+#       return not isinstance(instr,ScriptONLY)
 
 
 class ScriptBody (inFile):

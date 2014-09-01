@@ -79,7 +79,7 @@ class Instruction:
                                            else '"'+a+'"' if isinstance(a,str)
                                            else  str(a)       for a in self.arg]) + ")"
 
-class SriptONLY(Instruction):
+class ScriptONLY(Instruction):
     def allowed(self, mode):
         return not isinstance(mode,EvoMode.AdvancedWorkList)
 

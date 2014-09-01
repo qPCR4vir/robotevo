@@ -2,7 +2,8 @@ __author__ = 'qPCR4vir'
 
 import EvoMode
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.txt'),
-                                   EvoMode.ScriptBody('EvoScript.esc.txt')])
+                                   EvoMode.ScriptBody('EvoScript.esc.txt'),
+                                   EvoMode.EvoStdOut()])
 
 from Instructions import *
 from Labware import *
