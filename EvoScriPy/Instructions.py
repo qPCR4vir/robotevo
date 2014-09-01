@@ -164,12 +164,12 @@ class getDITI(DITIs):
 class getDITI2(DITIs):
     """ A.15.4.5 Get DITIs (Worklist: GetDITI)
     """
-    def __init__(self,  tipMask=curTipMask, LabwareName=None, options=0,
+    def __init__(self,  tipMask=curTipMask, LabwareTypeName=None, options=0,
                           arm=Pippet.LiHa1, AirgapVolume=0,   AirgapSpeed=def_AirgapSpeed ):
         """
 
         :param tipMask:
-        :param LabwareName: string? DiTi labware name
+        :param LabwareTypeName: string? DiTi labware name
         :param options:
         :param arm:
         :param AirgapVolume: int. used to specify a system trailing airgap (STAG) which will be aspirated after
@@ -177,16 +177,19 @@ class getDITI2(DITIs):
         :param AirgapSpeed: int. Speed for the airgap in μl/s
         """
         DITIs.__init__(self, "GetDITI2", tipMask, options, arm)
-        self.LabwareName = LabwareName
+        self.LabwareTypeName = LabwareTypeName
         self.AirgapSpeed = AirgapSpeed
         self.AirgapVolume = AirgapVolume
 
     def validateArg(self):
         DITIs.validateArg(self)
 
-        ln= self.LabwareName
-        if isinstance(ln,Labware.Labware):
-            ln= ln.label
+        ln= self.LabwareTypeName
+        if isinstance(ln,Labware.Labware.Type):
+            ln= ln.name
+        else:
+            if isinstance(ln, Labware.Labware):
+                ln=ln.type.name
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or 2 ? expression?
         self.arg += [integer(self.AirgapVolume),integer(self.AirgapSpeed)]   # arg 5, 6
@@ -227,6 +230,24 @@ class set_DITI_Counter(Pippet): # todo help determining the type,set other def_L
         self.arg = [integer(self.type), string1(self.labware.location.grid),
                                         string1(self.labware.location.site),
                                         string1(self.posInRack)] # todo extract from Location
+        return True
+
+class set_DITI_Counter2(Pippet): # todo help determining the type,set other def_LabW
+    """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
+        example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
+    """
+
+    def __init__(self, labware = def_LabW, posInRack=0, lastPos=False  ):
+        Pippet.__init__(self, "Set_DITI_Counter2" , labware = labware)
+        self.lastPos = lastPos
+        self.posInRack = posInRack
+
+    def validateArg(self):
+        self.arg = [string1(self.labware.type.name),
+                    string1(self.labware.location.grid),
+                    string1(self.labware.location.site+1),
+                    string1(self.posInRack),
+                    integer(self.lastPos)] # todo extract from Location
         return True
 
 class pickUp_DITIs(Pippet):
