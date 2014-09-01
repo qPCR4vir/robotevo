@@ -44,7 +44,7 @@ class dispense(Pippeting):
                         RackName    = None,        # TODO implement
                         Well        = None,        # TODO implement
                         arm         = Pippet.LiHa1):
-        Pippeting.__init__(self, 'Dispence',
+        Pippeting.__init__(self, 'Dispense',
                             tipMask,
                             liquidClass,
                             volume,
