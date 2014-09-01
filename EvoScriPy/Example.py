@@ -10,6 +10,7 @@ from Instructions import *
 from Labware import *
 
 ElutionBuffer = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
+ElutionBuffer.select(range(2,2+4))
 LysisBuffer   = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
 BindingBuffer = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
 VEW1          = Labware(Trough_100ml, Labware.Location(22,3), "4-VEW1 Wash Buffe"   )
