@@ -110,6 +110,11 @@ class Labware:
         for well in self.Wells:
             well.selFlag = True
 
+    def select(self, sel_idx_list):
+        for i in sel_idx_list:
+            self.Wells[i].selFlag = True
+
+
     def offset(self, row, col=1):
         if isinstance(row,str):
             return self.offsetFromName(row)
