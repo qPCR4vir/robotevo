@@ -107,7 +107,7 @@ class T_Mag_Instr(Device):
 
 
 
-def_TipMask     = 15
+def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
 def_liquidClass = "Water free DITi 1000"
 def_vol         = [0]*12

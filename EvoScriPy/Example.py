@@ -12,7 +12,7 @@ ElutionBuffer = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuff
 LysisBuffer   = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
 BindingBuffer = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
 VEW1          = Labware(Trough_100ml, Labware.Location(22,3), "4-VEW1 Wash Buffe"   )
-#VEW1          = Labware(Trough_100ml, Labware.Location(6 ,0), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
+#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,0), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
 VEW2          = Labware(Trough_100ml, Labware.Location(22,4), "5-VEW2-WashBuffer"   )
 BioWaste      = Labware(Trough_100ml, Labware.Location(22,5), "6-Waste"             )
 EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
