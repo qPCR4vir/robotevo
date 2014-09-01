@@ -2,6 +2,7 @@ __author__ = 'qPCR4vir'
 
 import EvoMode
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.txt'),
+                                   EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('EvoScript.esc.txt'),
                                    EvoMode.EvoStdOut()])
 
@@ -9,6 +10,7 @@ from Instructions import *
 from Labware import *
 
 ElutionBuffer = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
+ElutionBuffer.select(range(2,2+4+1))
 LysisBuffer   = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
 BindingBuffer = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
 VEW1          = Labware(Trough_100ml, Labware.Location(22,3), "4-VEW1 Wash Buffe"   )
@@ -32,19 +34,27 @@ DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
 DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
 DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
+# set_DITI_Counter(type??,5).exec()
+set_DITI_Counter2(DiTi1000_2,5).exec()
+getDITI2(LabwareTypeName=DiTi1000_2).exec()
 
-MP = Labware( MP96well, Labware.Location(1,1) )
+
+# MP = Labware( MP96well, Labware.Location(1,1) )
 
 Asp = aspirate(volume=50.3, labware=ElutionBuffer)
 Asp.exec()
 Dsp = dispense(volume=40.3, labware=TeMag)
 Dsp.exec()
+#dropDITI().exec()
+
+exit()
+
 Mx= mix(labware=Proben)
 Mx.exec()
 # Wtips=wash_tips()
 gDITI=getDITI(8,0)
 gDITI.exec()
-gDITI2=getDITI2(LabwareName=DiTi1000_1)
+gDITI2=getDITI2(LabwareTypeName=DiTi1000_1)
 gDITI2.exec()
 dropTips=dropDITI(AirgapSpeed=100)
 dropTips.exec()

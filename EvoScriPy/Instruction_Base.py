@@ -109,7 +109,7 @@ class T_Mag_Instr(Device):
 
 def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
-def_liquidClass = "Water free DITi 1000"
+def_liquidClass = "Water free dispense DiTi 1000"
 def_vol         = [0]*12
 def_LabW        = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
 def_LoopOp      = []
@@ -178,7 +178,7 @@ class Pippeting(Pippet):
     def validateArg(self):
         Pippet.validateArg(self)
 
-        self.arg[1:1] = [string1(self.liquidClass)] + expr(12,self.volume).split()          # arg 2, 3 - 14
+        self.arg[1:1] = [string1(self.liquidClass)] + expr(4,self.volume).split() + [int(0)]*8         # arg 2, 3 - 14
         return True
 
 class DITIs(Instruction):
