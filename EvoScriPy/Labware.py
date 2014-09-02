@@ -6,11 +6,24 @@ import EvoMode
 class WorkTable: # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
     """ Collection of Racks.Types and Labware.Types and pos of instances """
 
-    def __init__(self):
+    def __init__(self,templateFile=None):
         self.labTypes= {}  # typeName,type. The type mountain a list of labware (with locations)
         self.Racks = []
         self.nGrid = 67   # max
-        self.templateFile = ""
+        self.grid=[None]*67
+        if isinstance(templateFile,list):
+            self.template = templateFile
+        else:
+            self.template = self.parseWorTableFile(templateFile)
+
+    def parseWorTableFile(self, templateFile):
+        if not templateFile: return []
+        templList=[]
+        with open(templateFile) as tmpl:
+            for line in tmpl:            #todo do the real complete parse
+                templList += [line]
+                if line.startswith("--{ RPG }--"): break
+        return templList
 
     def addLabware(self, labware ):
 

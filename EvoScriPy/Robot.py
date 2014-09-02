@@ -1,6 +1,7 @@
 __author__ = 'qPCR4vir'
 
-import Instructions
+from Instruction_Base import Pippet
+from Labware import WorkTable
 
 tipMask=[]     # mask for one tip of index ...
 tipsMask=[0]   # mask for the first tips
@@ -21,7 +22,7 @@ class Robot:
                     self.maxVol = maxVol
                     
             
-        def __init__(self, nTips, index=Instructions.Pippet.LiHa1 ,workingTips=None, tipsType=DiTi ):
+        def __init__(self, nTips, index=Pippet.LiHa1 ,workingTips=None, tipsType=DiTi ):
             """
 
             :param nTips:
@@ -62,7 +63,9 @@ class Robot:
         def __init__(self, src, dest, vol):
             pass
 
-    def __init__(self, arms=None, nTips=def_nTips, index=Instructions.Pippet.LiHa1 , workingTips=None, tipsType=DiTi):
+    def __init__(self, arms=None, nTips=def_nTips,
+                 index=Pippet.LiHa1 , workingTips=None,
+                 tipsType=arm.DiTi, templateFile=None):
         """
 
         :param arm:
@@ -74,6 +77,8 @@ class Robot:
                     {arms.index, arms} if isinstance(arms,Robot.arm ) else \
                     {arms.index, Robot.arm(nTips,index,workingTips,tipsType)}
 
+        self.worktable=WorkTable(templateFile)
 
+curRobot=None
 
 

@@ -65,13 +65,24 @@ class AdvancedWorkList (inFile):
 class ScriptBody (inFile):
     pass
 
-
 class EvoCOM (EvoMode):
     pass
 
 
-class EvoScript (EvoMode):
-    pass
+class EvoScript (ScriptBody):
+    def __init__(self, filename, template, arms):
+        ScriptBody.__init__(self,filename)
+        import Robot
+        Robot.curRobot=Robot.Robot(templateFile=template, arms=arms)
+        self.templateNotAdded=True
+
+    def exec(self, instr):
+        if self.templateNotAdded:
+            from Robot import curRobot
+            for line in curRobot.worktable.template:
+                self.f.write(line)
+            self.templateNotAdded=False
+        ScriptBody.exec(self,instr)
 
 
 CurEvo = None
