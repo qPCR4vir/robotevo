@@ -76,6 +76,7 @@ class Well:
         self.offset = Well_Offset
         self.vol = 0
         self.selFlag = False
+        self.reactive = None
 
 
 class Labware:
@@ -105,6 +106,25 @@ class Labware:
             self.row=row
             self.col=col
 
+
+    def offset(self, row, col=1):
+        if isinstance(row, Labware.Position):
+            col=row.col
+            row=row.row
+        if isinstance(row,str):
+            return self.offsetFromName(row)
+        return row-1 + (col-1)*self.type.nRow
+
+    def offsetFromName(self, wellName):
+        row = ord(wellName[0]) - ord('A') + 1
+        col = int(wellName[1:])
+        return self.offset(row,col)
+
+    def position(self, offset):
+        return self.Position( offset % self.type.nCol + 1, offset // self.type.nCol + 1)
+
+    pos if isinstance(pos, Labware.Labware.Location) else labware.
+
     def __init__(self, type, location, label=None, worktable=curWorkTable):
         self.type = type
         self.label=label
@@ -131,19 +151,6 @@ class Labware:
         for i in sel_idx_list:
             self.Wells[i].selFlag = True
 
-
-    def offset(self, row, col=1):
-        if isinstance(row,str):
-            return self.offsetFromName(row)
-        return row-1 + (col-1)*self.type.nRow
-
-    def offsetFromName(self, wellName):
-        row = ord(wellName[0]) - ord('A') + 1
-        col = int(wellName[1:])
-        return self.offset(row,col)
-
-    def position(self, offset):
-        return self.Position( offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
     def newOffset(self, pos, offset ):
         return self.offset(pos.row,pos.col) + offset
