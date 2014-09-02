@@ -123,6 +123,10 @@ class Labware:
         for well in self.Wells:
             well.selFlag = True
 
+    def selectOnly(self,sel_idx_list):
+        self.clearSelection()
+        self.select(sel_idx_list)
+
     def select(self, sel_idx_list):
         for i in sel_idx_list:
             self.Wells[i].selFlag = True
@@ -177,9 +181,10 @@ class Labware:
         sel = "{:02X}{:02X}".format (X,Y)
         bitMask=0
         null = ord('0')
+        bit=0
         for w in self.Wells:
             bit = w.offset % 7
-            bitMask += w.selFlag << bit
+            if w.selFlag: bitMask |=  (1<<bit)
             if bit == 6 :
                 sel+= chr(null + bitMask)
                 bitMask = 0
