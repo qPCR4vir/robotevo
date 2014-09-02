@@ -123,8 +123,6 @@ class Labware:
     def position(self, offset):
         return self.Position( offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
-    pos if isinstance(pos, Labware.Labware.Location) else labware.
-
     def __init__(self, type, location, label=None, worktable=curWorkTable):
         self.type = type
         self.label=label

@@ -4,7 +4,7 @@ import EvoMode
 from Instructions import *
 from Labware import *
 import Robot
-
+from Reactive import *
 
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
@@ -42,6 +42,15 @@ DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 B_liquidClass = "Buffer free DITi 1000-AVR"
 W_liquidClass = "AVR-Water free DITi 1000"
 Std_liquidClass = "Water free dispense DiTi 1000"
+
+NumOfSamples=10
+
+IC_MS2 = Reactive("IC MS2 - bacterial phage culture", Reactives, pos=14, volpersample= 20 )
+IC2    = Reactive("IC2 (synthetic RNA)"             , Reactives, pos=11, volpersample=  4 )
+ElutBuf= Reactive("Elution Buffer"                  , ElutionBuffer,     volpersample=100 )
+ProtK  = Reactive("Proteinase K"                    , Reactives, pos=16, volpersample= 20 )
+cRNA   = Reactive("Carrier RNA"                     , Reactives, pos=15, volpersample=  4 )
+pK_cRNA= preMix  ("ProtK+carrier RNA premix)"       , Reactives, pos=12, components=[ProtK,cRNA])
 
 
 
