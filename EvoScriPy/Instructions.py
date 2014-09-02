@@ -319,7 +319,8 @@ class detect_Liquid(Pippeting):    # todo get the results !!!
                              LoopOptions = def_LoopOp,
                              arm         = Pippet.LiHa1,
                              RackName    = None,
-                             Well        = None          ):
+                             Well        = None,
+                             read        = False):
         Pippeting.__init__(self, 'Detect_Liquid',
                             tipMask,
                             liquidClass,
@@ -330,11 +331,17 @@ class detect_Liquid(Pippeting):    # todo get the results !!!
                             RackName,
                             Well,
                             arm )
+        self.read = read
 
     def validateArg(self):
         Pippet.validateArg(self)
         self.arg[2:13] = []
         return True
+
+    def exec(self, mode=None):
+        Pippeting.exec(self,mode)
+        if not self.read: return
+        #todo introduce some variable and read into it the vols
 
 class activate_PMP(Instruction):
     """ A.15.4.12 Activate PMP (Worklist: Activate_PMP)
