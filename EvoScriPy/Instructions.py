@@ -246,7 +246,7 @@ class set_DITI_Counter2(Pippet): # todo  set other def_LabW
         self.arg = [string1(self.labware.type.name),
                     string1(self.labware.location.grid),
                     string1(self.labware.location.site+1),
-                    string1(self.posInRack),
+                    string1(self.posInRack+1),
                     integer(self.lastPos)] # todo extract from Location
         return True
 
