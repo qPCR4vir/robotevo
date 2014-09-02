@@ -58,16 +58,9 @@ class inFile (EvoString):
 
 
 class AdvancedWorkList (inFile):
-
     def exec(self, instr):
-        s="B;" + EvoString.exec(self,instr) + ";\n"
-        self.f.write(s)
-        return s
-
-
-#    def allowed(self, instr):
-#       return not isinstance(instr,ScriptONLY)
-
+        self.f.write("B;")
+        return inFile.exec(self,instr)
 
 class ScriptBody (inFile):
     pass

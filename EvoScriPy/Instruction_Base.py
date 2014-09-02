@@ -77,7 +77,7 @@ class Instruction:
         self.validateArg()
         return self.name + "(" + ','.join([          ''   if    a is None
                                            else '"'+a+'"' if isinstance(a,str)
-                                           else  str(a)       for a in self.arg]) + ")"
+                                           else  str(a)       for a in self.arg]) + ");"
 
 class ScriptONLY(Instruction):
     def allowed(self, mode):
