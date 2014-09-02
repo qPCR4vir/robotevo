@@ -1,5 +1,5 @@
 __author__ = 'qPCR4vir'
-
+#todo Revise def values: the binding take place at the moment of first import ???
 import EvoMode
 import Labware
 
@@ -68,7 +68,8 @@ class Instruction:
     def allowed(self, mode):
         return True
 
-    def exec(self, mode=EvoMode.CurEvo):
+    def exec(self, mode=None):
+        if not mode: mode=EvoMode.CurEvo
         if not self.allowed(mode):
             return
         mode.exec(self)
