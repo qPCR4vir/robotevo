@@ -39,28 +39,41 @@ DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
 DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
 DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
+B_liquidClass = "Buffer free DITi 1000-AVR"
+W_liquidClass = "AVR-Water free DITi 1000"
+Std_liquidClass = "Water free dispense DiTi 1000"
 
-set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('A5')  ).exec()
+
+
+
+set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('A7')  ).exec()
 getDITI2(LabwareTypeName=DiTi1000_2).exec()
+
+ElutionBuffer.selectOnly(range(2,2+4))
+Asp = aspirate(liquidClass =B_liquidClass, volume=50.3, labware=ElutionBuffer)
+Asp.exec()
+
+TeMag.selectOnly(range(0,0+4))
+Dsp = dispense(volume=50.3, labware=TeMag, liquidClass =W_liquidClass)
+Dsp.exec()
+
+samples = 3  #for 3*4 = 12 samples
+for s in range(samples):
+    Asp.exec()
+    TeMag.selectOnly(range(4*s,4*s+4))
+    Dsp.exec()
+
+dropDITI().exec()
+
+exit()
+
+
+
+
 
 
 # MP = Labware( MP96well, Labware.Location(1,1) )
 
-ElutionBuffer.selectOnly(range(2,2+4))
-Asp = aspirate(volume=50.3, labware=ElutionBuffer)
-Asp.exec()
-
-TeMag.selectOnly(range(0,0+4))
-Dsp = dispense(volume=50.3, labware=TeMag)
-Dsp.exec()
-
-Asp.exec()
-TeMag.selectOnly(range(4,4+4))
-Dsp.exec()
-
-#dropDITI().exec()
-
-exit()
 
 Mx= mix(labware=Proben)
 Mx.exec()
