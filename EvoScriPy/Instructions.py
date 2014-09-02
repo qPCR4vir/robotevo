@@ -4,7 +4,7 @@ import EvoMode
 import Labware
 from Instruction_Base import *
 #todo organize the arg in each instruction according to the more common use
-# todo implement all the instruction, from all the devices !!
+# todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
 
 class aspirate(Pippeting):
     """ A.15.4.1 Aspirate command (Worklist: Aspirate)  A - 125
@@ -232,14 +232,14 @@ class set_DITI_Counter(Pippet): # todo help determining the type,set other def_L
                                         string1(self.posInRack)] # todo extract from Location
         return True
 
-class set_DITI_Counter2(Pippet): # todo help determining the type,set other def_LabW
+class set_DITI_Counter2(Pippet): # todo  set other def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
     """
 
     def __init__(self, labware = def_LabW, posInRack=0, lastPos=False  ):
         Pippet.__init__(self, "Set_DITI_Counter2" , labware = labware)
-        self.lastPos = lastPos
+        self.lastPos = lastPos #todo implement internally; how??
         self.posInRack = posInRack
 
     def validateArg(self):
@@ -301,14 +301,14 @@ class set_DITIs_Back(Pippet):
         self.arg[4:5] = []
         return True
 
-class pickUp_ZipTip(Pippet): # todo implement
+class pickUp_ZipTip(Pippet): # todo implement !!!
     """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)
     """
     def __init__(self, tipMask = curTipMask ):
         Pippet.__init__(self, 'PickUp_ZipTip' )
         assert False, "PickUp_ZipTip not implemented"
 
-class detect_Liquid(Pippeting):    # todo
+class detect_Liquid(Pippeting):    # todo get the results !!!
     """ A.15.4.11 Detect Liquid (Worklist: Detect_Liquid)
     """
     def __init__(self ,      tipMask     = curTipMask,

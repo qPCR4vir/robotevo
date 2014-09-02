@@ -12,7 +12,7 @@ def Aspirate( tipMask,
               grid,
               site,
               spacing,
-              wellSelection,       # todo implement
+              wellSelection,       # todo implement how to use alternative well selection?
               noOfLoopOptions,
               #loopName,
               #action,
@@ -43,7 +43,7 @@ def Aspirate( tipMask,
 
     return a, a.exec()
 
-def Dispence(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,      # todo implement
+def Dispense(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,      # todo implement currectly. how to use alternative well selection?
              LoopOptions,
              arm):
     """
