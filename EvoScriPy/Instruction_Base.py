@@ -110,7 +110,7 @@ class T_Mag_Instr(Device):
 
 def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
-def_liquidClass = "Water free dispense DiTi 1000"
+def_liquidClass = "Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
 def_vol         = [0]*12
 def_LabW        = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
 def_LoopOp      = []
@@ -144,6 +144,12 @@ class Pippet(Instruction):
                             # difference,
 
     def validateArg(self):
+        """
+        Evoware visual script generator enforce a compatibility between the arguments tipMask and well selection.
+        If they are not compatible the robot crash.
+        :return:
+
+        """
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid), integer(self.labware.location.site), # arg 2, 3
                       integer(self.spacing),         string1( self.labware.wellSelectionStr()) ]# arg 4, 5
