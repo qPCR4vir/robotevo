@@ -36,6 +36,14 @@ class Robot:
             self.nTips=nTips
             self.Tips=[None]* nTips
 
+
+        def get(self, TIP_MASK=-1, maxVol=1000):
+            if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
+            for i,tp in enumerate(self.Tips):
+                if TIP_MASK & (1<<i):
+                    if tp != None: raise "Tip already in position "+str(i)
+                    self.Tips[i] = tip(maxVol)
+
         def drop(self, TIP_MASK=-1):
             if  TIP_MASK==-1:
                 self.Tips=[None]* self.nTips
@@ -44,11 +52,22 @@ class Robot:
                 if TIP_MASK & (1<<i):
                     self.Tips[i]=None
 
-        def aspire(self, vol, TIP_MASK=-1):
-            TIP_MASK= TIP_MASK if TIP_MASK!=-1 else tipsMask[self.nTips]
-            for i in range(self.nTips):
+        def aspire(self, vol, TIP_MASK=-1): # todo more checks
+            if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
+            for i,tip in enumerate(self.Tips):
                 if TIP_MASK & (1<<i):
-                    if self.Tips[i]=None
+                    if tip == None: raise "No tip in position "+str(i)
+                    nv = tip.vol + vol[i]
+                    if nv > tip.maxVol: raise 'To much Vol in tip '+str(i)
+                    tip.vol = nv
+
+        def dispense(self, vol, TIP_MASK=-1): # todo more checks
+            if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
+            for i,tip in enumerate(self.Tips):
+                if TIP_MASK & (1<<i):
+                    if tip == None: raise "No tip in position "+str(i)
+                    tip.vol += vol[i]
+
 
     class ProtocolStep:
         pass
