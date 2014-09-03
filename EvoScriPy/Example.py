@@ -4,7 +4,8 @@ import EvoMode
 from Instructions import *
 from Labware import *
 import Robot
-from Reactive import *
+import Reactive as React
+# from Reactive import *
 
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
@@ -39,20 +40,23 @@ DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
 DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
 DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
+
 B_liquidClass = "Buffer free DITi 1000-AVR"
 W_liquidClass = "AVR-Water free DITi 1000"
 Std_liquidClass = "Water free dispense DiTi 1000"
 
-NumOfSamples=10
-
-IC_MS2 = Reactive("IC MS2 - bacterial phage culture", Reactives, pos=14, volpersample= 20 )
-IC2    = Reactive("IC2 (synthetic RNA)"             , Reactives, pos=11, volpersample=  4 )
-ElutBuf= Reactive("Elution Buffer"                  , ElutionBuffer,     volpersample=100 )
-ProtK  = Reactive("Proteinase K"                    , Reactives, pos=16, volpersample= 20 )
-cRNA   = Reactive("Carrier RNA"                     , Reactives, pos=15, volpersample=  4 )
-pK_cRNA= preMix  ("ProtK+carrier RNA premix)"       , Reactives, pos=12, components=[ProtK,cRNA])
 
 
+IC_MS2 = React.Reactive("IC MS2 - bacterial phage culture", Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
+IC2    = React.Reactive("IC2 (synthetic RNA)"             , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
+ElutBuf= React.Reactive("Elution Buffer"                  , ElutionBuffer,     volpersample=100 ,defLiqClass=B_liquidClass)
+ProtK  = React.Reactive("Proteinase K"                    , Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
+cRNA   = React.Reactive("Carrier RNA"                     , Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
+pK_cRNA= React.preMix  ("ProtK+carrier RNA premix)"       , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
+
+
+React.NumOfSamples = 10
+pK_cRNA.make()
 
 
 set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('A7')  ).exec()
