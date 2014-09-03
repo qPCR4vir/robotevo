@@ -86,3 +86,4 @@ EvoScriPy/__pycache__
 EvoScriPy/AWL.txt
 EvoScriPy/EvoScript.esc
 EvoScriPy/EvoScript.esc.txt
+EvoScripts/scripts/*.dat

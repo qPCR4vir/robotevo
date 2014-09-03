@@ -40,6 +40,7 @@ DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
 DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
 DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
+set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('E7')  ).exec()
 
 B_liquidClass = "Buffer free DITi 1000-AVR"
 W_liquidClass = "AVR-Water free DITi 1000"
@@ -54,12 +55,11 @@ ProtK  = React.Reactive("Proteinase K"                    , Reactives, pos=16, v
 cRNA   = React.Reactive("Carrier RNA"                     , Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
 pK_cRNA= React.preMix  ("ProtK+carrier RNA premix)"       , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
 
-
 React.NumOfSamples = 10
 pK_cRNA.make()
 
 
-set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('A7')  ).exec()
+
 getDITI2(LabwareTypeName=DiTi1000_2).exec()
 
 ElutionBuffer.selectOnly(range(2,2+4))
@@ -79,6 +79,7 @@ for s in range(samples):
 dropDITI().exec()
 
 exit()
+
 
 
 
