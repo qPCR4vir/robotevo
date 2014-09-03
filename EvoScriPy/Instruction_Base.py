@@ -3,6 +3,8 @@ __author__ = 'qPCR4vir'
 import EvoMode
 import Labware
 
+supportVirtualRobot=True  # todo explore this idea ! (problems with "asynchronous" and multiEvo mode)
+
 class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
@@ -117,6 +119,7 @@ def_LoopOp      = []
 def_WashWaste   = Labware.WashWaste
 def_WashCleaner = Labware.WashCleanerS
 def_DiTiWaste   = Labware.DiTiWaste
+def_DiTi        = Labware.DiTi_1000ul   # todo revise
 def_AirgapSpeed = 300
 
 class Pippet(Instruction):
