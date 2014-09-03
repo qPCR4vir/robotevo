@@ -119,6 +119,7 @@ def_LoopOp      = []
 def_WashWaste   = Labware.WashWaste
 def_WashCleaner = Labware.WashCleanerS
 def_DiTiWaste   = Labware.DiTiWaste
+def_DiTi        = Labware.DiTi_1000ul   # todo revise
 def_AirgapSpeed = 300
 
 class Pippet(Instruction):

@@ -185,6 +185,7 @@ class getDITI2(DITIs):
         DITIs.validateArg(self)
 
         ln= self.LabwareTypeName
+        if ln is None: ln=def_DiTi
         if isinstance(ln,Labware.Labware.Type):
             ln= ln.name
         else:
