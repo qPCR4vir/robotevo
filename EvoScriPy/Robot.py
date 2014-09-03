@@ -24,12 +24,6 @@ class Robot:
         DiTi=0
         Fixed=1
 
-        class Tip:
-            def __init__(self, maxVol=1000):
-                self.vol = 0
-                self.maxVol = maxVol
-
-
         def __init__(self, nTips, index=Pippet.LiHa1 ,workingTips=None, tipsType=DiTi ):
             """
 
