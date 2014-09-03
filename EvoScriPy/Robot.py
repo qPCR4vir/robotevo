@@ -139,21 +139,22 @@ class Robot:
         self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
         return usePreserved
      def curArm(self,arm=None):
-        return self.def_arm
+        if arm is not None: self.def_arm=arm
+        return self.arms[self.def_arm]
 
      def getTips(self, TIP_MASK=-1, maxVol=1000):
         if self.reusetips:
-            TIP_MASK = self.arms[self.def_arm].getMoreTips(TIP_MASK,maxVol)
+            TIP_MASK = self.curArm().getMoreTips(TIP_MASK,maxVol)
         else:
             self.dropTips(TIP_MASK)
-            TIP_MASK = self.arms[self.def_arm].getTips(TIP_MASK,maxVol)
+            TIP_MASK = self.curArm().getTips(TIP_MASK,maxVol)
         if TIP_MASK:
             getDITI2(TIP_MASK,arm=self.def_arm).exec()
         return TIP_MASK
 
      def dropTips(self, TIP_MASK=-1):
         if not self.droptips: return 0
-        TIP_MASK = self.arms[self.def_arm].drop(TIP_MASK)
+        TIP_MASK = self.curArm().drop(TIP_MASK)
         if TIP_MASK:
             dropDITI(TIP_MASK).exec()
         return TIP_MASK
