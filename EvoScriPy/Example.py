@@ -48,11 +48,11 @@ Std_liquidClass = "Water free dispense DiTi 1000"
 
 
 IC_MS2 = React.Reactive("IC MS2 - bacterial phage culture", Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
-IC2    = React.Reactive("IC2 (synthetic RNA)"             , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
+IC2    = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
 ElutBuf= React.Reactive("Elution Buffer"                  , ElutionBuffer,     volpersample=100 ,defLiqClass=B_liquidClass)
 ProtK  = React.Reactive("Proteinase K"                    , Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
 cRNA   = React.Reactive("Carrier RNA"                     , Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
-pK_cRNA= React.preMix  ("ProtK+carrier RNA premix)"       , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
+pK_cRNA= React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
 
 
 React.NumOfSamples = 10

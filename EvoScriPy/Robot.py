@@ -180,6 +180,10 @@ class Robot:
         dispense(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
 
      def makePreMix(self, pMix):
+        l=pMix.labware
+        msg= "preMix: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
+              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos, len(pMix.components))
+        comment(msg).exec()
         nc=len(pMix.components)
         assert nc <= self.arms[self.def_arm].nTips, \
             "Temporally the mix can not contain more than {:d} components.".format(self.arms[self.def_arm].nTips)
