@@ -3,6 +3,8 @@ __author__ = 'qPCR4vir'
 import EvoMode
 import Labware
 
+supportVirtualRobot=True  # todo explore this idea ! (problems with "asynchronous" and multiEvo mode)
+
 class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data

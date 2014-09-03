@@ -200,9 +200,12 @@ class dropDITI(Pippet):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """
 
     def __init__(self,  tipMask= curTipMask, labware = def_DiTiWaste,
-                AirgapVolume=0, AirgapSpeed=def_AirgapSpeed , arm= Pippet.LiHa1):
+                AirgapVolume=0, AirgapSpeed=def_AirgapSpeed ,
+                arm= Pippet.LiHa1): #, conditional=True):
         """
 
+
+        :param conditional: exec only if there are some tip to droop.
         :param tipMask:
         :param labware:
         :param AirgapVolume: floating point, 0 - 100.  airgap in μl which is aspirated after dropping the DITIs
@@ -210,6 +213,7 @@ class dropDITI(Pippet):
         :param arm:
         """
         Pippet.__init__(self, "DropDITI",  tipMask, labware = labware, arm=arm)
+#        self.conditional = conditional
         self.AirgapSpeed = AirgapSpeed
         self.AirgapVolume = AirgapVolume
 
@@ -217,6 +221,13 @@ class dropDITI(Pippet):
         Pippet.validateArg(self)
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
+
+#    def exec(self, mode=None):
+#        if supportVirtualRobot:
+#            global curRobot
+#            used=curRobot.arms[self.arm].drop(self.tipMask)
+#            if self.conditional and used:
+#                Pippet.exec(self,mode)
 
 class set_DITI_Counter(Pippet): # todo help determining the type,set other def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
