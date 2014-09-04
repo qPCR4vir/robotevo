@@ -138,19 +138,25 @@ class Labware:
     def clearSelection(self):
         for well in self.Wells:
             well.selFlag = False
+        return self
+
+    def selected(self):
+        return [well.offset for well in self.Wells if well.selFlag]
 
     def selectAll(self):
         for well in self.Wells:
             well.selFlag = True
+        return self
 
     def selectOnly(self,sel_idx_list):
         self.clearSelection()
         self.select(sel_idx_list)
+        return self
 
     def select(self, sel_idx_list):
         for i in sel_idx_list:
             self.Wells[i].selFlag = True
-
+        return self
 
     def newOffset(self, pos, offset ):
         return self.offset(pos.row,pos.col) + offset
