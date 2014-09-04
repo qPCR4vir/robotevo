@@ -27,27 +27,27 @@ class App:
     self.button = Button(frame,
                          text="START", fg="green", bg="black",
                          command=self.write_slogan)
-    self.button.pack(side=LEFT)
+    self.button.pack(side="center")
 
     self.button1 = Button(frame,
                          text="STOPP", fg="red", bg="black",
                          command=self.write_slogan)
-    self.button1.pack(side=LEFT)
+    self.button1.pack(side="center")
 
     self.button2 = Button(frame,
                          text="Pause", fg="yellow", bg="black",
                          command=self.write_slogan)
-    self.button2.pack(side=LEFT)
+    self.button2.pack(side="center")
 
     self.button3 = Button(frame,
                          text="Hallo", fg="red", bg="black",
                          command=self.write_slogan)
-    self.button3.pack(side=LEFT)
+    self.button3.pack(side="center")
 
     self.slogan = Button(frame,
                          text="QUIT",
                          command=frame.quit)
-    self.slogan.pack(side=LEFT)
+    self.slogan.pack(side="center")
   def write_slogan(self):
       msg.pack(),
 
