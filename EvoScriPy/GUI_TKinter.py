@@ -22,7 +22,8 @@ msg.config(bg='lightgreen', font=('times', 24, 'italic'))
 class App:
   def __init__(self, master):
     frame = Frame(master)
-    frame.pack()
+    frame.pack(side="left")
+
     self.button = Button(frame,
                          text="START", fg="green", bg="black",
                          command=self.write_slogan)
