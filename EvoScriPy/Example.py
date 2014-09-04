@@ -79,22 +79,18 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
 
 React.NumOfSamples = 6
 pK_cRNA_MS2.make(10)
-
-
-
-#pK_cRNA         = React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
-# pK_cRNA.make()
 s_r=range(React.NumOfSamples)
-# todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
+robot.spread(pK_cRNA_MS2, TeMag.select(s_r))
+
 Te_MagS_ActivateHeater(50).exec()
 Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
-
-
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
-
-robot.spread(pK_cRNA_MS2, TeMag.select(s_r))   #, robot.curArm().nTips
 exit()
-#Te_Mag.Incubate(Samples.select(s_r), time=10*60, mix_pippeting=True)
+
+# todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
+
+#Goal: Te_Mag.Incubate(Samples.select(s_r), time=10*60, mix_pippeting=True)
+
 robot.transfer(Samples.select(s_r), TeMag)
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 startTimer().exec()
