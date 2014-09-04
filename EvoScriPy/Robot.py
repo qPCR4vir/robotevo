@@ -194,7 +194,38 @@ class Robot:
 
         self.dropTips()
 
+     def spread(self, from_reactive, to_labware_region, vol=None, optimize=True ):
+        """
 
+        :param from_reactive: Reactive to spread
+        :param to_labware_region: Labware in which the destine well are selected
+        :param vol: if not, vol is set from the default of the source reactive
+        :param optimize: minimize zigzag of multipippeting
+        """
+        l=from_reactive.labware
+        to=to_labware_region.selected()
+        NumSamples=len(to)
+        vol= vol or from_reactive.minVol()
+        nt=self.curArm().nTips
+        nv= self.curArm().Tips[0].maxVol // vol # assume all tips equal
+        while NumSamples > 0:
+            if nt > NumSamples: nt=NumSamples
+            v=[vol*]
+
+        msg= "Spread: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
+              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos, len(pMix.components))
+        comment(msg).exec()
+
+
+
+     def aspiremultiwells(self, tips, reactive, vol=None):
+        if vol is None:
+            vol=reactive.minVol()
+        v=[0]*self.curArm().nTips
+        v[tip]=vol
+        reactive.autoselect() # reactive.labware.selectOnly([reactive.pos])
+        self.curArm().aspire(v,tipMask[tip])
+        aspirate(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
 
 
 

@@ -14,7 +14,8 @@ EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
                                                      arms=Robot.Robot.arm(4) ),
                                    EvoMode.EvoStdOut()
                                     ])
-
+robot=Robot.curRobot
+assert isinstance(robot,Robot.Robot)
 
 ElutionBuffer = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
 LysisBuffer   = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
@@ -31,7 +32,7 @@ Reactives     = Labware(EppRack16_2mL, Labware.Location(7,0),"Reactives")
 
 Eluat         = Labware(EppRack3x16R, Labware.Location(8,0),"Eluat")
 
-Proben        = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
+Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
 
 TeMg_Heat     = Labware(TeMag48, Labware.Location(14,0),"48 Pos Heat")
 TeMag         = Labware(TeMag48, Labware.Location(14,1),"48PosMagnet")
@@ -40,7 +41,7 @@ DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
 DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
 DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
-set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('E7')  ).exec()
+# set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('E7')  ).exec()
 
 B_liquidClass = "Buffer free DITi 1000-AVR"
 W_liquidClass = "AVR-Water free DITi 1000"
@@ -56,7 +57,11 @@ cRNA   = React.Reactive("Carrier RNA"                     , Reactives, pos=15, v
 pK_cRNA= React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
 
 React.NumOfSamples = 10
+s_r=range(React.NumOfSamples)
 pK_cRNA.make()
+robot.spread(pK_cRNA, TeMag.select(s_r), robot.curArm().nTips )
+
+ Samples.select(s_r)
 
 
 

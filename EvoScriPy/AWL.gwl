@@ -1,7 +1,10 @@
 B;Set_DITI_Counter2("DiTi 1000ul","25","2","53",0);
+B;Comment("preMix: 259.2 µL of ProtK+carrier RNA premix into Reactives[grid:7 site:0 well:11] from 2 components:");
 B;GetDITI2(3,"DiTi 1000ul",0,0,0,300);
+B;Comment("   1- 216.0 µL of Proteinase K from Reactives[grid:7 site:0 well:15]");
 B;Aspirate(1,"AVR-Water free DITi 1000","216.0","0","0","0",0,0,0,0,0,0,0,0,7,0,1,"0110002",0,0);
 B;Dispense(1,"AVR-Water free DITi 1000","216.0","0","0","0",0,0,0,0,0,0,0,0,7,0,1,"01100@0",0,0);
+B;Comment("   2- 43.2 µL of Carrier RNA from Reactives[grid:7 site:0 well:14]");
 B;Aspirate(2,"AVR-Water free DITi 1000","0","43.2","0","0",0,0,0,0,0,0,0,0,7,0,1,"0110001",0,0);
 B;Dispense(2,"AVR-Water free DITi 1000","0","43.2","0","0",0,0,0,0,0,0,0,0,7,0,1,"01100@0",0,0);
 B;DropDITI(3,22,6,0.0,300,0);
