@@ -96,7 +96,7 @@ class Te_MagS_Execution(T_Mag_Instr):
 
 
     class mix: #(Parametr):
-        def __init__(self, cycles, hh, mm, ss, z_pos):
+        def __init__(self, cycles, hh, mm, ss, z_pos=31):
             self.z_pos = z_pos
             self.ss = ss
             self.mm = mm
@@ -132,7 +132,7 @@ class Te_MagS_Execution(T_Mag_Instr):
             return "4:{:d} {:d}".format(int(self.position), int(self.z_pos))
 
     class command: #(Parametr):
-        def __init__(self,firmware_command="RPZ1"):
+        def __init__(self,firmware_command=""):     # example ="RPZ1" ???????
             self.firmware_command = firmware_command
 
         def __str__(self):
@@ -155,7 +155,7 @@ class Te_MagS_Execution(T_Mag_Instr):
         assert self.needs_allwd_lw == 0
         assert self.allowed_labware == ""
 
-        pr=self.exec_parameters + [Te_MagS_Execution.command()]
+        pr=self.exec_parameters     #  + [Te_MagS_Execution.command()]
         pr = ','.join( [str(cm) for cm in pr] )
 
         self.arg += [ expression(pr) , expression(self.needs_allwd_lw), expression(self.allowed_labware) ]
