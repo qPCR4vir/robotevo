@@ -176,7 +176,7 @@ class Robot:
      def makePreMix(self, pMix):
         l=pMix.labware
         msg= "preMix: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos, len(pMix.components))
+              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site+1, pMix.pos+1, len(pMix.components))
         comment(msg).exec()
         nc=len(pMix.components)
         assert nc <= self.curArm().nTips, \
@@ -187,7 +187,7 @@ class Robot:
         for i,react in enumerate(pMix.components):
             l=react.labware
             msg="   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                   i+1, react.minVol(), react.name,  l.label, l.location.grid, l.location.site, react.pos)
+                   i+1, react.minVol(), react.name,  l.label, l.location.grid, l.location.site+1, react.pos+1)
             comment(msg).exec()
             self.aspire(i,react)
             self.dispense(i,pMix,react.minVol())
@@ -210,10 +210,10 @@ class Robot:
         nv= self.curArm().Tips[0].maxVol // vol # assume all tips equal
         while NumSamples > 0:
             if nt > NumSamples: nt=NumSamples
-            v=[vol*]
+            #v=[vol*]
 
         msg= "Spread: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos, len(pMix.components))
+              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos+1, len(pMix.components))
         comment(msg).exec()
 
 
