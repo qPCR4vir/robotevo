@@ -108,6 +108,17 @@ class Labware:
             self.row=row
             self.col=col
 
+    def autoselect(self, offset, maxTips=1, replys=1):
+        nWells=self.type.nCol*self.type.nRow
+        assert nWells>offset, "Can not select to far"   # todo better msg
+        if self.type.conectedWells:
+            if nWells<maxTips: maxTips=nWells
+            self.selectOnly(range((nWells-maxTips)/2,maxTips))
+            return maxTips
+        else:
+            if maxTips > replys: maxTips=replys
+            self.selectOnly(range(offset,offset+maxTips))
+            return maxTips
 
     def offset(self, row, col=1):
         if isinstance(row, Labware.Position):

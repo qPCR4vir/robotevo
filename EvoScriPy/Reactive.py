@@ -27,7 +27,8 @@ class Reactive:
             NumSamples=NumOfSamples
         return self.volpersample * NumSamples * self.excess
 
-
+    def autoselect(self,maxTips=1):
+        return self.labware.autoselect(self.pos,maxTips,self.replys)
 
 class preMix(Reactive):
     def __init__(self, name, labware, pos, components, replys=1,
