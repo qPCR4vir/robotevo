@@ -159,19 +159,18 @@ class Robot:
      def aspire(self, tip, reactive, vol=None):
         if vol is None:
             vol=reactive.minVol()
-        v=[0]*self.arms[self.def_arm].nTips
+        v=[0]*self.curArm().nTips
         v[tip]=vol
-        reactive.labware.selectOnly([reactive.pos])
-        self.arms[self.def_arm].aspire(v,tipMask[tip])
+        reactive.autoselect() # reactive.labware.selectOnly([reactive.pos])
+        self.curArm().aspire(v,tipMask[tip])
         aspirate(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
 
      def dispense(self, tip, reactive, vol=None):
-        if vol is None:
-            vol=reactive.minVol()     # really ??
-        reactive.labware.selectOnly([reactive.pos])
-        v=[0]*self.arms[self.def_arm].nTips
+        vol= vol or reactive.minVol()     # really ??
+        reactive.autoselect() #reactive.labware.selectOnly([reactive.pos])
+        v=[0]*self.curArm().nTips
         v[tip]=vol
-        self.arms[self.def_arm].dispense(v,tipMask[tip])
+        self.curArm().dispense(v,tipMask[tip])
         dispense(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
 
      def makePreMix(self, pMix):
@@ -180,12 +179,19 @@ class Robot:
               pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos, len(pMix.components))
         comment(msg).exec()
         nc=len(pMix.components)
-        assert nc <= self.arms[self.def_arm].nTips, \
-            "Temporally the mix can not contain more than {:d} components.".format(self.arms[self.def_arm].nTips)
+        assert nc <= self.curArm().nTips, \
+            "Temporally the mix can not contain more than {:d} components.".format(self.curArm().nTips)
+
         self.getTips(tipsMask[nc])
+
         for i,react in enumerate(pMix.components):
+            l=react.labware
+            msg="   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
+                   i+1, react.minVol(), react.name,  l.label, l.location.grid, l.location.site, react.pos)
+            comment(msg).exec()
             self.aspire(i,react)
             self.dispense(i,pMix,react.minVol())
+
         self.dropTips()
 
 
