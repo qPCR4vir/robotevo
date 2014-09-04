@@ -196,41 +196,88 @@ class Robot:
 
         self.dropTips()
 
-     def spread(self, from_reactive, to_labware_region, vol=None, optimize=True ):
+     def spread(self, from_reactive, to_labware_region, Disp_V=None, optimize=True, NumSamples=None):
         """
 
+
+        :param NumSamples: Priorized   !!!! If true reset the selection
         :param from_reactive: Reactive to spread
         :param to_labware_region: Labware in which the destine well are selected
-        :param vol: if not, vol is set from the default of the source reactive
+        :param Disp_V: if not, Disp_V is set from the default of the source reactive
         :param optimize: minimize zigzag of multipippeting
         """
-        l=from_reactive.labware
+        assert isinstance(from_reactive,Reactive.Reactive),'A Reactive expected in from_reactive to spread'
+        assert isinstance(to_labware_region,Labware.Labware),'A Labware expected in to_labware_region to spread'
+
+        if NumSamples:
+            to_labware_region.selectOnly(range(NumSamples))
+        else:
+            if not to_labware_region.selected():
+                to_labware_region.selectOnly(range(Reactive.NumOfSamples))
+
         to=to_labware_region.selected()
         NumSamples=len(to)
-        vol= vol or from_reactive.minVol()
-        nt=self.curArm().nTips
-        nv= self.curArm().Tips[0].maxVol // vol # assume all tips equal
-        while NumSamples > 0:
-            if nt > NumSamples: nt=NumSamples
-            #v=[vol*]
+        SampleCnt=NumSamples
 
-        msg= "Spread: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site, pMix.pos+1, len(pMix.components))
+        Disp_V= Disp_V or from_reactive.volpersample
+
+        nt=self.curArm().nTips    # the number of tips to be used in each cycle of pippeting
+        if nt > SampleCnt: nt=SampleCnt
+
+        self.getTips(tipsMask[nt])
+
+        maxMultiDisp_N= self.curArm().Tips[0].maxVol // Disp_V # assume all tips equal
+
+        lf=from_reactive.labware
+        lt=to_labware_region
+        msg= "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}]:"\
+            .format( v=Disp_V,    n=from_reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=from_reactive.pos,
+                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
         comment(msg).exec()
+        availableDisp=0
 
 
+        while SampleCnt:
+            if nt > SampleCnt: nt=SampleCnt
+            if availableDisp==0:
+                dsp,rst=divmod(SampleCnt,nt)
+                if dsp > maxMultiDisp_N:
+                    dsp=maxMultiDisp_N
+                    vol=[Disp_V*dsp]*nt
+                    availableDisp=dsp
+                else:
+                    vol=[Disp_V*(dsp+1)]*rst + [Disp_V*dsp]*(nt-rst)
+                    availableDisp=dsp+bool(rst)
+                self.aspiremultiTips(nt,from_reactive,vol)
 
-     def aspiremultiwells(self, tips, reactive, vol=None):
-        if vol is None:
-            vol=reactive.minVol()
-        v=[0]*self.curArm().nTips
-        v[tip]=vol
-        reactive.autoselect() # reactive.labware.selectOnly([reactive.pos])
-        self.curArm().aspire(v,tipMask[tip])
-        aspirate(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
 
+            curSample=NumSamples-SampleCnt
+            sel=[to_labware_region.offsetAtParallelMove(to[sample]) for sample in range(curSample,curSample+nt)]
+            self.dispensemultiwells(nt,from_reactive.defLiqClass,to_labware_region.selectOnly(sel),[Disp_V]*nt)
+            availableDisp -=1
+            SampleCnt-=nt
+        self.dropTips()
 
+     def aspiremultiTips(self, tips, reactive, vol=None):
+        if not isinstance(vol,list):
+            vol=[vol]*tips
+        om=tipsMask[tips]
+        nt=reactive.autoselect(tips) # reactive.labware.selectOnly([reactive.pos])
+        ct=0
+        while ct<tips:
+            ft=ct+nt
+            ft= ft if ft<=tips else tips
+            m=tipsMask[ct]^tipsMask[ft]
+            self.curArm().aspire(vol,m)
+            v=vol[ct:ft]
+            aspirate(m,reactive.defLiqClass,v,reactive.labware).exec()
+            ct=ft
 
+     def dispensemultiwells(self, tips, liq_class,labware, vol):
+        if not isinstance(vol,list):
+            vol=[vol]*tips
+        om=tipsMask[tips]
+        dispense(tipsMask[tips],liq_class,vol,labware).exec()
 
 
 
