@@ -132,7 +132,7 @@ class Te_MagS_Execution(T_Mag_Instr):
             return "4:{:d} {:d}".format(int(self.position), int(self.z_pos))
 
     class command: #(Parametr):
-        def __init__(self,firmware_command=""):     # example ="RPZ1" ???????
+        def __init__(self,firmware_command):     # example ="RPZ1" ???????
             self.firmware_command = firmware_command
 
         def __str__(self):

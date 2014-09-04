@@ -153,8 +153,8 @@ class Robot:
             dropDITI(TIP_MASK).exec()
         return TIP_MASK
 
-     def make(self,what):
-        if isinstance(what,Reactive.preMix): self.makePreMix(what)
+     def make(self,what, NumSamples=None):
+        if isinstance(what,Reactive.preMix): self.makePreMix(what, NumSamples)
 
      def aspire(self, tip, reactive, vol=None):
         if vol is None:
@@ -173,10 +173,12 @@ class Robot:
         self.curArm().dispense(v,tipMask[tip])
         dispense(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
 
-     def makePreMix(self, pMix):
+     def makePreMix(self, pMix, NumSamples=None):
+        NumSamples = NumSamples or Reactive.NumOfSamples
+
         l=pMix.labware
         msg= "preMix: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-              pMix.minVol(), pMix.name, l.label, l.location.grid,l.location.site+1, pMix.pos+1, len(pMix.components))
+              pMix.minVol(NumSamples), pMix.name, l.label, l.location.grid,l.location.site+1, pMix.pos+1, len(pMix.components))
         comment(msg).exec()
         nc=len(pMix.components)
         assert nc <= self.curArm().nTips, \
@@ -187,10 +189,10 @@ class Robot:
         for i,react in enumerate(pMix.components):
             l=react.labware
             msg="   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                   i+1, react.minVol(), react.name,  l.label, l.location.grid, l.location.site+1, react.pos+1)
+                   i+1, react.minVol(NumSamples), react.name,  l.label, l.location.grid, l.location.site+1, react.pos+1)
             comment(msg).exec()
-            self.aspire(i,react)
-            self.dispense(i,pMix,react.minVol())
+            self.aspire(i,react,react.minVol(NumSamples))
+            self.dispense(i,pMix,react.minVol(NumSamples))
 
         self.dropTips()
 

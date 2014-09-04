@@ -77,8 +77,8 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                  ,defLiqClass=W_liquidClass)
 
-React.NumOfSamples = 10
-pK_cRNA_MS2.make()
+#React.NumOfSamples = 1
+pK_cRNA_MS2.make(10)
 
 exit()
 

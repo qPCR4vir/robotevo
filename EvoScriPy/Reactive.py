@@ -23,8 +23,7 @@ class Reactive:
         self.labware.Wells[self.pos].reactive=self
 
     def minVol(self, NumSamples=None):
-        if not NumSamples:
-            NumSamples=NumOfSamples
+        NumSamples = NumSamples or NumOfSamples
         return self.volpersample * NumSamples * self.excess
 
     def autoselect(self,maxTips=1):
@@ -37,16 +36,17 @@ class preMix(Reactive):
         vol=0
         for react in components:
             vol += react.volpersample
-            react.excess =  1 + ex/100
+            react.excess =  1 + ex/100      # todo revise! best to calculate at the moment of making?
         Reactive.__init__(self,name,labware,vol,pos,replys,defLiqClass,ex)
         self.components = components
 
-    def make(self):
+    def make(self, NumSamples=None):
         from Robot import curRobot
-        curRobot.make(self)
+        curRobot.make(self, NumSamples)
 
-    def compVol(self,index):
-        return self.components[index].minVol()
+    def compVol(self,index, NumSamples=None):
+        NumSamples = NumSamples or NumOfSamples
+        return self.components[index].minVol(NumSamples)
 
 
 
