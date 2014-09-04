@@ -217,6 +217,11 @@ class Labware:
         return sel
 
 
+class Cuvette(Labware):
+    pass
+
+class Te_Mag(Labware):
+    pass
 
 
 
