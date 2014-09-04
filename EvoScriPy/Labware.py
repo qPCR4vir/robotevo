@@ -177,10 +177,16 @@ class Labware:
 
     def posAtParallelMove(self, step):
         assert step < self.type.nCol * self.type.nRow , "too many steps!!"
-        nTips = EvoMode.CurEvo.Tip_tNum
+        from Robot import curRobot
+        #assert isinstance(curRobot,Robot.Robot)
+        nTips = curRobot.curArm().nTips
         SubPlateSize = nTips * self.type.nCol
         SubPlate = step // SubPlateSize
-        p = self.Position(row=SubPlate*nTips + step%nTips + 1, col=self.type.nCol - (step//nTips) % self.type.nCol )
+        tN_semiCol  = step // nTips
+        parit= (tN_semiCol//self.type.nCol)%2
+        pos_semiCol = self.type.nCol*parit + (tN_semiCol%self.type.nCol)*(-1)**parit + 1
+        p = self.Position(   row = SubPlate*nTips + step % nTips + 1,  col = pos_semiCol)
+                             #col = self.type.nCol - (step//nTips) % self.type.nCol )
         return p
 
     def offsetAtParallelMove(self, step):
