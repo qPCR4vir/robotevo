@@ -2,6 +2,7 @@ __author__ = 'qPCR4vir'
 
 import EvoMode
 from Instructions import *
+from Instructions_Te_MagS import *
 from Labware import *
 import Robot
 import Reactive as React
@@ -17,14 +18,14 @@ EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
 robot=Robot.curRobot
 assert isinstance(robot,Robot.Robot)
 
-ElutionBuffer = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
-LysisBuffer   = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
-BindingBuffer = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
-VEW1          = Labware(Trough_100ml, Labware.Location(22,3), "4-VEW1 Wash Buffe"   )
-#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,0), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
-VEW2          = Labware(Trough_100ml, Labware.Location(22,4), "5-VEW2-WashBuffer"   )
-BioWaste      = Labware(Trough_100ml, Labware.Location(22,5), "6-Waste"             )
-EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
+ElutBuf       = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
+LysBuf        = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
+BindBuf       = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
+#VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )
+#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,3), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
+#VEW2          = Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   )
+BioWaste      = Labware(Trough_100ml, Labware.Location(22,2), "6-Waste"             )
+#EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
 Unnused8      = Labware(Trough_100ml, Labware.Location(24,1), "8-Unnused"           )
 Unnused9      = Labware(Trough_100ml, Labware.Location(24,2), "9-Unnused"           )
 
@@ -48,20 +49,60 @@ W_liquidClass = "AVR-Water free DITi 1000"
 Std_liquidClass = "Water free dispense DiTi 1000"
 
 
+LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
+IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
+BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,defLiqClass=W_liquidClass)#todo change, define new in Evo
 
-IC_MS2 = React.Reactive("IC MS2 - bacterial phage culture", Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
-IC2    = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
-ElutBuf= React.Reactive("Elution Buffer"                  , ElutionBuffer,     volpersample=100 ,defLiqClass=B_liquidClass)
-ProtK  = React.Reactive("Proteinase K"                    , Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
-cRNA   = React.Reactive("Carrier RNA"                     , Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
-pK_cRNA= React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
+VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
+                                 Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
+                                                                                  volpersample=100 ,defLiqClass=B_liquidClass)
+VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
+                                 Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   ),
+                                                                                  volpersample=600 ,defLiqClass=B_liquidClass)
+EtOH80p         = React.Reactive("Ethanol 80%"                     ,
+                                 Labware(Trough_100ml, Labware.Location(24,0), "7-Ethanol 80%"   ),
+                                                                                  volpersample=600 ,defLiqClass=B_liquidClass)
+ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
+
+
+
+IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
+                                 Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
+ProtK           = React.Reactive("Proteinase K"                    ,
+                                 Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
+cRNA            = React.Reactive("Carrier RNA"                     ,
+                                 Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
+pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
+                                 Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
+                                 ,defLiqClass=W_liquidClass)
 
 React.NumOfSamples = 10
-s_r=range(React.NumOfSamples)
-pK_cRNA.make()
-robot.spread(pK_cRNA, TeMag.select(s_r), robot.curArm().nTips )
+pK_cRNA_MS2.make()
 
- Samples.select(s_r)
+exit()
+
+#pK_cRNA         = React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
+# pK_cRNA.make()
+s_r=range(React.NumOfSamples)
+# todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
+Te_MagS_ActivateHeater(50).exec()
+Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
+
+
+Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+robot.spread(pK_cRNA_MS2, TeMag.select(s_r), robot.curArm().nTips )
+
+#Te_Mag.Incubate(Samples.select(s_r), time=10*60, mix_pippeting=True)
+robot.transfer(Samples.select(s_r), TeMag)
+Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+startTimer().exec()
+waitTimer(timeSpan=10*60).exec()
+
+
+robot.transfer(TeMag.select(s_r),Eluat)
+
 
 
 
