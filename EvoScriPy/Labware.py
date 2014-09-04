@@ -77,6 +77,7 @@ class Well:
         self.vol = 0
         self.selFlag = False
         self.reactive = None
+        self.label   = ""
 
 
 class Labware:
