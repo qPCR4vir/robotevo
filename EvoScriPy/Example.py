@@ -77,10 +77,10 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                  ,defLiqClass=W_liquidClass)
 
-#React.NumOfSamples = 1
+React.NumOfSamples = 6
 pK_cRNA_MS2.make(10)
 
-exit()
+
 
 #pK_cRNA         = React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
 # pK_cRNA.make()
@@ -92,8 +92,8 @@ Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
 
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 
-robot.spread(pK_cRNA_MS2, TeMag.select(s_r), robot.curArm().nTips )
-
+robot.spread(pK_cRNA_MS2, TeMag.select(s_r))   #, robot.curArm().nTips
+exit()
 #Te_Mag.Incubate(Samples.select(s_r), time=10*60, mix_pippeting=True)
 robot.transfer(Samples.select(s_r), TeMag)
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
