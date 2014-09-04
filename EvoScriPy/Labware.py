@@ -77,11 +77,13 @@ class Well:
         self.vol = 0
         self.selFlag = False
         self.reactive = None
+        self.label   = ""
 
 
 class Labware:
     class Type:
-        def __init__(self, name, nRow, nCol=1, maxVol = None):
+        def __init__(self, name, nRow, nCol=1, maxVol = None, conectedWells=False):
+            self.conectedWells = conectedWells
             self.name = name
             self.nRow = nRow
             self.nCol = nCol
@@ -106,6 +108,17 @@ class Labware:
             self.row=row
             self.col=col
 
+    def autoselect(self, offset, maxTips=1, replys=1):
+        nWells=self.type.nCol*self.type.nRow
+        assert nWells>offset, "Can not select to far"   # todo better msg
+        if self.type.conectedWells:
+            if nWells<maxTips: maxTips=nWells
+            self.selectOnly(range((nWells-maxTips)/2,maxTips))
+            return maxTips
+        else:
+            if maxTips > replys: maxTips=replys
+            self.selectOnly(range(offset,offset+maxTips))
+            return maxTips
 
     def offset(self, row, col=1):
         if isinstance(row, Labware.Position):
@@ -136,19 +149,25 @@ class Labware:
     def clearSelection(self):
         for well in self.Wells:
             well.selFlag = False
+        return self
+
+    def selected(self):
+        return [well.offset for well in self.Wells if well.selFlag]
 
     def selectAll(self):
         for well in self.Wells:
             well.selFlag = True
+        return self
 
     def selectOnly(self,sel_idx_list):
         self.clearSelection()
         self.select(sel_idx_list)
+        return self
 
     def select(self, sel_idx_list):
         for i in sel_idx_list:
             self.Wells[i].selFlag = True
-
+        return self
 
     def newOffset(self, pos, offset ):
         return self.offset(pos.row,pos.col) + offset
@@ -201,7 +220,7 @@ class Labware:
 
 
 
-Trough_100ml  = Labware.Type("Trough 100ml", 8, maxVol=100000)
+Trough_100ml  = Labware.Type("Trough 100ml", 8, maxVol=100000,conectedWells=True )
 
 EppRack16_2mL = Labware.Type("Tube Eppendorf 2mL 16 Pos", 16, maxVol=2000)
 
@@ -211,16 +230,16 @@ EppRack3x16   = Labware.Type("Tube Eppendorf 3x 16 Pos", 3*16, maxVol=1500)
 
 TeMag48       = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
 
-CleanerSWS    = Labware.Type("Washstation 2Grid Cleaner short"  , 8, maxVol=100000)
+CleanerSWS    = Labware.Type("Washstation 2Grid Cleaner short"  , 8, maxVol=100000,conectedWells=True)
 WashCleanerS  = Labware(CleanerSWS, Labware.Location(22,0))
 
-WasteWS       = Labware.Type("Washstation 2Grid Waste"          , 8, maxVol=100000)
+WasteWS       = Labware.Type("Washstation 2Grid Waste"          , 8, maxVol=100000,conectedWells=True)
 WashWaste     = Labware(WasteWS,    Labware.Location(22,1))
 
-CleanerLWS    = Labware.Type("Washstation 2Grid Cleaner long"   , 8, maxVol=100000)
+CleanerLWS    = Labware.Type("Washstation 2Grid Cleaner long"   , 8, maxVol=100000,conectedWells=True)
 WashCleanerL  = Labware(CleanerLWS, Labware.Location(22,2))
 
-DiTi_Waste    = Labware.Type("Washstation 2Grid DiTi Waste"     , 8, maxVol=100000)
+DiTi_Waste    = Labware.Type("Washstation 2Grid DiTi Waste"     , 8, maxVol=100000,conectedWells=True)
 DiTiWaste     = Labware(DiTi_Waste,Labware.Location(22,6))
 
 DiTi_1000ul   = Labware.Type("DiTi 1000ul"     , 8,12, maxVol=970)
