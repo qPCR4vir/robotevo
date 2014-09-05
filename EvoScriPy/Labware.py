@@ -113,7 +113,7 @@ class Labware:
         assert nWells>offset, "Can not select to far"   # todo better msg
         if self.type.conectedWells:
             if nWells<maxTips: maxTips=nWells
-            self.selectOnly(range((nWells-maxTips)/2,maxTips))
+            self.selectOnly(range((nWells-maxTips)//2,maxTips))
             return maxTips
         else:
             if maxTips > replys: maxTips=replys
