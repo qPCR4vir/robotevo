@@ -52,7 +52,7 @@ Std_liquidClass = "Water free dispense DiTi 1000"
 LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
 IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
 BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,defLiqClass=W_liquidClass)#todo change, define new in Evo
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,replys=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
 
 VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                  Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
@@ -77,10 +77,14 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                  ,defLiqClass=W_liquidClass)
 
-React.NumOfSamples = 6
-pK_cRNA_MS2.make(10)
+React.NumOfSamples = 35
+pK_cRNA_MS2.make()
 s_r=range(React.NumOfSamples)
 robot.spread(pK_cRNA_MS2, TeMag.select(s_r))
+robot.spread(B_Beads,TeMag.select(s_r))
+robot.spread(LysisBuffer,TeMag.select(s_r))
+robot.spread(ElutionBuffer,Eluat)
+
 
 Te_MagS_ActivateHeater(50).exec()
 Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
