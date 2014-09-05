@@ -176,17 +176,23 @@ class Labware:
         return self.position(self.newOffset(pos,offset))
 
     def posAtParallelMove(self, step):
-        assert step < self.type.nCol * self.type.nRow , "too many steps!!"
+        nR, nC = self.type.nRow, self.type.nCol
+        assert step < nC * nR , "too many steps!!"
         from Robot import curRobot
         #assert isinstance(curRobot,Robot.Robot)
         nTips = curRobot.curArm().nTips
-        SubPlateSize = nTips * self.type.nCol
+        SubPlateSize = nTips * nC
         SubPlate = step // SubPlateSize
         tN_semiCol  = step // nTips
-        parit= (tN_semiCol//self.type.nCol)%2
-        pos_semiCol = self.type.nCol*parit + (tN_semiCol%self.type.nCol)*(-1)**parit + 1
+        parit= (tN_semiCol//nC)%2
+        pos_semiCol = nC*parit + (tN_semiCol%nC)*(-1)**parit + 1
+
         p = self.Position(   row = SubPlate*nTips + step % nTips + 1,  col = pos_semiCol)
                              #col = self.type.nCol - (step//nTips) % self.type.nCol )
+        msg = "error in calculation of parallel row {:d}>{:d}".format(p.row,nR)
+        assert 0<p.row <= nR, msg
+        msg = "error in calculation of parallel col {:d}>{:d}".format(p.col,nC)
+        assert 0<p.col <= nC, msg
         return p
 
     def offsetAtParallelMove(self, step):
@@ -200,6 +206,27 @@ class Labware:
         """
         :return: See A.15.3, pag. A-122
         file:///C:/Prog/RobotEvo/FreedomEVOwareStandardV2.4SP1-2011.ExtendedDeviceSupportManual.pdf
+        Many of the advanced worklist commands have a parameter called wellSelection.
+        wellSelection is a string which specifies the wells (tips) which should be used for
+        the command.
+        Characters 1 and 2 of the string specify the number of wells in the x-direction in
+        hexadecimal. Characters 3 and 4 of the the string specify the number of wells in
+        the y-direction in hexadecimal. For example, 12 x 8 (96 wells) = 0C08.
+        All following characters are used for the well selection, whereby each character
+        specifies the well selection for a group of 7 adjacent wells using a specially
+        adapted bitmap system. Only 7 bits are used per byte [RANGE 0-127 !!!] instead of 8 to avoid screen
+        and printer font compatibility problems. Using the 7-bit system, 14 characters are
+        needed to represent the well selection for 96 wells (plus characters 1 to 4, total of
+        18 characters) and 55 characters are needed to represent the well selection for
+        384 wells (total of 59 characters).
+        In addition, since most ANSI characters below ANSI 32 are non-printable (nonhuman-
+        readable), decimal 48 (ANSI value for “0”) is added to the value
+        [RANGE 48-175 !!! 144 have undefined Unicode !!!]  of the
+        bitmap to make it easier to read, send by eMail etc. The following shows some
+        examples for character 5 of the well selection string for a 96-well microplate in
+        landcape orientation.
+        Character 5 is responsible for the first group of 7 wells
+
         this function stores 7 bit per character in the selection string
         the first 2 characters are the number of wells in x direction (columns) in hexadecimal.
         the characters 3 and 4 are the number of wells in y direction (rows) in hexadecimal.
@@ -209,14 +236,15 @@ class Labware:
         X = self.type.nCol
         Y = self.type.nRow
         sel = "{:02X}{:02X}".format (X,Y)
+        #sel=sel.encode('ascii')
         bitMask=0
-        null = ord('0')
+        null = 48 # ord('0')
         bit=0
         for w in self.Wells:
             bit = w.offset % 7
             if w.selFlag: bitMask |=  (1<<bit)
             if bit == 6 :
-                sel+= chr(null + bitMask)
+                sel += chr(null + bitMask)
                 bitMask = 0
         if bit != 6:
             sel+= chr(null + bitMask)
