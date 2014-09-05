@@ -32,9 +32,9 @@ class expr(EvoTypes):
         if isinstance(self.data,list):
             d=self.dim-len(self.data)
             assert (d>=0)
-            return [expression(v) for v in self.data+[0]*d]
+            return [integer(0) if v is None else expression(v) for v in self.data]+[integer(0)]*d
         else:
-            return [expression(self.data)]*self.dim
+            return [integer(0) if self.data is None else expression(self.data) ]*self.dim
 
 class string2(EvoTypes):
     pass
