@@ -36,11 +36,11 @@ class multiEvo(EvoMode):
 class inFile (EvoString):
     def __init__(self, filename):
         self.filename=filename
-        self.f = open (filename,'w')
+        self.f = open (filename,'wb')
 
     def exec(self, instr):
-        s=EvoString.exec(self,instr) + "\n"
-        self.f.write(s)
+        s=EvoString.exec(self,instr) + "\r\n"
+        self.f.write(s.encode('Latin-1'))
         return s   # or f ?
 
     def done(self):
@@ -59,7 +59,7 @@ class inFile (EvoString):
 
 class AdvancedWorkList (inFile):
     def exec(self, instr):
-        self.f.write("B;")
+        self.f.write("B;".encode('Latin-1'))
         return inFile.exec(self,instr)
 
 class ScriptBody (inFile):
@@ -80,7 +80,7 @@ class EvoScript (ScriptBody):
         if self.templateNotAdded:
             from Robot import curRobot
             for line in curRobot.worktable.template:
-                self.f.write(line)
+                self.f.write((line[:-1]+"\r\n").encode('Latin-1'))
             self.templateNotAdded=False
         ScriptBody.exec(self,instr)
 
