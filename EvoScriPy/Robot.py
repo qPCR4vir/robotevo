@@ -261,17 +261,18 @@ class Robot:
      def aspiremultiTips(self, tips, reactive, vol=None):
         if not isinstance(vol,list):
             vol=[vol]*tips
-        om=tipsMask[tips]
-        nt=reactive.autoselect(tips) # reactive.labware.selectOnly([reactive.pos])
-        ct=0
-        while ct<tips:
-            ft=ct+nt
-            ft= ft if ft<=tips else tips
-            m=tipsMask[ct]^tipsMask[ft]
-            self.curArm().aspire(vol,m)
-            v=vol[ct:ft]
-            aspirate(m,reactive.defLiqClass,v,reactive.labware).exec()
-            ct=ft
+        mask=tipsMask[tips]
+        nTip=reactive.autoselect(tips)
+        asp=aspirate(mask,reactive.defLiqClass,vol,reactive.labware)
+        curTip=0
+        while curTip<tips:
+            nextTip=curTip+nTip
+            nextTip= nextTip if nextTip<=tips else tips
+            mask=tipsMask[curTip]^tipsMask[nextTip]
+            self.curArm().aspire(vol,mask)
+            asp.tipMask=mask
+            asp.exec()
+            curTip=nextTip
 
      def dispensemultiwells(self, tips, liq_class,labware, vol):
         if not isinstance(vol,list):
