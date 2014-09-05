@@ -1,0 +1,13 @@
+[ScriptInfo]
+StartLine=1
+EndLine=6
+RobotMoveDirty=0
+CurrentLine=4
+[UserQueries]
+Queries=0
+[LoopCounters]
+Counters=1
+Counter1=LOOP_DiTirückwärts;2
+[Variables]
+VarCount=1
+Variable1=LAST_ERROR_LINE;4
