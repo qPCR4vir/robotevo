@@ -113,7 +113,7 @@ class Labware:
         assert nWells>offset, "Can not select to far"   # todo better msg
         if self.type.conectedWells:
             if nWells<maxTips: maxTips=nWells
-            self.selectOnly(range((nWells-maxTips)//2,maxTips))
+            self.selectOnly(range((nWells-maxTips)//2,(nWells-maxTips)//2+maxTips))
             return maxTips
         else:
             if maxTips > replys: maxTips=replys
@@ -184,8 +184,8 @@ class Labware:
         SubPlateSize = nTips * nC
         SubPlate = step // SubPlateSize
         tN_semiCol  = step // nTips
-        parit= (tN_semiCol//nC)%2
-        pos_semiCol = nC*parit + (tN_semiCol%nC)*(-1)**parit + 1
+        parit= (SubPlate)%2
+        pos_semiCol = nC*parit + (tN_semiCol%nC)*(-1)**parit + 1-parit
 
         p = self.Position(   row = SubPlate*nTips + step % nTips + 1,  col = pos_semiCol)
                              #col = self.type.nCol - (step//nTips) % self.type.nCol )
