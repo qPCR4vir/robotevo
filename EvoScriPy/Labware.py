@@ -263,9 +263,9 @@ Trough_100ml  = Labware.Type("Trough 100ml", 8, maxVol=100000,conectedWells=True
 
 EppRack16_2mL = Labware.Type("Tube Eppendorf 2mL 16 Pos", 16, maxVol=2000)
 
-EppRack3x16R  = Labware.Type("Tube Eppendorf 3x 16 PosR", 3*16, maxVol=1500)
+EppRack3x16R  = Labware.Type("Tube Eppendorf 3x 16 PosR", 16,3, maxVol=1500)
 
-EppRack3x16   = Labware.Type("Tube Eppendorf 3x 16 Pos", 3*16, maxVol=1500)
+EppRack3x16   = Labware.Type("Tube Eppendorf 3x 16 Pos", 16,3, maxVol=1500)
 
 TeMag48       = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
 
