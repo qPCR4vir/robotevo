@@ -76,15 +76,17 @@ class Robot:
                 if TIP_MASK & (1<<i):
                     assert tip is not None, "No tip in position "+str(i)
                     nv = tip.vol + vol[i]
-                    if nv > tip.maxVol: raise 'To much Vol in tip '+str(i)
-                    tip.vol = nv
+                    if nv > tip.maxVol: raise BaseException('To much Vol in tip '+str(i+1)+  ' V=' +str(tip.vol)+  '+' +str(vol[i]))
+                    self.Tips[i].vol = nv
 
         def dispense(self, vol, TIP_MASK=-1): # todo more checks
             if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
             for i,tip in enumerate(self.Tips):
                 if TIP_MASK & (1<<i):
                     if tip == None: raise "No tip in position "+str(i)
-                    tip.vol += vol[i]
+                    nv = tip.vol - vol[i]
+                    assert nv >= 0, 'To few Vol in tip '  +str(i+1)+  ' V=' +str(tip.vol)+  '-' +str(vol[i])
+                    self.Tips[i].vol = nv
 
 
      class ProtocolStep:
@@ -278,7 +280,8 @@ class Robot:
         if not isinstance(vol,list):
             vol=[vol]*tips
         om=tipsMask[tips]
-        dispense(tipsMask[tips],liq_class,vol,labware).exec()
+        self.curArm().dispense(vol,om)
+        dispense(om,liq_class,vol,labware).exec()
 
 
 

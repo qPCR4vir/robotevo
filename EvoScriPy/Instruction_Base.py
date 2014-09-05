@@ -8,15 +8,11 @@ supportVirtualRobot=True  # todo explore this idea ! (problems with "asynchronou
 class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
-    #def __eq__(self, other):
 
     def __str__(self): # todo implement exceptions
         return str(self.data)
 
 class string1(EvoTypes):
-    #def __init__(self, data):
-    #   EvoTypes.__init__(self,data)
-
     def __str__(self):
         return '"'+ str(self.data) + '"'
 
