@@ -76,7 +76,8 @@ class Robot:
                 if TIP_MASK & (1<<i):
                     assert tip is not None, "No tip in position "+str(i)
                     nv = tip.vol + vol[i]
-                    if nv > tip.maxVol: raise BaseException('To much Vol in tip '+str(i+1)+  ' V=' +str(tip.vol)+  '+' +str(vol[i]))
+                    if nv > tip.maxVol:
+                        raise BaseException('To much Vol in tip '+str(i+1)+  ' V=' +str(tip.vol)+  '+' +str(vol[i]))
                     self.Tips[i].vol = nv
 
         def dispense(self, vol, TIP_MASK=-1): # todo more checks
@@ -91,16 +92,20 @@ class Robot:
 
      class ProtocolStep:
         pass
-
      class makeMix(ProtocolStep):
         pass
-
      class distrReactive(ProtocolStep):
         pass
-
      class Transfer(ProtocolStep):
         def __init__(self, src, dest, vol):
             pass
+     class Collect(ProtocolStep):
+        def __init__(self, src, dest, vol):
+            pass
+     class Waste(Collect):
+        def __init__(self, src, dest, vol):
+            pass
+
 
      def __init__(self, arms=None, nTips=def_nTips,
                  index=Pippet.LiHa1 , workingTips=None,
@@ -174,6 +179,30 @@ class Robot:
         v[tip]=vol
         self.curArm().dispense(v,tipMask[tip])
         dispense(tipMask[tip],reactive.defLiqClass,v,reactive.labware).exec()
+
+     def aspiremultiTips(self, tips, reactive, vol=None):
+        if not isinstance(vol,list):
+            vol=[vol]*tips
+        mask=tipsMask[tips]
+        nTip=reactive.autoselect(tips)
+        asp=aspirate(mask,reactive.defLiqClass,vol,reactive.labware)
+        curTip=0
+        while curTip<tips:
+            nextTip=curTip+nTip
+            nextTip= nextTip if nextTip<=tips else tips
+            mask=tipsMask[curTip]^tipsMask[nextTip]
+            self.curArm().aspire(vol,mask)
+            asp.tipMask=mask
+            asp.exec()
+            curTip=nextTip
+
+     def dispensemultiwells(self, tips, liq_class,labware, vol):
+        if not isinstance(vol,list):
+            vol=[vol]*tips
+        om=tipsMask[tips]
+        self.curArm().dispense(vol,om)
+        dispense(om,liq_class,vol,labware).exec()
+
 
      def makePreMix(self, pMix, NumSamples=None):
         NumSamples = NumSamples or Reactive.NumOfSamples
@@ -260,28 +289,7 @@ class Robot:
             SampleCnt-=nt
         self.dropTips()
 
-     def aspiremultiTips(self, tips, reactive, vol=None):
-        if not isinstance(vol,list):
-            vol=[vol]*tips
-        mask=tipsMask[tips]
-        nTip=reactive.autoselect(tips)
-        asp=aspirate(mask,reactive.defLiqClass,vol,reactive.labware)
-        curTip=0
-        while curTip<tips:
-            nextTip=curTip+nTip
-            nextTip= nextTip if nextTip<=tips else tips
-            mask=tipsMask[curTip]^tipsMask[nextTip]
-            self.curArm().aspire(vol,mask)
-            asp.tipMask=mask
-            asp.exec()
-            curTip=nextTip
 
-     def dispensemultiwells(self, tips, liq_class,labware, vol):
-        if not isinstance(vol,list):
-            vol=[vol]*tips
-        om=tipsMask[tips]
-        self.curArm().dispense(vol,om)
-        dispense(om,liq_class,vol,labware).exec()
 
 
 
