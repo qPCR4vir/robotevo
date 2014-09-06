@@ -188,12 +188,21 @@ class Labware:
         pos_semiCol = nC*parit + (tN_semiCol%nC)*(-1)**parit + 1-parit
 
         p = self.Position(   row = SubPlate*nTips + step % nTips + 1,  col = pos_semiCol)
-                             #col = self.type.nCol - (step//nTips) % self.type.nCol )
+
         msg = "error in calculation of parallel row {:d}>{:d}".format(p.row,nR)
         assert 0<p.row <= nR, msg
         msg = "error in calculation of parallel col {:d}>{:d}".format(p.col,nC)
         assert 0<p.col <= nC, msg
         return p
+
+    def parallelOrder(self,original=None):
+        original= original or self.selected()
+        assert original
+        if isinstance(original,int):
+            assert 0<original<=len(self.Wells)
+            original=range(original)
+        assert not isinstance(original,list)
+        return [self.offset(self.posAtParallelMove(offset)) for offset in original]
 
     def offsetAtParallelMove(self, step):
         p = self.posAtParallelMove(step)
@@ -235,8 +244,7 @@ class Labware:
         """
         X = self.type.nCol
         Y = self.type.nRow
-        sel = "{:02X}{:02X}".format (X,Y)
-        #sel=sel.encode('ascii')
+        sel = "{:02X}{:02X}".format (X,Y)        #sel=sel.encode('ascii')
         bitMask=0
         null = 48 # ord('0')
         bit=0
