@@ -272,7 +272,7 @@ class Robot:
             if nt > SampleCnt: nt=SampleCnt
             if availableDisp==0:
                 dsp,rst=divmod(SampleCnt,nt)
-                if dsp > maxMultiDisp_N:
+                if dsp >= maxMultiDisp_N:
                     dsp=maxMultiDisp_N
                     vol=[Disp_V*dsp]*nt
                     availableDisp=dsp
