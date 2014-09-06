@@ -6,7 +6,6 @@ from Instructions_Te_MagS import *
 from Labware import *
 import Robot
 import Reactive as React
-# from Reactive import *
 
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
@@ -21,16 +20,11 @@ assert isinstance(robot,Robot.Robot)
 ElutBuf       = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
 LysBuf        = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
 BindBuf       = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
-#VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )
-#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,3), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
-#VEW2          = Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   )
 BioWaste      = Labware(Trough_100ml, Labware.Location(22,2), "6-Waste"             )
-#EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
 Unnused8      = Labware(Trough_100ml, Labware.Location(24,1), "8-Unnused"           )
 Unnused9      = Labware(Trough_100ml, Labware.Location(24,2), "9-Unnused"           )
 
 Reactives     = Labware(EppRack16_2mL, Labware.Location(7,0),"Reactives")
-
 Eluat         = Labware(EppRack3x16R, Labware.Location(8,0),"Eluat")
 
 Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
@@ -56,13 +50,13 @@ B_Beads         = React.Reactive("B-Beads"                         , Reactives, 
 
 VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                  Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
-                                                                                  volpersample=100 ,defLiqClass=B_liquidClass)
+                                 volpersample=100 ,defLiqClass=B_liquidClass)
 VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
                                  Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   ),
-                                                                                  volpersample=600 ,defLiqClass=B_liquidClass)
+                                 volpersample=600 ,defLiqClass=B_liquidClass)
 EtOH80p         = React.Reactive("Ethanol 80%"                     ,
                                  Labware(Trough_100ml, Labware.Location(24,0), "7-Ethanol 80%"   ),
-                                                                                  volpersample=600 ,defLiqClass=B_liquidClass)
+                                 volpersample=600 ,defLiqClass=B_liquidClass)
 ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
 
 
@@ -77,18 +71,29 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                  ,defLiqClass=W_liquidClass)
 
-React.NumOfSamples = 35
-pK_cRNA_MS2.make()
-s_r=range(React.NumOfSamples)
-robot.spread(pK_cRNA_MS2, TeMag.select(s_r))
-robot.spread(B_Beads,TeMag.select(s_r))
-robot.spread(LysisBuffer,TeMag.select(s_r))
-robot.spread(ElutionBuffer,Eluat)
-
-
 Te_MagS_ActivateHeater(50).exec()
 Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
+React.NumOfSamples = 35
+s_r=range(React.NumOfSamples)
+
+pK_cRNA_MS2.make()
+robot.spread  (  pK_cRNA_MS2,        TeMag.select(s_r))
+robot.transfer(  Samples.select(s_r),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
+robot.spread  (  LysisBuffer,        TeMag.select(s_r))
+startTimer().exec()
+waitTimer(timeSpan=10*60)
+
+robot.spread( B_Beads,      TeMag.select(s_r))
+robot.spread( BindingBuffer,TeMag.select(s_r))
+subroutine("..\Scripts\avr_GetTips1000.esc",subroutine.Continues).exec()
+
+subroutine("..\Scripts\avr_GetTips1000.esc",subroutine.Waits_previous).exec()
+robot.waste(TeMag.select(s_r))
+
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+
+robot.spread( ElutionBuffer,Eluat )
 exit()
 
 # todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
@@ -180,8 +185,10 @@ LOp+=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.Var
 Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pippet.LiHa1)
 
 print("\n done")
-
-
+#VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )
+#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,3), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
+#VEW2          = Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   )
+#EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
 
 
 
