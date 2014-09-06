@@ -289,7 +289,168 @@ class Robot:
             SampleCnt-=nt
         self.dropTips()
 
+     def transfer(self, from_labware_region, to_labware_region, Disp_V, LC,
+                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
+        """
 
+
+        :param NumSamples: Priorized   !!!! If true reset the selection
+        :param from_reactive: Reactive to spread
+        :param to_labware_region: Labware in which the destine well are selected
+        :param Disp_V: if not, Disp_V is set from the default of the source reactive
+        :param optimize: minimize zigzag of multipippeting
+        """
+        assert isinstance(from_labware_region,Labware.Labware),'A Labware expected in from_labware_region to transfer'
+        assert isinstance(  to_labware_region,Labware.Labware),'A Labware expected in to_labware_region to transfer'
+        assert isinstance(LC,tuple)
+
+        if NumSamples:              # todo  select convenient def
+            oriSel=range(NumSamples)
+            dstSel=range(NumSamples)
+        else:
+            oriSel=  to_labware_region.selected()
+            dstSel=from_labware_region.selected()
+
+            if not dstSel:
+                if not oriSel:
+                    oriSel=range(Reactive.NumOfSamples)
+                    dstSel=range(Reactive.NumOfSamples)
+                else:
+                    dstSel=oriSel
+            else:
+                if not oriSel:
+                    oriSel=dstSel
+                else:
+                    l=min(len(oriSel,dstSel)) #todo transfer the minimun of the selected ???? Best reise error
+                    oriSel=oriSel[:l]
+                    dstSel=dstSel[:l]
+        if optimizeFrom: oriSel=from_labware_region.parallelOrder(oriSel)
+        if optimizeTo  : dstSel=  to_labware_region.parallelOrder(dstSel)
+
+        NumSamples=len(dstSel)
+        SampleCnt=NumSamples
+
+        assert isinstance(Disp_V,(int,float))
+        nt=self.curArm().nTips    # the number of tips to be used in each cycle of pippeting
+        if nt > SampleCnt: nt=SampleCnt
+
+        self.getTips(tipsMask[nt])
+
+        lf=from_labware_region
+        lt=  to_labware_region
+        msg= "Transfer: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] into {to:s}[grid:{tg:d} site:{ts:d}]:"\
+            .format( v=Disp_V,    n=lf.label, fg=lf.location.grid, fs=lf.location.site,
+                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
+        comment(msg).exec()
+        Asp=aspirate(tipsMask[nt],LC[0],Disp_V,from_labware_region)
+        Dst=dispense(tipsMask[nt],LC[1],Disp_V,  to_labware_region)
+        while SampleCnt:
+            curSample=NumSamples-SampleCnt
+            if nt > SampleCnt:
+                nt=SampleCnt
+                Asp.tipMask=tipsMask[nt]
+                Dst.tipMask=tipsMask[nt]
+
+            self.getTips(tipsMask[nt])
+            Asp.labware.selectOnly(oriSel[curSample:curSample+nt])
+            Asp.exec()
+
+            Dst.labware.selectOnly(dstSel[curSample:curSample+nt])
+            Dst.exec()
+            self.dropTips()
+
+            SampleCnt-=nt
+        self.dropTips()
+        Asp.labware.selectOnly(oriSel)
+        Dst.labware.selectOnly(dstSel)
+        return oriSel,dstSel
+
+     def waste(self, from_labware_region,LC, vol,optimize=True):
+        assert isinstance(from_labware_region,Labware.Labware),'A Labware expected in from_labware_region to transfer'
+        assert isinstance(vol,(int,float))
+              # todo  select convenient def
+        oriSel=from_labware_region.selected()
+        if optimize: oriSel=from_labware_region.parallelOrder(oriSel)
+        to_waste=BioWaste    !!!! ver
+        NumSamples=len(oriSel)
+        SampleCnt=NumSamples
+
+        assert isinstance(vol,(int,float))
+        nt=self.curArm().nTips    # the number of tips to be used in each cycle of pippeting
+        if nt > SampleCnt: nt=SampleCnt
+
+        self.getTips(tipsMask[nt])
+
+        lf=from_labware_region
+        msg= "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}]:"\
+            .format( v=vol,    n=lf.label, fg=lf.location.grid, fs=lf.location.site )
+        comment(msg).exec()
+        Asp=aspirate(tipsMask[nt],LC[0], vol,from_labware_region)
+        Dst=dispense(tipsMask[nt],LC[1], vol,  to_waste)
+        while SampleCnt:
+            curSample=NumSamples-SampleCnt
+            if nt > SampleCnt:
+                nt=SampleCnt
+                Asp.tipMask=tipsMask[nt]
+                Dst.tipMask=tipsMask[nt]
+
+            self.getTips(tipsMask[nt])
+            Asp.labware.selectOnly(oriSel[curSample:curSample+nt])
+            Asp.exec()
+
+            Dst.labware.selectOnly(dstSel[curSample:curSample+nt])
+            Dst.exec()
+            self.dropTips()
+
+            SampleCnt-=nt
+        self.dropTips()
+        Asp.labware.selectOnly(oriSel)
+        Dst.labware.selectOnly(dstSel)
+        return oriSel,dstSel
+
+   
+     def mix(self, from_labware_region,LC, vol,optimize=True):
+        assert isinstance(from_labware_region,Labware.Labware),'A Labware expected in from_labware_region to transfer'
+        assert isinstance(vol,(int,float))
+              # todo  select convenient def
+        oriSel=from_labware_region.selected()
+        if optimize: oriSel=from_labware_region.parallelOrder(oriSel)
+        to_waste=BioWaste    !!!! ver
+        NumSamples=len(oriSel)
+        SampleCnt=NumSamples
+
+        assert isinstance(vol,(int,float))
+        nt=self.curArm().nTips    # the number of tips to be used in each cycle of pippeting
+        if nt > SampleCnt: nt=SampleCnt
+
+        self.getTips(tipsMask[nt])
+
+        lf=from_labware_region
+        msg= "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}]:"\
+            .format( v=vol,    n=lf.label, fg=lf.location.grid, fs=lf.location.site )
+        comment(msg).exec()
+        Asp=aspirate(tipsMask[nt],LC[0], vol,from_labware_region)
+        Dst=dispense(tipsMask[nt],LC[1], vol,  to_waste)
+        while SampleCnt:
+            curSample=NumSamples-SampleCnt
+            if nt > SampleCnt:
+                nt=SampleCnt
+                Asp.tipMask=tipsMask[nt]
+                Dst.tipMask=tipsMask[nt]
+
+            self.getTips(tipsMask[nt])
+            Asp.labware.selectOnly(oriSel[curSample:curSample+nt])
+            Asp.exec()
+
+            Dst.labware.selectOnly(dstSel[curSample:curSample+nt])
+            Dst.exec()
+            self.dropTips()
+
+            SampleCnt-=nt
+        self.dropTips()
+        Asp.labware.selectOnly(oriSel)
+        Dst.labware.selectOnly(dstSel)
+        return oriSel,dstSel
 
 
 
