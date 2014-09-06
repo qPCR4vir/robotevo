@@ -20,7 +20,7 @@ class Tip:
 
 
 class Robot:
-    class arm:
+    class Arm:
         DiTi = 0
         Fixed = 1
 
@@ -43,12 +43,14 @@ class Robot:
             if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
-                    if tp is not None: raise "Tip already in position " + str(i)
+                    if tp is not None:
+                        raise "Tip already in position " + str(i)
                     self.Tips[i] = Tip(maxVol)
             return tip_mask
 
         def getMoreTips(self, tip_mask=-1, maxVol=1000):
-            if tip_mask == -1: tip_mask = tipsMask[self.nTips]
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp:  # already in position
@@ -57,23 +59,25 @@ class Robot:
                         self.Tips[i] = Tip(maxVol)
             return tip_mask
 
-        def drop(self, TIP_MASK=-1):
+        def drop(self, tip_mask=-1):
             """
             :rtype : True if actually ned to be drooped
             """
-            if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
-                if TIP_MASK & (1 << i):
+                if tip_mask & (1 << i):
                     if tp:  # in position
                         self.Tips[i] = None
                     else:
-                        TIP_MASK ^= (1 << i)  # already drooped
-            return TIP_MASK
+                        tip_mask ^= (1 << i)  # already drooped
+            return tip_mask
 
-        def aspire(self, vol, TIP_MASK=-1):  # todo more checks
-            if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
+        def aspire(self, vol, tip_mask=-1):  # todo more checks
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
             for i, tip in enumerate(self.Tips):
-                if TIP_MASK & (1 << i):
+                if tip_mask & (1 << i):
                     assert tip is not None, "No tip in position " + str(i)
                     nv = tip.vol + vol[i]
                     if nv > tip.maxVol:
@@ -81,11 +85,13 @@ class Robot:
                             'To much Vol in tip ' + str(i + 1) + ' V=' + str(tip.vol) + '+' + str(vol[i]))
                     self.Tips[i].vol = nv
 
-        def dispense(self, vol, TIP_MASK=-1):  # todo more checks
-            if TIP_MASK == -1:  TIP_MASK = tipsMask[self.nTips]
+        def dispense(self, vol, tip_mask=-1):  # todo more checks
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
             for i, tip in enumerate(self.Tips):
-                if TIP_MASK & (1 << i):
-                    if tip == None: raise "No tip in position " + str(i)
+                if tip_mask & (1 << i):
+                    if tip is None:
+                        raise "No tip in position " + str(i)
                     nv = tip.vol - vol[i]
                     assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tip.vol) + '-' + str(vol[i])
                     self.Tips[i].vol = nv
@@ -115,7 +121,7 @@ class Robot:
 
     def __init__(self, arms=None, nTips=def_nTips,
                  index=Pippet.LiHa1, workingTips=None,
-                 tipsType=arm.DiTi, templateFile=None):
+                 tipsType=Arm.DiTi, templateFile=None):
         """
 
         :param arm:
@@ -124,8 +130,8 @@ class Robot:
         :param tipsType:
         """
         self.arms = arms if isinstance(arms, dict) else \
-            {arms.index: arms} if isinstance(arms, Robot.arm) else \
-                {arms.index: Robot.arm(nTips, index, workingTips, tipsType)}
+            {arms.index: arms} if isinstance(arms, Robot.Arm) else \
+                {arms.index: Robot.Arm(nTips, index, workingTips, tipsType)}
 
         self.worktable = WorkTable(templateFile)
         self.def_arm = index

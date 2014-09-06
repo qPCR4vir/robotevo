@@ -11,7 +11,7 @@ EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
                                    EvoMode.EvoScript(template='RNAext_MNVet.ewt',
                                                      filename='AWL.esc',
-                                                     arms=Robot.Robot.arm(4) ),
+                                                     arms=Robot.Robot.Arm(4) ),
                                    EvoMode.EvoStdOut()
                                     ])
 robot=Robot.curRobot
