@@ -74,39 +74,41 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
 Te_MagS_ActivateHeater(50).exec()
 Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
 React.NumOfSamples = 35
-s_r=range(React.NumOfSamples)
+all_samples=range(React.NumOfSamples)
 
 pK_cRNA_MS2.make()
-robot.spread  (  pK_cRNA_MS2,        TeMag.select(s_r))
-robot.transfer(  Samples.select(s_r),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
-robot.spread  (  LysisBuffer,        TeMag.select(s_r))
+robot.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.select(all_samples))
+robot.transfer(  Samples.select(all_samples),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
+robot.spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.select(all_samples))
 startTimer().exec()
 waitTimer(timeSpan=10*60)
 
-robot.spread( B_Beads,      TeMag.select(s_r))
-robot.spread( BindingBuffer,TeMag.select(s_r))
-subroutine("..\Scripts\avr_GetTips1000.esc",subroutine.Continues).exec()
-
-subroutine("..\Scripts\avr_GetTips1000.esc",subroutine.Waits_previous).exec()
-robot.waste(TeMag.select(s_r))
+robot.spread( reactive=B_Beads,      to_labware_region=TeMag.select(all_samples))
+robot.spread( reactive=BindingBuffer,to_labware_region=TeMag.select(all_samples))
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+robot.mix( TeMag.select(all_samples), BindingBuffer.defLiqClass,600)
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+robot.waste(from_labware_region=TeMag.select(all_samples),
+            using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+            volume=100)
 
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 
 
-robot.spread( ElutionBuffer,Eluat )
+robot.spread( reactive=ElutionBuffer, to_labware_region=Eluat )
 exit()
 
 # todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
 
-#Goal: Te_Mag.Incubate(Samples.select(s_r), time=10*60, mix_pippeting=True)
+#Goal: Te_Mag.Incubate(Samples.select(all_samples), time=10*60, mix_pippeting=True)
 
-robot.transfer(Samples.select(s_r), TeMag)
+robot.transfer(Samples.select(all_samples), TeMag)
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 startTimer().exec()
 waitTimer(timeSpan=10*60).exec()
 
 
-robot.transfer(TeMag.select(s_r),Eluat)
+robot.transfer(TeMag.select(all_samples),Eluat)
 
 
 
