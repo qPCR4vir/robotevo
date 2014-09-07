@@ -1,7 +1,7 @@
 __author__ = 'qPCR4vir'
 
 from Instructions import *
-from Labware import WorkTable
+from Labware import *
 import Reactive
 
 tipMask = []  # mask for one tip of index ...
@@ -76,34 +76,33 @@ class Robot:
         def aspire(self, vol, tip_mask=-1):  # todo more checks
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
-            for i, tip in enumerate(self.Tips):
+            for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
-                    assert tip is not None, "No tip in position " + str(i)
-                    nv = tip.vol + vol[i]
-                    if nv > tip.maxVol:
+                    assert tp is not None, "No tp in position " + str(i)
+                    nv = tp.vol + vol[i]
+                    if nv > tp.maxVol:
                         raise BaseException(
-                            'To much Vol in tip ' + str(i + 1) + ' V=' + str(tip.vol) + '+' + str(vol[i]))
+                            'To much Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '+' + str(vol[i]))
                     self.Tips[i].vol = nv
 
         def dispense(self, vol, tip_mask=-1):  # todo more checks
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
-            for i, tip in enumerate(self.Tips):
+            for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
-                    if tip is None:
+                    if tp is None:
                         raise "No tip in position " + str(i)
-                    nv = tip.vol - vol[i]
-                    assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tip.vol) + '-' + str(vol[i])
+                    nv = tp.vol - vol[i]
+                    assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '-' + str(vol[i])
                     self.Tips[i].vol = nv
-
 
     class ProtocolStep:
         pass
 
-    class makeMix(ProtocolStep):
+    class MakeMix(ProtocolStep):
         pass
 
-    class distrReactive(ProtocolStep):
+    class DistrReactive(ProtocolStep):
         pass
 
     class Transfer(ProtocolStep):
@@ -119,19 +118,19 @@ class Robot:
             pass
 
 
-    def __init__(self, arms=None, nTips=def_nTips,
+    def __init__(self, arms=None, nTips=None,
                  index=Pippet.LiHa1, workingTips=None,
                  tipsType=Arm.DiTi, templateFile=None):
         """
 
-        :param arm:
+        :param arms:
         :param nTips:
         :param workingTips:
         :param tipsType:
         """
         self.arms = arms if isinstance(arms, dict) else \
             {arms.index: arms} if isinstance(arms, Robot.Arm) else \
-                {arms.index: Robot.Arm(nTips, index, workingTips, tipsType)}
+                {arms.index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
 
         self.worktable = WorkTable(templateFile)
         self.def_arm = index
@@ -246,18 +245,18 @@ class Robot:
 
         self.dropTips()
 
-    def spread(self, from_reactive, to_labware_region, Disp_V=None, optimize=True, NumSamples=None):
+    def spread(self, volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
         """
 
 
         :param NumSamples: Priorized   !!!! If true reset the selection
-        :param from_reactive: Reactive to spread
+        :param reactive: Reactive to spread
         :param to_labware_region: Labware in which the destine well are selected
-        :param Disp_V: if not, Disp_V is set from the default of the source reactive
+        :param volume: if not, volume is set from the default of the source reactive
         :param optimize: minimize zigzag of multipippeting
         """
-        assert isinstance(from_reactive, Reactive.Reactive), 'A Reactive expected in from_reactive to spread'
-        assert isinstance(to_labware_region, Labware.Labware), 'A Labware expected in to_labware_region to spread'
+        assert isinstance(reactive, Reactive.Reactive), 'A Reactive expected in reactive to spread'
+        assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to spread'
 
         if NumSamples:
             to_labware_region.selectOnly(range(NumSamples))
@@ -269,19 +268,19 @@ class Robot:
         NumSamples = len(to)
         SampleCnt = NumSamples
 
-        Disp_V = Disp_V or from_reactive.volpersample
+        volume = volume or reactive.volpersample
 
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
         self.getTips(tipsMask[nt])
 
-        maxMultiDisp_N = self.curArm().Tips[0].maxVol // Disp_V  # assume all tips equal
+        maxMultiDisp_N = self.curArm().Tips[0].maxVol // volume  # assume all tips equal
 
-        lf = from_reactive.labware
+        lf = reactive.labware
         lt = to_labware_region
         msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}]:" \
-            .format(v=Disp_V, n=from_reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=from_reactive.pos,
+            .format(v=volume, n=reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos,
                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
         comment(msg).exec()
         availableDisp = 0
@@ -292,16 +291,16 @@ class Robot:
                 dsp, rst = divmod(SampleCnt, nt)
                 if dsp >= maxMultiDisp_N:
                     dsp = maxMultiDisp_N
-                    vol = [Disp_V * dsp] * nt
+                    vol = [volume * dsp] * nt
                     availableDisp = dsp
                 else:
-                    vol = [Disp_V * (dsp + 1)] * rst + [Disp_V * dsp] * (nt - rst)
+                    vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
                     availableDisp = dsp + bool(rst)
-                self.aspiremultiTips(nt, from_reactive, vol)
+                self.aspiremultiTips(nt, reactive, vol)
 
             curSample = NumSamples - SampleCnt
             sel = [to_labware_region.offsetAtParallelMove(to[sample]) for sample in range(curSample, curSample + nt)]
-            self.dispensemultiwells(nt, from_reactive.defLiqClass, to_labware_region.selectOnly(sel), [Disp_V] * nt)
+            self.dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
             availableDisp -= 1
             SampleCnt -= nt
         self.dropTips()
@@ -317,8 +316,8 @@ class Robot:
         :param Disp_V: if not, Disp_V is set from the default of the source reactive
         :param optimize: minimize zigzag of multipippeting
         """
-        assert isinstance(from_labware_region, Labware.Labware), 'A Labware expected in from_labware_region to transfer'
-        assert isinstance(to_labware_region, Labware.Labware), 'A Labware expected in to_labware_region to transfer'
+        assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
+        assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to transfer'
         assert isinstance(LC, tuple)
 
         if NumSamples:  # todo  select convenient def
