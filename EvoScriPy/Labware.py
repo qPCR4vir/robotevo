@@ -108,7 +108,7 @@ class Labware:
             self.row=row
             self.col=col
 
-    def autoselect(self, offset, maxTips=1, replys=1):
+    def autoselect(self, offset=0, maxTips=1, replys=1):
         nWells=self.type.nCol*self.type.nRow
         assert nWells>offset, "Can not select to far"   # todo better msg
         if self.type.conectedWells:
@@ -201,7 +201,7 @@ class Labware:
         if isinstance(original,int):
             assert 0<original<=len(self.Wells)
             original=range(original)
-        assert not isinstance(original,list)
+        assert isinstance(original,(list,range))
         return [self.offset(self.posAtParallelMove(offset)) for offset in original]
 
     def offsetAtParallelMove(self, step):
@@ -268,27 +268,18 @@ class Te_Mag(Labware):
 
 
 Trough_100ml  = Labware.Type("Trough 100ml", 8, maxVol=100000,conectedWells=True )
-
 EppRack16_2mL = Labware.Type("Tube Eppendorf 2mL 16 Pos", 16, maxVol=2000)
-
 EppRack3x16R  = Labware.Type("Tube Eppendorf 3x 16 PosR", 16,3, maxVol=1500)
-
 EppRack3x16   = Labware.Type("Tube Eppendorf 3x 16 Pos", 16,3, maxVol=1500)
-
 TeMag48       = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
-
 CleanerSWS    = Labware.Type("Washstation 2Grid Cleaner short"  , 8, maxVol=100000,conectedWells=True)
 WashCleanerS  = Labware(CleanerSWS, Labware.Location(22,0))
-
 WasteWS       = Labware.Type("Washstation 2Grid Waste"          , 8, maxVol=100000,conectedWells=True)
 WashWaste     = Labware(WasteWS,    Labware.Location(22,1))
-
 CleanerLWS    = Labware.Type("Washstation 2Grid Cleaner long"   , 8, maxVol=100000,conectedWells=True)
 WashCleanerL  = Labware(CleanerLWS, Labware.Location(22,2))
-
 DiTi_Waste    = Labware.Type("Washstation 2Grid DiTi Waste"     , 8, maxVol=100000,conectedWells=True)
 DiTiWaste     = Labware(DiTi_Waste,Labware.Location(22,6))
-
 DiTi_1000ul   = Labware.Type("DiTi 1000ul"     , 8,12, maxVol=970)
 
 
