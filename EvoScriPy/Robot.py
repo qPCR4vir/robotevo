@@ -381,28 +381,42 @@ class Robot:
         Dst.labware.selectOnly(dstSel)
         return oriSel, dstSel
 
-    def waste(self, from_labware_region, LC, vol, optimize=True):
-        assert isinstance(from_labware_region, Labware.Labware), 'A Labware expected in from_labware_region to transfer'
-        assert isinstance(vol, (int, float))
+    def waste(self, from_labware_region, using_liquid_class, volume, to_waste_labware=None, optimize=True):
+
+        """
+
+        :param from_labware_region:
+        :param using_liquid_class:
+        :param volume:
+        :param to_waste_labware:
+        :param optimize:
+        :return:
+        """
+        to_waste_labware=to_waste_labware or WashWaste
+        assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
+        assert isinstance(volume, (int, float))
         # todo  select convenient def
         oriSel = from_labware_region.selected()
-        if optimize: oriSel = from_labware_region.parallelOrder(oriSel)
-        to_waste = BioWaste    !!!! ver
+        if not oriSel:
+            oriSel = range(Reactive.NumOfSamples)
+        if optimize:
+            oriSel = from_labware_region.parallelOrder(oriSel)
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
 
-        assert isinstance(vol, (int, float))
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if nt > SampleCnt: nt = SampleCnt
+        if nt > SampleCnt:
+            nt = SampleCnt
 
         self.getTips(tipsMask[nt])
 
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}]:" \
-            .format(v=vol, n=lf.label, fg=lf.location.grid, fs=lf.location.site)
+            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site)
         comment(msg).exec()
-        Asp = aspirate(tipsMask[nt], LC[0], vol, from_labware_region)
-        Dst = dispense(tipsMask[nt], LC[1], vol, to_waste)
+        Asp = aspirate(tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
+        Dst = dispense(tipsMask[nt], using_liquid_class[1], volume, to_waste_labware)
+        nt = to_waste_labware.autoselect(maxTips=nt)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
@@ -414,59 +428,62 @@ class Robot:
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             Asp.exec()
 
-            Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
             Dst.exec()
             self.dropTips()
 
             SampleCnt -= nt
         self.dropTips()
         Asp.labware.selectOnly(oriSel)
-        Dst.labware.selectOnly(dstSel)
-        return oriSel, dstSel
+        return oriSel
 
+    def mix(self, in_labware_region, using_liquid_class, volume, optimize=True):
 
-    def mix(self, from_labware_region, LC, vol, optimize=True):
-        assert isinstance(from_labware_region, Labware.Labware), 'A Labware expected in from_labware_region to transfer'
-        assert isinstance(vol, (int, float))
-        # todo  select convenient def
-        oriSel = from_labware_region.selected()
-        if optimize: oriSel = from_labware_region.parallelOrder(oriSel)
-        to_waste = BioWaste    !!!! ver
+        """
+
+        :param in_labware_region:
+        :param using_liquid_class:
+        :param volume:
+        :param optimize:
+        :return:
+        """
+        in_labware_region=in_labware_region or WashWaste
+        assert isinstance(in_labware_region, Labware), 'A Labware expected in in_labware_region to be mixed'
+        assert isinstance(volume, (int, float))
+        oriSel = in_labware_region.selected()
+        if not oriSel:
+            oriSel = range(Reactive.NumOfSamples)
+        if optimize:
+            oriSel = in_labware_region.parallelOrder(oriSel)
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
 
-        assert isinstance(vol, (int, float))
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if nt > SampleCnt: nt = SampleCnt
+        if nt > SampleCnt:
+            nt = SampleCnt
 
         self.getTips(tipsMask[nt])
 
-        lf = from_labware_region
-        msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}]:" \
-            .format(v=vol, n=lf.label, fg=lf.location.grid, fs=lf.location.site)
+        lf = in_labware_region
+        msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}]:" \
+            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site)
         comment(msg).exec()
-        Asp = aspirate(tipsMask[nt], LC[0], vol, from_labware_region)
-        Dst = dispense(tipsMask[nt], LC[1], vol, to_waste)
+        mx = mix(tipsMask[nt], using_liquid_class[0], volume, in_labware_region)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
                 nt = SampleCnt
-                Asp.tipMask = tipsMask[nt]
-                Dst.tipMask = tipsMask[nt]
+                mx.tipMask = tipsMask[nt]
 
             self.getTips(tipsMask[nt])
-            Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            Asp.exec()
+            mx.labware.selectOnly(oriSel[curSample:curSample + nt])
+            mx.exec()
 
-            Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
-            Dst.exec()
             self.dropTips()
 
             SampleCnt -= nt
         self.dropTips()
-        Asp.labware.selectOnly(oriSel)
-        Dst.labware.selectOnly(dstSel)
-        return oriSel, dstSel
+        mx.labware.selectOnly(oriSel)
+        return oriSel
 
 
 curRobot = None
