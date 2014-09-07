@@ -305,7 +305,7 @@ class Robot:
             SampleCnt -= nt
         self.dropTips()
 
-    def transfer(self, from_labware_region, to_labware_region, Disp_V, LC,
+    def transfer(self, from_labware_region, to_labware_region, volume, using_liquid_class,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
         """
 
@@ -313,12 +313,12 @@ class Robot:
         :param NumSamples: Priorized   !!!! If true reset the selection
         :param from_reactive: Reactive to spread
         :param to_labware_region: Labware in which the destine well are selected
-        :param Disp_V: if not, Disp_V is set from the default of the source reactive
+        :param volume: if not, volume is set from the default of the source reactive
         :param optimize: minimize zigzag of multipippeting
         """
         assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to transfer'
-        assert isinstance(LC, tuple)
+        assert isinstance(using_liquid_class, tuple)
 
         if NumSamples:  # todo  select convenient def
             oriSel = range(NumSamples)
@@ -337,7 +337,7 @@ class Robot:
                 if not oriSel:
                     oriSel = dstSel
                 else:
-                    l = min(len(oriSel, dstSel))  # todo transfer the minimun of the selected ???? Best reise error
+                    l = min(len(oriSel), len(dstSel))  # todo transfer the minimun of the selected ???? Best reise error
                     oriSel = oriSel[:l]
                     dstSel = dstSel[:l]
         if optimizeFrom: oriSel = from_labware_region.parallelOrder(oriSel)
@@ -346,7 +346,7 @@ class Robot:
         NumSamples = len(dstSel)
         SampleCnt = NumSamples
 
-        assert isinstance(Disp_V, (int, float))
+        assert isinstance(volume, (int, float))
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
@@ -355,11 +355,11 @@ class Robot:
         lf = from_labware_region
         lt = to_labware_region
         msg = "Transfer: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] into {to:s}[grid:{tg:d} site:{ts:d}]:" \
-            .format(v=Disp_V, n=lf.label, fg=lf.location.grid, fs=lf.location.site,
+            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site,
                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
         comment(msg).exec()
-        Asp = aspirate(tipsMask[nt], LC[0], Disp_V, from_labware_region)
-        Dst = dispense(tipsMask[nt], LC[1], Disp_V, to_labware_region)
+        Asp = aspirate(tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
+        Dst = dispense(tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:

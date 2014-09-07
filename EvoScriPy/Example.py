@@ -91,7 +91,45 @@ subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exe
 robot.waste(from_labware_region=TeMag.select(all_samples),
             using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
             volume=100)
+Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 
+robot.spread( reactive=VEW1,to_labware_region=TeMag.select(all_samples))
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+robot.mix( TeMag.select(all_samples), VEW1.defLiqClass,600)
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+robot.waste(from_labware_region=TeMag.select(all_samples),
+            using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+            volume=100)
+Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+
+robot.spread( reactive=VEW2,to_labware_region=TeMag.select(all_samples))
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+robot.mix( TeMag.select(all_samples), VEW2.defLiqClass,600)
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+robot.waste(from_labware_region=TeMag.select(all_samples),
+            using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+            volume=100)
+Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+robot.spread( reactive=EtOH80p,to_labware_region=TeMag.select(all_samples))
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+robot.mix( TeMag.select(all_samples), EtOH80p.defLiqClass,600)
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+robot.waste(from_labware_region=TeMag.select(all_samples),
+            using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+            volume=100)
+Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+
+robot.spread( reactive=ElutionBuffer,to_labware_region=TeMag.select(all_samples))
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+robot.mix( TeMag.select(all_samples), ElutionBuffer.defLiqClass,600)
+subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits).exec()
+robot.transfer(from_labware_region=TeMag.select(all_samples),
+               to_labware_region=Eluat.select(all_samples),
+               using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+               volume=100, optimizeTo=False ),
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 
 
