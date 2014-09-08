@@ -499,9 +499,9 @@ class Robot:
             using_liquid_class=(reactive.defLiqClass,reactive.defLiqClass)
 
         self.spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
-        subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+        subroutine("avr_MagMix.esc",subroutine.Continues).exec()
         self.mix( TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
-        subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+        subroutine("avr_MagMix.esc",subroutine.Waits_previous).exec()
         self.waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
 
 
