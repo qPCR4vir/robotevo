@@ -61,6 +61,7 @@ class Instruction:
         self.arg = []
 
     def validateArg(self):
+        self.arg = []
         return False
 
     def allowed(self, mode):
