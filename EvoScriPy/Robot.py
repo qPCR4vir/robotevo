@@ -80,6 +80,8 @@ class Robot:
             return tip_mask
 
         def aspire(self, vol, tip_mask=-1):  # todo more checks
+            if isinstance(vol,(float,int)):
+                vol=[vol]*self.nTips
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
@@ -92,6 +94,8 @@ class Robot:
                     self.Tips[i].vol = nv
 
         def dispense(self, vol, tip_mask=-1):  # todo more checks
+            if isinstance(vol,(float,int)):
+                vol=[vol]*self.nTips
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
@@ -414,24 +418,25 @@ class Robot:
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
-
-        self.getTips(tipsMask[nt])
+        tm=tipsMask[nt]
+        self.getTips(tm)
 
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
             .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
         comment(msg).exec()
-        Asp = aspirate(tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
-        Dst = dispense(tipsMask[nt], using_liquid_class[1], volume, to_waste_labware)
+        Asp = aspirate(tm, using_liquid_class[0], volume, from_labware_region)
+        Dst = dispense(tm, using_liquid_class[1], volume, to_waste_labware)
         nt = to_waste_labware.autoselect(maxTips=nt)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
                 nt = SampleCnt
-                Asp.tipMask = tipsMask[nt]
-                Dst.tipMask = tipsMask[nt]
+                tm=tipsMask[nt]
+                Asp.tipMask = tm
+                Dst.tipMask = tm
 
-            self.getTips(tipsMask[nt])
+            self.getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             vol=volume
             rest=vol
@@ -439,10 +444,10 @@ class Robot:
                 if vol>self.curArm().Tips[0].maxVol:
                     vol=self.curArm().Tips[0].maxVol
                 Asp.volume=vol
-                self.curArm().aspire(vol, tipMask[nt])
+                self.curArm().aspire(vol, tm)
                 Asp.exec()
                 Dst.volume=vol
-                self.curArm().dispense(vol, tipMask[nt])
+                self.curArm().dispense(vol, tm)
                 Dst.exec()
                 rest-=vol
                 vol=rest
