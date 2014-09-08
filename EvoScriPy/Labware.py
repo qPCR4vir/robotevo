@@ -19,7 +19,7 @@ class WorkTable: # todo Implement !, parse WT from export file, template and scr
     def parseWorTableFile(self, templateFile):
         if not templateFile: return []
         templList=[]
-        with open(templateFile) as tmpl:
+        with open(templateFile,'r', encoding='Latin-1') as tmpl:
             for line in tmpl:            #todo do the real complete parse
                 templList += [line]
                 if line.startswith("--{ RPG }--"): break
@@ -244,7 +244,7 @@ class Labware:
         """
         X = self.type.nCol
         Y = self.type.nRow
-        sel = "{:02X}{:02X}".format (X,Y)        #sel=sel.encode('ascii')
+        sel = bytearray()      #sel=sel.encode('ascii')
         bitMask=0
         null = 48 # ord('0')
         bit=0
@@ -252,11 +252,11 @@ class Labware:
             bit = w.offset % 7
             if w.selFlag: bitMask |=  (1<<bit)
             if bit == 6 :
-                sel += chr(null + bitMask)
+                sel.append(null + bitMask)
                 bitMask = 0
         if bit != 6:
-            sel+= chr(null + bitMask)
-        return sel
+            sel.append (null + bitMask)
+        return "{:02X}{:02X}".format (X,Y)+  sel.decode(EvoMode.EvoMode.encoding)
 
 
 class Cuvette(Labware):
