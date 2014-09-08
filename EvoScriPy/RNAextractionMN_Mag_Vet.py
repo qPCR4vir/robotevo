@@ -74,17 +74,17 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     robot.wash_in_TeMag(reactive=VEW2, wells=all_samples)
 
     robot.spread( reactive=EtOH80p,to_labware_region=Robot.TeMag.selectOnly(all_samples))
-    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    subroutine("avr_MagMix.esc",subroutine.Continues).exec()
     robot.mix( Robot.TeMag.selectOnly(all_samples), EtOH80p.defLiqClass,600)
-    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+    subroutine("avr_MagMix.esc",subroutine.Waits_previous).exec()
     robot.waste(from_labware_region=Robot.TeMag.selectOnly(all_samples),
                 using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
                 volume=600)
 
     robot.spread( reactive=ElutionBuffer,to_labware_region=Robot.TeMag.selectOnly(all_samples))
-    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    subroutine("avr_MagMix.esc",subroutine.Continues).exec()
     robot.mix( Robot.TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass,600)
-    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits).exec()
+    subroutine("avr_MagMix.esc",subroutine.Waits).exec()
     robot.transfer(from_labware_region=Robot.TeMag.selectOnly(all_samples),
                    to_labware_region=Eluat.selectOnly(all_samples),
                    using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
