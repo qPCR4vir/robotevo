@@ -18,6 +18,15 @@ class EvoString(EvoMode):
         s= str(instr)
         return s
 
+class EvoComments(EvoString):
+    def __init__(self):
+        self.comments=[]
+    def exec(self, instr):
+        from Instructions import comment
+        if isinstance(instr, comment):
+            self.comments.append("  "+instr.arg[0].data)
+
+
 class EvoStdOut(EvoString):
     def exec(self, instr):
         s=EvoString.exec(self,instr)
