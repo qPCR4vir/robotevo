@@ -271,6 +271,7 @@ class Robot:
                 to_labware_region.selectOnly(range(React.NumOfSamples))
 
         to = to_labware_region.selected()
+        if optimize: to = to_labware_region.parallelOrder(to)
         NumSamples = len(to)
         SampleCnt = NumSamples
 
@@ -285,8 +286,8 @@ class Robot:
 
         lf = reactive.labware
         lt = to_labware_region
-        msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}]:" \
-            .format(v=volume, n=reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos,
+        msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+            .format(v=volume, n=reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos, do=str(to),
                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
         comment(msg).exec()
         availableDisp = 0
@@ -497,11 +498,11 @@ class Robot:
         if using_liquid_class is None:
             using_liquid_class=(reactive.defLiqClass,reactive.defLiqClass)
 
-        self.spread(reactive=reactive, to_labware_region=TeMag.select(wells))
+        self.spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
         subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
-        self.mix( TeMag.select(wells), reactive.defLiqClass, vol or reactive.volpersample)
+        self.mix( TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
         subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
-        self.waste(TeMag.select(wells), using_liquid_class, vol or reactive.volpersample)
+        self.waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
 
 
 curRobot = None
