@@ -250,8 +250,13 @@ class Robot:
                 i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
                 react.pos + 1)
             comment(msg).exec()
-            self.aspire(i, react, react.minVol(NumSamples))
-            self.dispense(i, pMix, react.minVol(NumSamples))
+            mV=self.curArm().Tips[i].maxVol
+            r=react.minVol(NumSamples)
+            while r>0:
+                dV=r if r<mV else mV
+                self.aspire(i, react, dV)
+                self.dispense(i, pMix, dV)
+                r-=dV
 
         self.dropTips()
 
@@ -310,7 +315,7 @@ class Robot:
                 self.aspiremultiTips(nt, reactive, vol)
 
             curSample = NumSamples - SampleCnt
-            sel =  to[curSample: curSample + nt]
+            sel =  to[curSample: curSample + nt]     #todo what if volume > maxVol_tip ?
             self.dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
             availableDisp -= 1
             SampleCnt -= nt
@@ -438,20 +443,17 @@ class Robot:
 
             self.getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            vol=volume
-            rest=vol
-            while rest>0:
-                if vol>self.curArm().Tips[0].maxVol:
-                    vol=self.curArm().Tips[0].maxVol
-                Asp.volume=vol
-                self.curArm().aspire(vol, tm)
+            mV=self.curArm().Tips[0].maxVol
+            r =volume
+            while r >0:
+                dV = r if r< mV else mV
+                r-=dV
+                Asp.volume=dV
+                self.curArm().aspire(dV, tm)
                 Asp.exec()
-                Dst.volume=vol
-                self.curArm().dispense(vol, tm)
+                Dst.volume=dV
+                self.curArm().dispense(dV, tm)
                 Dst.exec()
-                rest-=vol
-                vol=rest
-
 
             self.dropTips()
 
