@@ -433,9 +433,21 @@ class Robot:
 
             self.getTips(tipsMask[nt])
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            Asp.exec()
+            vol=volume
+            rest=vol
+            while rest>0:
+                if vol>self.curArm().Tips[0].maxVol:
+                    vol=self.curArm().Tips[0].maxVol
+                Asp.volume=vol
+                self.curArm().aspire(vol, tipMask[nt])
+                Asp.exec()
+                Dst.volume=vol
+                self.curArm().dispense(vol, tipMask[nt])
+                Dst.exec()
+                rest-=vol
+                vol=rest
 
-            Dst.exec()
+
             self.dropTips()
 
             SampleCnt -= nt
@@ -474,7 +486,7 @@ class Robot:
         msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
             .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
         comment(msg).exec()
-        mx = mix(tipsMask[nt], using_liquid_class[0], volume, in_labware_region)
+        mx = mix(tipsMask[nt], using_liquid_class, volume, in_labware_region)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
