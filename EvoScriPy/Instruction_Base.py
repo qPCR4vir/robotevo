@@ -12,9 +12,15 @@ class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], int
     def __str__(self): # todo implement exceptions
         return str(self.data)
 
+    def cod(self):
+        return b'' if self.data is None else self.data
+
+
 class string1(EvoTypes):
     def __str__(self):
         return '"'+ str(self.data) + '"'
+    def cod(self):
+        return b'"'+  self.data  + b'"'
 
 class expression(string1):
     pass
@@ -38,10 +44,14 @@ class string2(EvoTypes):
 class integer(EvoTypes):   # todo implement exceptions
     def __str__(self):
         return str(int(self.data))
+    def cod(self):
+        return  self.__str__().encode('Latin-1')
 
 class floating_point(EvoTypes):
     def __str__(self):
         return str(float(self.data))
+    def cod(self):
+        return  self.__str__().encode('Latin-1')
 
 
 class LoopOption:
@@ -78,6 +88,20 @@ class Instruction:
         return self.name + "(" + ','.join([          ''   if    a is None
                                            else '"'+a+'"' if isinstance(a,str)
                                            else  str(a)       for a in self.arg]) + ");"
+    def cod(self):
+        self.validateArg()
+        code=self.name.encode('ascii') + b"("
+        for a in self.arg[:-1]:
+            if a is None:
+                pass
+            else:
+                if isinstance(a,bytes):
+                    code += b'"' + a + b'"'
+                else:
+                    if isinstance(a,str):
+                        code += b'"' + a.encode('Latin-1') + b'"'
+            code+= b","
+        code +=  b");"
 
 class ScriptONLY(Instruction):
     def allowed(self, mode):

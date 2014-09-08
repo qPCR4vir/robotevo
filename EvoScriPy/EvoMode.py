@@ -15,7 +15,7 @@ class EvoMode:
 
 class EvoString(EvoMode):
     def exec(self, instr):
-        s= str(instr)
+        s= instr.cod()#str(instr)
         return s
 
 class EvoComments(EvoString):
@@ -24,7 +24,7 @@ class EvoComments(EvoString):
     def exec(self, instr):
         from Instructions import comment
         if isinstance(instr, comment):
-            self.comments.append("  "+instr.arg[0].data)
+            self.comments.append(b"  "+instr.arg[0].data)
 
 
 class EvoStdOut(EvoString):
@@ -45,11 +45,12 @@ class multiEvo(EvoMode):
 class inFile (EvoString):
     def __init__(self, filename):
         self.filename=filename
-        self.f = open (filename,'wb')
+        self.f = open (filename,'wb')#,encoding='Latin-1'
+        assert self.f
 
     def exec(self, instr):
-        s=EvoString.exec(self,instr) + "\r\n"
-        self.f.write(s.encode('Latin-1'))
+        s=EvoString.exec(self,instr) + b"\r\n"
+        self.f.write( s) #.encode('Latin-1'))   #ascii,   Latin-1   iso-8859-1 US-ASCII
         return s   # or f ?
 
     def done(self):
@@ -60,7 +61,7 @@ class inFile (EvoString):
 
     def open(self):
         if self.f is None:
-            self.f = open (self.filename,'a')
+            self.f = open (self.filename,'ab')
 
     def __del__(self):
         self.done()
@@ -68,7 +69,7 @@ class inFile (EvoString):
 
 class AdvancedWorkList (inFile):
     def exec(self, instr):
-        self.f.write("B;".encode('Latin-1'))
+        self.f.write(b"B;")#.encode('Latin-1')) #.encode('Latin-1')
         return inFile.exec(self,instr)
 
 class ScriptBody (inFile):

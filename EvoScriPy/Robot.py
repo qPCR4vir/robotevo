@@ -306,7 +306,7 @@ class Robot:
                 self.aspiremultiTips(nt, reactive, vol)
 
             curSample = NumSamples - SampleCnt
-            sel = [to_labware_region.offsetAtParallelMove(to[sample]) for sample in range(curSample, curSample + nt)]
+            sel = to[curSample: curSample + nt]
             self.dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
             availableDisp -= 1
             SampleCnt -= nt

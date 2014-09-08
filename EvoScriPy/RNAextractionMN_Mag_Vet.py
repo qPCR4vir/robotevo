@@ -57,9 +57,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
     pK_cRNA_MS2.make()
-
+            # todo Implement in EvoTECAN liq classes: Serum Disp postMix3 and Serum Asp preMix3
     robot.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
-    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
+    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("AVR-Serum 1000","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
     robot.spread  (  reactive=LysisBuffer,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
     startTimer().exec()
     waitTimer(timeSpan=10*60).exec()
