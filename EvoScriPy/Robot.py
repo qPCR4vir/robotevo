@@ -383,11 +383,13 @@ class Robot:
                 Asp.tipMask = tipsMask[nt]
                 Dst.tipMask = tipsMask[nt]
 
-            self.getTips(tipsMask[nt])
+            self.getTips(tipsMask[nt])     #todo what if volume > maxVol_tip ?
+            self.curArm().aspire(volume, tipsMask[nt])
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             Asp.exec()
 
             Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
+            self.curArm().dispense(volume, tipsMask[nt])
             Dst.exec()
             self.dropTips()
 
@@ -482,12 +484,14 @@ class Robot:
             oriSel = in_labware_region.parallelOrder(oriSel)
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
-
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
 
         self.getTips(tipsMask[nt])
+        volume = volume*0.8
+        mV=self.curArm().Tips[0].maxVol*0.8
+        volume = volume if volume < mV else mV
 
         lf = in_labware_region
         msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
