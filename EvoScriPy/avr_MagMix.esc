@@ -1,5 +1,5 @@
-3E19A3C4
-20140808_133315 Admin           
+F0208292
+20140909_083308 Admin           
                                                                                                                                 
 Administrator                                                                                                                   
 --{ RES }--
@@ -124,11 +124,4 @@ V;200
 998;1;
 996;0;0;
 --{ RPG }--
-IfThen("MagMix",0,"MixFew");
-FACTS("Te-MagS","Te-MagS_Execution","1:2 0 0 0 25","0","");
-Else();
-IfThen("MagMix",0,"MixFull");
 FACTS("Te-MagS","Te-MagS_Execution","1:3 0 0 0 31","0","");
-Else();
-EndIf();
-EndIf();
