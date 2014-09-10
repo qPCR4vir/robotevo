@@ -43,7 +43,7 @@ class App(tk.Frame):
         logo = tk.PhotoImage(file='..\EvoScriPy\FLI-Logo_mit_Farbverlauf.png')
         #tk.Label(self, image=logo,width=800).pack(side="top")
 
-        tk.Label(self,text='Number of Samples:').pack(side='top')
+        tk.Label(self,text='Number of Samples (1-48):').pack(side='top')
 
         self.NumOfSamples=tk.StringVar(master,'12')
 
@@ -64,7 +64,7 @@ class App(tk.Frame):
         self.protocol_selection.activate(1)
 
 
-        self.run = tk.Button(self, text="Run the selected protocol",  command=self.run_selected)
+        self.run = tk.Button(self, text="Synthetize a TECAN script for the selected protocol",  command=self.run_selected)
         self.run.pack(side='top')
 
         self.quit = tk.Button(self,   text="Quit",   command=self.quit)
