@@ -17,6 +17,9 @@ for tip in range(13):
     tipsMask += [2 ** tip - 1]
 
 def_nTips = 4
+nTips=def_nTips
+Tip_1000maxVol=940
+Tip_200maxVol=190
 
 
 class Tip:
@@ -45,7 +48,7 @@ class Robot:
             self.Tips = [None] * nTips
 
 
-        def getTips(self, tip_mask=-1, maxVol=1000):
+        def getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol):
             if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
@@ -54,7 +57,7 @@ class Robot:
                     self.Tips[i] = Tip(maxVol)
             return tip_mask
 
-        def getMoreTips(self, tip_mask=-1, maxVol=1000):
+        def getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol):
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
@@ -169,7 +172,7 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, TIP_MASK=-1, maxVol=1000):
+    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
         if self.reusetips:
             TIP_MASK = self.curArm().getMoreTips(TIP_MASK, maxVol)
         else:
