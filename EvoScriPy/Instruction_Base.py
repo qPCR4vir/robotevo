@@ -2,6 +2,7 @@ __author__ = 'qPCR4vir'
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoMode
 import Labware
+import Robot
 
 supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiEvo mode)
 
@@ -25,8 +26,8 @@ class expression(string1):
 
 class expr(EvoTypes):
     def __init__(self, dim, data):
+        EvoTypes.__init__(self,data)
         self.dim = dim
-        self.data = data
 
     def split(self):  #TODO 0 instant "0" ???? ; split - is not an elegant solution
         if isinstance(self.data, list):
@@ -46,7 +47,7 @@ class integer(EvoTypes):  # todo implement exceptions
         return str(int(self.data))
 
 
-class floating_point(EvoTypes):
+class floating_point(EvoTypes):  # todo implement exceptions
     def __str__(self):
         return str(float(self.data))
 
@@ -107,10 +108,10 @@ class Device(Instruction):
 class T_Mag_Instr(Device):
     """ A.15.10 Advanced Worklist Commands for the Te-MagS
     """
-    Dispense = 0
-    Aspirate = 1
+    Dispense    = 0
+    Aspirate    = 1
     Resuspension = 2
-    Incubation = 3
+    Incubation  = 3
 
     def __init__(self, commandname):
         Device.__init__(self, "Te-MagS", commandname)
