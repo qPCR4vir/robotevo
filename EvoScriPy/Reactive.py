@@ -11,7 +11,7 @@ NumOfSamples     = None
 
 class Reactive:
     def __init__(self, name, labware,  volpersample,
-                 pos=0, replys=1, defLiqClass=None, excess=None):
+                 pos=1, replys=1, defLiqClass=None, excess=None):
         ex= def_react_excess if excess is None else excess
         self.excess = 1 + ex/100
         self.defLiqClass = defLiqClass

@@ -8,15 +8,11 @@ supportVirtualRobot=True  # todo explore this idea ! (problems with "asynchronou
 class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
-    #def __eq__(self, other):
 
     def __str__(self): # todo implement exceptions
         return str(self.data)
 
 class string1(EvoTypes):
-    #def __init__(self, data):
-    #   EvoTypes.__init__(self,data)
-
     def __str__(self):
         return '"'+ str(self.data) + '"'
 
@@ -32,9 +28,9 @@ class expr(EvoTypes):
         if isinstance(self.data,list):
             d=self.dim-len(self.data)
             assert (d>=0)
-            return [expression(v) for v in self.data+[0]*d]
+            return [integer(0) if v is None else expression(v) for v in self.data]+[integer(0)]*d
         else:
-            return [expression(self.data)]*self.dim
+            return [integer(0) if self.data is None else expression(self.data) ]*self.dim
 
 class string2(EvoTypes):
     pass
@@ -65,6 +61,7 @@ class Instruction:
         self.arg = []
 
     def validateArg(self):
+        self.arg = []
         return False
 
     def allowed(self, mode):
@@ -187,8 +184,9 @@ class Pippeting(Pippet):
 
     def validateArg(self):
         Pippet.validateArg(self)
-
-        self.arg[1:1] = [string1(self.liquidClass)] + expr(4,self.volume).split() + [int(0)]*8         # arg 2, 3 - 14
+        from Robot import curRobot  #todo better
+        nTips=curRobot.curArm().nTips
+        self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips,self.volume).split() + [int(0)]*(12-nTips)         # arg 2, 3 - 14
         return True
 
 class DITIs(Instruction):

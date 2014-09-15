@@ -575,11 +575,14 @@ class variable(Instruction):    # todo declare const
         self.arg += [  integer(string1.InitMode), integer(string1.QueryAtStart)  ]
         return True
 
-class execute_VBscript(Instruction):    # todo declare const
+class execute_VBscript(Instruction):
     """ A.15.4.24 Execute VB Script (Worklist: Execute_VBscript)
     """
     def __init__(self, filename, action  = 0 ):
         """
+
+        :param filename: Path and filename of the defined VB script.
+        :param action: Use Waits, Continues and Waits_previous defined in subroutine
         """
         Instruction.__init__(self, "Execute_VBscript")
         self.action = action
@@ -612,4 +615,23 @@ class notification(Instruction):    # todo declare const
         Instruction.validateArg(self)
         self.arg= [integer(self.AttachScreen_ShotFlag), string1(self.receiverGroup),  string1(self.emailSubject),
                     string1(self.emailMessage),integer(self.action) ]
+        return True
+
+class subroutine(ScriptONLY):
+    """ UNDOCUMENTED
+    """
+    Waits     =0      # script waits for end of the called script
+    Continues =1      # script continues
+    Waits_previous= 2 # script waits for a previously started script
+
+    def __init__(self, filename, action  = 0 ):
+        """
+        """
+        Instruction.__init__(self, "Subroutine")
+        self.action = action
+        self.filename = filename
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string1(self.filename), integer(self.action) ]
         return True

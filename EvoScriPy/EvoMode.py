@@ -3,6 +3,7 @@ __author__ = 'qPCR4vir'
 #from Instruction_Base import ScriptONLY
 
 class EvoMode:
+    encoding='Latin-1'
     # Tip_tNum = 4
     def exec(self, instr):
         pass
@@ -17,6 +18,15 @@ class EvoString(EvoMode):
     def exec(self, instr):
         s= str(instr)
         return s
+
+class EvoComments(EvoString):
+    def __init__(self):
+        self.comments=[]
+    def exec(self, instr):
+        from Instructions import comment
+        if isinstance(instr, comment):
+            self.comments.append("  "+instr.arg[0].data)
+
 
 class EvoStdOut(EvoString):
     def exec(self, instr):
@@ -36,11 +46,11 @@ class multiEvo(EvoMode):
 class inFile (EvoString):
     def __init__(self, filename):
         self.filename=filename
-        self.f = open (filename,'w')
+        self.f = open (filename,'w',encoding=EvoMode.encoding)
 
     def exec(self, instr):
-        s=EvoString.exec(self,instr) + "\n"
-        self.f.write(s)
+        s=EvoString.exec(self,instr) + "\n"   #\r
+        self.f.write(s)  #.encode('Latin-1')
         return s   # or f ?
 
     def done(self):
@@ -51,7 +61,7 @@ class inFile (EvoString):
 
     def open(self):
         if self.f is None:
-            self.f = open (self.filename,'a')
+            self.f = open (self.filename,'a',encoding=EvoMode.encoding)
 
     def __del__(self):
         self.done()
@@ -59,7 +69,7 @@ class inFile (EvoString):
 
 class AdvancedWorkList (inFile):
     def exec(self, instr):
-        self.f.write("B;")
+        self.f.write("B;")#.encode('Latin-1')
         return inFile.exec(self,instr)
 
 class ScriptBody (inFile):
@@ -80,7 +90,7 @@ class EvoScript (ScriptBody):
         if self.templateNotAdded:
             from Robot import curRobot
             for line in curRobot.worktable.template:
-                self.f.write(line)
+                self.f.write((line[:-1]+"\n"))   #.encode('Latin-1')  \r
             self.templateNotAdded=False
         ScriptBody.exec(self,instr)
 

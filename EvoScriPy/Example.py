@@ -6,102 +6,44 @@ from Instructions_Te_MagS import *
 from Labware import *
 import Robot
 import Reactive as React
-# from Reactive import *
+from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 
 EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
                                    EvoMode.EvoScript(template='RNAext_MNVet.ewt',
                                                      filename='AWL.esc',
-                                                     arms=Robot.Robot.arm(4) ),
+                                                     arms=Robot.Robot.Arm(4) ),
                                    EvoMode.EvoStdOut()
                                     ])
-robot=Robot.curRobot
-assert isinstance(robot,Robot.Robot)
 
-ElutBuf       = Labware(Trough_100ml, Labware.Location(6, 0), "1-VEL-ElutionBuffer" )
-LysBuf        = Labware(Trough_100ml, Labware.Location(6, 1), "2-Vl Lysis Buffer"   )
-BindBuf       = Labware(Trough_100ml, Labware.Location(6, 2), "3-VEB Binding Buffer")
-#VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )
-#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,3), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
-#VEW2          = Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   )
-BioWaste      = Labware(Trough_100ml, Labware.Location(22,2), "6-Waste"             )
-#EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
-Unnused8      = Labware(Trough_100ml, Labware.Location(24,1), "8-Unnused"           )
-Unnused9      = Labware(Trough_100ml, Labware.Location(24,2), "9-Unnused"           )
-
-Reactives     = Labware(EppRack16_2mL, Labware.Location(7,0),"Reactives")
-
-Eluat         = Labware(EppRack3x16R, Labware.Location(8,0),"Eluat")
-
-Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
-
-TeMg_Heat     = Labware(TeMag48, Labware.Location(14,0),"48 Pos Heat")
-TeMag         = Labware(TeMag48, Labware.Location(14,1),"48PosMagnet")
-
-DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
-DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
-DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
-
-# set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('E7')  ).exec()
-
-B_liquidClass = "Buffer free DITi 1000-AVR"
-W_liquidClass = "AVR-Water free DITi 1000"
-Std_liquidClass = "Water free dispense DiTi 1000"
-
-
-LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
-IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
-BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,defLiqClass=W_liquidClass)#todo change, define new in Evo
-
-VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
-                                 Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
-                                                                                  volpersample=100 ,defLiqClass=B_liquidClass)
-VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
-                                 Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   ),
-                                                                                  volpersample=600 ,defLiqClass=B_liquidClass)
-EtOH80p         = React.Reactive("Ethanol 80%"                     ,
-                                 Labware(Trough_100ml, Labware.Location(24,0), "7-Ethanol 80%"   ),
-                                                                                  volpersample=600 ,defLiqClass=B_liquidClass)
-ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
-
-
-
-IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
-                                 Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
-ProtK           = React.Reactive("Proteinase K"                    ,
-                                 Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
-cRNA            = React.Reactive("Carrier RNA"                     ,
-                                 Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
-pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
-                                 Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
-                                 ,defLiqClass=W_liquidClass)
-
-#React.NumOfSamples = 1
-pK_cRNA_MS2.make(10)
+extractRNA_with_MN_Vet_Kit( NumOfSamples=35 )
 
 exit()
 
-#pK_cRNA         = React.preMix  ("ProtK+carrier RNA premix"        , Reactives, pos=12, components=[ProtK,cRNA],defLiqClass=W_liquidClass)
-# pK_cRNA.make()
-s_r=range(React.NumOfSamples)
-# todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
-Te_MagS_ActivateHeater(50).exec()
-Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
+
+
+
+
+
 
 
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 
-robot.spread(pK_cRNA_MS2, TeMag.select(s_r), robot.curArm().nTips )
 
-#Te_Mag.Incubate(Samples.select(s_r), time=10*60, mix_pippeting=True)
-robot.transfer(Samples.select(s_r), TeMag)
+robot.spread( reactive=ElutionBuffer, to_labware_region=Eluat )
+exit()
+
+# todo Describe all the possibles variants of the protocol. Here now only the "canonical" protocol
+
+#Goal: Te_Mag.Incubate(Samples.select(all_samples), time=10*60, mix_pippeting=True)
+
+robot.transfer(Samples.select(all_samples), TeMag)
 Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
 startTimer().exec()
 waitTimer(timeSpan=10*60).exec()
 
 
-robot.transfer(TeMag.select(s_r),Eluat)
+robot.transfer(TeMag.select(all_samples),Eluat)
 
 
 
@@ -180,11 +122,120 @@ LOp+=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.Var
 Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pippet.LiHa1)
 
 print("\n done")
+#VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )
+#VEW1          = Labware(Trough_100ml, Labware.Location(22 ,3), "4-VEW1 Wash Buffe"   ) # Plus RACK_OFFSET = 3 ??!!
+#VEW2          = Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   )
+#EtOH80p       = Labware(Trough_100ml, Labware.Location(24,0), "7-EtOH80p"           )
 
 
 
+from RobotInitRNAextraction import *
+from Labware import *
+import Reactive as React
+
+Reactives     = Labware(EppRack16_2mL, Labware.Location(7,0),"Reactives")
+Eluat         = Labware(EppRack3x16R, Labware.Location(8,0),"Eluat")
+Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
 
 
+LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
+IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
+BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,replys=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
+
+VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
+                                 Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
+                                 volpersample=100 ,defLiqClass=B_liquidClass)
+VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
+                                 Labware(Trough_100ml, Labware.Location(22,1), "5-VEW2-WashBuffer"   ),
+                                 volpersample=600 ,defLiqClass=B_liquidClass)
+EtOH80p         = React.Reactive("Ethanol 80%"                     ,
+                                 Labware(Trough_100ml, Labware.Location(24,0), "7-Ethanol 80%"   ),
+                                 volpersample=600 ,defLiqClass=B_liquidClass)
+ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
+
+
+
+IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
+                                 Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
+ProtK           = React.Reactive("Proteinase K"                    ,
+                                 Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
+cRNA            = React.Reactive("Carrier RNA"                     ,
+                                 Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
+pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
+                                 Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
+                                 ,defLiqClass=W_liquidClass)
+
+import Robot
+
+
+
+from Instructions_Te_MagS import *
+from Instructions import *
+
+def extractRNA_with_MN_Vet_Kit(withRobot):
+    robot=Robot.curRobot
+    assert isinstance(robot,Robot.Robot)
+
+    Te_MagS_ActivateHeater(50).exec()
+    Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
+    React.NumOfSamples = 35
+    all_samples=range(React.NumOfSamples)
+
+    pK_cRNA_MS2.make()
+    robot.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.select(all_samples))
+    robot.transfer(  Samples.select(all_samples),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
+    robot.spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.select(all_samples))
+    startTimer().exec()
+    waitTimer(timeSpan=10*60)
+
+    robot.spread( reactive=B_Beads,      to_labware_region=TeMag.select(all_samples))
+    robot.spread( reactive=BindingBuffer,to_labware_region=TeMag.select(all_samples))
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    robot.mix( TeMag.select(all_samples), BindingBuffer.defLiqClass,600)
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+    robot.waste(from_labware_region=TeMag.select(all_samples),
+                using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                volume=100)
+    Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+    robot.spread( reactive=VEW1,to_labware_region=TeMag.select(all_samples))
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    robot.mix( TeMag.select(all_samples), VEW1.defLiqClass,600)
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+    robot.waste(from_labware_region=TeMag.select(all_samples),
+                using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                volume=100)
+    Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+
+    robot.spread( reactive=VEW2,to_labware_region=TeMag.select(all_samples))
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    robot.mix( TeMag.select(all_samples), VEW2.defLiqClass,600)
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+    robot.waste(from_labware_region=TeMag.select(all_samples),
+                using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                volume=100)
+    Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+    robot.spread( reactive=EtOH80p,to_labware_region=TeMag.select(all_samples))
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    robot.mix( TeMag.select(all_samples), EtOH80p.defLiqClass,600)
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits_previous).exec()
+    robot.waste(from_labware_region=TeMag.select(all_samples),
+                using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                volume=100)
+    Te_MagS_Execution([Te_MagS_Execution.mix(cycles=3,hh=0,mm=0,ss=3) ]).exec()
+
+
+    robot.spread( reactive=ElutionBuffer,to_labware_region=TeMag.select(all_samples))
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Continues).exec()
+    robot.mix( TeMag.select(all_samples), ElutionBuffer.defLiqClass,600)
+    subroutine("..\EvoScripts\scripts\avr_MagMix.esc",subroutine.Waits).exec()
+    robot.transfer(from_labware_region=TeMag.select(all_samples),
+                   to_labware_region=Eluat.select(all_samples),
+                   using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                   volume=100, optimizeTo=False ),
 
 
 
