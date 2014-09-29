@@ -186,10 +186,10 @@ class getDITI2(DITIs):
 
         ln= self.LabwareTypeName
         if ln is None: ln=def_DiTi
-        if isinstance(ln,Labware.Labware.Type):
+        if isinstance(ln,Lab.Labware.Type):
             ln= ln.name
         else:
-            if isinstance(ln, Labware.Labware):
+            if isinstance(ln, Lab.Labware):
                 ln=ln.type.name
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or 2 ? expression?

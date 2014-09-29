@@ -1,8 +1,7 @@
 __author__ = 'qPCR4vir'
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoMode
-import Labware
-import Robot
+import Labware as Lab
 
 supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiple mode)
 
@@ -121,12 +120,12 @@ def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
 def_liquidClass = "Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
 def_vol         = [0]*12
-def_LabW        = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
+def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.Labware.Location(1,1))
 def_LoopOp      = []
-def_WashWaste   = Labware.WashWaste
-def_WashCleaner = Labware.WashCleanerS
-def_DiTiWaste   = Labware.DiTiWaste
-def_DiTi        = Labware.DiTi_1000ul   # todo revise
+def_WashWaste   = Lab.WashWaste
+def_WashCleaner = Lab.WashCleanerS
+def_DiTiWaste   = Lab.DiTiWaste
+def_DiTi        = Lab.DiTi_1000ul   # todo revise
 def_AirgapSpeed = 300
 
 
