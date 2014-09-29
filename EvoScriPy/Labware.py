@@ -256,7 +256,7 @@ class Labware:
                 bitMask = 0
         if bit != 6:
             sel.append (null + bitMask)
-        return "{:02X}{:02X}".format (X,Y)+  sel.decode(EvoMode.EvoMode.encoding)
+        return "{:02X}{:02X}".format (X,Y)+  sel.decode(EvoMode.Mode.encoding)
 
 
 class Cuvette(Labware):

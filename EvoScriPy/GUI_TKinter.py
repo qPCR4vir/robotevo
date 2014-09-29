@@ -11,12 +11,12 @@ import Robot
 import Reactive as React
 from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 
-EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
+EvoMode.CurEvo = EvoMode.multiple([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
-                                   EvoMode.EvoScript(template='RNAext_MNVet.ewt',
+                                   EvoMode.Script(template='RNAext_MNVet.ewt',
                                                      filename='AWL.esc',
                                                      arms=Robot.Robot.Arm(4) ),
-                                   EvoMode.EvoStdOut()
+                                   EvoMode.StdOut()
                                     ])
 
 

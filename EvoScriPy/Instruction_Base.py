@@ -4,7 +4,7 @@ import EvoMode
 import Labware
 import Robot
 
-supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiEvo mode)
+supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiple mode)
 
 
 class EvoTypes:  # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
