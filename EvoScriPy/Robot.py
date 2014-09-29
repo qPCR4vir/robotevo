@@ -32,7 +32,7 @@ class Robot:
         DiTi = 0
         Fixed = 1
 
-        def __init__(self, nTips, index=None, workingTips=None, tipsType=DiTi):
+        def __init__(self, nTips, index=Pippet.LiHa1, workingTips=None, tipsType=DiTi):
             """
 
             :param nTips:
@@ -131,7 +131,7 @@ class Robot:
 
 
     def __init__(self, arms=None, nTips=None,
-                 index=None, workingTips=None,
+                 index=Pippet.LiHa1, workingTips=None,
                  tipsType=Arm.DiTi, templateFile=None):
         """
 
