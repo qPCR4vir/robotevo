@@ -1,7 +1,5 @@
 __author__ = 'qPCR4vir'
 
-# from Instruction_Base import ScriptONLY
-
 
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
@@ -131,5 +129,13 @@ class Script(ScriptBody):
         ScriptBody.exec(self, instr)
 
 
-CurEvo = None
+class iRobot(Mode):
+    """ It will be used to validate instructions based on an the state of an internal model af the physical robot.
+    It will check the kind and number of tips, and the volume already aspired in each tips, and the existence
+    and current volume in wells in labware, etc. One basic use of this, is to garante that the robot will be actualize
+    once and only once even when multiple modes are used.
+    """
+
+
+current = None
 
