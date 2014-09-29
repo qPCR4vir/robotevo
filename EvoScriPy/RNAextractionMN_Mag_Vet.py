@@ -59,7 +59,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     pK_cRNA_MS2.make()
 
     robot.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
-    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
+    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
+                     False,True,NumSamples=React.NumOfSamples)
     robot.spread  (  reactive=LysisBuffer,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
     startTimer().exec()
     waitTimer(timeSpan=10*60).exec()
@@ -67,7 +68,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     robot.spread( reactive=B_Beads,      to_labware_region=Robot.TeMag.selectOnly(all_samples))
 
     robot.wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
-                        using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"), vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample+B_Beads.volpersample+BindingBuffer.volpersample)
+                        using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                        vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
+                            +B_Beads.volpersample+BindingBuffer.volpersample)
 
     robot.wash_in_TeMag(reactive=VEW1, wells=all_samples)
 
