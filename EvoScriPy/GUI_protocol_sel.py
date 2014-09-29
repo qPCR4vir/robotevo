@@ -28,20 +28,18 @@ from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 import tkinter as tk
 
 
-
 def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
 class App(tk.Frame):
     """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
     """
-    def __init__(self, master=None):
-
+    def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.pack(side="left")
 
         logo = tk.PhotoImage(file='..\EvoScriPy\FLI-Logo_mit_Farbverlauf.png')
-        #tk.Label(self, image=logo,width=800).pack(side="top")
+        tk.Label(self, image=logo).pack(side="top")
 
         tk.Label(self,text='Number of Samples (1-48):').pack(side='top')
 
