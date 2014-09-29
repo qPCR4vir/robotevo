@@ -77,7 +77,7 @@ class Instruction:
         return True
 
     def exec(self, mode=None):
-        if not mode: mode = EvoMode.CurEvo  # todo revise
+        if not mode: mode = EvoMode.current  # todo revise
         if not self.allowed(mode):
             return
         mode.exec(self)
