@@ -1,15 +1,7 @@
 __author__ = 'Ariel'
 
-
-
-
-import EvoMode
-from Instructions import *
-from Instructions_Te_MagS import *
 from Labware import *
 import Robot
-import Reactive as React
-from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 
 comments=EvoMode.Comments()
 

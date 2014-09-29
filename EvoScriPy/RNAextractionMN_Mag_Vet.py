@@ -45,7 +45,7 @@ from Instructions_Te_MagS import *
 from Instructions import *
 
 def extractRNA_with_MN_Vet_Kit(NumOfSamples):
-    robot=Robot.curRobot
+    robot=Robot.current
     #assert isinstance(robot,Robot.Robot)
 
 

@@ -178,9 +178,9 @@ class Labware:
     def posAtParallelMove(self, step):
         nR, nC = self.type.nRow, self.type.nCol
         assert step < nC * nR , "too many steps!!"
-        from Robot import curRobot
-        #assert isinstance(curRobot,Robot.Robot)
-        nTips = curRobot.curArm().nTips
+        from Robot import current
+        #assert isinstance(current,Robot.Robot)
+        nTips = current.curArm().nTips
         SubPlateSize = nTips * nC
         SubPlate = step // SubPlateSize
         tN_semiCol  = step // nTips

@@ -116,14 +116,14 @@ class Script(ScriptBody):
         ScriptBody.__init__(self, filename)
         import Robot
 
-        Robot.curRobot = Robot.Robot(templateFile=template, arms=arms)
+        Robot.current = Robot.Robot(templateFile=template, arms=arms)
         self.templateNotAdded = True
 
     def exec(self, instr):
         if self.templateNotAdded:
-            from Robot import curRobot
+            from Robot import current
 
-            for line in curRobot.worktable.template:
+            for line in current.worktable.template:
                 self.f.write((line[:-1] + "\n"))  # .encode('Latin-1')  \r
             self.templateNotAdded = False
         ScriptBody.exec(self, instr)

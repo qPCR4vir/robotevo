@@ -1,10 +1,9 @@
 __author__ = 'qPCR4vir'
 
-import EvoMode
-import Labware
 from Instruction_Base import *
+#from Robot import current as robot
 #todo organize the arg in each instruction according to the more common use
-# todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
+#todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
 
 class aspirate(Pippeting):
     """ A.15.4.1 Aspirate command (Worklist: Aspirate)  A - 125
@@ -225,8 +224,8 @@ class dropDITI(Pippet):
 
 #    def exec(self, mode=None):
 #        if supportVirtualRobot:
-#            global curRobot
-#            used=curRobot.arms[self.arm].drop(self.tipMask)
+#            global current
+#            used=current.arms[self.arm].drop(self.tipMask)
 #            if self.conditional and used:
 #                Pippet.exec(self,mode)
 

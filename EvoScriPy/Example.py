@@ -174,7 +174,7 @@ from Instructions_Te_MagS import *
 from Instructions import *
 
 def extractRNA_with_MN_Vet_Kit(withRobot):
-    robot=Robot.curRobot
+    robot=Robot.current
     assert isinstance(robot,Robot.Robot)
 
     Te_MagS_ActivateHeater(50).exec()

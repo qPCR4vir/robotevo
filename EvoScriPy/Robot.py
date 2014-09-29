@@ -40,7 +40,7 @@ class Robot:
             :param workingTips:
             :param tipsType:
             """
-            self.index = index or Pippet.LiHa1 #todo this is a workaround: we need properly design the dependencies.
+            self.index = index or Pippet.LiHa1  # todo this is a workaround: we need properly design the dependencies.
             self.workingTips = workingTips if workingTips is not None else tipsMask[nTips]
             self.tipsType = tipsType
             self.nTips = nTips
@@ -107,28 +107,6 @@ class Robot:
                     nv = tp.vol - vol[i]
                     assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '-' + str(vol[i])
                     self.Tips[i].vol = nv
-
-    class ProtocolStep:
-        pass
-
-    class MakeMix(ProtocolStep):
-        pass
-
-    class DistrReactive(ProtocolStep):
-        pass
-
-    class Transfer(ProtocolStep):
-        def __init__(self, src, dest, vol):
-            pass
-
-    class Collect(ProtocolStep):
-        def __init__(self, src, dest, vol):
-            pass
-
-    class Waste(Collect):
-        def __init__(self, src, dest, vol):
-            pass
-
 
     def __init__(self, arms=None, nTips=None,
                  index=Pippet.LiHa1, workingTips=None,
@@ -530,6 +508,32 @@ class Robot:
         self.waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
 
 
-curRobot = None
+current = None
 
+
+class ProtocolStep:
+    pass
+
+
+class MakeMix(ProtocolStep):
+    pass
+
+
+class DistrReactive(ProtocolStep):
+    pass
+
+
+class Transfer(ProtocolStep):
+    def __init__(self, src, dest, vol):
+        pass
+
+
+class Collect(ProtocolStep):
+    def __init__(self, src, dest, vol):
+        pass
+
+
+class Waste(Collect):
+    def __init__(self, src, dest, vol):
+        pass
 

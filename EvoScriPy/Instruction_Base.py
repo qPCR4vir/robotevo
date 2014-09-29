@@ -198,9 +198,9 @@ class Pippeting(Pippet):
 
     def validateArg(self):
         Pippet.validateArg(self)
-        from Robot import curRobot  #todo better
+        from Robot import current  #todo better
 
-        nTips = curRobot.curArm().nTips
+        nTips = current.curArm().nTips
         self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
             12 - nTips)  # arg 2, 3 - 14
         return True

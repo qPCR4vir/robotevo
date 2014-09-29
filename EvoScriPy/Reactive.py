@@ -2,7 +2,7 @@ __author__ = 'qPCR4vir'
 
 
 from Labware import *
-# from Robot import curRobot
+# from Robot import current
 
 
 def_react_excess =  4
@@ -41,8 +41,8 @@ class preMix(Reactive):
         self.components = components
 
     def make(self, NumSamples=None):
-        from Robot import curRobot
-        curRobot.make(self, NumSamples)
+        from Robot import current
+        current.make(self, NumSamples)
 
     def compVol(self,index, NumSamples=None):
         NumSamples = NumSamples or NumOfSamples
