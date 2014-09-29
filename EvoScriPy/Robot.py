@@ -81,11 +81,19 @@ class Robot:
                         tip_mask ^= (1 << i)  # already drooped
             return tip_mask
 
-        def aspire(self, vol, tip_mask=-1):  # todo more checks
-            if isinstance(vol, (float, int)):
-                vol = [vol] * self.nTips
+        def aspire(self, volumen, tip_mask=-1):  # todo more checks. Subtract vol from wells !!!
+            """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
+            Using the tip mask will check that you are not trying to use an unmounted tip.
+            vol values for unsettled tip mask are ignored.
+
+            """
+            if isinstance(volumen, (float, int)):
+                vol = [volumen] * self.nTips
+            else:
+                vol = list(volumen)
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     assert tp is not None, "No tp in position " + str(i)
@@ -94,6 +102,9 @@ class Robot:
                         raise BaseException(
                             'To much Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '+' + str(vol[i]))
                     self.Tips[i].vol = nv
+                else:
+                    vol[i] = None
+            return vol, tip_mask
 
         def dispense(self, vol, tip_mask=-1):  # todo more checks
             if isinstance(vol, (float, int)):

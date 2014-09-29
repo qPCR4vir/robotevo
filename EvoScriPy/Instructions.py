@@ -30,6 +30,11 @@ class aspirate(Pippeting):
                             Well,
                             arm )
 
+    def actualize_robot_state(self):
+
+        pass
+
+
 class dispense(Pippeting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
     """
