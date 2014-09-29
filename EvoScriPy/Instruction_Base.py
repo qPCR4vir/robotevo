@@ -75,6 +75,9 @@ class Instruction:
     def allowed(self, mode):
         return True
 
+    def actualize_robot_state(self):
+        pass
+
     def exec(self, mode=None):
         if not mode: mode = EvoMode.current  # todo revise
         if not self.allowed(mode):

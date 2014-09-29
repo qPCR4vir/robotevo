@@ -13,7 +13,8 @@ from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 
 comments=EvoMode.Comments()
 
-EvoMode.current = EvoMode.multiple([EvoMode.AdvancedWorkList('AWL.gwl'),
+EvoMode.current = EvoMode.multiple([EvoMode.iRobot(),
+                                    EvoMode.AdvancedWorkList('AWL.gwl'),
                                     EvoMode.ScriptBody('AWL.esc.txt'),
                                     EvoMode.Script(template = 'RNAext_MNVet.ewt',
                                                    filename = 'AWL.esc',

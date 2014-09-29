@@ -135,6 +135,8 @@ class iRobot(Mode):
     and current volume in wells in labware, etc. One basic use of this, is to garante that the robot will be actualize
     once and only once even when multiple modes are used.
     """
+    def exec(self, instr):
+        instr.actualize_robot_state()
 
 
 current = None
