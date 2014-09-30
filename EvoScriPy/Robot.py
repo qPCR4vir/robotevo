@@ -1,13 +1,13 @@
 __author__ = 'qPCR4vir'
 
-from Instruction_Base import *
-from Instructions import *
-from Labware import *
-import Reactive as React
+#from Instruction_Base import *
+#from Instructions import *
+import Labware as Lab
+import Reactive as Rtv
 
 
-TeMg_Heat = Labware(TeMag48, Labware.Location(14, 0), "48 Pos Heat")
-TeMag = Labware(TeMag48, Labware.Location(14, 1), "48PosMagnet")
+TeMg_Heat = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 0), "48 Pos Heat")
+TeMag = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 1), "48PosMagnet")
 
 tipMask = []  # mask for one tip of index ...
 tipsMask = []  # mask for the first tips
@@ -34,7 +34,7 @@ class Robot:
         Aspire = 1
         Dispense = -1
 
-        def __init__(self, nTips, index=Pipette.LiHa1, workingTips=None, tipsType=DiTi):
+        def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
             """
 
             :param nTips:
@@ -42,7 +42,7 @@ class Robot:
             :param workingTips:
             :param tipsType:
             """
-            self.index = index or Pipette.LiHa1  # todo this is a workaround: we need properly design the dependencies.
+            self.index = index # or Pipette.LiHa1  todo this is a workaround: we need properly design the dependencies.
             self.workingTips = workingTips if workingTips is not None else tipsMask[nTips]
             self.tipsType = tipsType
             self.nTips = nTips
@@ -164,9 +164,9 @@ class Robot:
                     vol[i] = None
             return vol, tip_mask
 
-    def __init__(self, arms=None, nTips=None,
-                 index=Pipette.LiHa1, workingTips=None,
-                 tipsType=Arm.DiTi, templateFile=None):
+    def __init__(self, index,arms=None, nTips=None,
+                  workingTips=None,
+                 tipsType=Arm.DiTi, templateFile=None): # index=Pipette.LiHa1
         """
 
         :param arms:
@@ -178,8 +178,8 @@ class Robot:
             {arms.index: arms} if isinstance(arms, Robot.Arm) else \
                 {arms.index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
 
-        self.worktable = WorkTable(templateFile)
-        self.def_arm = index or Pipette.LiHa1
+        self.worktable = Lab.WorkTable(templateFile)
+        self.def_arm = index  # or Pipette.LiHa1
         self.droptips = True
         self.reusetips = False
         self.preservetips = False
@@ -205,42 +205,36 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol): # todo coordine protocol
         if self.reusetips:
             TIP_MASK = self.curArm().getMoreTips(TIP_MASK, maxVol)
         else:
             self.dropTips(TIP_MASK)
             TIP_MASK = self.curArm().getTips(TIP_MASK, maxVol)
-        if TIP_MASK:
-            getDITI2(TIP_MASK, arm=self.def_arm).exec()
         return TIP_MASK
 
-    def dropTips(self, TIP_MASK=-1):
+    def dropTips(self, TIP_MASK=-1): # todo coordine protocol
         if not self.droptips: return 0
         TIP_MASK = self.curArm().drop(TIP_MASK)
-        if TIP_MASK:
-            dropDITI(TIP_MASK).exec()
         return TIP_MASK
 
-    def make(self, what, NumSamples=None):
-        if isinstance(what, React.preMix): self.makePreMix(what, NumSamples)
+    def make(self, what, NumSamples=None): # todo coordine protocol
+        if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
-    def aspire(self, tip, reactive, vol=None):
+    def aspire(self, tip, reactive, vol=None): # todo coordine protocol
         if vol is None:
             vol = reactive.minVol()
         v = [0] * self.curArm().nTips
         v[tip] = vol
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
         self.curArm().aspire(v, tipMask[tip])
-        aspirate(tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-    def dispense(self, tip, reactive, vol=None):
+    def dispense(self, tip, reactive, vol=None): # todo coordine protocol
         vol = vol or reactive.minVol()  # really ??
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
         v = [0] * self.curArm().nTips
         v[tip] = vol
         self.curArm().dispense(v, tipMask[tip])
-        dispense(tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
     def aspiremultiTips(self, tips, reactive, vol=None):
         if not isinstance(vol, list):
