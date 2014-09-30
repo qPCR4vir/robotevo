@@ -3,44 +3,46 @@ __author__ = 'qPCR4vir'
 import EvoMode
 
 
-class WorkTable: # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
+class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
     """ Collection of Racks.Types and Labware.Types and pos of instances """
 
-    def __init__(self,templateFile=None):
-        self.labTypes= {}  # typeName,type. The type mountain a list of labware (with locations)
+    def __init__(self, templateFile=None):
+        self.labTypes = {}  # typeName,type. The type mountain a list of labware (with locations)
         self.Racks = []
-        self.nGrid = 67   # max
-        self.grid=[None]*67
-        if isinstance(templateFile,list):
+        self.nGrid = 67  # max
+        self.grid = [None] * 67
+        if isinstance(templateFile, list):
             self.template = templateFile
         else:
             self.template = self.parseWorTableFile(templateFile)
 
     def parseWorTableFile(self, templateFile):
         if not templateFile: return []
-        templList=[]
-        with open(templateFile,'r', encoding='Latin-1') as tmpl:
-            for line in tmpl:            #todo do the real complete parse
+        templList = []
+        with open(templateFile, 'r', encoding='Latin-1') as tmpl:
+            for line in tmpl:  # todo do the real complete parse
                 templList += [line]
                 if line.startswith("--{ RPG }--"): break
         return templList
 
-    def addLabware(self, labware ):
+    def addLabware(self, labware):
 
         if labware.location.grid >= self.nGrid:
             raise "This WT have only " + self.nGrid + " grid."
 
-        if  labware.type.name not in self.labTypes :
-            self.labTypes[labware.type.name]=[]
+        if labware.type.name not in self.labTypes:
+            self.labTypes[labware.type.name] = []
         self.labTypes[labware.type.name] += [labware]
 
 
 curWorkTable = WorkTable()
 
+
 class Rack:
     """ Collection of Labwares sites, filled with labwares... """
+
     class Type:
-        def __init__(self,name, width = 1, nSite = 1):
+        def __init__(self, name, width=1, nSite=1):
             self.width = width
             self.nSite = nSite
             self.allowedLabwaresTypes = []
@@ -60,14 +62,13 @@ class Rack:
             raise "This rack " + self.Type.name + ":" + self.label + " have only " + self.Type.nSite + " sites."
 
         if self.labwares[site] is not None:
-            print ("Warning: you replaced an existed labware")
+            print("Warning: you replaced an existed labware")
 
         self.labwares[site] = labware
-        if labware.location.grid !=self.grid:
+        if labware.location.grid != self.grid:
             if labware.location.grid is not None:
-                print ("Warning, original grid changed to that of the Rack.")
-            labware.location.grid=self.grid
-
+                print("Warning, original grid changed to that of the Rack.")
+            labware.location.grid = self.grid
 
 
 class Well:
@@ -77,12 +78,12 @@ class Well:
         self.vol = 0
         self.selFlag = False
         self.reactive = None
-        self.label   = ""
+        self.label = ""
 
 
 class Labware:
     class Type:
-        def __init__(self, name, nRow, nCol=1, maxVol = None, conectedWells=False):
+        def __init__(self, name, nRow, nCol=1, maxVol=None, conectedWells=False):
             self.conectedWells = conectedWells
             self.name = name
             self.nRow = nRow
@@ -99,51 +100,90 @@ class Labware:
             """
 
             self.rack = rack
-            self.grid=grid
-            self.site=site
+            self.grid = grid
+            self.site = site
             self.rack_site = rack_site
 
     class Position:
         def __init__(self, row, col=1):
-            self.row=row
-            self.col=col
+            self.row = row
+            self.col = col
 
     def autoselect(self, offset=0, maxTips=1, replys=1):
-        nWells=self.type.nCol*self.type.nRow
-        assert nWells>offset, "Can not select to far"   # todo better msg
+        nWells = self.type.nCol * self.type.nRow
+        assert nWells > offset, "Can not select to far"  # todo better msg
         if self.type.conectedWells:
-            if nWells<maxTips: maxTips=nWells
-            self.selectOnly(range((nWells-maxTips)//2,(nWells-maxTips)//2+maxTips))
+            if nWells < maxTips: maxTips = nWells
+            self.selectOnly(range((nWells - maxTips) // 2, (nWells - maxTips) // 2 + maxTips))
             return maxTips
         else:
-            if maxTips > replys: maxTips=replys
-            self.selectOnly(range(offset,offset+maxTips))
+            if maxTips > replys: maxTips = replys
+            self.selectOnly(range(offset, offset + maxTips))
             return maxTips
 
     def offset(self, row, col=1):
         if isinstance(row, Labware.Position):
-            col=row.col
-            row=row.row
-        if isinstance(row,str):
+            col = row.col
+            row = row.row
+        if isinstance(row, str):
             return self.offsetFromName(row)
-        return row-1 + (col-1)*self.type.nRow
+        return row - 1 + (col - 1) * self.type.nRow
 
     def offsetFromName(self, wellName):
         row = ord(wellName[0]) - ord('A') + 1
         col = int(wellName[1:])
-        return self.offset(row,col)
+        return self.offset(row, col)
 
     def position(self, offset):
-        return self.Position( offset % self.type.nCol + 1, offset // self.type.nCol + 1)
+        return self.Position(offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
     def __init__(self, type, location, label=None, worktable=curWorkTable):
         self.type = type
-        self.label=label
+        self.label = label
         self.location = location
-        self.Wells = [Well(self,offset) for offset in range(self.offset(self.type.nRow,self.type.nCol)+1)]
+        self.Wells = [Well(self, offset) for offset in range(self.offset(self.type.nRow, self.type.nCol) + 1)]
         worktable.addLabware(self)
         if location.rack:
-            location.rack.addLabware(self,location.rack_site)
+            location.rack.addLabware(self, location.rack_site)
+
+    def find_free_wells(self, n=1):
+        continuous = True
+        free_wells = []
+        for i in range(len(self.Wells) - n):
+            if any(w.reactive for w in self.Wells[i:i + n]): continue
+            return continuous, self.Wells[i:i + n]
+        for w in self.Wells:
+            if w.reactive: continue
+            free_wells += [w]
+            if len(free_wells) == n: break
+        return not continuous, free_wells
+
+    def put(self, reactive, pos=None, replicas=None):
+        if pos is None:  # find self where to put the replicas of this reactive
+            replicas = replicas or 1  # default one replica
+            continuous, pos = self.find_free_wells(replicas)
+            assert replicas == len(pos)  # replicas = len(pos)  # todo What to do?
+        elif isinstance(pos, list):
+            if replicas is None:  # put one replica on each of the given position
+                replicas = len(pos)
+            else:
+                assert (replicas == len(pos))
+        else:
+            replicas = replicas or 1  # put one replica beginning from the given position
+            if isinstance(pos, Well):
+                pos = self.Wells[pos.offset: pos.offset + replicas]
+            else:
+                pos = self.offset(pos) + 1
+                pos = range(pos, pos + replicas)
+
+        Replicas = []
+        for w in pos:
+            w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
+            assert not w.reactive, self.label + ": Can not put " + reactive.name + " in position " + str(
+                w.offset + 1) + " already occupied by " + w.reactive.name
+            w.reactive = reactive
+            Replicas += [w]
+        return Replicas
 
 
     def clearSelection(self):
@@ -159,7 +199,7 @@ class Labware:
             well.selFlag = True
         return self
 
-    def selectOnly(self,sel_idx_list):
+    def selectOnly(self, sel_idx_list):
         self.clearSelection()
         self.select(sel_idx_list)
         return self
@@ -169,46 +209,46 @@ class Labware:
             self.Wells[i].selFlag = True
         return self
 
-    def newOffset(self, pos, offset ):
-        return self.offset(pos.row,pos.col) + offset
+    def newOffset(self, pos, offset):
+        return self.offset(pos.row, pos.col) + offset
 
     def newPosition(self, pos, offset):
-        return self.position(self.newOffset(pos,offset))
+        return self.position(self.newOffset(pos, offset))
 
     def posAtParallelMove(self, step):
         nR, nC = self.type.nRow, self.type.nCol
-        assert step < nC * nR , "too many steps!!"
+        assert step < nC * nR, "too many steps!!"
         from Robot import current
-        #assert isinstance(current,Robot.Robot)
+        # assert isinstance(current,Robot.Robot)
         nTips = current.curArm().nTips
         SubPlateSize = nTips * nC
         SubPlate = step // SubPlateSize
-        tN_semiCol  = step // nTips
-        parit= (SubPlate)%2
-        pos_semiCol = nC*parit + (tN_semiCol%nC)*(-1)**parit + 1-parit
+        tN_semiCol = step // nTips
+        parit = (SubPlate) % 2
+        pos_semiCol = nC * parit + (tN_semiCol % nC) * (-1) ** parit + 1 - parit
 
-        p = self.Position(   row = SubPlate*nTips + step % nTips + 1,  col = pos_semiCol)
+        p = self.Position(row=SubPlate * nTips + step % nTips + 1, col=pos_semiCol)
 
-        msg = "error in calculation of parallel row {:d}>{:d}".format(p.row,nR)
-        assert 0<p.row <= nR, msg
-        msg = "error in calculation of parallel col {:d}>{:d}".format(p.col,nC)
-        assert 0<p.col <= nC, msg
+        msg = "error in calculation of parallel row {:d}>{:d}".format(p.row, nR)
+        assert 0 < p.row <= nR, msg
+        msg = "error in calculation of parallel col {:d}>{:d}".format(p.col, nC)
+        assert 0 < p.col <= nC, msg
         return p
 
-    def parallelOrder(self,original=None):
-        original= original or self.selected()
+    def parallelOrder(self, original=None):
+        original = original or self.selected()
         assert original
-        if isinstance(original,int):
-            assert 0<original<=len(self.Wells)
-            original=range(original)
-        assert isinstance(original,(list,range))
+        if isinstance(original, int):
+            assert 0 < original <= len(self.Wells)
+            original = range(original)
+        assert isinstance(original, (list, range))
         return [self.offset(self.posAtParallelMove(offset)) for offset in original]
 
     def offsetAtParallelMove(self, step):
         p = self.posAtParallelMove(step)
         return self.offset(p.row, p.col)
 
-    def moveParallel(self, pos, offset): # TODO
+    def moveParallel(self, pos, offset):  # TODO
         return offset % self.type.nCol + 1, offset // self.type.nCol + 1
 
     def wellSelectionStr(self):
@@ -244,44 +284,42 @@ class Labware:
         """
         X = self.type.nCol
         Y = self.type.nRow
-        sel = bytearray()      #sel=sel.encode('ascii')
-        bitMask=0
-        null = 48 # ord('0')
-        bit=0
+        sel = bytearray()  # sel=sel.encode('ascii')
+        bitMask = 0
+        null = 48  # ord('0')
+        bit = 0
         for w in self.Wells:
             bit = w.offset % 7
-            if w.selFlag: bitMask |=  (1<<bit)
-            if bit == 6 :
+            if w.selFlag: bitMask |= (1 << bit)
+            if bit == 6:
                 sel.append(null + bitMask)
                 bitMask = 0
         if bit != 6:
-            sel.append (null + bitMask)
-        return "{:02X}{:02X}".format (X,Y)+  sel.decode(EvoMode.Mode.encoding)
+            sel.append(null + bitMask)
+        return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
 
 
 class Cuvette(Labware):
     pass
 
+
 class Te_Mag(Labware):
     pass
 
 
-
-Trough_100ml  = Labware.Type("Trough 100ml", 8, maxVol=100000,conectedWells=True )
+Trough_100ml = Labware.Type("Trough 100ml", 8, maxVol=100000, conectedWells=True)
 EppRack16_2mL = Labware.Type("Tube Eppendorf 2mL 16 Pos", 16, maxVol=2000)
-EppRack3x16R  = Labware.Type("Tube Eppendorf 3x 16 PosR", 16,3, maxVol=1500)
-EppRack3x16   = Labware.Type("Tube Eppendorf 3x 16 Pos", 16,3, maxVol=1500)
-TeMag48       = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
-CleanerSWS    = Labware.Type("Washstation 2Grid Cleaner short"  , 8, maxVol=100000,conectedWells=True)
-WashCleanerS  = Labware(CleanerSWS, Labware.Location(22,0))
-WasteWS       = Labware.Type("Washstation 2Grid Waste"          , 8, maxVol=100000,conectedWells=True)
-WashWaste     = Labware(WasteWS,    Labware.Location(22,1))
-CleanerLWS    = Labware.Type("Washstation 2Grid Cleaner long"   , 8, maxVol=100000,conectedWells=True)
-WashCleanerL  = Labware(CleanerLWS, Labware.Location(22,2))
-DiTi_Waste    = Labware.Type("Washstation 2Grid DiTi Waste"     , 8, maxVol=100000,conectedWells=True)
-DiTiWaste     = Labware(DiTi_Waste,Labware.Location(22,6))
-DiTi_1000ul   = Labware.Type("DiTi 1000ul"     , 8,12, maxVol=970)
+EppRack3x16R = Labware.Type("Tube Eppendorf 3x 16 PosR", 16, 3, maxVol=1500)
+EppRack3x16 = Labware.Type("Tube Eppendorf 3x 16 Pos", 16, 3, maxVol=1500)
+TeMag48 = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
+CleanerSWS = Labware.Type("Washstation 2Grid Cleaner short", 8, maxVol=100000, conectedWells=True)
+WashCleanerS = Labware(CleanerSWS, Labware.Location(22, 0))
+WasteWS = Labware.Type("Washstation 2Grid Waste", 8, maxVol=100000, conectedWells=True)
+WashWaste = Labware(WasteWS, Labware.Location(22, 1))
+CleanerLWS = Labware.Type("Washstation 2Grid Cleaner long", 8, maxVol=100000, conectedWells=True)
+WashCleanerL = Labware(CleanerLWS, Labware.Location(22, 2))
+DiTi_Waste = Labware.Type("Washstation 2Grid DiTi Waste", 8, maxVol=100000, conectedWells=True)
+DiTiWaste = Labware(DiTi_Waste, Labware.Location(22, 6))
+DiTi_1000ul = Labware.Type("DiTi 1000ul", 8, 12, maxVol=970)
 
-
-
-MP96well = Labware.Type("MP 96 well 0,2 mL", 8,12, maxVol=200)
+MP96well = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)

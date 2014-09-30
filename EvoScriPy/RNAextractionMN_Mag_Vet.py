@@ -12,7 +12,7 @@ Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
 LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
 IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
 BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,replys=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
 
 VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                  Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
@@ -28,7 +28,7 @@ ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,   
 
 
 IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
-                                 Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)
+                                 Reactives, volpersample= 20 ,defLiqClass=W_liquidClass)  #, pos=14
 ProtK           = React.Reactive("Proteinase K"                    ,
                                  Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
 cRNA            = React.Reactive("Carrier RNA"                     ,
