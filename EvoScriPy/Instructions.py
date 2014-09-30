@@ -1,7 +1,7 @@
 __author__ = 'qPCR4vir'
 
 from Instruction_Base import *
-#from Robot import current as robot
+from Robot import current as robot
 #todo organize the arg in each instruction according to the more common use
 #todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
 
@@ -30,9 +30,9 @@ class aspirate(Pipetting):
                             Well,
                             arm )
 
-    def actualize_robot_state(self):
+    def action(self):
+        return robot.Arm.Aspire
 
-        pass
 
 class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
@@ -59,7 +59,11 @@ class dispense(Pipetting):
                             Well,
                             arm )
 
-class mix(Pippeting):
+    def action(self):
+        return robot.Arm.Dispense
+
+
+class mix(Pipetting):
     """ A.15.4.3 Mix (Worklist: Mix)
     """
     def __init__(self,  tipMask     = curTipMask,

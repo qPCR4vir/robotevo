@@ -31,6 +31,8 @@ class Robot:
     class Arm:
         DiTi = 0
         Fixed = 1
+        Aspire = 1
+        Dispense = -1
 
         def __init__(self, nTips, index=Pipette.LiHa1, workingTips=None, tipsType=DiTi):
             """
@@ -80,6 +82,38 @@ class Robot:
                     else:
                         tip_mask ^= (1 << i)  # already drooped
             return tip_mask
+
+        def pipette(self, action, volume, tip_mask=-1) -> (list, int):
+            """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
+                    Using the tip mask will check that you are not trying to use an unmounted tip.
+                    vol values for unsettled tip mask are ignored.
+
+                    :rtype : list, int
+                    :param action: +1:aspire, -1:dispense
+                    :param volume:
+                    :param tip_mask: -1:all tips
+                    """
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
+            else:
+                vol = list(volume)
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    assert tp is not None, "No tp in position " + str(i)
+                    nv = tp.vol + action * vol[i]
+                    if 0 < nv < tp.maxVol:
+                        self.Tips[i].vol = nv
+                        continue
+                    msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
+                    if 0 < nv:
+                        raise BaseException('To few Vol in tip ' + msg)
+                    raise BaseException('To much Vol in tip ' + msg)
+                else:
+                    vol[i] = None
+            return vol, tip_mask
+
 
         def aspire(self, volume, tip_mask=-1):  # todo more checks. Subtract vol from wells !!!
             """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.

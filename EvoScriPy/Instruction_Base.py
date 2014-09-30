@@ -2,6 +2,7 @@ __author__ = 'qPCR4vir'
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoMode
 import Labware as Lab
+from Robot import current as robot
 
 supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiple mode)
 
@@ -25,10 +26,10 @@ class expression(string1):
 
 class expr(EvoTypes):
     def __init__(self, dim, data):
-        EvoTypes.__init__(self,data)
+        EvoTypes.__init__(self, data)
         self.dim = dim
 
-    def split(self):  #TODO 0 instant "0" ???? ; split - is not an elegant solution
+    def split(self):  # TODO 0 instant "0" ???? ; split - is not an elegant solution
         if isinstance(self.data, list):
             d = self.dim - len(self.data)
             assert (d >= 0)
@@ -137,11 +138,11 @@ class Pipette(Instruction):
     LiHa2 = 1
     def __init__(self, name, tipMask     = curTipMask,
                              labware     = def_LabW,
-                             spacing     = 1,
-                             wellSelection = None,
-                             LoopOptions = def_LoopOp,
-                             RackName    = None,
-                             Well        = None,
+                             spacing     = 1,           # todo how to use???
+                             wellSelection = None,      # todo how to use???
+                             LoopOptions = def_LoopOp,  # todo how to model???
+                             RackName    = None,        # todo I need to this???
+                             Well        = None,        # todo I need to this???
                              arm         = LiHa1):
         Instruction.__init__(self, name)
         self.tipMask=tipMask
@@ -197,13 +198,18 @@ class Pipetting(Pipette):
         self.volume=volume
 
     def validateArg(self):
-        from Robot import current  #todo better
         Pipette.validateArg(self)
+        #from Robot import current  #todo better
 
-        nTips = current.curArm().nTips
+        nTips = robot.curArm().nTips
         self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
             12 - nTips)  # arg 2, 3 - 14
         return True
+
+    def actualize_robot_state(self):
+        self.volume, self.tipMask = robot.pipette(self.action(), self.volume, self.tipMask )
+
+        pass
 
 
 class DITIs(Instruction):
