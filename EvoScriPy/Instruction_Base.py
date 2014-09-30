@@ -132,7 +132,7 @@ def_DiTi        = Lab.DiTi_1000ul   # todo revise
 def_AirgapSpeed = 300
 
 
-class Pippet(Instruction):
+class Pipette(Instruction):
     LiHa1 = 0
     LiHa2 = 1
     def __init__(self, name, tipMask     = curTipMask,
@@ -174,7 +174,7 @@ class Pippet(Instruction):
         return True
 
 
-class Pippeting(Pippet):
+class Pipetting(Pipette):
     def __init__(self, name, tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
@@ -184,8 +184,8 @@ class Pippeting(Pippet):
                              LoopOptions = def_LoopOp,
                              RackName    = None,
                              Well        = None,
-                             arm         = Pippet.LiHa1):
-        Pippet.__init__(self, name, tipMask    ,
+                             arm         = Pipette.LiHa1):
+        Pipette.__init__(self, name, tipMask    ,
                              labware     ,
                              spacing    ,
                              wellSelection,
@@ -197,8 +197,8 @@ class Pippeting(Pippet):
         self.volume=volume
 
     def validateArg(self):
-        Pippet.validateArg(self)
         from Robot import current  #todo better
+        Pipette.validateArg(self)
 
         nTips = current.curArm().nTips
         self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
@@ -207,7 +207,7 @@ class Pippeting(Pippet):
 
 
 class DITIs(Instruction):
-    def __init__(self, name, tipMask=curTipMask, options=0, arm=Pippet.LiHa1):
+    def __init__(self, name, tipMask=curTipMask, options=0, arm=Pipette.LiHa1):
         """
 
         :param name: str, instruction

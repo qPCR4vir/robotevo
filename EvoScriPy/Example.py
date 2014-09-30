@@ -114,12 +114,12 @@ MP.Wells[MP.offset("F01")].selFlag = True
 
 from EvoScriptCommands import *
 
-Aspirate( 8, "BufferNewXDX", vol,1,1,1,MP.wellSelectionStr() ,LOp, Pippet.LiHa1)
+Aspirate( 8, "BufferNewXDX", vol,1,1,1,MP.wellSelectionStr() ,LOp, Pipette.LiHa1)
 
 vol=[1.1,2.2]
 LOp+=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]
 
-Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pippet.LiHa1)
+Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pipette.LiHa1)
 
 print("\n done")
 #VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )

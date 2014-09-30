@@ -32,7 +32,7 @@ class Robot:
         DiTi = 0
         Fixed = 1
 
-        def __init__(self, nTips, index=Pippet.LiHa1, workingTips=None, tipsType=DiTi):
+        def __init__(self, nTips, index=Pipette.LiHa1, workingTips=None, tipsType=DiTi):
             """
 
             :param nTips:
@@ -40,7 +40,7 @@ class Robot:
             :param workingTips:
             :param tipsType:
             """
-            self.index = index or Pippet.LiHa1  # todo this is a workaround: we need properly design the dependencies.
+            self.index = index or Pipette.LiHa1  # todo this is a workaround: we need properly design the dependencies.
             self.workingTips = workingTips if workingTips is not None else tipsMask[nTips]
             self.tipsType = tipsType
             self.nTips = nTips
@@ -131,7 +131,7 @@ class Robot:
             return vol, tip_mask
 
     def __init__(self, arms=None, nTips=None,
-                 index=Pippet.LiHa1, workingTips=None,
+                 index=Pipette.LiHa1, workingTips=None,
                  tipsType=Arm.DiTi, templateFile=None):
         """
 
@@ -145,7 +145,7 @@ class Robot:
                 {arms.index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
 
         self.worktable = WorkTable(templateFile)
-        self.def_arm = index or Pippet.LiHa1
+        self.def_arm = index or Pipette.LiHa1
         self.droptips = True
         self.reusetips = False
         self.preservetips = False

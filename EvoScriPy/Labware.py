@@ -94,9 +94,12 @@ class Labware:
         def __init__(self, grid=None, site=None, rack=None, rack_site=None):
             """
 
-            :param grid: int, 1-67.     labware location - carrier grid position
-            :param site: int, 0 - 127.  labware location - (site on carrier - 1) !!!!!
+
+            :param grid: int, 1-67.   worktable grid. Carrier grid position
+            :param site: int, 0 - 127. Site on carrier (on RAck?)lab location - (site on carrier - 1) !!!!!
             :param label:
+            :param rack:
+            :param rack_site:
             """
 
             self.rack = rack
@@ -109,7 +112,14 @@ class Labware:
             self.row = row
             self.col = col
 
-    def autoselect(self, offset=0, maxTips=1, replys=1):
+    def autoselect(self, offset=0, maxTips=1, replys=1): #todo make this "virtual". Implement cuvette
+        """
+
+        :param offset:
+        :param maxTips:
+        :param replys:
+        :return:
+        """
         nWells = self.type.nCol * self.type.nRow
         assert nWells > offset, "Can not select to far"  # todo better msg
         if self.type.conectedWells:
