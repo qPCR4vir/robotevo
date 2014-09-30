@@ -81,16 +81,16 @@ class Robot:
                         tip_mask ^= (1 << i)  # already drooped
             return tip_mask
 
-        def aspire(self, volumen, tip_mask=-1):  # todo more checks. Subtract vol from wells !!!
+        def aspire(self, volume, tip_mask=-1):  # todo more checks. Subtract vol from wells !!!
             """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
             Using the tip mask will check that you are not trying to use an unmounted tip.
             vol values for unsettled tip mask are ignored.
 
             """
-            if isinstance(volumen, (float, int)):
-                vol = [volumen] * self.nTips
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
             else:
-                vol = list(volumen)
+                vol = list(volume)
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
 
@@ -106,11 +106,19 @@ class Robot:
                     vol[i] = None
             return vol, tip_mask
 
-        def dispense(self, vol, tip_mask=-1):  # todo more checks
-            if isinstance(vol, (float, int)):
-                vol = [vol] * self.nTips
+        def dispense(self, volume, tip_mask=-1):  # todo more checks. Add vol from wells !!!
+            """ Check and actualize the robot Arm state to dispense [vol]s with a tip mask.
+            Using the tip mask will check that you are not trying to use an unmounted tip.
+            vol values for unsettled tip mask are ignored.
+
+            """
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
+            else:
+                vol = list(volume)
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is None:
@@ -118,6 +126,9 @@ class Robot:
                     nv = tp.vol - vol[i]
                     assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '-' + str(vol[i])
                     self.Tips[i].vol = nv
+                else:
+                    vol[i] = None
+            return vol, tip_mask
 
     def __init__(self, arms=None, nTips=None,
                  index=Pippet.LiHa1, workingTips=None,
