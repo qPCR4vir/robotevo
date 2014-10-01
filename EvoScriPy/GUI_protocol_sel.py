@@ -2,15 +2,15 @@ __author__ = 'Ariel'
 
 from Labware import *
 import Robot
+from Instructions import Pipette
 
 comments=EvoMode.Comments()
 
-EvoMode.current = EvoMode.multiple([EvoMode.iRobot(),
+EvoMode.current = EvoMode.multiple([EvoMode.iRobot(Pipette.LiHa1, nTips=4),
+                                    EvoMode.Script(template = 'RNAext_MNVet.ewt',
+                                                   filename = 'AWL.esc' ),
                                     EvoMode.AdvancedWorkList('AWL.gwl'),
                                     EvoMode.ScriptBody('AWL.esc.txt'),
-                                    EvoMode.Script(template = 'RNAext_MNVet.ewt',
-                                                   filename = 'AWL.esc',
-                                                   arms     = Robot.Robot.Arm(4) ),
                                     EvoMode.StdOut(), comments
                                     ])
 

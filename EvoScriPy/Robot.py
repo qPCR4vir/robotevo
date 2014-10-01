@@ -3,8 +3,6 @@ __author__ = 'qPCR4vir'
 #from Instruction_Base import *
 #from Instructions import *
 import Labware as Lab
-import Reactive as Rtv
-
 
 TeMg_Heat = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 0), "48 Pos Heat")
 TeMag = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 1), "48PosMagnet")
@@ -17,7 +15,7 @@ for tip in range(13):
 
 def_nTips = 4
 nTips = def_nTips
-Tip_1000maxVol = 940
+Tip_1000maxVol = Lab.DiTi_1000ul.maxVol
 Tip_200maxVol = 190
 
 
@@ -28,6 +26,12 @@ class Tip:
 
 
 class Robot:
+    """ Maintain an intern state.
+    Can have more than one arm in a dictionary that map an index with the actual arm.
+    One of the arms can be set as "current" and is returned by curArm()
+    Most of the changes in state are made by the implementation of the low level instructions, while the protocols can
+    "observe" the state to make all kind of optimizations and organizations previous to the actual instruction call
+    """
     class Arm:
         DiTi = 0
         Fixed = 1
@@ -167,56 +171,6 @@ class Robot:
                     vol[i] = None
             return vol, tip_mask
 
-
-        def aspire(self, volume, tip_mask=-1):  # todo more checks. Subtract vol from wells !!!
-            """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
-            Using the tip mask will check that you are not trying to use an unmounted tip.
-            vol values for unsettled tip mask are ignored.
-
-            """
-            if isinstance(volume, (float, int)):
-                vol = [volume] * self.nTips
-            else:
-                vol = list(volume)
-            if tip_mask == -1:
-                tip_mask = tipsMask[self.nTips]
-
-            for i, tp in enumerate(self.Tips):
-                if tip_mask & (1 << i):
-                    assert tp is not None, "No tp in position " + str(i)
-                    nv = tp.vol + vol[i]
-                    if nv > tp.maxVol:
-                        raise BaseException(
-                            'To much Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '+' + str(vol[i]))
-                    self.Tips[i].vol = nv
-                else:
-                    vol[i] = None
-            return vol, tip_mask
-
-        def dispense(self, volume, tip_mask=-1):  # todo more checks. Add vol from wells !!!
-            """ Check and actualize the robot Arm state to dispense [vol]s with a tip mask.
-            Using the tip mask will check that you are not trying to use an unmounted tip.
-            vol values for unsettled tip mask are ignored.
-
-            """
-            if isinstance(volume, (float, int)):
-                vol = [volume] * self.nTips
-            else:
-                vol = list(volume)
-            if tip_mask == -1:
-                tip_mask = tipsMask[self.nTips]
-
-            for i, tp in enumerate(self.Tips):
-                if tip_mask & (1 << i):
-                    if tp is None:
-                        raise "No tip in position " + str(i)
-                    nv = tp.vol - vol[i]
-                    assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '-' + str(vol[i])
-                    self.Tips[i].vol = nv
-                else:
-                    vol[i] = None
-            return vol, tip_mask
-
     def __init__(self, index,arms=None, nTips=None,
                   workingTips=None,
                  tipsType=Arm.DiTi, templateFile=None): # index=Pipette.LiHa1
@@ -237,6 +191,9 @@ class Robot:
         self.reusetips = False
         self.preservetips = False
         self.usePreservedtips = False
+
+    def set_worktable(self,templateFile):
+        self.worktable = Lab.WorkTable(templateFile)
 
     def dropTips(self, drop=True):
         self.droptips, drop = drop, self.droptips
@@ -282,23 +239,9 @@ class Robot:
         TIP_MASK = self.curArm().drop(TIP_MASK)
         return TIP_MASK
 
-    def make(self, what, NumSamples=None): # todo coordine protocol
-        if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
+    def dispense(self, tip, labware, vol=None): # todo implement a coordinate call to arm and lab
 
-    def aspire(self, tip, reactive, vol=None): # todo coordine protocol
-        if vol is None:
-            vol = reactive.minVol()
-        v = [0] * self.curArm().nTips
-        v[tip] = vol
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        self.curArm().aspire(v, tipMask[tip])
-
-    def dispense(self, tip, reactive, vol=None): # todo coordine protocol
-        vol = vol or reactive.minVol()  # really ??
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        v = [0] * self.curArm().nTips
-        v[tip] = vol
-        self.curArm().dispense(v, tipMask[tip])
+        self.curArm().dispense(vol, tipMask[tip])
 
     def aspiremultiTips(self, tips, reactive, vol=None):
         if not isinstance(vol, list):
