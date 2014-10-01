@@ -95,6 +95,13 @@ class mix(Pipetting):
         self.arg[18:18] = [self.cycles]                 # arg 19
         return True
 
+    def actualize_robot_state(self):
+        self.volume, self.tipMask = Robot.current.curArm().pipette(Robot.Robot.Arm.Aspire, self.volume, self.tipMask )
+        self.volume, self.tipMask = Robot.current.curArm().pipette(Robot.Robot.Arm.Dispense, self.volume, self.tipMask )
+
+        pass
+
+
 class wash_tips(Pipette):                     # TODO revise def values of arg
     """ A.15.4.4 Wash Tips (Worklist: Wash)
     """
