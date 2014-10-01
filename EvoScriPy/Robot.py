@@ -38,27 +38,74 @@ class Robot:
             """
 
             :param nTips:
-            :param index:
-            :param workingTips:
+            :param index: int. for example: index=Pipette.LiHa1
+            :param workingTips: some tips maybe broken or permanently unused.
             :param tipsType:
             """
-            self.index = index # or Pipette.LiHa1  todo this is a workaround: we need properly design the dependencies.
-            self.workingTips = workingTips if workingTips is not None else tipsMask[nTips]
+            self.index = index
+            self.workingTips = workingTips if workingTips is not None else tipsMask[nTips] # todo implement
             self.tipsType = tipsType
             self.nTips = nTips
             self.Tips = [None] * nTips
 
-
-        def getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol):
+        def mask_to_getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+            """     Mount only one kind of tip at a time
+                    :rtype : int
+                    :param tip_mask:
+                    :param maxVol: int. the maximum volume allowed in microliters
+                    :return: the mask that can be used
+                    :raise "Tip already in position " + str(i):
+                    """
             if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
-                        raise "Tip already in position " + str(i)
+                        raise "A Tip with max Vol=" + str(tp.maxVol) + " already in position " + str(i)
+                    # self.Tips[i] = Tip(maxVol)
+            return tip_mask
+
+        def getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+            """     Mount only one kind of tip at a time
+                    :rtype : int
+                    :param tip_mask:
+                    :param maxVol: int. the maximum volume allowed in microliters
+                    :return: the mask that can be used
+                    :raise "Tip already in position " + str(i):
+                    """
+            if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    if tp is not None:
+                        raise "A Tip with max Vol=" + str(tp.maxVol) + " already in position " + str(i)
                     self.Tips[i] = Tip(maxVol)
             return tip_mask
 
-        def getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol):
+        def mask_to_getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+            """ Mount only the tips with are not already mounted.
+                Mount only one kind of tip at a time, but not necessary the same of the already mounted.
+                    :rtype : int
+                    :param tip_mask: int
+                    :param maxVol: int  max microliter
+                    :return: the mask that can be used
+                    """
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    if tp:  # already in position
+                        tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
+                    else:
+                        3 self.Tips[i] = Tip(maxVol)
+            return tip_mask
+
+        def getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+            """ Mount only the tips with are not already mounted.
+                Mount only one kind of tip at a time, but not necessary the same of the already mounted.
+                    :rtype : int
+                    :param tip_mask: int
+                    :param maxVol: int  max microliter
+                    :return: the mask that can be used
+                    """
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
@@ -69,9 +116,11 @@ class Robot:
                         self.Tips[i] = Tip(maxVol)
             return tip_mask
 
-        def drop(self, tip_mask=-1):
-            """
-            :rtype : True if actually ned to be drooped
+        def drop(self, tip_mask=-1) -> int:
+            """ Drop tips only if needed
+            :param tip_mask: int
+            :return: the mask that can be used with, is "True" if tips actually ned to be drooped
+            :rtype : int
             """
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
@@ -88,15 +137,19 @@ class Robot:
                     Using the tip mask will check that you are not trying to use an unmounted tip.
                     vol values for unsettled tip mask are ignored.
 
-                    :rtype : list, int
+                    :rtype : (list, int)
                     :param action: +1:aspire, -1:dispense
-                    :param volume:
+                    :param volume: one vol for all tips, or a list of vol
                     :param tip_mask: -1:all tips
+                    :return: a lis of vol to pipette, and the mask
+
                     """
             if isinstance(volume, (float, int)):
                 vol = [volume] * self.nTips
             else:
                 vol = list(volume)
+                d = self.nTips - len(vol)
+                vol += [0]*(d if d > 0 else 0 )
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
@@ -205,13 +258,24 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol): # todo coordine protocol
+    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+        # todo Find the correct rack in the worktable and the current position to pick.
         if self.reusetips:
             TIP_MASK = self.curArm().getMoreTips(TIP_MASK, maxVol)
         else:
             self.dropTips(TIP_MASK)
             TIP_MASK = self.curArm().getTips(TIP_MASK, maxVol)
         return TIP_MASK
+
+    def mask_to_getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+        if self.reusetips:
+            TIP_MASK = self.curArm().mask_to_getMoreTips(TIP_MASK, maxVol)
+        else:
+            self.dropTips(TIP_MASK)
+            TIP_MASK = self.curArm().mask_to_getTips(TIP_MASK, maxVol)
+        return TIP_MASK
+
+
 
     def dropTips(self, TIP_MASK=-1): # todo coordine protocol
         if not self.droptips: return 0

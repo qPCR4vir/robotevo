@@ -42,10 +42,10 @@ class dispense(Pipetting):
                         volume      = def_vol,
                         labware     = def_LabW,
                         spacing     = 1,
-                        wellSelection= None,       # TODO implement
+                        wellSelection= None,
                         LoopOptions = def_LoopOp,
-                        RackName    = None,        # TODO implement
-                        Well        = None,        # TODO implement
+                        RackName    = None,
+                        Well        = None,
                         arm         = Pipette.LiHa1):
         Pipetting.__init__(self, 'Dispense',
                             tipMask,
@@ -71,11 +71,11 @@ class mix(Pipetting):
                         volume      = def_vol,
                         labware     = def_LabW,
                         spacing     = 1,
-                        wellSelection= None,       # TODO implement
+                        wellSelection= None,
                         cycles      = 3,
                         LoopOptions = def_LoopOp,
-                        RackName    = None,        # TODO implement
-                        Well        = None,        # TODO implement
+                        RackName    = None,
+                        Well        = None,
                         arm         = Pipette.LiHa1):
         Pipetting.__init__(self, 'Mix',
                             tipMask,
@@ -111,8 +111,8 @@ class wash_tips(Pipette):                     # TODO revise def values of arg
                         FastWash    = False,
                         lowVolume   = False,
                         atFrequency = 0,
-                        RackName    = None,        # TODO implement
-                        Well        = None,        # TODO implement
+                        RackName    = None,
+                        Well        = None,
                         arm         = Pipette.LiHa1):
         Pipette.__init__(self, 'Wash',
                             tipMask,
@@ -155,13 +155,32 @@ class wash_tips(Pipette):                     # TODO revise def values of arg
 
 class getDITI(DITIs):
     def __init__(self,  tipMask, type, options=0, arm= Pipette.LiHa1):
-        """ A.15.4.5 Get DITIs (Worklist: GetDITI)
+        """ A.15.4.5 Get DITIs (Worklist: GetDITI) ...
+            The Get DITIs command is used to pick up DITIs (disposable tips) of the specified
+            type from a DITI rack. Freedom EVOware keeps track of their position on the
+            worktable and automatically picks up the next available unused DITIs of the
+            chosen type.
+            When you choose a DITI type in a script command, the pull-down list all of the
+            LiHa DITI types which are currently configured in the labware database. When
+            you want to pick up a DiTi, Freedom EVOware searches the worktable for a DITI
+            rack which contains the DITI type you have specified in the script command.
+            To configure Freedom EVOware for a new DITI type, create a new DITI rack or
+            duplicate an existing DITI rack and give the new labware a suitable name (e.g.
+            “ZipTip”).
+            DiTi Index:
+            Freedom EVOware automatically assigns a unique numeric index to each
+            DITI type. You cannot edit the index manually. The DITI index is used e.g. by
+            the Set DITI Type command in worklists and in advanced worklists. The DITI
+            index is shown in the Edit Labware dialog box for the DITI labware (Well
+            Dimensions tab).
+            This function is deprecated in favor of getDITI2 which do not use index
+            Currently only use ... ?
         :param label:
         :param tipMask:
         :param type: int, 0-3. DITI index (see 9.4.5 “Labware Types and DITI Types”,  9-32, DITI Index).
         """
         DITIs.__init__(self, "GetDITI", tipMask, options, arm)
-        self.type=type
+        self.type=type # todo Implement!! Find the correct rack in the worktable and the current position to pick.
 
     def validateArg(self):
         DITIs.validateArg(self)
@@ -184,7 +203,7 @@ class getDITI2(DITIs):
         :param AirgapSpeed: int. Speed for the airgap in μl/s
         """
         DITIs.__init__(self, "GetDITI2", tipMask, options, arm)
-        self.LabwareTypeName = LabwareTypeName
+        self.LabwareTypeName = LabwareTypeName # todo Implement!! Find the rack and the current position to pick.
         self.AirgapSpeed = AirgapSpeed
         self.AirgapVolume = AirgapVolume
 
@@ -192,17 +211,26 @@ class getDITI2(DITIs):
         DITIs.validateArg(self)
 
         ln= self.LabwareTypeName
-        if ln is None: ln=def_DiTi
-        if isinstance(ln,Lab.Labware.Type):
-            ln= ln.name
-        else:
-            if isinstance(ln, Lab.Labware):
-                ln=ln.type.name
+        if   ln is None                     : ln = def_DiTi.type.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        elif isinstance(ln, Lab.Labware)    : ln = ln.type.name
+        elif isinstance(ln,Lab.Labware.Type): ln = ln.name
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or 2 ? expression?
-        self.arg += [integer(self.AirgapVolume),integer(self.AirgapSpeed)]   # arg 5, 6
+        self.arg += [integer(self.AirgapVolume), integer(self.AirgapSpeed)]   # arg 5, 6
 
         return True
+
+    def actualize_robot_state(self):
+        maxVol = None                   # todo Implement all this in the iRobot or in the Labware !!!
+        ln = self.LabwareTypeName
+        if   ln is None                 :   ln = def_DiTi.type  # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        elif isinstance(ln, str)        :   ln = robot.worktable.labTypes[ln].type
+        elif isinstance(ln, Lab.Labware):   ln = ln.type
+        assert isinstance(ln, Lab.Labware.Type)
+        maxVol = ln.maxVol
+        self.tipMask = robot.getTips(self.tipMask, maxVol)
+        self.LabwareTypeName = ln.name
+
 
 class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """

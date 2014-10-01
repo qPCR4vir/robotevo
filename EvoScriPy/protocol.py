@@ -6,16 +6,10 @@ import Instruction_Base as I_b
 import Instructions as Itr
 import Reactive as Rtv
 
+def getTips( TIP_MASK=-1, maxVol=Rbt.Tip_1000maxVol):
 
-def getTips( TIP_MASK=-1, maxVol=Rbt.Tip_1000maxVol): # todo coordine robot
-        if robot.reusetips:
-            TIP_MASK = robot.curArm().getMoreTips(TIP_MASK, maxVol)
-        else:
-            robot.dropTips(TIP_MASK)
-            TIP_MASK = robot.curArm().getTips(TIP_MASK, maxVol)
-        if TIP_MASK:
-            Itr.getDITI2(TIP_MASK, arm=robot.def_arm).exec()
-        return TIP_MASK
+    Itr.getDITI2(robot.mask_to_getTips(TIP_MASK,maxVol), arm=robot.def_arm).exec()
+    return TIP_MASK
 
 def dropTips(self, TIP_MASK=-1): # todo coordine robot
         if not robot.droptips: return 0

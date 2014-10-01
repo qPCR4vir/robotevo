@@ -309,6 +309,7 @@ class Labware:
         return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
 
 
+
 class Cuvette(Labware):
     pass
 
@@ -330,6 +331,6 @@ CleanerLWS = Labware.Type("Washstation 2Grid Cleaner long", 8, maxVol=100000, co
 WashCleanerL = Labware(CleanerLWS, Labware.Location(22, 2))
 DiTi_Waste = Labware.Type("Washstation 2Grid DiTi Waste", 8, maxVol=100000, conectedWells=True)
 DiTiWaste = Labware(DiTi_Waste, Labware.Location(22, 6))
-DiTi_1000ul = Labware.Type("DiTi 1000ul", 8, 12, maxVol=970)
+DiTi_1000ul = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
 
 MP96well = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)
