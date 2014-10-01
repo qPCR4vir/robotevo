@@ -11,14 +11,14 @@ def getTips( TIP_MASK=-1, maxVol=Rbt.Tip_1000maxVol):
     Itr.getDITI2(robot.mask_to_getTips(TIP_MASK,maxVol), arm=robot.def_arm).exec()
     return TIP_MASK
 
-def dropTips(self, TIP_MASK=-1): # todo coordine robot
+def dropTips( TIP_MASK=-1): # todo coordine robot
         if not robot.droptips: return 0
         TIP_MASK = robot.curArm().drop(TIP_MASK)
         if TIP_MASK:
             Itr.dropDITI(TIP_MASK).exec()
         return TIP_MASK
 
-def aspire(self, tip, reactive, vol=None):
+def aspire( tip, reactive, vol=None):
         """
         Aspire vol with ONE tip from reactive
         :param self:
@@ -34,15 +34,15 @@ def aspire(self, tip, reactive, vol=None):
         # robot.curArm().aspire(v, Rbt.tipMask[tip])
         Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def dispense(self, tip, reactive, vol=None): # todo coordinate with robot
+def dispense( tip, reactive, vol=None): # todo coordinate with robot
         vol = vol or reactive.minVol()  # really ??
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
         v = [0] * robot.curArm().nTips
         v[tip] = vol
-        robot.curArm().dispense(v, Rbt.tipMask[tip])
+        # robot.curArm().dispense(v, Rbt.tipMask[tip])
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def aspiremultiTips(self, tips, reactive, vol=None):
+def aspiremultiTips( tips, reactive, vol=None):
         if not isinstance(vol, list):
             vol = [vol] * tips
         mask = Rbt.tipsMask[tips]
@@ -58,14 +58,14 @@ def aspiremultiTips(self, tips, reactive, vol=None):
             asp.exec()
             curTip = nextTip
 
-def dispensemultiwells(self, tips, liq_class, labware, vol):
+def dispensemultiwells( tips, liq_class, labware, vol):
         if not isinstance(vol, list):
             vol = [vol] * tips
         om = Rbt.tipsMask[tips]
         robot.curArm().dispense(vol, om)
         dispense(om, liq_class, vol, labware).exec()
 
-def make(self, what, NumSamples=None): # todo coordinate with protocol
+def make( what, NumSamples=None): # todo coordinate with protocol
         if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
 def makePreMix( preMix, NumSamples=None):
@@ -98,7 +98,7 @@ def makePreMix( preMix, NumSamples=None):
 
         dropTips()
 
-def spread(self, volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
+def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
         """
 
 
@@ -159,7 +159,7 @@ def spread(self, volume=None, reactive=None, to_labware_region=None, optimize=Tr
             SampleCnt -= nt
         robot.dropTips()
 
-def transfer(self, from_labware_region, to_labware_region, volume, using_liquid_class,
+def transfer( from_labware_region, to_labware_region, volume, using_liquid_class,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
         """
 
@@ -237,7 +237,7 @@ def transfer(self, from_labware_region, to_labware_region, volume, using_liquid_
         Dst.labware.selectOnly(dstSel)
         return oriSel, dstSel
 
-def waste(self, from_labware_region, using_liquid_class, volume, to_waste_labware=None, optimize=True):
+def waste( from_labware_region, using_liquid_class, volume, to_waste_labware=None, optimize=True):
 
         """
 
@@ -302,7 +302,7 @@ def waste(self, from_labware_region, using_liquid_class, volume, to_waste_labwar
         Asp.labware.selectOnly(oriSel)
         return oriSel
 
-def mix(self, in_labware_region, using_liquid_class, volume, optimize=True):
+def mix( in_labware_region, using_liquid_class, volume, optimize=True):
 
         """
 
@@ -353,7 +353,7 @@ def mix(self, in_labware_region, using_liquid_class, volume, optimize=True):
         mx.labware.selectOnly(oriSel)
         return oriSel
 
-def wash_in_TeMag(self, reactive, wells=None, using_liquid_class=None, vol=None):
+def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         if wells is None:
             wells = reactive.labware.selected() or range(React.NumOfSamples)
         if using_liquid_class is None:

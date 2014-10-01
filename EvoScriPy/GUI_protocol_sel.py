@@ -1,12 +1,13 @@
 __author__ = 'Ariel'
 
-from Labware import *
-import Robot
+# from Labware import *
+# import Robot
+import EvoMode
 from Instructions import Pipette
 
 comments=EvoMode.Comments()
 
-EvoMode.current = EvoMode.multiple([EvoMode.iRobot(Pipette.LiHa1, nTips=4),
+EvoMode.current = EvoMode.multiple([EvoMode.iRobot( Pipette.LiHa1, nTips=4),
                                     EvoMode.Script(template = 'RNAext_MNVet.ewt',
                                                    filename = 'AWL.esc' ),
                                     EvoMode.AdvancedWorkList('AWL.gwl'),

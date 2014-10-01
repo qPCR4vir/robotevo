@@ -1,6 +1,6 @@
 __author__ = 'qPCR4vir'
 
-
+import Robot
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
     this script generator. Some options are: A worklist; a full Evoware script; only comments, etc.
@@ -123,9 +123,9 @@ class Script(ScriptBody):
 
     def exec(self, instr):
         if self.templateNotAdded:
-            from Robot import current
+            # from Robot import current
 
-            for line in current.worktable.template:
+            for line in Robot.current.worktable.template:
                 self.f.write((line[:-1] + "\n"))  # .encode('Latin-1')  \r
             self.templateNotAdded = False
         ScriptBody.exec(self, instr)
@@ -137,10 +137,11 @@ class iRobot(Mode):
     and current volume in wells in labware, etc. One basic use of this, is to garante that the robot will be actualize
     once and only once even when multiple modes are used.
     """
-    def __init__(self,  arms):
+    def __init__(self, index,  nTips=4 , arms=None):
         Mode.__init__(self )
-        import Robot as Rbt
-        Rbt.current = Rbt.Robot(arms=arms)
+        # import Robot as Rbt
+        Robot.current = Robot.Robot(index=index, arms=arms, nTips=nTips)
+        pass
 
     def exec(self, instr):
         instr.actualize_robot_state()

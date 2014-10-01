@@ -1,7 +1,7 @@
 __author__ = 'qPCR4vir'
 
 from Instruction_Base import *
-from Robot import current as robot
+import Robot
 #todo organize the arg in each instruction according to the more common use
 #todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
 
@@ -31,7 +31,7 @@ class aspirate(Pipetting):
                             arm )
 
     def action(self):
-        return robot.Arm.Aspire
+        return Robot.Robot.Arm.Aspire
 
 
 class dispense(Pipetting):
@@ -60,7 +60,7 @@ class dispense(Pipetting):
                             arm )
 
     def action(self):
-        return robot.Arm.Dispense
+        return Robot.Robot.Arm.Dispense
 
 
 class mix(Pipetting):
@@ -223,12 +223,12 @@ class getDITI2(DITIs):
     def actualize_robot_state(self):
         maxVol = None                   # todo Implement all this in the iRobot or in the Labware !!!
         ln = self.LabwareTypeName
-        if   ln is None                 :   ln = def_DiTi.type  # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
-        elif isinstance(ln, str)        :   ln = robot.worktable.labTypes[ln].type
+        if   ln is None                 :   ln = def_DiTi       # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        elif isinstance(ln, str)        :   ln = Robot.current.worktable.labTypes[ln].type
         elif isinstance(ln, Lab.Labware):   ln = ln.type
         assert isinstance(ln, Lab.Labware.Type)
         maxVol = ln.maxVol
-        self.tipMask = robot.getTips(self.tipMask, maxVol)
+        self.tipMask = Robot.current.getTips(self.tipMask, maxVol)
         self.LabwareTypeName = ln.name
 
 

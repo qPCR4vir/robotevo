@@ -2,7 +2,7 @@ __author__ = 'qPCR4vir'
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoMode
 import Labware as Lab
-from Robot import current as robot
+import Robot
 
 supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiple mode)
 
@@ -201,13 +201,13 @@ class Pipetting(Pipette):
         Pipette.validateArg(self)
         #from Robot import current  #todo better
 
-        nTips = robot.curArm().nTips
+        nTips = Robot.current.curArm().nTips
         self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
             12 - nTips)  # arg 2, 3 - 14
         return True
 
     def actualize_robot_state(self):
-        self.volume, self.tipMask = robot.pipette(self.action(), self.volume, self.tipMask )
+        self.volume, self.tipMask = Robot.current.curArm().pipette(self.action(), self.volume, self.tipMask )
 
         pass
 
