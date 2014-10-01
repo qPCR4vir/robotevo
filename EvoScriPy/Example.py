@@ -8,12 +8,12 @@ import Robot
 import Reactive as React
 from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 
-EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
+EvoMode.current = EvoMode.multiple([EvoMode.AdvancedWorkList('AWL.gwl'),
                                    EvoMode.ScriptBody('AWL.esc.txt'),
-                                   EvoMode.EvoScript(template='RNAext_MNVet.ewt',
+                                   EvoMode.Script(template='RNAext_MNVet.ewt',
                                                      filename='AWL.esc',
                                                      arms=Robot.Robot.Arm(4) ),
-                                   EvoMode.EvoStdOut()
+                                   EvoMode.StdOut()
                                     ])
 
 extractRNA_with_MN_Vet_Kit( NumOfSamples=35 )
@@ -114,12 +114,12 @@ MP.Wells[MP.offset("F01")].selFlag = True
 
 from EvoScriptCommands import *
 
-Aspirate( 8, "BufferNewXDX", vol,1,1,1,MP.wellSelectionStr() ,LOp, Pippet.LiHa1)
+Aspirate( 8, "BufferNewXDX", vol,1,1,1,MP.wellSelectionStr() ,LOp, Pipette.LiHa1)
 
 vol=[1.1,2.2]
 LOp+=[LoopOption("tip",LoopOption.VaryColumn,10),LoopOption("ROW",LoopOption.VaryRow,3) ]
 
-Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pippet.LiHa1)
+Dispence(3,"Otro Buffer",10.1,1,1,1,"NNSelectionxx", LOp ,Pipette.LiHa1)
 
 print("\n done")
 #VEW1          = Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffe"   )
@@ -141,7 +141,7 @@ Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
 LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
 IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
 BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,replys=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
 
 VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                  Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
@@ -174,7 +174,7 @@ from Instructions_Te_MagS import *
 from Instructions import *
 
 def extractRNA_with_MN_Vet_Kit(withRobot):
-    robot=Robot.curRobot
+    robot=Robot.current
     assert isinstance(robot,Robot.Robot)
 
     Te_MagS_ActivateHeater(50).exec()

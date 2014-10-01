@@ -1,59 +1,68 @@
 __author__ = 'qPCR4vir'
-#todo Revise def values: the binding take place at the moment of first import ???
+# todo Revise def values: the binding take place at the moment of first import ???
 import EvoMode
-import Labware
+import Labware as Lab
+from Robot import current as robot
 
-supportVirtualRobot=True  # todo explore this idea ! (problems with "asynchronous" and multiEvo mode)
+supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiple mode)
 
-class EvoTypes: # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
+
+class EvoTypes:  # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
 
-    def __str__(self): # todo implement exceptions
+    def __str__(self):  # todo implement exceptions
         return str(self.data)
+
 
 class string1(EvoTypes):
     def __str__(self):
-        return '"'+ str(self.data) + '"'
+        return '"' + str(self.data) + '"'
+
 
 class expression(string1):
     pass
 
+
 class expr(EvoTypes):
     def __init__(self, dim, data):
+        EvoTypes.__init__(self, data)
         self.dim = dim
-        self.data = data
 
-    def split(self):  #TODO 0 instant "0" ???? ; split - is not an elegant solution
-        if isinstance(self.data,list):
-            d=self.dim-len(self.data)
-            assert (d>=0)
-            return [integer(0) if v is None else expression(v) for v in self.data]+[integer(0)]*d
+    def split(self):  # TODO 0 instant "0" ???? ; split - is not an elegant solution
+        if isinstance(self.data, list):
+            d = self.dim - len(self.data)
+            assert (d >= 0)
+            return [integer(0) if v is None else expression(v) for v in self.data] + [integer(0)] * d
         else:
-            return [integer(0) if self.data is None else expression(self.data) ]*self.dim
+            return [integer(0) if self.data is None else expression(self.data)] * self.dim
+
 
 class string2(EvoTypes):
     pass
 
-class integer(EvoTypes):   # todo implement exceptions
+
+class integer(EvoTypes):  # todo implement exceptions
     def __str__(self):
         return str(int(self.data))
 
-class floating_point(EvoTypes):
+
+class floating_point(EvoTypes):  # todo implement exceptions
     def __str__(self):
         return str(float(self.data))
 
 
 class LoopOption:
     def __init__(self, name, action, difference):
-        self.name=name
-        self.action=action
-        self.difference=difference
+        self.name = name
+        self.action = action
+        self.difference = difference
 
-    VaryColumn=0
-    VaryRow=1
-    VaryWell=2
-    VaryRack=3
+    VaryColumn = 0
+    VaryRow = 1
+    VaryWell = 2
+    VaryRack = 3
+
 
 class Instruction:
     def __init__(self, name):
@@ -67,8 +76,11 @@ class Instruction:
     def allowed(self, mode):
         return True
 
+    def actualize_robot_state(self):
+        pass
+
     def exec(self, mode=None):
-        if not mode: mode=EvoMode.CurEvo
+        if not mode: mode = EvoMode.current  # todo revise
         if not self.allowed(mode):
             return
         mode.exec(self)
@@ -81,7 +93,8 @@ class Instruction:
 
 class ScriptONLY(Instruction):
     def allowed(self, mode):
-        return not isinstance(mode,EvoMode.AdvancedWorkList)
+        return not isinstance(mode, EvoMode.AdvancedWorkList)
+
 
 class Device(Instruction):
     def __init__(self, devicename, commandname):
@@ -91,8 +104,9 @@ class Device(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg += [string1(self.devicename),string1(self.commandname)]
+        self.arg += [string1(self.devicename), string1(self.commandname)]
         return False
+
 
 class T_Mag_Instr(Device):
     """ A.15.10 Advanced Worklist Commands for the Te-MagS
@@ -102,33 +116,33 @@ class T_Mag_Instr(Device):
     Resuspension = 2
     Incubation  = 3
 
-    def __init__(self,  commandname):
-        Device.__init__(self, "Te-MagS", commandname )
-
+    def __init__(self, commandname):
+        Device.__init__(self, "Te-MagS", commandname)
 
 
 def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
 def_liquidClass = "Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
 def_vol         = [0]*12
-def_LabW        = Labware.Labware(type=Labware.MP96well,location=Labware.Labware.Location(1,1))
+def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.Labware.Location(1,1))
 def_LoopOp      = []
-def_WashWaste   = Labware.WashWaste
-def_WashCleaner = Labware.WashCleanerS
-def_DiTiWaste   = Labware.DiTiWaste
-def_DiTi        = Labware.DiTi_1000ul   # todo revise
+def_WashWaste   = Lab.WashWaste
+def_WashCleaner = Lab.WashCleanerS
+def_DiTiWaste   = Lab.DiTiWaste
+def_DiTi        = Lab.DiTi_1000ul   # todo revise
 def_AirgapSpeed = 300
 
-class Pippet(Instruction):
+
+class Pipette(Instruction):
     LiHa1 = 0
     LiHa2 = 1
     def __init__(self, name, tipMask     = curTipMask,
                              labware     = def_LabW,
-                             spacing     = 1,
-                             wellSelection = None,
-                             LoopOptions = def_LoopOp,
-                             RackName    = None,
-                             Well        = None,
+                             spacing     = 1,           # todo how to use???
+                             wellSelection = None,      # todo how to use???
+                             LoopOptions = def_LoopOp,  # todo how to model???
+                             RackName    = None,        # todo I need to this???
+                             Well        = None,        # todo I need to this???
                              arm         = LiHa1):
         Instruction.__init__(self, name)
         self.tipMask=tipMask
@@ -160,7 +174,8 @@ class Pippet(Instruction):
 
         return True
 
-class Pippeting(Pippet):
+
+class Pipetting(Pipette):
     def __init__(self, name, tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
@@ -170,8 +185,8 @@ class Pippeting(Pippet):
                              LoopOptions = def_LoopOp,
                              RackName    = None,
                              Well        = None,
-                             arm         = Pippet.LiHa1):
-        Pippet.__init__(self, name, tipMask    ,
+                             arm         = Pipette.LiHa1):
+        Pipette.__init__(self, name, tipMask    ,
                              labware     ,
                              spacing    ,
                              wellSelection,
@@ -183,14 +198,22 @@ class Pippeting(Pippet):
         self.volume=volume
 
     def validateArg(self):
-        Pippet.validateArg(self)
-        from Robot import curRobot  #todo better
-        nTips=curRobot.curArm().nTips
-        self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips,self.volume).split() + [int(0)]*(12-nTips)         # arg 2, 3 - 14
+        Pipette.validateArg(self)
+        #from Robot import current  #todo better
+
+        nTips = robot.curArm().nTips
+        self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
+            12 - nTips)  # arg 2, 3 - 14
         return True
 
+    def actualize_robot_state(self):
+        self.volume, self.tipMask = robot.pipette(self.action(), self.volume, self.tipMask )
+
+        pass
+
+
 class DITIs(Instruction):
-    def __init__(self, name, tipMask= curTipMask,  options=0, arm= Pippet.LiHa1):
+    def __init__(self, name, tipMask=curTipMask, options=0, arm=Pipette.LiHa1):
         """
 
         :param name: str, instruction
@@ -198,14 +221,14 @@ class DITIs(Instruction):
         :param options: int, 0-1. bit-coded 1 = if diti not fetched try 3 times then go to next position
         :param arm:
         """
-        Instruction.__init__(self, name )
+        Instruction.__init__(self, name)
         self.options = options
-        self.tipMask=tipMask
+        self.tipMask = tipMask
         self.arm = arm
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg  =  [integer(self.tipMask)]                                                    # arg 1
+        self.arg = [integer(self.tipMask)]  # arg 1
         self.arg += [integer(self.options)]
-        self.arg +=  [integer(self.arm)]                                                        # arg 10
+        self.arg += [integer(self.arm)]  # arg 10
         return True

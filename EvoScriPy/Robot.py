@@ -1,14 +1,13 @@
 __author__ = 'qPCR4vir'
 
-from Instructions import *
-from Labware import *
-import Reactive as React
+#from Instruction_Base import *
+#from Instructions import *
+import Labware as Lab
+import Reactive as Rtv
 
 
-
-TeMg_Heat     = Labware(TeMag48, Labware.Location(14,0),"48 Pos Heat")
-TeMag         = Labware(TeMag48, Labware.Location(14,1),"48PosMagnet")
-
+TeMg_Heat = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 0), "48 Pos Heat")
+TeMag = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 1), "48PosMagnet")
 
 tipMask = []  # mask for one tip of index ...
 tipsMask = []  # mask for the first tips
@@ -17,9 +16,9 @@ for tip in range(13):
     tipsMask += [2 ** tip - 1]
 
 def_nTips = 4
-nTips=def_nTips
-Tip_1000maxVol=940
-Tip_200maxVol=190
+nTips = def_nTips
+Tip_1000maxVol = 940
+Tip_200maxVol = 190
 
 
 class Tip:
@@ -32,8 +31,10 @@ class Robot:
     class Arm:
         DiTi = 0
         Fixed = 1
+        Aspire = 1
+        Dispense = -1
 
-        def __init__(self, nTips, index=Pippet.LiHa1, workingTips=None, tipsType=DiTi):
+        def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
             """
 
             :param nTips:
@@ -41,7 +42,7 @@ class Robot:
             :param workingTips:
             :param tipsType:
             """
-            self.index = index
+            self.index = index # or Pipette.LiHa1  todo this is a workaround: we need properly design the dependencies.
             self.workingTips = workingTips if workingTips is not None else tipsMask[nTips]
             self.tipsType = tipsType
             self.nTips = nTips
@@ -82,11 +83,51 @@ class Robot:
                         tip_mask ^= (1 << i)  # already drooped
             return tip_mask
 
-        def aspire(self, vol, tip_mask=-1):  # todo more checks
-            if isinstance(vol,(float,int)):
-                vol=[vol]*self.nTips
+        def pipette(self, action, volume, tip_mask=-1) -> (list, int):
+            """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
+                    Using the tip mask will check that you are not trying to use an unmounted tip.
+                    vol values for unsettled tip mask are ignored.
+
+                    :rtype : list, int
+                    :param action: +1:aspire, -1:dispense
+                    :param volume:
+                    :param tip_mask: -1:all tips
+                    """
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
+            else:
+                vol = list(volume)
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    assert tp is not None, "No tp in position " + str(i)
+                    nv = tp.vol + action * vol[i]
+                    if 0 < nv < tp.maxVol:
+                        self.Tips[i].vol = nv
+                        continue
+                    msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
+                    if 0 < nv:
+                        raise BaseException('To few Vol in tip ' + msg)
+                    raise BaseException('To much Vol in tip ' + msg)
+                else:
+                    vol[i] = None
+            return vol, tip_mask
+
+
+        def aspire(self, volume, tip_mask=-1):  # todo more checks. Subtract vol from wells !!!
+            """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
+            Using the tip mask will check that you are not trying to use an unmounted tip.
+            vol values for unsettled tip mask are ignored.
+
+            """
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
+            else:
+                vol = list(volume)
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     assert tp is not None, "No tp in position " + str(i)
@@ -95,12 +136,23 @@ class Robot:
                         raise BaseException(
                             'To much Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '+' + str(vol[i]))
                     self.Tips[i].vol = nv
+                else:
+                    vol[i] = None
+            return vol, tip_mask
 
-        def dispense(self, vol, tip_mask=-1):  # todo more checks
-            if isinstance(vol,(float,int)):
-                vol=[vol]*self.nTips
+        def dispense(self, volume, tip_mask=-1):  # todo more checks. Add vol from wells !!!
+            """ Check and actualize the robot Arm state to dispense [vol]s with a tip mask.
+            Using the tip mask will check that you are not trying to use an unmounted tip.
+            vol values for unsettled tip mask are ignored.
+
+            """
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
+            else:
+                vol = list(volume)
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is None:
@@ -108,32 +160,13 @@ class Robot:
                     nv = tp.vol - vol[i]
                     assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '-' + str(vol[i])
                     self.Tips[i].vol = nv
+                else:
+                    vol[i] = None
+            return vol, tip_mask
 
-    class ProtocolStep:
-        pass
-
-    class MakeMix(ProtocolStep):
-        pass
-
-    class DistrReactive(ProtocolStep):
-        pass
-
-    class Transfer(ProtocolStep):
-        def __init__(self, src, dest, vol):
-            pass
-
-    class Collect(ProtocolStep):
-        def __init__(self, src, dest, vol):
-            pass
-
-    class Waste(Collect):
-        def __init__(self, src, dest, vol):
-            pass
-
-
-    def __init__(self, arms=None, nTips=None,
-                 index=Pippet.LiHa1, workingTips=None,
-                 tipsType=Arm.DiTi, templateFile=None):
+    def __init__(self, index,arms=None, nTips=None,
+                  workingTips=None,
+                 tipsType=Arm.DiTi, templateFile=None): # index=Pipette.LiHa1
         """
 
         :param arms:
@@ -145,8 +178,8 @@ class Robot:
             {arms.index: arms} if isinstance(arms, Robot.Arm) else \
                 {arms.index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
 
-        self.worktable = WorkTable(templateFile)
-        self.def_arm = index
+        self.worktable = Lab.WorkTable(templateFile)
+        self.def_arm = index  # or Pipette.LiHa1
         self.droptips = True
         self.reusetips = False
         self.preservetips = False
@@ -172,42 +205,36 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol): # todo coordine protocol
         if self.reusetips:
             TIP_MASK = self.curArm().getMoreTips(TIP_MASK, maxVol)
         else:
             self.dropTips(TIP_MASK)
             TIP_MASK = self.curArm().getTips(TIP_MASK, maxVol)
-        if TIP_MASK:
-            getDITI2(TIP_MASK, arm=self.def_arm).exec()
         return TIP_MASK
 
-    def dropTips(self, TIP_MASK=-1):
+    def dropTips(self, TIP_MASK=-1): # todo coordine protocol
         if not self.droptips: return 0
         TIP_MASK = self.curArm().drop(TIP_MASK)
-        if TIP_MASK:
-            dropDITI(TIP_MASK).exec()
         return TIP_MASK
 
-    def make(self, what, NumSamples=None):
-        if isinstance(what, React.preMix): self.makePreMix(what, NumSamples)
+    def make(self, what, NumSamples=None): # todo coordine protocol
+        if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
-    def aspire(self, tip, reactive, vol=None):
+    def aspire(self, tip, reactive, vol=None): # todo coordine protocol
         if vol is None:
             vol = reactive.minVol()
         v = [0] * self.curArm().nTips
         v[tip] = vol
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
         self.curArm().aspire(v, tipMask[tip])
-        aspirate(tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-    def dispense(self, tip, reactive, vol=None):
+    def dispense(self, tip, reactive, vol=None): # todo coordine protocol
         vol = vol or reactive.minVol()  # really ??
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
         v = [0] * self.curArm().nTips
         v[tip] = vol
         self.curArm().dispense(v, tipMask[tip])
-        dispense(tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
     def aspiremultiTips(self, tips, reactive, vol=None):
         if not isinstance(vol, list):
@@ -253,13 +280,13 @@ class Robot:
                 i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
                 react.pos + 1)
             comment(msg).exec()
-            mV=self.curArm().Tips[i].maxVol
-            r=react.minVol(NumSamples)
-            while r>0:
-                dV=r if r<mV else mV
+            mV = self.curArm().Tips[i].maxVol
+            r = react.minVol(NumSamples)
+            while r > 0:
+                dV = r if r < mV else mV
                 self.aspire(i, react, dV)
                 self.dispense(i, pMix, dV)
-                r-=dV
+                r -= dV
 
         self.dropTips()
 
@@ -318,7 +345,7 @@ class Robot:
                 self.aspiremultiTips(nt, reactive, vol)
 
             curSample = NumSamples - SampleCnt
-            sel =  to[curSample: curSample + nt]     #todo what if volume > maxVol_tip ?
+            sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
             self.dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
             availableDisp -= 1
             SampleCnt -= nt
@@ -374,7 +401,7 @@ class Robot:
         lf = from_labware_region
         lt = to_labware_region
         msg = "Transfer: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site,oo=str(oriSel), do=str(dstSel),
+            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site, oo=str(oriSel), do=str(dstSel),
                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
         comment(msg).exec()
         Asp = aspirate(tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
@@ -386,7 +413,7 @@ class Robot:
                 Asp.tipMask = tipsMask[nt]
                 Dst.tipMask = tipsMask[nt]
 
-            self.getTips(tipsMask[nt])     #todo what if volume > maxVol_tip ?
+            self.getTips(tipsMask[nt])  # todo what if volume > maxVol_tip ?
             self.curArm().aspire(volume, tipsMask[nt])
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             Asp.exec()
@@ -413,7 +440,7 @@ class Robot:
         :param optimize:
         :return:
         """
-        to_waste_labware=to_waste_labware or WashWaste
+        to_waste_labware = to_waste_labware or WashWaste
         assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(volume, (int, float))
         # todo  select convenient def
@@ -428,12 +455,12 @@ class Robot:
         nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
-        tm=tipsMask[nt]
+        tm = tipsMask[nt]
         self.getTips(tm)
 
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
+                  .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
         comment(msg).exec()
         Asp = aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Dst = dispense(tm, using_liquid_class[1], volume, to_waste_labware)
@@ -442,21 +469,21 @@ class Robot:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
                 nt = SampleCnt
-                tm=tipsMask[nt]
+                tm = tipsMask[nt]
                 Asp.tipMask = tm
                 Dst.tipMask = tm
 
             self.getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mV=self.curArm().Tips[0].maxVol
-            r =volume
-            while r >0:
-                dV = r if r< mV else mV
-                r-=dV
-                Asp.volume=dV
+            mV = self.curArm().Tips[0].maxVol
+            r = volume
+            while r > 0:
+                dV = r if r < mV else mV
+                r -= dV
+                Asp.volume = dV
                 self.curArm().aspire(dV, tm)
                 Asp.exec()
-                Dst.volume=dV
+                Dst.volume = dV
                 self.curArm().dispense(dV, tm)
                 Dst.exec()
 
@@ -477,7 +504,7 @@ class Robot:
         :param optimize:
         :return:
         """
-        in_labware_region=in_labware_region or WashWaste
+        in_labware_region = in_labware_region or WashWaste
         assert isinstance(in_labware_region, Labware), 'A Labware expected in in_labware_region to be mixed'
         assert isinstance(volume, (int, float))
         oriSel = in_labware_region.selected()
@@ -492,13 +519,13 @@ class Robot:
             nt = SampleCnt
 
         self.getTips(tipsMask[nt])
-        volume = volume*0.8
-        mV=self.curArm().Tips[0].maxVol*0.8
+        volume = volume * 0.8
+        mV = self.curArm().Tips[0].maxVol * 0.8
         volume = volume if volume < mV else mV
 
         lf = in_labware_region
         msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
+                  .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
         comment(msg).exec()
         mx = mix(tipsMask[nt], using_liquid_class, volume, in_labware_region)
         while SampleCnt:
@@ -520,17 +547,43 @@ class Robot:
 
     def wash_in_TeMag(self, reactive, wells=None, using_liquid_class=None, vol=None):
         if wells is None:
-            wells=reactive.labware.selected() or range(React.NumOfSamples)
+            wells = reactive.labware.selected() or range(React.NumOfSamples)
         if using_liquid_class is None:
-            using_liquid_class=(reactive.defLiqClass,reactive.defLiqClass)
+            using_liquid_class = (reactive.defLiqClass, reactive.defLiqClass)
 
         self.spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
-        subroutine("avr_MagMix.esc",subroutine.Continues).exec()
-        self.mix( TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
-        subroutine("avr_MagMix.esc",subroutine.Waits_previous).exec()
+        subroutine("avr_MagMix.esc", subroutine.Continues).exec()
+        self.mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
+        subroutine("avr_MagMix.esc", subroutine.Waits_previous).exec()
         self.waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
 
 
-curRobot = None
+current = None
 
+
+class ProtocolStep:
+    pass
+
+
+class MakeMix(ProtocolStep):
+    pass
+
+
+class DistrReactive(ProtocolStep):
+    pass
+
+
+class Transfer(ProtocolStep):
+    def __init__(self, src, dest, vol):
+        pass
+
+
+class Collect(ProtocolStep):
+    def __init__(self, src, dest, vol):
+        pass
+
+
+class Waste(Collect):
+    def __init__(self, src, dest, vol):
+        pass
 
