@@ -99,7 +99,7 @@ class Robot:
                     if tp:  # already in position
                         tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                     else:
-                        3 self.Tips[i] = Tip(maxVol)
+                        pass # self.Tips[i] = Tip(maxVol)
             return tip_mask
 
         def getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
@@ -160,18 +160,18 @@ class Robot:
                 if tip_mask & (1 << i):
                     assert tp is not None, "No tp in position " + str(i)
                     nv = tp.vol + action * vol[i]
-                    if 0 < nv < tp.maxVol:
+                    if 0 <= nv <= tp.maxVol:
                         self.Tips[i].vol = nv
                         continue
                     msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
-                    if 0 < nv:
+                    if nv < 0:
                         raise BaseException('To few Vol in tip ' + msg)
                     raise BaseException('To much Vol in tip ' + msg)
                 else:
                     vol[i] = None
             return vol, tip_mask
 
-    def __init__(self, index,arms=None, nTips=None,
+    def __init__(self, index=None,arms=None, nTips=None,
                   workingTips=None,
                  tipsType=Arm.DiTi, templateFile=None): # index=Pipette.LiHa1
         """
@@ -181,9 +181,9 @@ class Robot:
         :param workingTips:
         :param tipsType:
         """
-        self.arms = arms if isinstance(arms, dict) else \
-            {arms.index: arms} if isinstance(arms, Robot.Arm) else \
-                {arms.index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
+        self.arms = arms              if isinstance(arms, dict     ) else \
+                   {arms.index: arms} if isinstance(arms, Robot.Arm) else \
+                   {     index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
 
         self.worktable = Lab.WorkTable(templateFile)
         self.def_arm = index  # or Pipette.LiHa1
