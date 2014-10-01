@@ -4,6 +4,7 @@ import Robot as Rbt
 from Robot import current as robot
 import Instruction_Base as I_b
 import Instructions as Itr
+import Reactive as Rtv
 
 
 def getTips( TIP_MASK=-1, maxVol=Rbt.Tip_1000maxVol): # todo coordine robot
@@ -23,30 +24,29 @@ def dropTips(self, TIP_MASK=-1): # todo coordine robot
             Itr.dropDITI(TIP_MASK).exec()
         return TIP_MASK
 
-def aspire(self, tip, reactive, vol=None): # todo coordine robot
+def aspire(self, tip, reactive, vol=None):
+        """
+        Aspire vol with ONE tip from reactive
+        :param self:
+        :param tip:
+        :param reactive:
+        :param vol:
+        """
         if vol is None:
             vol = reactive.minVol()
         v = [0] * robot.curArm().nTips
         v[tip] = vol
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        robot.curArm().aspire(v, Rbt.tipMask[tip])
+        # robot.curArm().aspire(v, Rbt.tipMask[tip])
         Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def dispense(self, tip, reactive, vol=None): # todo coordine robot
+def dispense(self, tip, reactive, vol=None): # todo coordinate with robot
         vol = vol or reactive.minVol()  # really ??
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
         v = [0] * robot.curArm().nTips
         v[tip] = vol
         robot.curArm().dispense(v, Rbt.tipMask[tip])
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
-
-
-def dispense(self, tip, reactive, vol=None): # todo coordine protocol
-        vol = vol or reactive.minVol()  # really ??
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        v = [0] * robot.curArm().nTips
-        v[tip] = vol
-        robot.curArm().dispense(v, Rbt.tipMask[tip])
 
 def aspiremultiTips(self, tips, reactive, vol=None):
         if not isinstance(vol, list):
@@ -71,36 +71,38 @@ def dispensemultiwells(self, tips, liq_class, labware, vol):
         robot.curArm().dispense(vol, om)
         dispense(om, liq_class, vol, labware).exec()
 
+def make(self, what, NumSamples=None): # todo coordinate with protocol
+        if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
-def makePreMix(self, pMix, NumSamples=None):
-        NumSamples = NumSamples or React.NumOfSamples
+def makePreMix( preMix, NumSamples=None):
+        NumSamples = NumSamples or Rtv.NumOfSamples
 
-        l = pMix.labware
+        l = preMix.labware
         msg = "preMix: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-            pMix.minVol(NumSamples), pMix.name, l.label, l.location.grid, l.location.site + 1, pMix.pos + 1,
-            len(pMix.components))
+            preMix.minVol(NumSamples), preMix.name, l.label, l.location.grid, l.location.site + 1, preMix.pos + 1,
+            len(preMix.components))
         Itr.comment(msg).exec()
-        nc = len(pMix.components)
+        nc = len(preMix.components)
         assert nc <= robot.curArm().nTips, \
             "Temporally the mix can not contain more than {:d} components.".format(robot.curArm().nTips)
 
-        robot.getTips(tipsMask[nc])
+        getTips(Rbt.tipsMask[nc])
 
-        for i, react in enumerate(pMix.components):
+        for i, react in enumerate(preMix.components):
             l = react.labware
             msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
                 i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
                 react.pos + 1)
             Itr.comment(msg).exec()
-            mV = robot.curArm().Tips[i].maxVol
+            mV = robot.curArm().Tips[i].maxVol # todo what if the tip are different?
             r = react.minVol(NumSamples)
             while r > 0:
                 dV = r if r < mV else mV
-                robot.aspire(i, react, dV)
-                robot.dispense(i, pMix, dV)
+                aspire(i, react, dV)
+                dispense(i, preMix, dV)
                 r -= dV
 
-        robot.dropTips()
+        dropTips()
 
 def spread(self, volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
         """

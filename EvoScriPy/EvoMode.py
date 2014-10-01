@@ -112,11 +112,13 @@ class Script(ScriptBody):
     """ Create a full and executable script for the evoware soft. Take an existing script or script-template as a base.
     """
 
-    def __init__(self, filename, template, arms):
+    def __init__(self, filename, template, arms=None):
         ScriptBody.__init__(self, filename)
-        import Robot
-
-        Robot.current = Robot.Robot(templateFile=template, arms=arms)
+        import Robot as Rbt
+        if Rbt.current:
+            Rbt.current.set_worktable(filename)
+        else:
+            Rbt.current = Rbt.Robot(templateFile=template, arms=arms)
         self.templateNotAdded = True
 
     def exec(self, instr):
@@ -135,6 +137,11 @@ class iRobot(Mode):
     and current volume in wells in labware, etc. One basic use of this, is to garante that the robot will be actualize
     once and only once even when multiple modes are used.
     """
+    def __init__(self,  arms):
+        Mode.__init__(self )
+        import Robot as Rbt
+        Rbt.current = Rbt.Robot(arms=arms)
+
     def exec(self, instr):
         instr.actualize_robot_state()
 

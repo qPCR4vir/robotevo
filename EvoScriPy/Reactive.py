@@ -66,8 +66,8 @@ class preMix(Reactive):
     def make(self, NumSamples=None):
         if self.Replicas[0].vol is None:
             self.put_min_vol(NumSamples)
-        from Robot import current
-        current.make(self, NumSamples)
+        from protocol import makePreMix
+        makePreMix(self, NumSamples)
 
     def compVol(self,index, NumSamples=None):
         NumSamples = NumSamples or NumOfSamples

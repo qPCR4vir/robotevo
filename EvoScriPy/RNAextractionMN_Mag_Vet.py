@@ -3,6 +3,7 @@ __author__ = 'Ariel'
 from RobotInitRNAextraction import *
 from Labware import *
 import Reactive as React
+from protocol import *
 
 Reactives     = Labware(EppRack16_2mL, Labware.Location(7,0),"Reactives")
 Eluat         = Labware(EppRack3x16R, Labware.Location(8,0),"Eluat")
@@ -58,37 +59,37 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
     pK_cRNA_MS2.make()
 
-    robot.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
-    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
+    spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
+    transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
                      False,True,NumSamples=React.NumOfSamples)
-    robot.spread  (  reactive=LysisBuffer,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
+    spread  (  reactive=LysisBuffer,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
     startTimer().exec()
     waitTimer(timeSpan=10*60).exec()
 
-    robot.spread( reactive=B_Beads,      to_labware_region=Robot.TeMag.selectOnly(all_samples))
+    spread( reactive=B_Beads,      to_labware_region=Robot.TeMag.selectOnly(all_samples))
 
-    robot.wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
+    wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
                         using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
                         vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
                             +B_Beads.volpersample+BindingBuffer.volpersample)
 
-    robot.wash_in_TeMag(reactive=VEW1, wells=all_samples)
+    wash_in_TeMag(reactive=VEW1, wells=all_samples)
 
-    robot.wash_in_TeMag(reactive=VEW2, wells=all_samples)
+    wash_in_TeMag(reactive=VEW2, wells=all_samples)
 
-    robot.spread( reactive=EtOH80p,to_labware_region=Robot.TeMag.selectOnly(all_samples))
+    spread( reactive=EtOH80p,to_labware_region=Robot.TeMag.selectOnly(all_samples))
     subroutine("avr_MagMix.esc",subroutine.Continues).exec()
-    robot.mix( Robot.TeMag.selectOnly(all_samples), EtOH80p.defLiqClass,600)
+    mix( Robot.TeMag.selectOnly(all_samples), EtOH80p.defLiqClass,600)
     subroutine("avr_MagMix.esc",subroutine.Waits_previous).exec()
-    robot.waste(from_labware_region=Robot.TeMag.selectOnly(all_samples),
+    waste(from_labware_region=Robot.TeMag.selectOnly(all_samples),
                 using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
                 volume=600)
 
-    robot.spread( reactive=ElutionBuffer,to_labware_region=Robot.TeMag.selectOnly(all_samples))
+    spread( reactive=ElutionBuffer,to_labware_region=Robot.TeMag.selectOnly(all_samples))
     subroutine("avr_MagMix.esc",subroutine.Continues).exec()
-    robot.mix( Robot.TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass,600)
+    mix( Robot.TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass,600)
     subroutine("avr_MagMix.esc",subroutine.Waits).exec()
-    robot.transfer(from_labware_region=Robot.TeMag.selectOnly(all_samples),
+    transfer(from_labware_region=Robot.TeMag.selectOnly(all_samples),
                    to_labware_region=Eluat.selectOnly(all_samples),
                    using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
                    volume=100, optimizeTo=False )
