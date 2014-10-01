@@ -5,11 +5,12 @@ from Robot import current as robot
 import Instruction_Base as I_b
 import Instructions as Itr
 import Reactive as Rtv
+import Labware as Lab
 
-def getTips( TIP_MASK=-1, maxVol=Rbt.Tip_1000maxVol):
-
-    Itr.getDITI2(robot.mask_to_getTips(TIP_MASK,maxVol), arm=robot.def_arm).exec()
-    return TIP_MASK
+def getTips( TIP_MASK=-1, type=Itr.def_DiTi):
+    # TIP_MASK = robot.mask_to_getTips(TIP_MASK,maxVol)
+    Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm).exec()
+    # return TIP_MASK
 
 def dropTips( TIP_MASK=-1): # todo coordine robot
         if not robot.droptips: return 0
@@ -53,7 +54,7 @@ def aspiremultiTips( tips, reactive, vol=None):
             nextTip = curTip + nTip
             nextTip = nextTip if nextTip <= tips else tips
             mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]
-            robot.curArm().aspire(vol, mask)
+            #robot.curArm().aspire(vol, mask)
             asp.tipMask = mask
             asp.exec()
             curTip = nextTip
@@ -62,8 +63,8 @@ def dispensemultiwells( tips, liq_class, labware, vol):
         if not isinstance(vol, list):
             vol = [vol] * tips
         om = Rbt.tipsMask[tips]
-        robot.curArm().dispense(vol, om)
-        dispense(om, liq_class, vol, labware).exec()
+        # robot.curArm().dispense(vol, om)
+        Itr.dispense(om, liq_class, vol, labware).exec()
 
 def make( what, NumSamples=None): # todo coordinate with protocol
         if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
@@ -108,14 +109,14 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         :param volume: if not, volume is set from the default of the source reactive
         :param optimize: minimize zigzag of multipippeting
         """
-        assert isinstance(reactive, React.Reactive), 'A Reactive expected in reactive to spread'
-        assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to spread'
+        assert isinstance(reactive, Rtv.Reactive), 'A Reactive expected in reactive to spread'
+        assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
 
         if NumSamples:
             to_labware_region.selectOnly(range(NumSamples))
         else:
             if not to_labware_region.selected():
-                to_labware_region.selectOnly(range(React.NumOfSamples))
+                to_labware_region.selectOnly(range(Rtv.NumOfSamples))
 
         to = to_labware_region.selected()
         if optimize: to = to_labware_region.parallelOrder(to)
@@ -127,13 +128,13 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
-        robot.getTips(Rbt.tipsMask[nt])
+        getTips(Rbt.tipsMask[nt])
 
         maxMultiDisp_N = robot.curArm().Tips[0].maxVol // volume  # assume all tips equal
 
         lf = reactive.labware
         lt = to_labware_region
-        msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+        msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] \ninto {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
             .format(v=volume, n=reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos, do=str(to),
                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
         Itr.comment(msg).exec()
@@ -150,14 +151,14 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                 else:
                     vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
                     availableDisp = dsp + bool(rst)
-                robot.aspiremultiTips(nt, reactive, vol)
+                aspiremultiTips(nt, reactive, vol)
 
             curSample = NumSamples - SampleCnt
             sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
-            robot.dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
+            dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
             availableDisp -= 1
             SampleCnt -= nt
-        robot.dropTips()
+        dropTips()
 
 def transfer( from_labware_region, to_labware_region, volume, using_liquid_class,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
@@ -170,8 +171,8 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         :param volume: if not, volume is set from the default of the source reactive
         :param optimize: minimize zigzag of multipippeting
         """
-        assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
-        assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to transfer'
+        assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
+        assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to transfer'
         assert isinstance(using_liquid_class, tuple)
 
         if NumSamples:  # todo  select convenient def
@@ -211,9 +212,9 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         msg = "Transfer: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
             .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site, oo=str(oriSel), do=str(dstSel),
                     to=lt.label, tg=lt.location.grid, ts=lt.location.site)
-        comment(msg).exec()
-        Asp = aspirate(Rbt.tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
-        Dst = dispense(Rbt.tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
+        Itr.comment(msg).exec()
+        Asp = Itr.aspirate(Rbt.tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
+        Dst = Itr.dispense(Rbt.tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
@@ -221,23 +222,23 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                 Asp.tipMask = Rbt.tipsMask[nt]
                 Dst.tipMask = Rbt.tipsMask[nt]
 
-            robot.getTips(Rbt.tipsMask[nt])  # todo what if volume > maxVol_tip ?
-            robot.curArm().aspire(volume, Rbt.tipsMask[nt])
+            getTips(Rbt.tipsMask[nt])  # todo what if volume > maxVol_tip ?
+            #  robot.curArm().aspire(volume, Rbt.tipsMask[nt])
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             Asp.exec()
 
             Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
-            robot.curArm().dispense(volume, Rbt.tipsMask[nt])
+            # robot.curArm().dispense(volume, Rbt.tipsMask[nt])
             Dst.exec()
-            robot.dropTips()
+            dropTips()
 
             SampleCnt -= nt
-        robot.dropTips()
+        dropTips()
         Asp.labware.selectOnly(oriSel)
         Dst.labware.selectOnly(dstSel)
         return oriSel, dstSel
 
-def waste( from_labware_region, using_liquid_class, volume, to_waste_labware=None, optimize=True):
+def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_waste_labware=None, optimize=True):
 
         """
 
@@ -248,13 +249,13 @@ def waste( from_labware_region, using_liquid_class, volume, to_waste_labware=Non
         :param optimize:
         :return:
         """
-        to_waste_labware = to_waste_labware or WashWaste
-        assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
+        to_waste_labware = to_waste_labware or Lab.WashWaste
+        assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(volume, (int, float))
         # todo  select convenient def
         oriSel = from_labware_region.selected()
         if not oriSel:
-            oriSel = range(React.NumOfSamples)
+            oriSel = range(Rtv.NumOfSamples)
         if optimize:
             oriSel = from_labware_region.parallelOrder(oriSel)
         NumSamples = len(oriSel)
@@ -264,7 +265,7 @@ def waste( from_labware_region, using_liquid_class, volume, to_waste_labware=Non
         if nt > SampleCnt:
             nt = SampleCnt
         tm = Rbt.tipsMask[nt]
-        robot.getTips(tm)
+        getTips(tm)
 
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
@@ -281,7 +282,7 @@ def waste( from_labware_region, using_liquid_class, volume, to_waste_labware=Non
                 Asp.tipMask = tm
                 Dst.tipMask = tm
 
-            robot.getTips(tm)
+            getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             mV = robot.curArm().Tips[0].maxVol
             r = volume
@@ -289,10 +290,10 @@ def waste( from_labware_region, using_liquid_class, volume, to_waste_labware=Non
                 dV = r if r < mV else mV
                 r -= dV
                 Asp.volume = dV
-                robot.curArm().aspire(dV, tm)
+                # robot.curArm().aspire(dV, tm)
                 Asp.exec()
                 Dst.volume = dV
-                robot.curArm().dispense(dV, tm)
+                # robot.curArm().dispense(dV, tm)
                 Dst.exec()
 
             robot.dropTips()
@@ -312,12 +313,12 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         :param optimize:
         :return:
         """
-        in_labware_region = in_labware_region or WashWaste
-        assert isinstance(in_labware_region, Labware), 'A Labware expected in in_labware_region to be mixed'
+        in_labware_region = in_labware_region or Lab.WashWaste
+        assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
         assert isinstance(volume, (int, float))
         oriSel = in_labware_region.selected()
         if not oriSel:
-            oriSel = range(React.NumOfSamples)
+            oriSel = range(Rtv.NumOfSamples)
         if optimize:
             oriSel = in_labware_region.parallelOrder(oriSel)
         NumSamples = len(oriSel)
@@ -326,7 +327,7 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         if nt > SampleCnt:
             nt = SampleCnt
 
-        robot.getTips(Rbt.tipsMask[nt])
+        getTips(Rbt.tipsMask[nt])
         volume = volume * 0.8
         mV = robot.curArm().Tips[0].maxVol * 0.8
         volume = volume if volume < mV else mV
@@ -334,33 +335,33 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         lf = in_labware_region
         msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
                   .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
-        comment(msg).exec()
-        mx = mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
+        Itr.comment(msg).exec()
+        mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
             if nt > SampleCnt:
                 nt = SampleCnt
                 mx.tipMask = Rbt.tipsMask[nt]
 
-            robot.getTips(Rbt.tipsMask[nt])
+            getTips(Rbt.tipsMask[nt])
             mx.labware.selectOnly(oriSel[curSample:curSample + nt])
             mx.exec()
 
-            robot.dropTips()
+            dropTips()
 
             SampleCnt -= nt
-        robot.dropTips()
+        dropTips()
         mx.labware.selectOnly(oriSel)
         return oriSel
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         if wells is None:
-            wells = reactive.labware.selected() or range(React.NumOfSamples)
+            wells = reactive.labware.selected() or range(Rtv.NumOfSamples)
         if using_liquid_class is None:
             using_liquid_class = (reactive.defLiqClass, reactive.defLiqClass)
 
-        robot.spread(reactive=reactive, to_labware_region=Itr.TeMag.selectOnly(wells))
+        spread(reactive=reactive, to_labware_region=Rbt.TeMag.selectOnly(wells))
         Itr.subroutine("avr_MagMix.esc", Itr.subroutine.Continues).exec()
-        robot.mix(Itr.TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
+        mix(Rbt.TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
         Itr.subroutine("avr_MagMix.esc", Itr.subroutine.Waits_previous).exec()
-        robot.waste(Itr.TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
+        waste(Rbt.TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
