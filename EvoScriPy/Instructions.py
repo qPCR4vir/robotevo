@@ -30,7 +30,8 @@ class aspirate(Pipetting):
                             Well,
                             arm )
 
-    def action(self):
+    @staticmethod
+    def action():
         return Robot.Robot.Arm.Aspire
 
 
@@ -59,7 +60,8 @@ class dispense(Pipetting):
                             Well,
                             arm )
 
-    def action(self):
+    @staticmethod
+    def action():
         return Robot.Robot.Arm.Dispense
 
 
@@ -96,8 +98,8 @@ class mix(Pipetting):
         return True
 
     def actualize_robot_state(self):
-        self.pipette_on_iRobot(Robot.Robot.Arm.Aspire)
-        self.pipette_on_iRobot(Robot.Robot.Arm.Dispense)
+        self.pipette_on_iRobot(aspirate.action())
+        self.pipette_on_iRobot(dispense.action())
         pass
 
 
