@@ -207,9 +207,11 @@ class Pipetting(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.volume, self.tipMask = Robot.current.curArm().pipette(self.action(), self.volume, self.tipMask )
-
+        self.pipette_on_iRobot(self.action())
         pass
+
+    def pipette_on_iRobot(self,action):
+        self.volume, self.tipMask = Robot.current.curArm().pipette(action, self.volume, self.tipMask )
 
 
 class DITIs(Instruction):

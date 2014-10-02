@@ -96,9 +96,8 @@ class mix(Pipetting):
         return True
 
     def actualize_robot_state(self):
-        self.volume, self.tipMask = Robot.current.curArm().pipette(Robot.Robot.Arm.Aspire, self.volume, self.tipMask )
-        self.volume, self.tipMask = Robot.current.curArm().pipette(Robot.Robot.Arm.Dispense, self.volume, self.tipMask )
-
+        self.pipette_on_iRobot(Robot.Robot.Arm.Aspire)
+        self.pipette_on_iRobot(Robot.Robot.Arm.Dispense)
         pass
 
 
