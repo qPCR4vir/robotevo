@@ -1,20 +1,18 @@
 __author__ = 'qPCR4vir'
 
 import Robot as Rbt
-from Robot import current as robot
-import Instruction_Base as I_b
 import Instructions as Itr
 import Reactive as Rtv
 import Labware as Lab
 
 def getTips( TIP_MASK=-1, type=Itr.def_DiTi):
-    # TIP_MASK = robot.mask_to_getTips(TIP_MASK,maxVol)
-    Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm).exec()
+    # TIP_MASK = Rbt.current.mask_to_getTips(TIP_MASK,maxVol)
+    Itr.getDITI2(TIP_MASK, type, arm=Rbt.current.def_arm).exec()
     # return TIP_MASK
 
 def dropTips( TIP_MASK=-1): # todo coordine robot
-        if not robot.droptips: return 0
-        TIP_MASK = robot.curArm().drop(TIP_MASK)
+        if not Rbt.current.droptips: return 0
+        TIP_MASK = Rbt.current.curArm().drop(TIP_MASK)
         if TIP_MASK:
             Itr.dropDITI(TIP_MASK).exec()
         return TIP_MASK
@@ -29,18 +27,18 @@ def aspire( tip, reactive, vol=None):
         """
         if vol is None:
             vol = reactive.minVol()
-        v = [0] * robot.curArm().nTips
+        v = [0] * Rbt.current.curArm().nTips
         v[tip] = vol
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        # robot.curArm().aspire(v, Rbt.tipMask[tip])
+        # Rbt.current.curArm().aspire(v, Rbt.tipMask[tip])
         Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 def dispense( tip, reactive, vol=None): # todo coordinate with robot
         vol = vol or reactive.minVol()  # really ??
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        v = [0] * robot.curArm().nTips
+        v = [0] * Rbt.current.curArm().nTips
         v[tip] = vol
-        # robot.curArm().dispense(v, Rbt.tipMask[tip])
+        # Rbt.current.curArm().dispense(v, Rbt.tipMask[tip])
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 def aspiremultiTips( tips, reactive, vol=None):
@@ -54,7 +52,7 @@ def aspiremultiTips( tips, reactive, vol=None):
             nextTip = curTip + nTip
             nextTip = nextTip if nextTip <= tips else tips
             mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]
-            #robot.curArm().aspire(vol, mask)
+            #Rbt.current.curArm().aspire(vol, mask)
             asp.tipMask = mask
             asp.exec()
             curTip = nextTip
@@ -63,7 +61,7 @@ def dispensemultiwells( tips, liq_class, labware, vol):
         if not isinstance(vol, list):
             vol = [vol] * tips
         om = Rbt.tipsMask[tips]
-        # robot.curArm().dispense(vol, om)
+        # Rbt.current.curArm().dispense(vol, om)
         Itr.dispense(om, liq_class, vol, labware).exec()
 
 def make( what, NumSamples=None): # todo coordinate with protocol
@@ -78,8 +76,8 @@ def makePreMix( preMix, NumSamples=None):
             len(preMix.components))
         Itr.comment(msg).exec()
         nc = len(preMix.components)
-        assert nc <= robot.curArm().nTips, \
-            "Temporally the mix can not contain more than {:d} components.".format(robot.curArm().nTips)
+        assert nc <= Rbt.current.curArm().nTips, \
+            "Temporally the mix can not contain more than {:d} components.".format(Rbt.current.curArm().nTips)
 
         getTips(Rbt.tipsMask[nc])
 
@@ -89,7 +87,7 @@ def makePreMix( preMix, NumSamples=None):
                 i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
                 react.pos + 1)
             Itr.comment(msg).exec()
-            mV = robot.curArm().Tips[i].maxVol # todo what if the tip are different?
+            mV = Rbt.current.curArm().Tips[i].maxVol # todo what if the tip are different?
             r = react.minVol(NumSamples)
             while r > 0:
                 dV = r if r < mV else mV
@@ -125,12 +123,12 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
 
         volume = volume or reactive.volpersample
 
-        nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
         getTips(Rbt.tipsMask[nt])
 
-        maxMultiDisp_N = robot.curArm().Tips[0].maxVol // volume  # assume all tips equal
+        maxMultiDisp_N = Rbt.current.curArm().Tips[0].maxVol // volume  # assume all tips equal
 
         lf = reactive.labware
         lt = to_labware_region
@@ -202,10 +200,10 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         SampleCnt = NumSamples
 
         assert isinstance(volume, (int, float))
-        nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
-        robot.getTips(Rbt.tipsMask[nt])
+        getTips(Rbt.tipsMask[nt])
 
         lf = from_labware_region
         lt = to_labware_region
@@ -223,12 +221,12 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                 Dst.tipMask = Rbt.tipsMask[nt]
 
             getTips(Rbt.tipsMask[nt])  # todo what if volume > maxVol_tip ?
-            #  robot.curArm().aspire(volume, Rbt.tipsMask[nt])
+            #  Rbt.current.curArm().aspire(volume, Rbt.tipsMask[nt])
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             Asp.exec()
 
             Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
-            # robot.curArm().dispense(volume, Rbt.tipsMask[nt])
+            # Rbt.current.curArm().dispense(volume, Rbt.tipsMask[nt])
             Dst.exec()
             dropTips()
 
@@ -261,7 +259,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
 
-        nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
         tm = Rbt.tipsMask[nt]
@@ -284,22 +282,22 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mV = robot.curArm().Tips[0].maxVol
+            mV = Rbt.current.curArm().Tips[0].maxVol
             r = volume
             while r > 0:
                 dV = r if r < mV else mV
                 r -= dV
                 Asp.volume = dV
-                # robot.curArm().aspire(dV, tm)
+                # Rbt.current.curArm().aspire(dV, tm)
                 Asp.exec()
                 Dst.volume = dV
-                # robot.curArm().dispense(dV, tm)
+                # Rbt.current.curArm().dispense(dV, tm)
                 Dst.exec()
 
-            robot.dropTips()
+            dropTips()
 
             SampleCnt -= nt
-        robot.dropTips()
+        dropTips()
         Asp.labware.selectOnly(oriSel)
         return oriSel
 
@@ -323,13 +321,13 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
             oriSel = in_labware_region.parallelOrder(oriSel)
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
-        nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
 
         getTips(Rbt.tipsMask[nt])
         volume = volume * 0.8
-        mV = robot.curArm().Tips[0].maxVol * 0.8
+        mV = Rbt.current.curArm().Tips[0].maxVol * 0.8
         volume = volume if volume < mV else mV
 
         lf = in_labware_region
