@@ -95,7 +95,7 @@ class Labware:
             Labware.Type.__init__(self, name, nRow, nCol, maxVol, conectedWells=False)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
-            self.pick_next_rack = None
+            self.pick_next_rack = None  # labware (DITIrack or grid,site)
 
     class Cuvette(Type):        pass
     class Te_Mag (Type):        pass

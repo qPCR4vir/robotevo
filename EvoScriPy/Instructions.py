@@ -283,14 +283,18 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other def_
         return True
 
     def actualize_robot_state(self):
-        Robot.current.worktable.labTypes[self.type]
+        # Robot.current.worktable.labTypes[self.type]
+        self.labware.type.pick_next_rack = self.labware
+        self.labware.type.pick_next      = self.posInRack
 
 class set_DITI_Counter2(Pipette): # todo  set other def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
     """
 
-    def __init__(self, labware = def_LabW, posInRack=0, lastPos=False  ):
+    def __init__(self, labware   = def_LabW,
+                       posInRack = 0,
+                       lastPos   = False  ):
         Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware, tipMask=True)
         self.lastPos = lastPos #todo implement internally; how??
         self.posInRack = posInRack
@@ -304,8 +308,12 @@ class set_DITI_Counter2(Pipette): # todo  set other def_LabW
         return True
 
     def actualize_robot_state(self):
-        if self.lastPos):
-            self.labware.type.n
+        self.labware.type.pick_next_rack = self.labware
+        if self.lastPos:
+            self.labware.type.pick_next_back = self.posInRack
+        else:
+            self.labware.type.pick_next      = self.posInRack
+
 
 
 
