@@ -65,7 +65,7 @@ def dispensemultiwells( tips, liq_class, labware, vol):
         Itr.dispense(om, liq_class, vol, labware).exec()
 
 def make( what, NumSamples=None): # todo coordinate with protocol
-        if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
+        if isinstance(what, Rtv.preMix): makePreMix(what, NumSamples)
 
 def makePreMix( preMix, NumSamples=None):
         NumSamples = NumSamples or Rtv.NumOfSamples
