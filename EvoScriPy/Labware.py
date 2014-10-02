@@ -90,6 +90,25 @@ class Labware:
             self.nCol = nCol
             self.maxVol = maxVol
 
+    class DITIrack(Type):
+        def __init__(self, name, nRow=8, nCol=12, maxVol=None):
+            Labware.Type.__init__(self, name, nRow, nCol, maxVol, conectedWells=False)
+            self.pick_next      = 0
+            self.pick_next_back = nRow*nCol-1
+            self.pick_next_rack = None
+
+    class Cuvette(Type):        pass
+    class Te_Mag (Type):        pass
+
+    def __init__(self, type, location, label=None, worktable=curWorkTable):
+        self.type = type
+        self.label = label
+        self.location = location
+        self.Wells = [Well(self, offset) for offset in range(self.offset(self.type.nRow, self.type.nCol) + 1)]
+        worktable.addLabware(self)
+        if location.rack:
+            location.rack.addLabware(self, location.rack_site)
+
     class Location:
         def __init__(self, grid=None, site=None, rack=None, rack_site=None):
             """
@@ -147,15 +166,6 @@ class Labware:
     def position(self, offset):
         return self.Position(offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
-    def __init__(self, type, location, label=None, worktable=curWorkTable):
-        self.type = type
-        self.label = label
-        self.location = location
-        self.Wells = [Well(self, offset) for offset in range(self.offset(self.type.nRow, self.type.nCol) + 1)]
-        worktable.addLabware(self)
-        if location.rack:
-            location.rack.addLabware(self, location.rack_site)
-
     def find_free_wells(self, n=1):
         continuous = True
         free_wells = []
@@ -194,7 +204,6 @@ class Labware:
             w.reactive = reactive
             Replicas += [w]
         return Replicas
-
 
     def clearSelection(self):
         for well in self.Wells:
@@ -308,14 +317,22 @@ class Labware:
             sel.append(null + bitMask)
         return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
 
+class DiTi_Rack (Labware):
+    def __init__(self, type, location, label=None, worktable=curWorkTable):
+        assert isinstance(type, Labware.DITIrack)
+        Labware.__init__(self, type, location, label=None, worktable=worktable)
+        self.fill()
+        if type.pick_next_rack is None:
+            type.pick_next_rack = self
 
-
-class Cuvette(Labware):
-    pass
-
-
-class Te_Mag(Labware):
-    pass
+    def fill(self, beg=1, end=None):
+        if isinstance(beg, list): assert end is None
+        else:
+            beg = self.offset(beg)
+            end = self.offset(end or self.type.nRow*self.type.nCol)
+            beg = range(beg, end+1)
+        for w in self.Wells: w.reactive=None
+        for w in beg: self.Wells[w].reactive=True   # todo Set some kind of tip
 
 
 Trough_100ml = Labware.Type("Trough 100ml", 8, maxVol=100000, conectedWells=True)
@@ -331,6 +348,6 @@ CleanerLWS = Labware.Type("Washstation 2Grid Cleaner long", 8, maxVol=100000, co
 WashCleanerL = Labware(CleanerLWS, Labware.Location(22, 2))
 DiTi_Waste = Labware.Type("Washstation 2Grid DiTi Waste", 8, maxVol=100000, conectedWells=True)
 DiTiWaste = Labware(DiTi_Waste, Labware.Location(22, 6))
-DiTi_1000ul = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+DiTi_1000ul = Labware.DITIrack("DiTi 1000ul", maxVol=940)
 
 MP96well = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)

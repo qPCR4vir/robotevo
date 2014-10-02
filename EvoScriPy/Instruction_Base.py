@@ -233,7 +233,7 @@ class DITIs(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg = [integer(self.tipMask)]  # arg 1
-        self.arg += [integer(self.options)]
-        self.arg += [integer(self.arm)]  # arg 10
+        self.arg = [integer(self.tipMask)]   # arg 1
+        self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
+        self.arg += [integer(self.arm)]      # arg 4
         return True

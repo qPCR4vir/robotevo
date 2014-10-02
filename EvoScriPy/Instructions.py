@@ -100,7 +100,7 @@ class mix(Pipetting):
         self.pipette_on_iRobot(dispense.action())
         pass
 
-class wash_tips(Pipette):                     # TODO revise def values of arg
+class wash_tips(Pipette):                     # TODO revise def values of arg, how to model with iRobot?
     """ A.15.4.4 Wash Tips (Worklist: Wash)
     """
     def __init__(self,  tipMask     = curTipMask,
@@ -181,22 +181,28 @@ class getDITI(DITIs):
         :param type: int, 0-3. DITI index (see 9.4.5 “Labware Types and DITI Types”,  9-32, DITI Index).
         """
         DITIs.__init__(self, "GetDITI", tipMask, options, arm)
-        self.type=type # todo Implement!! Find the correct rack in the worktable and the current position to pick.
+        self.type=type # todo Deprecated?? Find the correct rack in the worktable and the current position to pick.
 
     def validateArg(self):
         DITIs.validateArg(self)
-        self.arg[1:1] = [integer(self.type)]
+        self.arg[1:1] = [integer(self.type)]     # arg 2 is type -an index-
         return True
 
 class getDITI2(DITIs):
     """ A.15.4.5 Get DITIs (Worklist: GetDITI)
+    It take a labware name instead of the labware itself because the real robot take track of the next position to pick
+    including the rack and the site (that is - the labware). It need a labware type and it know where is the next tip.
     """
-    def __init__(self,  tipMask=curTipMask, LabwareTypeName=None, options=0,
-                          arm=Pipette.LiHa1, AirgapVolume=0,   AirgapSpeed=def_AirgapSpeed ):
+    def __init__(self,  tipMask         = curTipMask,
+                        LabwareTypeName = None,
+                        options         = 0,
+                        arm             = Pipette.LiHa1,
+                        AirgapVolume    = 0,
+                        AirgapSpeed     = def_AirgapSpeed ):
         """
 
         :param tipMask:
-        :param LabwareTypeName: string? DiTi labware name
+        :param LabwareTypeName: string or labware or labware.Type? DiTi labware name
         :param options:
         :param arm:
         :param AirgapVolume: int. used to specify a system trailing airgap (STAG) which will be aspirated after
@@ -216,8 +222,8 @@ class getDITI2(DITIs):
         elif isinstance(ln, Lab.Labware)    : ln = ln.type.name
         elif isinstance(ln,Lab.Labware.Type): ln = ln.name
 
-        self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or 2 ? expression?
-        self.arg += [integer(self.AirgapVolume), integer(self.AirgapSpeed)]   # arg 5, 6
+        self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or expression?
+        self.arg += [integer(self.AirgapVolume), integer(self.AirgapSpeed)]   # arg 5, 6 (3, 4 are grid, site)
 
         return True
 
@@ -275,6 +281,9 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other def_
                                         string1(self.posInRack)] # todo extract from Location
         return True
 
+    def actualize_robot_state(self):
+        Robot.current.worktable.labTypes[self.type]
+
 class set_DITI_Counter2(Pipette): # todo  set other def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
@@ -292,6 +301,12 @@ class set_DITI_Counter2(Pipette): # todo  set other def_LabW
                     string1(self.posInRack+1),
                     integer(self.lastPos)] # todo extract from Location
         return True
+
+    def actualize_robot_state(self):
+        if self.lastPos):
+            self.labware.type.n
+
+
 
 class pickUp_DITIs(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI)

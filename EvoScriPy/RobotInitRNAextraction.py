@@ -11,9 +11,9 @@ Unused8      = Labware(Trough_100ml, Labware.Location(24,1), "8-Unused"         
 Unused9      = Labware(Trough_100ml, Labware.Location(24,2), "9-Unused"           )
 
 
-DiTi1000_1    = Labware(DiTi_1000ul, Labware.Location(25,0),"1000-1")
-DiTi1000_2    = Labware(DiTi_1000ul, Labware.Location(25,1),"1000-2")
-DiTi1000_3    = Labware(DiTi_1000ul, Labware.Location(25,2),"1000-3")
+DiTi1000_1    = DiTi_Rack(DiTi_1000ul, Labware.Location(25,0),"1000-1")
+DiTi1000_2    = DiTi_Rack(DiTi_1000ul, Labware.Location(25,1),"1000-2")
+DiTi1000_3    = DiTi_Rack(DiTi_1000ul, Labware.Location(25,2),"1000-3")
 
 # set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('E7')  ).exec()
 
