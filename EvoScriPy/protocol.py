@@ -182,8 +182,8 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
 
             if not dstSel:
                 if not oriSel:
-                    oriSel = range(React.NumOfSamples)
-                    dstSel = range(React.NumOfSamples)
+                    oriSel = range(Rtv.NumOfSamples)
+                    dstSel = range(Rtv.NumOfSamples)
                 else:
                     dstSel = oriSel
             else:

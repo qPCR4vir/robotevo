@@ -52,7 +52,7 @@ class Robot:
             self.nTips = nTips
             self.Tips = [None] * nTips
 
-        def mask_to_getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+        def getTips_test(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
             """     Mount only one kind of tip at a time
                     :rtype : int
                     :param tip_mask:
@@ -84,7 +84,7 @@ class Robot:
                     self.Tips[i] = Tip(maxVol)
             return tip_mask
 
-        def mask_to_getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+        def getMoreTips_test(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
             """ Mount only the tips with are not already mounted.
                 Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                     :rtype : int
@@ -218,14 +218,14 @@ class Robot:
     def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
         # todo Find the correct rack in the worktable and the current position to pick.
 
-        return self.curArm().getTips(self.mask_to_getTips(TIP_MASK, maxVol))
+        return self.curArm().getTips(self.getTips_test(TIP_MASK, maxVol))
 
-    def mask_to_getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+    def getTips_test(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
         if self.reusetips:
-            TIP_MASK = self.curArm().mask_to_getMoreTips(TIP_MASK, maxVol)
+            TIP_MASK = self.curArm().getMoreTips_test(TIP_MASK, maxVol)
         else:
             self.dropTips(TIP_MASK)
-            TIP_MASK = self.curArm().mask_to_getTips(TIP_MASK, maxVol)
+            TIP_MASK = self.curArm().getMoreTips_test(TIP_MASK, maxVol)
         return TIP_MASK
 
     def dropTips(self, TIP_MASK=-1): # todo coordine protocol
@@ -262,25 +262,4 @@ class Robot:
 
 current = None
 
-
-class ProtocolStep:
-    pass
-
-
-class MakeMix(ProtocolStep):
-    pass
-
-
-class DistrReactive(ProtocolStep):
-    pass
-
-
-class Transfer(ProtocolStep):
-    def __init__(self, src, dest, vol):
-        pass
-
-
-class Collect(ProtocolStep):
-    def __init__(self, src, dest, vol):
-        pass
 
