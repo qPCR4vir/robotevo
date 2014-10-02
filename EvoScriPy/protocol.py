@@ -10,12 +10,12 @@ def getTips( TIP_MASK=-1, type=Itr.def_DiTi):
     Itr.getDITI2(TIP_MASK, type, arm=Rbt.current.def_arm).exec()
     # return TIP_MASK
 
-def dropTips( TIP_MASK=-1): # todo coordine robot
-        if not Rbt.current.droptips: return 0
-        TIP_MASK = Rbt.current.curArm().drop(TIP_MASK)
-        if TIP_MASK:
-            Itr.dropDITI(TIP_MASK).exec()
-        return TIP_MASK
+def dropTips( TIP_MASK=-1): # todo is this a correct solution or it is best to do a double check? To force drop?
+        #if not Rbt.current.droptips: return 0
+        #TIP_MASK = Rbt.current.curArm().drop(TIP_MASK)
+        #if TIP_MASK:
+        Itr.dropDITI(TIP_MASK).exec()
+        #return TIP_MASK
 
 def aspire( tip, reactive, vol=None):
         """

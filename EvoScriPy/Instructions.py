@@ -258,12 +258,8 @@ class dropDITI(Pipette):
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
 
-#    def exec(self, mode=None):
-#        if supportVirtualRobot:
-#            global current
-#            used=current.arms[self.arm].drop(self.tipMask)
-#            if self.conditional and used:
-#                Pipette.exec(self,mode)
+    def actualize_robot_state(self):
+        self.tipMask = Robot.current.dropTips(self.tipMask)
 
 class set_DITI_Counter(Pipette): # todo help determining the type,set other def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
