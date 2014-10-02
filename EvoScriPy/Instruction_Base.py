@@ -174,6 +174,9 @@ class Pipette(Instruction):
 
         return True
 
+    def exec(self, mode=None):
+        if self.tipMask: Instruction.exec(self, mode)
+
 
 class Pipetting(Pipette):
     def __init__(self, name, tipMask     = curTipMask,

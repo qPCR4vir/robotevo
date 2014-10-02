@@ -34,7 +34,6 @@ class aspirate(Pipetting):
     def action():
         return Robot.Robot.Arm.Aspire
 
-
 class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
     """
@@ -63,7 +62,6 @@ class dispense(Pipetting):
     @staticmethod
     def action():
         return Robot.Robot.Arm.Dispense
-
 
 class mix(Pipetting):
     """ A.15.4.3 Mix (Worklist: Mix)
@@ -101,7 +99,6 @@ class mix(Pipetting):
         self.pipette_on_iRobot(aspirate.action())
         self.pipette_on_iRobot(dispense.action())
         pass
-
 
 class wash_tips(Pipette):                     # TODO revise def values of arg
     """ A.15.4.4 Wash Tips (Worklist: Wash)
@@ -156,10 +153,6 @@ class wash_tips(Pipette):                     # TODO revise def values of arg
                           integer(self.lowVolume),
                           integer(self.atFrequency)]
         return True
-
-    def __init__(self):
-        Pipette.__init__(self, "Wash")
-        assert False,"Wash() not implemented"
 
 class getDITI(DITIs):
     def __init__(self,  tipMask, type, options=0, arm= Pipette.LiHa1):
@@ -239,7 +232,6 @@ class getDITI2(DITIs):
         self.tipMask = Robot.current.getTips(self.tipMask, maxVol)
         self.LabwareTypeName = ln.name
 
-
 class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """
 
@@ -277,7 +269,7 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other def_
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
 
     def __init__(self, type, posInRack=0, labware = def_LabW  ):
-        Pipette.__init__(self, "Set_DITI_Counter" , labware = labware)
+        Pipette.__init__(self, "Set_DITI_Counter" , labware = labware, tipMask=True)
         self.type = type
         self.posInRack = posInRack
 
@@ -293,7 +285,7 @@ class set_DITI_Counter2(Pipette): # todo  set other def_LabW
     """
 
     def __init__(self, labware = def_LabW, posInRack=0, lastPos=False  ):
-        Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware)
+        Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware, tipMask=True)
         self.lastPos = lastPos #todo implement internally; how??
         self.posInRack = posInRack
 
@@ -410,6 +402,9 @@ class activate_PMP(Instruction):
         self.arg= [integer(self.tipMask)]
         return True
 
+    def exec(self, mode=None):
+        if self.tipMask: Instruction.exec(self, mode)
+
 class deactivate_PMP(Instruction):
     """ A.15.4.13 Deactivate PMP (Worklist: Deactivate_PMP)
     """
@@ -422,11 +417,14 @@ class deactivate_PMP(Instruction):
         self.arg= [integer(self.tipMask)]
         return True
 
+    def exec(self, mode=None):
+        if self.tipMask: Instruction.exec(self, mode)
+
 class moveLiha(Pipette ): #todo convenient arg
     """ A.15.4.14 Move LiHa (Worklist: MoveLiha   - A - 135)
     """
     def __init__(self, zMove, zTarget, offset, speed  ):
-        Pipette.__init__(self, 'MoveLiha' )
+        Pipette.__init__(self, 'MoveLiha' , tipMask=True)
         self.speed = speed
         self.offset = offset
         self.zTarget = zTarget
