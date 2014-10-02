@@ -191,7 +191,8 @@ class getDITI(DITIs):
 class getDITI2(DITIs):
     """ A.15.4.5 Get DITIs (Worklist: GetDITI)
     It take a labware name instead of the labware itself because the real robot take track of the next position to pick
-    including the rack and the site (that is - the labware). It need a labware type and it know where is the next tip.
+    including the rack and the site (that is - the labware). 
+    It need a labware type and it know where to pick the next tip.
     """
     def __init__(self,  tipMask         = curTipMask,
                         LabwareTypeName = None,
