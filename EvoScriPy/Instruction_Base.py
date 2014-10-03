@@ -124,12 +124,7 @@ def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
 def_liquidClass = "Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
 def_vol         = [0]*12
-def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.Labware.Location(1,1))
 def_LoopOp      = []
-def_WashWaste   = Lab.WashWaste
-def_WashCleaner = Lab.WashCleanerS
-def_DiTiWaste   = Lab.DiTiWaste
-def_DiTi        = Lab.DiTi_1000ul   # todo revise
 def_AirgapSpeed = 300
 
 
@@ -137,7 +132,7 @@ class Pipette(Instruction):
     LiHa1 = 0
     LiHa2 = 1
     def __init__(self, name, tipMask     = curTipMask,
-                             labware     = def_LabW,
+                             labware     = None,
                              spacing     = 1,           # todo how to use???
                              wellSelection = None,      # todo how to use???
                              LoopOptions = def_LoopOp,  # todo how to model???
@@ -146,7 +141,7 @@ class Pipette(Instruction):
                              arm         = LiHa1):
         Instruction.__init__(self, name)
         self.tipMask=tipMask
-        self.labware=labware
+        self.labware=labware or Lab.def_LabW
         self.spacing = spacing
         self.loopOptions = LoopOptions
         self.RackName = RackName
@@ -182,7 +177,7 @@ class Pipetting(Pipette):
     def __init__(self, name, tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
-                             labware     = def_LabW,
+                             labware     = Lab.def_LabW,
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,

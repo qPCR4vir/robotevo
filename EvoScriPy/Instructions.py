@@ -11,7 +11,7 @@ class aspirate(Pipetting):
     def __init__(self,  tipMask     = curTipMask,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
-                        labware     = def_LabW,
+                        labware     = None,
                         spacing     = 1,
                         wellSelection= None,       # TODO implement
                         LoopOptions = def_LoopOp,
@@ -22,7 +22,7 @@ class aspirate(Pipetting):
                             tipMask,
                             liquidClass,
                             volume,
-                            labware,
+                            labware or Lab.def_LabW,
                             spacing,
                             wellSelection,
                             LoopOptions,
@@ -40,7 +40,7 @@ class dispense(Pipetting):
     def __init__(self,  tipMask     = curTipMask,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
-                        labware     = def_LabW,
+                        labware     = None,
                         spacing     = 1,
                         wellSelection= None,
                         LoopOptions = def_LoopOp,
@@ -51,7 +51,7 @@ class dispense(Pipetting):
                             tipMask,
                             liquidClass,
                             volume,
-                            labware,
+                            labware or Lab.def_LabW,
                             spacing,
                             wellSelection,
                             LoopOptions,
@@ -69,7 +69,7 @@ class mix(Pipetting):
     def __init__(self,  tipMask     = curTipMask,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
-                        labware     = def_LabW,
+                        labware     = None,
                         spacing     = 1,
                         wellSelection= None,
                         cycles      = 3,
@@ -80,7 +80,7 @@ class mix(Pipetting):
         Pipetting.__init__(self, 'Mix',
                             tipMask,
                             liquidClass,
-                            volume,
+                            volume or Lab.def_LabW,
                             labware,
                             spacing,
                             wellSelection,
@@ -104,8 +104,8 @@ class wash_tips(Pipette):                     # TODO revise def values of arg, h
     """ A.15.4.4 Wash Tips (Worklist: Wash)
     """
     def __init__(self,  tipMask     = curTipMask,
-                        WashWaste   = def_WashWaste,
-                        WashCleaner = def_WashCleaner,
+                        WashWaste   = None,
+                        WashCleaner = None,
                         wasteVol    = 100,
                         wasteDelay  = 50,
                         cleanerVol  = 10,
@@ -121,7 +121,7 @@ class wash_tips(Pipette):                     # TODO revise def values of arg, h
                         arm         = Pipette.LiHa1):
         Pipette.__init__(self, 'Wash',
                             tipMask,
-                            labware=WashWaste,
+                            labware=WashWaste or Lab.def_WashWaste,
                             RackName=RackName,
                             Well=Well,
                             arm=arm )
@@ -135,7 +135,7 @@ class wash_tips(Pipette):                     # TODO revise def values of arg, h
         self.cleanerVol = cleanerVol
         self.wasteDelay = wasteDelay
         self.wasteVol = wasteVol
-        self.WashCleaner = WashCleaner
+        self.WashCleaner = WashCleaner or Lab.def_WashCleaner,
         #self.WashWaste = WashWaste
 
     def validateArg(self):
@@ -321,7 +321,7 @@ class pickUp_DITIs(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI)
     """
     def __init__(self, tipMask     = curTipMask,
-                             labware     = def_LabW,
+                             labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
                              type        = None,
@@ -330,7 +330,7 @@ class pickUp_DITIs(Pipette):
                              Well        = None):
         Pipette.__init__(self, 'PickUp_DITIs',
                              tipMask     = tipMask,
-                             labware     = labware,
+                             labware     = labware or Lab.def_DiTi,
                              wellSelection= wellSelection,
                              LoopOptions = LoopOptions,
                              RackName    = RackName,
@@ -348,7 +348,7 @@ class set_DITIs_Back(Pipette):
     """ A.15.4.9 Set DITIs Back (Worklist: Set_DITIs_Back)
     """
     def __init__(self , tipMask     = curTipMask,
-                             labware     = def_LabW,
+                             labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
                              arm         = Pipette.LiHa1,
@@ -356,7 +356,7 @@ class set_DITIs_Back(Pipette):
                              Well        = None):
         Pipette.__init__(self, 'Set_DITIs_Back',
                              tipMask     = tipMask,
-                             labware     = labware,
+                             labware     = labware or Lab.def_DiTi,
                              wellSelection= wellSelection,
                              LoopOptions = LoopOptions,
                              RackName    = RackName,
@@ -380,7 +380,7 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
     """
     def __init__(self ,      tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
-                             labware     = def_LabW,
+                             labware     = None,
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
@@ -391,7 +391,7 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
         Pipetting.__init__(self, 'Detect_Liquid',
                             tipMask,
                             liquidClass,
-                            labware,
+                            labware or Lab.def_LabW,
                             spacing,
                             wellSelection,
                             LoopOptions,
