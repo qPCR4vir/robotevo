@@ -1,6 +1,6 @@
 __author__ = 'qPCR4vir'
 
-import Robot
+import Robot as Rbt
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
     this script generator. Some options are: A worklist; a full Evoware script; only comments, etc.
@@ -114,18 +114,15 @@ class Script(ScriptBody):
 
     def __init__(self, filename, template, arms=None):
         ScriptBody.__init__(self, filename)
-        import Robot as Rbt
-        if Rbt.current:
-            Rbt.current.set_worktable(filename)
+        if Rbt.Robot.current:
+            Rbt.Robot.current.set_worktable(filename)
         else:
-            Rbt.current = Rbt.Robot(templateFile=template, arms=arms)
+            Rbt.Robot.current = Rbt.Robot(templateFile=template, arms=arms)
         self.templateNotAdded = True
 
     def exec(self, instr):
         if self.templateNotAdded:
-            # from Robot import current
-
-            for line in Robot.current.worktable.template:
+            for line in Rbt.Robot.current.worktable.template:
                 self.f.write((line[:-1] + "\n"))  # .encode('Latin-1')  \r
             self.templateNotAdded = False
         ScriptBody.exec(self, instr)
@@ -140,7 +137,7 @@ class iRobot(Mode):
     def __init__(self, index,  nTips=4 , arms=None):
         Mode.__init__(self )
         # import Robot as Rbt
-        Robot.current = Robot.Robot(index=index, arms=arms, nTips=nTips)
+        Rbt.Robot.current = Rbt.Robot(index=index, arms=arms, nTips=nTips)
         pass
 
     def exec(self, instr):

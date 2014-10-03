@@ -1,7 +1,7 @@
 __author__ = 'qPCR4vir'
 
 
-from Labware import *
+import Labware as Lab
 # from Robot import current
 from Instruction_Base import def_liquidClass
 
