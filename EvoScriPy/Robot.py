@@ -151,9 +151,9 @@ class Robot:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
-                    assert tp is not None, "No tp in position " + str(i)
+                    assert isinstance(tp, Lab.Tip), "No tip in position " + str(i)
                     nv = tp.vol + action * vol[i]
-                    if 0 <= nv <= tp.maxVol:
+                    if 0 <= nv <= tp.type.maxVol:
                         self.Tips[i].vol = nv
                         continue
                     msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
@@ -164,9 +164,12 @@ class Robot:
                     pass # vol[i] = None
             return vol, tip_mask
 
-    def __init__(self, index=None,arms=None, nTips=None,
-                  workingTips=None,
-                 tipsType=Arm.DiTi, templateFile=None): # index=Pipette.LiHa1
+    def __init__(self,  index       = None,
+                        arms        = None,
+                        nTips       = None,
+                        workingTips = None,
+                        tipsType    = Arm.DiTi,
+                        templateFile= None): # index=Pipette.LiHa1
         """
 
         :param arms:

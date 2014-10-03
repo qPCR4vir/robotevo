@@ -251,12 +251,9 @@ class Labware:
     def newPosition(self, pos, offset):
         return self.position(self.newOffset(pos, offset))
 
-    def posAtParallelMove(self, step):
+    def posAtParallelMove(self, step, nTips):
         nR, nC = self.type.nRow, self.type.nCol
         assert step < nC * nR, "too many steps!!"
-        from Robot import current
-        # assert isinstance(current,Robot.Robot)
-        nTips = current.curArm().nTips
         SubPlateSize = nTips * nC
         SubPlate = step // SubPlateSize
         tN_semiCol = step // nTips
@@ -271,17 +268,17 @@ class Labware:
         assert 0 < p.col <= nC, msg
         return p
 
-    def parallelOrder(self, original=None):
+    def parallelOrder(self, nTips, original=None):
         original = original or self.selected()
         assert original
         if isinstance(original, int):
             assert 0 < original <= len(self.Wells)
             original = range(original)
         assert isinstance(original, (list, range))
-        return [self.offset(self.posAtParallelMove(offset)) for offset in original]
+        return [self.offset(self.posAtParallelMove(offset, nTips)) for offset in original]
 
-    def offsetAtParallelMove(self, step):
-        p = self.posAtParallelMove(step)
+    def offsetAtParallelMove(self, step, nTips):
+        p = self.posAtParallelMove(step, nTips)
         return self.offset(p.row, p.col)
 
     def moveParallel(self, pos, offset):  # TODO
@@ -419,16 +416,16 @@ class DiTi_Rack (Labware):
             tp.pick_next_rack = nr
 
 
-Trough_100ml = Labware.Type("Trough 100ml", 8, maxVol=100000, conectedWells=True)
-EppRack16_2mL = Labware.Type("Tube Eppendorf 2mL 16 Pos", 16, maxVol=2000)
-EppRack3x16R = Labware.Type("Tube Eppendorf 3x 16 PosR", 16, 3, maxVol=1500)
-EppRack3x16 = Labware.Type("Tube Eppendorf 3x 16 Pos", 16, 3, maxVol=1500)
-TeMag48 = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
-CleanerSWS = Labware.Type("Washstation 2Grid Cleaner short", 8, maxVol=100000, conectedWells=True)
-WasteWS = Labware.Type("Washstation 2Grid Waste", 8, maxVol=100000, conectedWells=True)
-CleanerLWS = Labware.Type("Washstation 2Grid Cleaner long", 8, maxVol=100000, conectedWells=True)
-DiTi_Waste = Labware.Type("Washstation 2Grid DiTi Waste", 8, maxVol=100000, conectedWells=True)
-DiTi_1000ul = Labware.DITIrack("DiTi 1000ul", maxVol=940)
+Trough_100ml    = Labware.Type("Trough 100ml",                      8,      maxVol=100000, conectedWells=True)
+EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=2000)
+EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=1500)
+EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=1500)
+TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=1500)
+CleanerSWS      = Labware.Type("Washstation 2Grid Cleaner short",   8,      maxVol=100000, conectedWells=True)
+WasteWS         = Labware.Type("Washstation 2Grid Waste",           8,      maxVol=100000, conectedWells=True)
+CleanerLWS      = Labware.Type("Washstation 2Grid Cleaner long",    8,      maxVol=100000, conectedWells=True)
+DiTi_Waste      = Labware.Type("Washstation 2Grid DiTi Waste",      8,      maxVol=100000, conectedWells=True)
+DiTi_1000ul     = Labware.DITIrack("DiTi 1000ul", maxVol=940)
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190
 def_DiTi        = DiTi_1000ul

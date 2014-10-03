@@ -116,6 +116,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         """
         assert isinstance(reactive, Rtv.Reactive), 'A Reactive expected in reactive to spread'
         assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
+        nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
 
         if NumSamples:
             to_labware_region.selectOnly(range(NumSamples))
@@ -124,18 +125,17 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                 to_labware_region.selectOnly(range(Rtv.NumOfSamples))
 
         to = to_labware_region.selected()
-        if optimize: to = to_labware_region.parallelOrder(to)
+        if optimize: to = to_labware_region.parallelOrder(nt, to)
         NumSamples = len(to)
         SampleCnt = NumSamples
 
         volume = volume or reactive.volpersample
 
-        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
         getTips(Rbt.tipsMask[nt])
 
-        maxMultiDisp_N = Rbt.current.curArm().Tips[0].maxVol // volume  # assume all tips equal
+        maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
 
         lf = reactive.labware
         lt = to_labware_region
@@ -179,6 +179,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to transfer'
         assert isinstance(using_liquid_class, tuple)
+        nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
 
         if NumSamples:  # todo  select convenient def
             oriSel = range(NumSamples)
@@ -200,14 +201,13 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                     l = min(len(oriSel), len(dstSel))  # todo transfer the minimun of the selected ???? Best reise error
                     oriSel = oriSel[:l]
                     dstSel = dstSel[:l]
-        if optimizeFrom: oriSel = from_labware_region.parallelOrder(oriSel)
-        if optimizeTo: dstSel = to_labware_region.parallelOrder(dstSel)
+        if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)
+        if optimizeTo: dstSel = to_labware_region.parallelOrder(nt, dstSel)
 
         NumSamples = len(dstSel)
         SampleCnt = NumSamples
 
         assert isinstance(volume, (int, float))
-        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt: nt = SampleCnt
 
         getTips(Rbt.tipsMask[nt])
@@ -254,19 +254,19 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         :param optimize:
         :return:
         """
-        to_waste_labware = to_waste_labware or Lab.WashWaste
+        to_waste_labware = to_waste_labware or Lab.def_WashWaste
         assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(volume, (int, float))
         # todo  select convenient def
         oriSel = from_labware_region.selected()
+        nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if not oriSel:
             oriSel = range(Rtv.NumOfSamples)
         if optimize:
-            oriSel = from_labware_region.parallelOrder(oriSel)
+            oriSel = from_labware_region.parallelOrder(nt, oriSel)
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
 
-        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
         tm = Rbt.tipsMask[nt]
@@ -322,19 +322,19 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
         assert isinstance(volume, (int, float))
         oriSel = in_labware_region.selected()
+        nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if not oriSel:
             oriSel = range(Rtv.NumOfSamples)
         if optimize:
-            oriSel = in_labware_region.parallelOrder(oriSel)
+            oriSel = in_labware_region.parallelOrder( nt, oriSel)
         NumSamples = len(oriSel)
         SampleCnt = NumSamples
-        nt = Rbt.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if nt > SampleCnt:
             nt = SampleCnt
 
         getTips(Rbt.tipsMask[nt])
         volume = volume * 0.8
-        mV = Rbt.current.curArm().Tips[0].maxVol * 0.8
+        mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
         volume = volume if volume < mV else mV
 
         lf = in_labware_region
