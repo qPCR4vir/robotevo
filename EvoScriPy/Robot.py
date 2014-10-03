@@ -19,11 +19,6 @@ Tip_1000maxVol = Lab.DiTi_1000ul.maxVol
 Tip_200maxVol = 190
 
 
-class Tip:
-    def __init__(self, maxVol=1000):
-        self.vol = 0
-        self.maxVol = maxVol
-
 
 class Robot:
     """ Maintain an intern state.
@@ -42,7 +37,6 @@ class Robot:
 
         def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
             """
-
             :param nTips:
             :param index: int. for example: index=Pipette.LiHa1
             :param workingTips: some tips maybe broken or permanently unused.
@@ -54,11 +48,10 @@ class Robot:
             self.nTips = nTips
             self.Tips = [None] * nTips
 
-        def getTips_test(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
-            """     Mount only one kind of tip at a time
+        def getTips_test(self, tip_mask=-1) -> int:
+            """
                     :rtype : int
                     :param tip_mask:
-                    :param maxVol: int. the maximum volume allowed in microliters
                     :return: the mask that can be used
                     :raise "Tip already in position " + str(i):
                     """
@@ -66,32 +59,30 @@ class Robot:
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
-                        raise "A Tip with max Vol=" + str(tp.maxVol) + " already in position " + str(i)
-                    # self.Tips[i] = Tip(maxVol)
+                        raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
             return tip_mask
 
-        def getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+        def getTips(self, rack_type, tip_mask=-1) -> int:
             """     Mount only one kind of tip at a time
                     :rtype : int
                     :param tip_mask:
-                    :param maxVol: int. the maximum volume allowed in microliters
                     :return: the mask that can be used
                     :raise "Tip already in position " + str(i):
                     """
+            assert isinstance(rack_type, Lab.Labware.DITIrack)
             if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
-                        raise "A Tip with max Vol=" + str(tp.maxVol) + " already in position " + str(i)
-                    self.Tips[i] = Tip(maxVol)
+                        raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
+                    self.Tips[i] = Lab.Tip(rack_type)
             return tip_mask
 
-        def getMoreTips_test(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+        def getMoreTips_test(self, rack_type, tip_mask=-1) -> int:
             """ Mount only the tips with are not already mounted.
                 Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                     :rtype : int
                     :param tip_mask: int
-                    :param maxVol: int  max microliter
                     :return: the mask that can be used
                     """
             if tip_mask == -1:
@@ -99,17 +90,19 @@ class Robot:
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp:  # already in position
+                        if tp.type is not rack_type:
+                            raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
+                                    " and we need " + rack_type.name
                         tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                     else:
-                        pass # self.Tips[i] = Tip(maxVol)
+                        pass # self.Tips[i] = Lab.Tip(rack_type)
             return tip_mask
 
-        def getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol) -> int:
+        def getMoreTips(self, rack_type, tip_mask=-1) -> int:
             """ Mount only the tips with are not already mounted.
                 Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                     :rtype : int
                     :param tip_mask: int
-                    :param maxVol: int  max microliter
                     :return: the mask that can be used
                     """
             if tip_mask == -1:
@@ -117,9 +110,12 @@ class Robot:
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp:  # already in position
+                        if tp.type is not rack_type:
+                            raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
+                                    " and we need " + rack_type.name
                         tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                     else:
-                        self.Tips[i] = Tip(maxVol)
+                        pass # self.Tips[i] = Lab.Tip(rack_type)
             return tip_mask
 
         def drop(self, tip_mask=-1) -> int:
@@ -227,18 +223,21 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
-        # todo Find the correct rack in the worktable and the current position to pick.
+    def getTips(self, rack, tip_mask=-1,lastPos=False) -> int:
+        if isinstance(rack, Lab.Labware.DITIrack):
+            rack = rack.pick_next_rack
+        assert isinstance(rack, Lab.DiTi_Rack)
+        tip_mask = self.getTips_test(rack.type, tip_mask)
+        rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
+        return self.curArm().getTips(rack.type, tip_mask)
 
-        return self.curArm().getTips(self.getTips_test(TIP_MASK, maxVol))
-
-    def getTips_test(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+    def getTips_test(self, rack_type, tip_mask=-1) -> int:   # todo REVISE
         if self.reusetips:
-            TIP_MASK = self.curArm().getMoreTips_test(TIP_MASK, maxVol)
+            tip_mask = self.curArm().getMoreTips_test(rack_type , tip_mask)
         else:
-            self.dropTips(TIP_MASK)
-            TIP_MASK = self.curArm().getMoreTips_test(TIP_MASK, maxVol)
-        return TIP_MASK
+            self.dropTips(tip_mask)  # todo REVISE  here ???
+            tip_mask = self.curArm().getMoreTips_test(rack_type , tip_mask)
+        return tip_mask
 
     def dropTips(self, TIP_MASK=-1): # todo coordine protocol
         if not self.droptips: return 0
@@ -249,28 +248,6 @@ class Robot:
 
         self.curArm().dispense(vol, tipMask[tip])
 
-    def aspiremultiTips(self, tips, reactive, vol=None):
-        if not isinstance(vol, list):
-            vol = [vol] * tips
-        mask = tipsMask[tips]
-        nTip = reactive.autoselect(tips)
-        asp = aspirate(mask, reactive.defLiqClass, vol, reactive.labware)
-        curTip = 0
-        while curTip < tips:
-            nextTip = curTip + nTip
-            nextTip = nextTip if nextTip <= tips else tips
-            mask = tipsMask[curTip] ^ tipsMask[nextTip]
-            self.curArm().aspire(vol, mask)
-            asp.tipMask = mask
-            asp.exec()
-            curTip = nextTip
-
-    def dispensemultiwells(self, tips, liq_class, labware, vol):
-        if not isinstance(vol, list):
-            vol = [vol] * tips
-        om = tipsMask[tips]
-        self.curArm().dispense(vol, om)
-        dispense(om, liq_class, vol, labware).exec()
 
 
 

@@ -2,6 +2,11 @@ __author__ = 'qPCR4vir'
 
 import EvoMode
 
+class Tip:    # todo play with this idea
+    def __init__(self, rack_type):
+        assert isinstance(rack_type, Labware.DITIrack)
+        self.vol = 0
+        self.type = rack_type
 
 class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
     """ Collection of Racks.Types and Labware.Types and pos of instances """
@@ -339,7 +344,74 @@ class DiTi_Rack (Labware):
             end = self.offset(end or self.type.nRow*self.type.nCol)
             beg = range(beg, end+1)
         for w in self.Wells: w.reactive=None
-        for w in beg: self.Wells[w].reactive=True   # todo Set some kind of tip
+        for w in beg: self.Wells[w].reactive = Tip(self.type)   # todo Set some kind of tip
+
+    def find_new_tips(self, TIP_MASK, labware, lastPos):
+        n = 0
+        while TIP_MASK:
+            n += (TIP_MASK & 1)
+            TIP_MASK = TIP_MASK >> 1
+        tips = []
+        sr = labware.type
+        assert isinstance(sr, Labware.DITIrack)
+        bg, ed, sr = sr.pick_next, sr.pick_next_rack, sr.pick_next_rack
+        dr = -1 if lastPos else 1
+        r = self.Wells[bg,ed+1,dr]
+        for i in range(len(r)-n):
+            if any(w.reactive for w in self.Wells[i:i + n]): continue
+            return continuous, self.Wells[i:i + n]
+        for w in self.Wells:
+            if w.reactive: continue
+            free_wells += [w]
+            if len(free_wells) == n: break
+        return not continuous, free_wells
+
+    def remove_tips(self, TIP_MASK, labware, worktable, lastPos=False):
+        n = 0
+        while TIP_MASK:
+            n += (TIP_MASK & 1)
+            TIP_MASK >>= 1
+        tp = labware
+        tp = tp if isinstance(tp, Labware.Type) else tp.type
+        self._remove_tip(n, tp, worktable, lastPos)
+
+    def _remove_tip(self, n, tp, worktable, lastPos=False):
+        assert isinstance(tp, Labware.DITIrack)
+        beg, end, sr = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
+        assert isinstance(sr, DiTi_Rack)
+        rest = end - beg + 1
+        i,d = [end, -1] if lastPos else [beg, 1]
+        while n:
+            assert sr.Wells[i].reactive.type is tp
+            sr.Wells[i].reactive = None
+            print ("Pick tip "+str(i+1)+" from site "+str(sr.location.site+1))
+            n -= 1
+            rest -= 1
+            if not rest:
+                self.set_next_to_next_rack(worktable)
+                return self._remove_tip(n, tp, worktable, lastPos)
+            i+=d
+            if lastPos:  tp.pick_next_back -= 1
+            else:        tp.pick_next      += 1
+
+    def set_next_to_next_rack(self, worktable):
+            tp = self.type
+            assert isinstance(worktable, WorkTable)
+            racks = worktable.labTypes[tp.name]
+            assert isinstance(racks,list)
+            i = racks.index(self)
+            i = i+1
+            if i == len (racks):
+                i = 0
+
+            racks[i].fill() # TODO USER PROMPT Fill Rack i+1
+            print ("WARNING !!!! USER PROMPT Fill Rack " + str(i+1))
+            nr = racks[i]
+            assert self is not nr
+            assert isinstance(nr, DiTi_Rack)
+            tp.pick_next = 0
+            tp.pick_next_back = tp.nCol * tp.nRow -1
+            tp.pick_next_rack = nr
 
 
 Trough_100ml = Labware.Type("Trough 100ml", 8, maxVol=100000, conectedWells=True)

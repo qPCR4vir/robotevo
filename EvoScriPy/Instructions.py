@@ -219,9 +219,9 @@ class getDITI2(DITIs):
         DITIs.validateArg(self)
 
         ln= self.LabwareTypeName
-        if   ln is None                     : ln = def_DiTi.type.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
-        elif isinstance(ln, Lab.Labware)    : ln = ln.type.name
-        elif isinstance(ln,Lab.Labware.Type): ln = ln.name
+        if   ln is None                     : ln = Lab.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        elif isinstance(ln, Lab.DiTi_Rack)    : ln = ln.type.name
+        elif isinstance(ln, Lab.Labware.DITIrack): ln = ln.name
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or expression?
         self.arg += [integer(self.AirgapVolume), integer(self.AirgapSpeed)]   # arg 5, 6 (3, 4 are grid, site)
@@ -231,23 +231,24 @@ class getDITI2(DITIs):
     def actualize_robot_state(self):
         maxVol = None                   # todo Implement all this in the iRobot or in the Labware !!!
         ln = self.LabwareTypeName
-        if   ln is None                 :   ln = def_DiTi       # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
-        elif isinstance(ln, str)        :   ln = Robot.current.worktable.labTypes[ln].type
-        elif isinstance(ln, Lab.Labware):   ln = ln.type
-        assert isinstance(ln, Lab.Labware.Type)
-        maxVol = ln.maxVol
-        self.tipMask = Robot.current.getTips(self.tipMask, maxVol)
-        self.LabwareTypeName = ln.name
+        if   ln is None                 :   ln = Lab.def_DiTi       # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        elif isinstance(ln, str)        :
+            curW = Robot.Robot.current.worktable
+            assert isinstance(curW, Lab.WorkTable)
+            ln = Robot.Robot.current.worktable.labTypes [ln][0].type
+        assert isinstance(ln, Lab.DiTi_Rack) or isinstance(ln, Lab.Labware.DITIrack)
+        self.tipMask = Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
+        self.LabwareTypeName = ln
 
 class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """
 
-    def __init__(self,  tipMask= curTipMask, labware = def_DiTiWaste,
-                AirgapVolume=0, AirgapSpeed=def_AirgapSpeed ,
-                arm= Pipette.LiHa1): #, conditional=True):
+    def __init__(self,  tipMask     = curTipMask,
+                        labware     = None,
+                        AirgapVolume= 0,
+                        AirgapSpeed = def_AirgapSpeed ,
+                        arm         = Pipette.LiHa1): #, conditional=True):
         """
-
-
         :param conditional: exec only if there are some tip to droop.
         :param tipMask:
         :param labware:
@@ -255,7 +256,7 @@ class dropDITI(Pipette):
         :param AirgapSpeed: int 1-1000. Speed for the airgap in μl/s
         :param arm:
         """
-        Pipette.__init__(self, "DropDITI",  tipMask, labware = labware, arm=arm)
+        Pipette.__init__(self, "DropDITI",  tipMask, labware = labware or Lab.def_DiTiWaste, arm=arm)
 #        self.conditional = conditional
         self.AirgapSpeed = AirgapSpeed
         self.AirgapVolume = AirgapVolume
@@ -266,13 +267,15 @@ class dropDITI(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = Robot.current.dropTips(self.tipMask)
+        self.tipMask = Robot.Robot.current.dropTips(self.tipMask)
 
-class set_DITI_Counter(Pipette): # todo help determining the type,set other def_LabW
+class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
 
-    def __init__(self, type, posInRack=0, labware = def_LabW  ):
-        Pipette.__init__(self, "Set_DITI_Counter" , labware = labware, tipMask=True)
+    def __init__(self, type,
+                       posInRack = 0,
+                       labware   = None ):
+        Pipette.__init__(self, "Set_DITI_Counter" , labware = labware or Lab.def_DiTi, tipMask=True)
         self.type = type
         self.posInRack = posInRack
 
@@ -283,19 +286,19 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other def_
         return True
 
     def actualize_robot_state(self):
-        # Robot.current.worktable.labTypes[self.type]
+        # Robot.Robot.current.worktable.labTypes[self.type]
         self.labware.type.pick_next_rack = self.labware
         self.labware.type.pick_next      = self.posInRack
 
-class set_DITI_Counter2(Pipette): # todo  set other def_LabW
+class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
     """
 
-    def __init__(self, labware   = def_LabW,
+    def __init__(self, labware   = None,
                        posInRack = 0,
                        lastPos   = False  ):
-        Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware, tipMask=True)
+        Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware or Lab.def_DiTi, tipMask=True)
         self.lastPos = lastPos #todo implement internally; how??
         self.posInRack = posInRack
 
@@ -313,9 +316,6 @@ class set_DITI_Counter2(Pipette): # todo  set other def_LabW
             self.labware.type.pick_next_back = self.posInRack
         else:
             self.labware.type.pick_next      = self.posInRack
-
-
-
 
 class pickUp_DITIs(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI)
