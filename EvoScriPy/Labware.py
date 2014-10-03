@@ -2,6 +2,11 @@ __author__ = 'qPCR4vir'
 
 import EvoMode
 
+def_LabW        = None
+def_WashWaste   = None
+def_WashCleaner = None
+def_DiTiWaste   = None
+
 class Tip:    # todo play with this idea
     def __init__(self, rack_type):
         assert isinstance(rack_type, Labware.DITIrack)
@@ -420,13 +425,13 @@ EppRack3x16R = Labware.Type("Tube Eppendorf 3x 16 PosR", 16, 3, maxVol=1500)
 EppRack3x16 = Labware.Type("Tube Eppendorf 3x 16 Pos", 16, 3, maxVol=1500)
 TeMag48 = Labware.Type("Tube Eppendorf 48 Pos", 8, 6, maxVol=1500)
 CleanerSWS = Labware.Type("Washstation 2Grid Cleaner short", 8, maxVol=100000, conectedWells=True)
-WashCleanerS = Labware(CleanerSWS, Labware.Location(22, 0))
 WasteWS = Labware.Type("Washstation 2Grid Waste", 8, maxVol=100000, conectedWells=True)
-WashWaste = Labware(WasteWS, Labware.Location(22, 1))
 CleanerLWS = Labware.Type("Washstation 2Grid Cleaner long", 8, maxVol=100000, conectedWells=True)
-WashCleanerL = Labware(CleanerLWS, Labware.Location(22, 2))
 DiTi_Waste = Labware.Type("Washstation 2Grid DiTi Waste", 8, maxVol=100000, conectedWells=True)
-DiTiWaste = Labware(DiTi_Waste, Labware.Location(22, 6))
 DiTi_1000ul = Labware.DITIrack("DiTi 1000ul", maxVol=940)
+Tip_1000maxVol  = DiTi_1000ul.maxVol
+Tip_200maxVol   = 190
+def_DiTi        = DiTi_1000ul
+
 
 MP96well = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)

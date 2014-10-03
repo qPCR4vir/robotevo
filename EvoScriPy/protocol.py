@@ -359,14 +359,3 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         mx.labware.selectOnly(oriSel)
         return oriSel
 
-def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
-        if wells is None:
-            wells = reactive.labware.selected() or range(Rtv.NumOfSamples)
-        if using_liquid_class is None:
-            using_liquid_class = (reactive.defLiqClass, reactive.defLiqClass)
-
-        spread(reactive=reactive, to_labware_region=Rbt.TeMag.selectOnly(wells))
-        Itr.subroutine("avr_MagMix.esc", Itr.subroutine.Continues).exec()
-        mix(Rbt.TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
-        Itr.subroutine("avr_MagMix.esc", Itr.subroutine.Waits_previous).exec()
-        waste(Rbt.TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)

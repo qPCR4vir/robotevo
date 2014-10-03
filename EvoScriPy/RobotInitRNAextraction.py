@@ -3,7 +3,18 @@ __author__ = 'Ariel'
 import Labware as Lab
 
 
+TeMg_Heat       = Lab.Labware(Lab.TeMag48,      Lab.Labware.Location(14, 0), "48 Pos Heat")
+TeMag           = Lab.Labware(Lab.TeMag48,      Lab.Labware.Location(14, 1), "48PosMagnet")
+WashCleanerS    = Lab.Labware(Lab.CleanerSWS,   Lab.Labware.Location(22, 0))
+WashWaste       = Lab.Labware(Lab.WasteWS,      Lab.Labware.Location(22, 1))
+WashCleanerL    = Lab.Labware(Lab.CleanerLWS,   Lab.Labware.Location(22, 2))
+DiTiWaste       = Lab.Labware(Lab.DiTi_Waste,   Lab.Labware.Location(22, 6))
 
+Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.Labware.Location(1,1))
+Lab.def_WashWaste   = WashWaste
+Lab.def_WashCleaner = WashCleanerS
+Lab.def_DiTiWaste   = DiTiWaste
+Lab.def_DiTi        = Lab.DiTi_1000ul   # todo revise
 
 
 

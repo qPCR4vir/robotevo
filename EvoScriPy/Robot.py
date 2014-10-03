@@ -4,8 +4,6 @@ __author__ = 'qPCR4vir'
 #from Instructions import *
 import Labware as Lab
 
-TeMg_Heat = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 0), "48 Pos Heat")
-TeMag = Lab.Labware(Lab.TeMag48, Lab.Labware.Location(14, 1), "48PosMagnet")
 
 tipMask = []  # mask for one tip of index ...
 tipsMask = []  # mask for the first tips
@@ -15,9 +13,6 @@ for tip in range(13):
 
 def_nTips = 4
 nTips = def_nTips
-Tip_1000maxVol = Lab.DiTi_1000ul.maxVol
-Tip_200maxVol = 190
-
 
 
 class Robot:
