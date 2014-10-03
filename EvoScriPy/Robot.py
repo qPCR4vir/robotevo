@@ -32,6 +32,8 @@ class Robot:
     Most of the changes in state are made by the implementation of the low level instructions, while the protocols can
     "observe" the state to make all kind of optimizations and organizations previous to the actual instruction call
     """
+    current=None
+
     class Arm:
         DiTi = 0
         Fixed = 1
@@ -181,11 +183,12 @@ class Robot:
         :param workingTips:
         :param tipsType:
         """
+        assert Robot.current is None
+        Robot.current = self
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Robot.Arm) else \
                    {     index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
-
-        self.worktable = Lab.WorkTable(templateFile)
+        self.set_worktable(templateFile)
         self.def_arm = index  # or Pipette.LiHa1
         self.droptips = True
         self.reusetips = False
@@ -193,7 +196,16 @@ class Robot:
         self.usePreservedtips = False
 
     def set_worktable(self,templateFile):
-        self.worktable = Lab.WorkTable(templateFile)
+        w = Lab.WorkTable.curWorkTable
+        if not w:
+            w = Lab.WorkTable(templateFile)
+        else:
+            w.parseWorTableFile(templateFile)
+        self.worktable = w
+
+    def set_as_current(self):
+        Lab.curWorkTable=self.worktable
+
 
     def set_dropTips(self, drop=True):
         self.droptips, drop = drop, self.droptips
@@ -260,6 +272,5 @@ class Robot:
         self.curArm().dispense(vol, om)
         dispense(om, liq_class, vol, labware).exec()
 
-current = None
 
 

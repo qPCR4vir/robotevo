@@ -5,14 +5,15 @@ import Instructions as Itr
 import Reactive as Rtv
 import Labware as Lab
 
-def getTips( TIP_MASK=-1, type=Itr.def_DiTi):
-    # TIP_MASK = Rbt.current.mask_to_getTips(TIP_MASK,maxVol)
-    Itr.getDITI2(TIP_MASK, type, arm=Rbt.current.def_arm).exec()
+def getTips(TIP_MASK=-1, type=None):
+    type=type or Lab.def_DiTi
+    # TIP_MASK = Rbt.Robot.current.mask_to_getTips(TIP_MASK,maxVol)
+    Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.def_arm).exec()
     # return TIP_MASK
 
 def dropTips( TIP_MASK=-1): # todo is this a correct solution or it is best to do a double check? To force drop?
-        #if not Rbt.current.droptips: return 0
-        #TIP_MASK = Rbt.current.curArm().drop(TIP_MASK)
+        #if not Rbt.Robot.current.droptips: return 0
+        #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
         #if TIP_MASK:
         Itr.dropDITI(TIP_MASK).exec()
         #return TIP_MASK
@@ -27,18 +28,24 @@ def aspire( tip, reactive, vol=None):
         """
         if vol is None:
             vol = reactive.minVol()
-        v = [0] * Rbt.current.curArm().nTips
+        v = [0] * Rbt.Robot.current.curArm().nTips
         v[tip] = vol
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        # Rbt.current.curArm().aspire(v, Rbt.tipMask[tip])
+        # Rbt.Robot.current.curArm().aspire(v, Rbt.tipMask[tip])
         Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 def dispense( tip, reactive, vol=None): # todo coordinate with robot
+        """
+        Dispense vol with ONE tip to reactive
+        :param tip:
+        :param reactive:
+        :param vol:
+        """
         vol = vol or reactive.minVol()  # really ??
         reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        v = [0] * Rbt.current.curArm().nTips
+        v = [0] * Rbt.Robot.current.curArm().nTips
         v[tip] = vol
-        # Rbt.current.curArm().dispense(v, Rbt.tipMask[tip])
+        # Rbt.Robot.current.curArm().dispense(v, Rbt.tipMask[tip])
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 def aspiremultiTips( tips, reactive, vol=None):
@@ -52,7 +59,7 @@ def aspiremultiTips( tips, reactive, vol=None):
             nextTip = curTip + nTip
             nextTip = nextTip if nextTip <= tips else tips
             mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]
-            #Rbt.current.curArm().aspire(vol, mask)
+            #Rbt.Robot.current.curArm().aspire(vol, mask)
             asp.tipMask = mask
             asp.exec()
             curTip = nextTip
@@ -61,7 +68,7 @@ def dispensemultiwells( tips, liq_class, labware, vol):
         if not isinstance(vol, list):
             vol = [vol] * tips
         om = Rbt.tipsMask[tips]
-        # Rbt.current.curArm().dispense(vol, om)
+        # Rbt.Robot.current.curArm().dispense(vol, om)
         Itr.dispense(om, liq_class, vol, labware).exec()
 
 def make( what, NumSamples=None): # todo coordinate with protocol
@@ -76,8 +83,8 @@ def makePreMix( preMix, NumSamples=None):
             len(preMix.components))
         Itr.comment(msg).exec()
         nc = len(preMix.components)
-        assert nc <= Rbt.current.curArm().nTips, \
-            "Temporally the mix can not contain more than {:d} components.".format(Rbt.current.curArm().nTips)
+        assert nc <= Rbt.Robot.current.curArm().nTips, \
+            "Temporally the mix can not contain more than {:d} components.".format(Rbt.Robot.current.curArm().nTips)
 
         getTips(Rbt.tipsMask[nc])
 
@@ -87,7 +94,7 @@ def makePreMix( preMix, NumSamples=None):
                 i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
                 react.pos + 1)
             Itr.comment(msg).exec()
-            mV = Rbt.current.curArm().Tips[i].maxVol # todo what if the tip are different?
+            mV = Rbt.Robot.current.curArm().Tips[i].type.maxVol # todo what if the tip are different?
             r = react.minVol(NumSamples)
             while r > 0:
                 dV = r if r < mV else mV
@@ -221,12 +228,12 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                 Dst.tipMask = Rbt.tipsMask[nt]
 
             getTips(Rbt.tipsMask[nt])  # todo what if volume > maxVol_tip ?
-            #  Rbt.current.curArm().aspire(volume, Rbt.tipsMask[nt])
+            #  Rbt.Robot.current.curArm().aspire(volume, Rbt.tipsMask[nt])
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             Asp.exec()
 
             Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
-            # Rbt.current.curArm().dispense(volume, Rbt.tipsMask[nt])
+            # Rbt.Robot.current.curArm().dispense(volume, Rbt.tipsMask[nt])
             Dst.exec()
             dropTips()
 
@@ -282,16 +289,16 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mV = Rbt.current.curArm().Tips[0].maxVol
+            mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol
             r = volume
             while r > 0:
                 dV = r if r < mV else mV
                 r -= dV
                 Asp.volume = dV
-                # Rbt.current.curArm().aspire(dV, tm)
+                # Rbt.Robot.current.curArm().aspire(dV, tm)
                 Asp.exec()
                 Dst.volume = dV
-                # Rbt.current.curArm().dispense(dV, tm)
+                # Rbt.Robot.current.curArm().dispense(dV, tm)
                 Dst.exec()
 
             dropTips()

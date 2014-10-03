@@ -6,8 +6,12 @@ import EvoMode
 class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
     """ Collection of Racks.Types and Labware.Types and pos of instances """
 
+    curWorkTable = None
+
     def __init__(self, templateFile=None):
-        self.labTypes = {}  # typeName,type. The type mountain a list of labware (with locations)
+        assert WorkTable.curWorkTable is None
+        WorkTable.curWorkTable = self
+        self.labTypes = {}  # typeName:labwares. The type mountain a list of labware (with locations)
         self.Racks = []
         self.nGrid = 67  # max
         self.grid = [None] * 67
@@ -16,6 +20,8 @@ class WorkTable:  # todo Implement !, parse WT from export file, template and sc
         else:
             self.template = self.parseWorTableFile(templateFile)
 
+
+
     def parseWorTableFile(self, templateFile):
         if not templateFile: return []
         templList = []
@@ -23,20 +29,21 @@ class WorkTable:  # todo Implement !, parse WT from export file, template and sc
             for line in tmpl:  # todo do the real complete parse
                 templList += [line]
                 if line.startswith("--{ RPG }--"): break
+        self.template = templList
         return templList
 
     def addLabware(self, labware):
+        """
 
+        :param labware:
+        :raise "This WT have only " + self.nGrid + " grid.":
+        """
         if labware.location.grid >= self.nGrid:
             raise "This WT have only " + self.nGrid + " grid."
 
         if labware.type.name not in self.labTypes:
             self.labTypes[labware.type.name] = []
         self.labTypes[labware.type.name] += [labware]
-
-
-curWorkTable = WorkTable()
-
 
 class Rack:
     """ Collection of Labwares sites, filled with labwares... """
@@ -48,7 +55,7 @@ class Rack:
             self.allowedLabwaresTypes = []
             self.name = name
 
-    def __init__(self, RackType, grid, label="", worktable=curWorkTable):
+    def __init__(self, RackType, grid, label="", worktable=WorkTable.curWorkTable):
         self.site = grid
         self.type = RackType
         self.labwares = [None] * self.nSite
@@ -70,7 +77,6 @@ class Rack:
                 print("Warning, original grid changed to that of the Rack.")
             labware.location.grid = self.grid
 
-
 class Well:
     def __init__(self, labware, Well_Offset):
         assert isinstance(Well_Offset, int)
@@ -79,7 +85,6 @@ class Well:
         self.selFlag = False
         self.reactive = None
         self.label = ""
-
 
 class Labware:
     class Type:
@@ -100,11 +105,13 @@ class Labware:
     class Cuvette(Type):        pass
     class Te_Mag (Type):        pass
 
-    def __init__(self, type, location, label=None, worktable=curWorkTable):
+    def __init__(self, type, location, label=None, worktable=None):
         self.type = type
         self.label = label
         self.location = location
         self.Wells = [Well(self, offset) for offset in range(self.offset(self.type.nRow, self.type.nCol) + 1)]
+        worktable = worktable or WorkTable.curWorkTable
+        assert isinstance(worktable, WorkTable)
         worktable.addLabware(self)
         if location.rack:
             location.rack.addLabware(self, location.rack_site)
@@ -318,7 +325,7 @@ class Labware:
         return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
 
 class DiTi_Rack (Labware):
-    def __init__(self, type, location, label=None, worktable=curWorkTable):
+    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
         assert isinstance(type, Labware.DITIrack)
         Labware.__init__(self, type, location, label=None, worktable=worktable)
         self.fill()

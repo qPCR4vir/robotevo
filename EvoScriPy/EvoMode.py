@@ -138,6 +138,7 @@ class iRobot(Mode):
         Mode.__init__(self )
         # import Robot as Rbt
         Rbt.Robot.current = Rbt.Robot(index=index, arms=arms, nTips=nTips)
+        Rbt.Robot.current.set_as_current()
         pass
 
     def exec(self, instr):

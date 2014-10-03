@@ -47,7 +47,7 @@ import Robot
 
 
 def extractRNA_with_MN_Vet_Kit(NumOfSamples):
-    robot=Robot.current
+    robot=Robot.Robot.current
     #assert isinstance(robot,Robot.Robot)
 
 
