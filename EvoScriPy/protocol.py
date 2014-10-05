@@ -11,12 +11,15 @@ def getTips(TIP_MASK=-1, type=None):
     Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.def_arm).exec()
     # return TIP_MASK
 
-def dropTips( TIP_MASK=-1): # todo is this a correct solution or it is best to do a double check? To force drop?
+def dropTips(TIP_MASK=-1): # todo is this a correct solution or it is best to do a double check? To force drop?
         #if not Rbt.Robot.current.droptips: return 0
         #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
         #if TIP_MASK:
         Itr.dropDITI(TIP_MASK).exec()
         #return TIP_MASK
+
+def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
+    pass # Itr.moveLiha
 
 def aspire( tip, reactive, vol=None):
         """
@@ -278,6 +281,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         Itr.comment(msg).exec()
         Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
+        Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
         nt = to_waste_labware.autoselect(maxTips=nt)
         while SampleCnt:
             curSample = NumSamples - SampleCnt
@@ -286,7 +290,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 tm = Rbt.tipsMask[nt]
                 Asp.tipMask = tm
                 Dst.tipMask = tm
-
+                Ctr.tipMask = tm
             getTips(tm)
             Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
             mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol
@@ -295,10 +299,9 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 dV = r if r < mV else mV
                 r -= dV
                 Asp.volume = dV
-                # Rbt.Robot.current.curArm().aspire(dV, tm)
-                Asp.exec()
                 Dst.volume = dV
-                # Rbt.Robot.current.curArm().dispense(dV, tm)
+                Asp.exec()
+                Ctr.exec()
                 Dst.exec()
 
             dropTips()
