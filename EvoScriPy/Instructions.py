@@ -18,6 +18,20 @@ class aspirate(Pipetting):
                         RackName    = None,        # TODO implement
                         Well        = None,        # TODO implement
                         arm         = Pipette.LiHa1):
+        """
+
+
+        :param liquidClass:
+        :param volume:
+        :param tipMask: int; selected tips, bit-coded (tip1 = 1, tip8 = 128)
+        :param labware: Labware;
+        :param spacing: int; tip spacing
+        :param wellSelection: str;
+        :param LoopOptions: list; of objects of class LoopOption.
+        :param RackName:
+        :param Well:
+        :param arm:
+        """
         Pipetting.__init__(self, 'Aspirate',
                             tipMask,
                             liquidClass,
@@ -440,11 +454,87 @@ class deactivate_PMP(Instruction):
     def exec(self, mode=None):
         if self.tipMask: Instruction.exec(self, mode)
 
-class moveLiha(Pipette ): #todo convenient arg
-    """ A.15.4.14 Move LiHa (Worklist: MoveLiha   - A - 135)
+class moveLiha(Pipette ):
+    """ A.15.4.14 Move LiHa (Worklist: MoveLiha   - A - 135)see 15.21 “Move LiHa Command”, 15-33.
+    The Move LiHa command is used to move the liquid handling arm (LiHa) from one
+    position to another without performing an Aspirate or Dispense operation.
+    Type of movement
+    Choose X-Move, Y-Move or Z-Move to move only one axis of the LiHa. You
+    can then specify the speed of the movement. Z-Move only moves the selected
+    tips.
+    The options Positioning with global Z-travel, Positioning with local Z-travel and
+    Positioning with variable Z-travel move the LiHa to the labware at maximum
+    speed. The chosen height for Z-Travel (the tip height which is used during the
+    arm movement) only applies to the selected tips. The Z position of the
+    unselected tips remains unchanged.
+    If you choose Positioning with variable Z-travel, the required Z-Travel height is
+    specified using the pre-defined variable LIHA_MOVE_HEIGHT (see
+    14.1.4.7 “LIHA_MOVE_HEIGHT”,  14-5).
+    Z-Position
+    Unless you have chosen X-Move or Y-Move in the Type of Movement field,
+    you can specify the Z-Position to which the selected tips should be lowered at
+    the end of the LiHa movement. The Z position of the unselected tips remains
+    unchanged. Choose the required Z-position and then specify a Z offset in mm
+    if required. A positive value for the offset lowers the tips.
     """
-    def __init__(self, zMove, zTarget, offset, speed  ):
-        Pipette.__init__(self, 'MoveLiha' , tipMask=True)
+        # type of movement:
+    pos_global_z_travel = 0  # = positioning with global z-travel
+    pos_local_z_travel  = 1  # = positioning with local z-travel
+    x_move              = 2  # = x-move
+    y_move              = 3  # = y-move
+    z_move              = 4  # = z-move
+
+        # z-position after move:
+    z_travel        = 0  # = z-travel
+    z_dispense      = 1  # = z-dispense
+    z_start         = 2  # = z-start
+    z_max           = 3  # = z-max
+    global_z_travel = 4  # = global z-travel
+
+    def __init__(self,  zMove, zTarget, offset, speed,   # arg 6,7,8,9
+                        tipMask     = curTipMask,
+                        labware     = None,
+                        spacing     = 1,
+                        wellSelection= None,
+                        LoopOptions = def_LoopOp,
+                        RackName    = None,
+                        Well        = None,
+                        arm         = Pipette.LiHa1):
+        """
+
+        :param zMove: int; type of movement:
+                            0 = positioning with global z-travel
+                            1 = positioning with local z-travel
+                            2 = x-move
+                            3 = y-move
+                            4 = z-move
+        :param zTarget: int; z-position after move:
+                            0 = z-travel
+                            1 = z-dispense
+                            2 = z-start
+                            3 = z-max
+                            4 = global z-travel
+        :param offset: float;  in range (-1000, 1000) offset in mm added to z-position (parameter zTarget)
+        :param speed:  float;  in range (0.1, 400)  move speed in mm/s if zMove is x-move, y-move or z-move
+        :param tipMask: int; selected tips, bit-coded (tip1 = 1, tip8 = 128)
+        :param labware: Labware;
+        :param spacing: int; tip spacing
+        :param wellSelection: str; bit-coded well selection
+        :param LoopOptions: list; of objects of class LoopOption.
+        :param RackName:
+        :param Well:
+        :param arm:
+        """
+        Pipette.__init__(self,  'MoveLiha' ,
+                             tipMask    ,
+                             labware     ,
+                             spacing    ,
+                             wellSelection,
+                             LoopOptions,
+                             RackName    ,
+                             Well      ,
+                             arm       )
+
         self.speed = speed
         self.offset = offset
         self.zTarget = zTarget
@@ -452,7 +542,8 @@ class moveLiha(Pipette ): #todo convenient arg
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[5:5] = [ self.zMove, self.zTarget, self.offset, self.speed]
+        self.arg[5:5] = [integer(self.zMove),         integer(self.zTarget),       # arg 6, 7
+                         floating_point(self.offset), floating_point(self.speed)]  # arg 8, 9
         return True
 
 class waste(Instruction):

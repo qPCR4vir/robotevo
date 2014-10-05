@@ -54,10 +54,16 @@ class floating_point(EvoTypes):  # todo implement exceptions
 
 class LoopOption:
     def __init__(self, name, action, difference):
+        """
+
+        :param name: str; name
+        :param action: int;
+        :param difference: int;
+        """
         self.name = name
         self.action = action
         self.difference = difference
-
+    # loop action:
     VaryColumn = 0
     VaryRow = 1
     VaryWell = 2
@@ -139,6 +145,30 @@ class Pipette(Instruction):
                              RackName    = None,        # todo I need to this???
                              Well        = None,        # todo I need to this???
                              arm         = LiHa1):
+        """
+
+        :param name: str; Instruction name
+        :param tipMask: int; selected tips, bit-coded (tip1 = 1, tip8 = 128)
+        :param labware: Labware;
+        :param spacing: int; Tip Spacing
+                                    The Tip Spacing parameter controls the distance between adjacent pipetting
+                                    tips for this command. You can choose a different tip spacing for the source
+                                    labware and the destination labware. Tip spacing is only relevant if you want
+                                    to use more than one tip. A tip spacing of 1 means that the tips will be spread
+                                    to match the distance between adjacent wells in the labware. A tip spacing of
+                                    2 will select every other well in the labware. You can only choose values for tip
+                                    spacing which are meaningful for the labware geometry.
+                                    The liquid handling arm achieves the highest mechanical accuracy when the
+                                    tips are not spread. For high-density labware such as 1536-well microplates,
+                                    you should choose tip spacing such that the tips are adjacent to one another
+                                    (physical tip spacing 9 mm). Accordingly, for 1536-well microplates you should
+                                    set tip spacing to 4 (every fourth well).
+        :param wellSelection: str; bit-coded well selection
+        :param LoopOptions: list; of objects of class LoopOption.
+        :param RackName:
+        :param Well:
+        :param arm:
+        """
         Instruction.__init__(self, name)
         self.tipMask=tipMask
         self.labware=labware or Lab.def_LabW
