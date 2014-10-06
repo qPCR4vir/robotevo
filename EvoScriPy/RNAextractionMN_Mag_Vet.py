@@ -9,10 +9,14 @@ Eluat         = Labware(EppRack3x16R, Labware.Location(8,0),"Eluat")
 Samples       = Labware(EppRack3x16, Labware.Location(11,0),"Proben")
 
 
-LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
-IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
-BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 ,replys=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
+LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,
+                                 volpersample=180 ,defLiqClass=B_liquidClass)
+IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11,
+                                 volpersample=  4 ,defLiqClass=W_liquidClass)
+BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,
+                                 volpersample=600 ,defLiqClass=B_liquidClass)
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13,
+                                 volpersample= 20 ,replys=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
 
 VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                  Labware(Trough_100ml, Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
@@ -23,7 +27,8 @@ VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
 EtOH80p         = React.Reactive("Ethanol 80%"                     ,
                                  Labware(Trough_100ml, Labware.Location(24,0), "7-Ethanol 80%"   ),
                                  volpersample=600 ,defLiqClass=B_liquidClass)
-ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
+ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,
+                                 volpersample=100 ,defLiqClass=B_liquidClass)
 
 
 
@@ -58,8 +63,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
     pK_cRNA_MS2.make()
 
-    robot.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
-    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),False,True,NumSamples=React.NumOfSamples)
+    robot.spread  (  reactive=pK_cRNA_MS2,           to_labware_region= Robot.TeMag.selectOnly(all_samples))
+    robot.transfer(  Samples.selectOnly(all_samples),Robot.TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
+                                                                              False,True,NumSamples=React.NumOfSamples)
     robot.spread  (  reactive=LysisBuffer,   to_labware_region= Robot.TeMag.selectOnly(all_samples))
     startTimer().exec()
     waitTimer(timeSpan=10*60).exec()
@@ -67,7 +73,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     robot.spread( reactive=B_Beads,      to_labware_region=Robot.TeMag.selectOnly(all_samples))
 
     robot.wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
-                        using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"), vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample+B_Beads.volpersample+BindingBuffer.volpersample)
+                        using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                        vol=pK_cRNA_MS2.volpersample + 200 + LysisBuffer.volpersample
+                            + B_Beads.volpersample+BindingBuffer.volpersample    )
 
     robot.wash_in_TeMag(reactive=VEW1, wells=all_samples)
 
