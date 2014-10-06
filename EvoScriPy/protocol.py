@@ -367,6 +367,12 @@ def parallel_execution_of(subroutine):
     yield
     Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
 
+@contextmanager
+def incubation(minutes, timer=1):
+    Itr.startTimer(timer).exec()
+    yield
+    Itr.waitTimer(timer=timer, timeSpan= 10*60).exec()
+
 
 
 @contextmanager
