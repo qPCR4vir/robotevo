@@ -787,3 +787,30 @@ class subroutine(ScriptONLY):
         Instruction.validateArg(self)
         self.arg= [string1(self.filename), integer(self.action) ]
         return True
+
+class group(ScriptONLY):
+    """ UNDOCUMENTED. Begging a group. MANUALLY set the group_end()  !!!!
+    """
+    def __init__(self, titel ):
+        """
+        """
+        Instruction.__init__(self, "Group")
+        self.titel = titel
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        self.arg= [string1(self.titel)]
+        return True
+
+class group_end(ScriptONLY):
+    """ UNDOCUMENTED. Begging a group. MANUALLY set the group_end()  !!!!
+    """
+    def __init__(self ):
+        """
+        """
+        Instruction.__init__(self, "GroupEnd")
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        return True
+
