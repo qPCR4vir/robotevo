@@ -90,7 +90,7 @@ class inFile(toString):
 
     def open(self):
         if self.f is None:
-            self.f = open(self.filename, 'a', encoding=Mode.encoding)
+            self.f = open(self.filename, 'w', encoding=Mode.encoding)
 
     def __del__(self):
         self.done()

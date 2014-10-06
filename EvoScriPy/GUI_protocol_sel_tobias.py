@@ -3,12 +3,12 @@ __author__ = 'Ariel'
 # import Robot
 import EvoMode
 from Instructions import Pipette
-
+iRobot = EvoMode.iRobot( Pipette.LiHa1, nTips=4)
+Script = EvoMode.Script(template = 'RNAext_MNVet.ewt',    filename = 'AWL.esc' )
 comments=EvoMode.Comments()
 
-EvoMode.current = EvoMode.multiple([EvoMode.iRobot( Pipette.LiHa1, nTips=4),
-                                    EvoMode.Script(template = 'RNAext_MNVet.ewt',
-                                                   filename = 'AWL.esc' ),
+EvoMode.current = EvoMode.multiple([iRobot,
+                                    Script,
                                     EvoMode.AdvancedWorkList('AWL.gwl'),
                                     EvoMode.ScriptBody('AWL.esc.txt'),
                                     EvoMode.StdOut(), comments
@@ -79,6 +79,7 @@ class App(tk.Frame):
         NumOfSamples = int(self.sample_num.get())
 
         self.protocols[selected](NumOfSamples)
+        Script.done()
 
         self.comments.delete(0, self.size())
         for line in comments.comments:
