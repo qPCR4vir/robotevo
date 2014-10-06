@@ -383,3 +383,16 @@ def opening_example(filename):
     finally:
         f.close() # Ditto for errors here (however unlikely)
 
+# TODO  write the total vol to spread.
+# TODO  Elution buffer to eppis !!!
+# TODO  mix well <B-beads
+# TODO  reimplementar rest... for waste
+# TODO  implementar acc vol
+# TODO  implementar actualize vol in reactives in pipette
+# TODO  actualize liquid classes
+# TODO  test no drop
+# TODO  implementar reuse tips
+# TODO  comentar las replicas, como 2x b-beads
+# TODO  poner IC MS2 mas cerca (intercambiar con b-beads)
+
+
