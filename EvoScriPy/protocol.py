@@ -83,31 +83,30 @@ def makePreMix( preMix, NumSamples=None):
         NumSamples = NumSamples or Rtv.NumOfSamples
 
         l = preMix.labware
-        msg = "preMix: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-            preMix.minVol(NumSamples), preMix.name, l.label, l.location.grid, l.location.site + 1, preMix.pos + 1,
-            len(preMix.components))
-        Itr.comment(msg).exec()
-        nc = len(preMix.components)
-        assert nc <= Rbt.Robot.current.curArm().nTips, \
-            "Temporally the mix can not contain more than {:d} components.".format(Rbt.Robot.current.curArm().nTips)
-
-        getTips(Rbt.tipsMask[nc])
-
-        for i, react in enumerate(preMix.components):
-            l = react.labware
-            msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
-                react.pos + 1)
+        msg = "preMix: {:.1f} µL of {:s}".format(preMix.minVol(NumSamples), preMix.name)
+        with group(msg):
+            msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
+                l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
             Itr.comment(msg).exec()
-            mV = Rbt.Robot.current.curArm().Tips[i].type.maxVol # todo what if the tip are different?
-            r = react.minVol(NumSamples)
-            while r > 0:
-                dV = r if r < mV else mV
-                aspire(i, react, dV)
-                dispense(i, preMix, dV)
-                r -= dV
+            nc = len(preMix.components)
+            assert nc <= Rbt.Robot.current.curArm().nTips, \
+                "Temporally the mix can not contain more than {:d} components.".format(Rbt.Robot.current.curArm().nTips)
 
-        dropTips()
+            with tips(Rbt.tipsMask[nc]):
+
+                for i, react in enumerate(preMix.components):
+                    l = react.labware
+                    msg += "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
+                        i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
+                        react.pos + 1)
+                    Itr.comment(msg).exec()
+                    mV = Rbt.Robot.current.curArm().Tips[i].type.maxVol # todo what if the tip are different?
+                    r = react.minVol(NumSamples)
+                    while r > 0:
+                        dV = r if r < mV else mV
+                        aspire(i, react, dV)
+                        dispense(i, preMix, dV)
+                        r -= dV
 
 def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
         """
@@ -138,37 +137,35 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
 
         if nt > SampleCnt: nt = SampleCnt
 
-        getTips(Rbt.tipsMask[nt])
-
-        maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
-
         lf = reactive.labware
         lt = to_labware_region
-        msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] \ninto {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-            .format(v=volume, n=reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos, do=str(to),
-                    to=lt.label, tg=lt.location.grid, ts=lt.location.site)
-        Itr.comment(msg).exec()
-        availableDisp = 0
+        msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
+        with group(msg):
+            msg += "[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                .format(fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos, do=str(to),
+                        to=lt.label, tg=lt.location.grid, ts=lt.location.site)
+            Itr.comment(msg).exec()
+            availableDisp = 0
+            with tips(Rbt.tipsMask[nt]):
+                maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
+                while SampleCnt:
+                    if nt > SampleCnt: nt = SampleCnt
+                    if availableDisp == 0:
+                        dsp, rst = divmod(SampleCnt, nt)
+                        if dsp >= maxMultiDisp_N:
+                            dsp = maxMultiDisp_N
+                            vol = [volume * dsp] * nt
+                            availableDisp = dsp
+                        else:
+                            vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
+                            availableDisp = dsp + bool(rst)
+                        aspiremultiTips(nt, reactive, vol)
 
-        while SampleCnt:
-            if nt > SampleCnt: nt = SampleCnt
-            if availableDisp == 0:
-                dsp, rst = divmod(SampleCnt, nt)
-                if dsp >= maxMultiDisp_N:
-                    dsp = maxMultiDisp_N
-                    vol = [volume * dsp] * nt
-                    availableDisp = dsp
-                else:
-                    vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
-                    availableDisp = dsp + bool(rst)
-                aspiremultiTips(nt, reactive, vol)
-
-            curSample = NumSamples - SampleCnt
-            sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
-            dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
-            availableDisp -= 1
-            SampleCnt -= nt
-        dropTips()
+                    curSample = NumSamples - SampleCnt
+                    sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
+                    dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
+                    availableDisp -= 1
+                    SampleCnt -= nt
 
 def transfer( from_labware_region, to_labware_region, volume, using_liquid_class,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
@@ -215,35 +212,31 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         assert isinstance(volume, (int, float))
         if nt > SampleCnt: nt = SampleCnt
 
-        getTips(Rbt.tipsMask[nt])
+        dropTips(Rbt.tipsMask[nt])
 
         lf = from_labware_region
         lt = to_labware_region
-        msg = "Transfer: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site, oo=str(oriSel), do=str(dstSel),
-                    to=lt.label, tg=lt.location.grid, ts=lt.location.site)
-        Itr.comment(msg).exec()
         Asp = Itr.aspirate(Rbt.tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
         Dst = Itr.dispense(Rbt.tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
-        while SampleCnt:
-            curSample = NumSamples - SampleCnt
-            if nt > SampleCnt:
-                nt = SampleCnt
-                Asp.tipMask = Rbt.tipsMask[nt]
-                Dst.tipMask = Rbt.tipsMask[nt]
+        msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
+        with group(msg):
+            msg += "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                .format(fg=lf.location.grid, fs=lf.location.site, oo=str(oriSel), do=str(dstSel),
+                        to=lt.label, tg=lt.location.grid, ts=lt.location.site)
+            Itr.comment(msg).exec()
+            while SampleCnt:
+                curSample = NumSamples - SampleCnt
+                if nt > SampleCnt:
+                    nt = SampleCnt
+                    Asp.tipMask = Rbt.tipsMask[nt]
+                    Dst.tipMask = Rbt.tipsMask[nt]
 
-            getTips(Rbt.tipsMask[nt])  # todo what if volume > maxVol_tip ?
-            #  Rbt.Robot.current.curArm().aspire(volume, Rbt.tipsMask[nt])
-            Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            Asp.exec()
-
-            Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
-            # Rbt.Robot.current.curArm().dispense(volume, Rbt.tipsMask[nt])
-            Dst.exec()
-            dropTips()
-
-            SampleCnt -= nt
-        dropTips()
+                with tips(Rbt.tipsMask[nt]):  # todo what if volume > maxVol_tip ?
+                    Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
+                    Asp.exec()
+                    Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
+                    Dst.exec()
+                SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
         Dst.labware.selectOnly(dstSel)
         return oriSel, dstSel
@@ -274,43 +267,39 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
         if nt > SampleCnt:
             nt = SampleCnt
-        tm = Rbt.tipsMask[nt]
-        getTips(tm)
-
         lf = from_labware_region
-        msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
-                  .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
-        Itr.comment(msg).exec()
+        tm = Rbt.tipsMask[nt]
         Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
         Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
         nt = to_waste_labware.autoselect(maxTips=nt)
-        while SampleCnt:
-            curSample = NumSamples - SampleCnt
-            if nt > SampleCnt:
-                nt = SampleCnt
-                tm = Rbt.tipsMask[nt]
-                Asp.tipMask = tm
-                Dst.tipMask = tm
-                Ctr.tipMask = tm
-            getTips(tm)
-            Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol
-            r = volume
-            while r > 0:
-                dV = r if r < mV else mV
-                r -= dV
-                Asp.volume = dV
-                Dst.volume = dV
-                Asp.exec()
-                Ctr.exec()
-                Dst.exec()
-
-            dropTips()
-
-            SampleCnt -= nt
-        dropTips()
-        Asp.labware.selectOnly(oriSel)
+        mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
+        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+        msg = "Waste: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
+        with group(msg):
+            msg += "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
+            Itr.comment(msg).exec()
+            while SampleCnt:
+                curSample = NumSamples - SampleCnt
+                if nt > SampleCnt:
+                    nt = SampleCnt
+                    tm = Rbt.tipsMask[nt]
+                    Asp.tipMask = tm
+                    Dst.tipMask = tm
+                    Ctr.tipMask = tm
+                Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
+                r = volume
+                with tips(tm):
+                    while r > 0:
+                        dV = r if r < mV else mV
+                        r -= dV
+                        Asp.volume = dV
+                        Dst.volume = dV
+                        Asp.exec()
+                        Ctr.exec()
+                        Dst.exec()
+                SampleCnt -= nt
+            Asp.labware.selectOnly(oriSel)
         return oriSel
 
 def mix( in_labware_region, using_liquid_class, volume, optimize=True):
@@ -336,31 +325,27 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         SampleCnt = NumSamples
         if nt > SampleCnt:
             nt = SampleCnt
-
-        getTips(Rbt.tipsMask[nt])
         volume = volume * 0.8
-        mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+        mV = Lab.def_DiTi.maxVol * 0.8    # todo revise !! What tip tp use !
+        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
         volume = volume if volume < mV else mV
 
         lf = in_labware_region
-        msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
-                  .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
-        Itr.comment(msg).exec()
         mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
-        while SampleCnt:
-            curSample = NumSamples - SampleCnt
-            if nt > SampleCnt:
-                nt = SampleCnt
-                mx.tipMask = Rbt.tipsMask[nt]
+        msg = "Mix: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
+        with group(msg):
+            msg += "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
+            Itr.comment(msg).exec()
+            while SampleCnt:
+                curSample = NumSamples - SampleCnt
+                if nt > SampleCnt:
+                    nt = SampleCnt
+                    mx.tipMask = Rbt.tipsMask[nt]
 
-            getTips(Rbt.tipsMask[nt])
-            mx.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mx.exec()
-
-            dropTips()
-
-            SampleCnt -= nt
-        dropTips()
+                with tips(Rbt.tipsMask[nt]):
+                    mx.labware.selectOnly(oriSel[curSample:curSample + nt])
+                    mx.exec()
+                SampleCnt -= nt
         mx.labware.selectOnly(oriSel)
         return oriSel
 
