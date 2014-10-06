@@ -1,5 +1,7 @@
 __author__ = 'qPCR4vir'
 
+from contextlib import contextmanager
+
 import Robot as Rbt
 import Instructions as Itr
 import Reactive as Rtv
@@ -361,4 +363,31 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         dropTips()
         mx.labware.selectOnly(oriSel)
         return oriSel
+
+@contextmanager
+def group(titel, mode=None):
+    Itr.group(titel).exec(mode)
+    yield
+    Itr.group_end().exec(mode)
+
+@contextmanager
+def tips(tipsMask):
+    getTips(tipsMask)
+    yield
+    dropTips(tipsMask)
+
+@contextmanager
+def parallel_execution_of(subroutine):
+    getTips(tipsMask)
+    yield
+    dropTips(tipsMask)
+
+
+@contextmanager
+def opening_example(filename):
+    f = open(filename) # IOError is untouched by GeneratorContext
+    try:
+        yield f
+    finally:
+        f.close() # Ditto for errors here (however unlikely)
 
