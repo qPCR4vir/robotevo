@@ -51,17 +51,25 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Te_MagS_ActivateHeater(50).exec()
     Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
 
+    reuse_tips_and_drop(reuse=True, drop=False)
     pK_cRNA_MS2.make()
 
+    reuse_tips_and_drop(reuse=True, drop=False)
     spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.selectOnly(all_samples))
+
+    reuse_tips_and_drop(reuse=True, drop=True)
     transfer(  Samples.selectOnly(all_samples),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
                      False, True, NumSamples=React.NumOfSamples)
+
+    reuse_tips_and_drop(reuse=False, drop=True)
     spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
 
     with incubation(10): pass
 
+    reuse_tips_and_drop(reuse=False, drop=True)
     spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 
+    reuse_tips_and_drop(reuse=False, drop=True)
     wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
                         using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"),
                         vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
@@ -93,7 +101,9 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         wells = wells or reactive.labware.selected() or range(Rtv.NumOfSamples)
         using_liquid_class = using_liquid_class or (reactive.defLiqClass, reactive.defLiqClass)
         with group("Wash in TeMag with " + reactive.name):
+            reuse_tips_and_drop(reuse=False, drop=False)
             spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
+            reuse_tips_and_drop(reuse=True, drop=True)
             with parallel_execution_of(mix_mag_sub):
                 mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
             waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)

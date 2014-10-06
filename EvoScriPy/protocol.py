@@ -13,6 +13,16 @@ def getTips(TIP_MASK=-1, type=None):
     Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.def_arm).exec()
     # return TIP_MASK
 
+def set_dropTips(drop=True):
+    return Rbt.Robot.current.set_dropTips(drop)
+
+def reuseTips(reuse=True):
+    return Rbt.Robot.current.reuseTips(reuse)
+
+def reuse_tips_and_drop(reuse=True, drop=True):
+    set_dropTips(drop)
+    reuseTips(reuse)
+
 def dropTips(TIP_MASK=-1): # todo is this a correct solution or it is best to do a double check? To force drop?
         #if not Rbt.Robot.current.droptips: return 0
         #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
@@ -85,7 +95,7 @@ def makePreMix( preMix, NumSamples=None):
         l = preMix.labware
         msg = "preMix: {:.1f} µL of {:s}".format(preMix.minVol(NumSamples), preMix.name)
         with group(msg):
-            msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
+            msg = " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
                 l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
             Itr.comment(msg).exec()
             nc = len(preMix.components)
