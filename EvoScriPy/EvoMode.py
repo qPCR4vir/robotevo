@@ -115,7 +115,7 @@ class Script(ScriptBody):
     def __init__(self, filename, template, arms=None):
         ScriptBody.__init__(self, filename)
         if Rbt.Robot.current:
-            Rbt.Robot.current.set_worktable(filename)
+            Rbt.Robot.current.set_worktable(template)
         else:
             Rbt.Robot.current = Rbt.Robot(templateFile=template, arms=arms)
         self.templateNotAdded = True
