@@ -231,10 +231,10 @@ class Robot:
 
     def getTips_test(self, rack_type, tip_mask=-1) -> int:   # todo REVISE
         if self.reusetips:
-            tip_mask = self.curArm().getMoreTips_test(rack_type , tip_mask)
+            tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
         else:
             # self.dropTips(tip_mask)  # todo REVISE  here ???
-            tip_mask = self.curArm().getMoreTips_test(rack_type , tip_mask)
+            tip_mask = self.curArm().getTips_test(tip_mask)
         return tip_mask
 
     def dropTips(self, TIP_MASK=-1): # todo coordine protocol
