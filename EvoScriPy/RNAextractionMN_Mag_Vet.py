@@ -30,8 +30,6 @@ EtOH80p         = React.Reactive("Ethanol 80%"                     ,
                                  volpersample=600 ,defLiqClass=B_liquidClass)
 ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
 
-
-
 IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
                                  Reactives, volpersample= 20 ,defLiqClass=W_liquidClass)  #, pos=14
 ProtK           = React.Reactive("Proteinase K"                    ,
@@ -42,43 +40,37 @@ pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 p
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                  ,defLiqClass=W_liquidClass)
 
-import Robot
-
+mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
 
 
 def extractRNA_with_MN_Vet_Kit(NumOfSamples):
-    robot = Robot.Robot.current
-    mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
-    # mix_mag_sub = br"C:\\Prog\\robotevo\\EvoScriPy\\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
-    # C:\Prog\\robotevo\EvoScriPy\\
+    Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
-    Te_MagS_ActivateHeater(50).exec()
-    Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
     React.NumOfSamples = NumOfSamples
     all_samples = range(React.NumOfSamples)
 
-    Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+    Te_MagS_ActivateHeater(50).exec()
+    Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
 
     pK_cRNA_MS2.make()
 
     spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.selectOnly(all_samples))
     transfer(  Samples.selectOnly(all_samples),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
-                     False,True,NumSamples=React.NumOfSamples)
+                     False, True, NumSamples=React.NumOfSamples)
     spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
-    Itr.startTimer().exec()
-    Itr.waitTimer(timeSpan=10*60).exec()
+
+    with incubation(10): pass
 
     spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 
     wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
-                        using_liquid_class=("Serum Asp preMix3","Serum Disp postMix3"),
+                        using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"),
                         vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
-                            +B_Beads.volpersample+BindingBuffer.volpersample)
+                            + B_Beads.volpersample+BindingBuffer.volpersample)
 
     wash_in_TeMag(reactive=VEW1, wells=all_samples)
 
     wash_in_TeMag(reactive=VEW2, wells=all_samples)
-
 
     with group("Wash in TeMag with " + EtOH80p.name):
         spread( reactive=EtOH80p,to_labware_region=TeMag.selectOnly(all_samples))
@@ -99,16 +91,10 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
              volume=100, optimizeTo=False )
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
-        if wells is None:
-            wells = reactive.labware.selected() or range(Rtv.NumOfSamples)
-        if using_liquid_class is None:
-            using_liquid_class = (reactive.defLiqClass, reactive.defLiqClass)
-
-        mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
-        Itr.group("Wash in TeMag with " + reactive.name)
-        spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
-        Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
-        mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
-        Itr.subroutine(mix_mag_sub, Itr.subroutine.Waits_previous).exec()
-        waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
-        Itr.group_end()
+        wells = wells or reactive.labware.selected() or range(Rtv.NumOfSamples)
+        using_liquid_class = using_liquid_class or (reactive.defLiqClass, reactive.defLiqClass)
+        with group("Wash in TeMag with " + reactive.name):
+            spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
+            with parallel_execution_of(mix_mag_sub):
+                mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
+            waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
