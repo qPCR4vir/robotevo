@@ -1,7 +1,6 @@
 __author__ = 'Ariel'
 
 from RobotInitRNAextraction import *
-from Labware import *
 import Labware as Lab
 import Reactive as React
 from protocol import *
