@@ -233,7 +233,7 @@ class Robot:
         if self.reusetips:
             tip_mask = self.curArm().getMoreTips_test(rack_type , tip_mask)
         else:
-            self.dropTips(tip_mask)  # todo REVISE  here ???
+            # self.dropTips(tip_mask)  # todo REVISE  here ???
             tip_mask = self.curArm().getMoreTips_test(rack_type , tip_mask)
         return tip_mask
 
