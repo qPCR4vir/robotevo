@@ -139,6 +139,9 @@ class Labware:
             """
 
             self.rack = rack
+            assert 1 <= grid <= 67
+            site -= 1
+            assert 0 <= site <= 127
             self.grid = grid
             self.site = site
             self.rack_site = rack_site

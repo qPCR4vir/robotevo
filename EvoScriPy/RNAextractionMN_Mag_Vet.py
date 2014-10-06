@@ -9,33 +9,33 @@ from protocol import *
 from Instructions_Te_MagS import *
 import Instructions as Itr
 
-Reactives     = Lab.Labware(EppRack16_2mL, Lab.Labware.Location(7,0),"Reactives")
-Eluat         = Lab.Labware(EppRack3x16R, Lab.Labware.Location(8,0),"Eluat")
-Samples       = Lab.Labware(EppRack3x16, Lab.Labware.Location(11,0),"Proben")
+Reactives     = Lab.Labware(Lab.EppRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
+Eluat         = Lab.Labware(Lab.EppRack3x16R,  Lab.Labware.Location(8, 1 ), "Eluat" )
+Samples       = Lab.Labware(Lab.EppRack3x16,   Lab.Labware.Location(11, 1), "Proben")
 
 
 LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
 IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
 BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=13, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
+B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=1, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
 
 VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
-                                 Lab.Labware(Trough_100ml, Lab.Labware.Location(22,0), "4-VEW1 Wash Buffer"   ),
+                                 Lab.Labware(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"   ),
                                  volpersample=600 ,defLiqClass=B_liquidClass)
 VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
-                                 Lab.Labware(Trough_100ml, Lab.Labware.Location(22,1), "5-VEW2-WashBuffer"   ),
+                                 Lab.Labware(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer"   ),
                                  volpersample=600 ,defLiqClass=B_liquidClass)
 EtOH80p         = React.Reactive("Ethanol 80%"                     ,
-                                 Lab.Labware(Trough_100ml, Lab.Labware.Location(24,0), "7-Ethanol 80%"   ),
+                                 Lab.Labware(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
                                  volpersample=600 ,defLiqClass=B_liquidClass)
 ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
 
-IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
-                                 Reactives, volpersample= 20 ,defLiqClass=W_liquidClass)  #, pos=14
 ProtK           = React.Reactive("Proteinase K"                    ,
                                  Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
 cRNA            = React.Reactive("Carrier RNA"                     ,
                                  Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
+IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
+                                 Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)  #, pos=14
 pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                  ,defLiqClass=W_liquidClass)

@@ -141,9 +141,9 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         lt = to_labware_region
         msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
         with group(msg):
-            msg += "[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                .format(fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos, do=str(to),
-                        to=lt.label, tg=lt.location.grid, ts=lt.location.site)
+            msg = "[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                .format(fg=lf.location.grid, fs=lf.location.site+1, fw=reactive.pos+1, do=str(to),
+                        to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
             with tips(Rbt.tipsMask[nt]):
@@ -220,9 +220,9 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         Dst = Itr.dispense(Rbt.tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
         msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg += "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                .format(fg=lf.location.grid, fs=lf.location.site, oo=str(oriSel), do=str(dstSel),
-                        to=lt.label, tg=lt.location.grid, ts=lt.location.site)
+            msg = "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                .format(fg=lf.location.grid, fs=lf.location.site+1, oo=str(oriSel), do=str(dstSel),
+                        to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
@@ -277,7 +277,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
         msg = "Waste: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg += "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
+            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) + str(oriSel)
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
@@ -334,7 +334,7 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
         msg = "Mix: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg += "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
+            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) + str(oriSel)
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
