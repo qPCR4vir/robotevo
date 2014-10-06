@@ -211,9 +211,6 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
 
         assert isinstance(volume, (int, float))
         if nt > SampleCnt: nt = SampleCnt
-
-        dropTips(Rbt.tipsMask[nt])
-
         lf = from_labware_region
         lt = to_labware_region
         Asp = Itr.aspirate(Rbt.tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
