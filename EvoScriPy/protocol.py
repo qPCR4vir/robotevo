@@ -96,7 +96,7 @@ def makePreMix( preMix, NumSamples=None):
 
                 for i, react in enumerate(preMix.components):
                     l = react.labware
-                    msg += "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
+                    msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
                         i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
                         react.pos + 1)
                     Itr.comment(msg).exec()

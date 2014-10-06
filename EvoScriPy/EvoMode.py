@@ -28,7 +28,7 @@ class toString(Mode):
 
 
 class Comments(toString):
-    """  Create a list with all (and only with) the comments. Useful to be shown immediately after generation,
+    """  Create a list with all (and only with) the comments and the Groups. Useful to be shown immediately after generation,
     but also to the final user just before the actual physical run.
     """
 
@@ -36,10 +36,12 @@ class Comments(toString):
         self.comments = []
 
     def exec(self, instr):
-        from Instructions import comment
+        from Instructions import comment, group
 
-        if isinstance(instr, comment):
+        if isinstance(instr, comment) or isinstance(instr, group):
             self.comments.append("  " + instr.arg[0].data)
+
+
 
 
 class StdOut(toString):
