@@ -363,9 +363,10 @@ def tips(tipsMask):
 
 @contextmanager
 def parallel_execution_of(subroutine):
-    getTips(tipsMask)
+    Itr.subroutine(subroutine, Itr.subroutine.Continues).exec()
     yield
-    dropTips(tipsMask)
+    Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
+
 
 
 @contextmanager
