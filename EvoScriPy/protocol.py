@@ -262,6 +262,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         to_waste_labware = to_waste_labware or Lab.def_WashWaste
         assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(volume, (int, float))
+        if volume < 0 : volume = 0
         # todo  select convenient def
         oriSel = from_labware_region.selected()
         nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
@@ -274,14 +275,17 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
         if nt > SampleCnt:
             nt = SampleCnt
-        lf = from_labware_region
         tm = Rbt.tipsMask[nt]
+        nt = to_waste_labware.autoselect(maxTips=nt)
+        mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
+
+        Rest = 100  # the volume we cannot more aspire with liquid detection, to small, collisions
+        RestPlus = 100
+
         Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
         Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
-        nt = to_waste_labware.autoselect(maxTips=nt)
-        mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
-        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+        lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
             msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) + str(oriSel)
@@ -295,16 +299,29 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                     Dst.tipMask = tm
                     Ctr.tipMask = tm
                 Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-                r = volume
+                r = volume   # r - Waste_available, volume - Waste
                 with tips(tm):
-                    while r > 0:
+                    while r > 0:      # dont aspire Rest with these Liq Class (Liq Detect)
                         dV = r if r < mV else mV
-                        r -= dV
-                        Asp.volume = dV
+                        if dV < Rest: break
+                        dV -= Rest
+                        Asp.volume = dV  #  with Liq Class with Detect) ">> AVR-Serum 1000 <<	365"
+                        Asp.liquidClass = ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
                         Dst.volume = dV
                         Asp.exec()
                         Ctr.exec()
                         Dst.exec()
+                        r -= dV
+                    Asp.volume = Rest
+                    Asp.liquidClass = ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
+                    Ctr.exec()
+                    Asp.volume = RestPlus
+                    Asp.liquidClass = ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
+                    Ctr.exec()
+                    Dst.volume = dV + Rest + RestPlus
+                    Dst.exec()
+
+
                 SampleCnt -= nt
             Asp.labware.selectOnly(oriSel)
         return oriSel
@@ -397,8 +414,8 @@ def opening_example(filename):
 # TODO  implementar acc vol
 # TODO  implementar actualize vol in reactives in pipette
 # TODO  actualize liquid classes
-# TODO  test no drop
-# TODO  implementar reuse tips
+# TODO  test no drop                                        - ok ?!
+# TODO  implementar reuse tips                              - ok ?!
 # TODO  comentar las replicas, como 2x b-beads
 # TODO  poner IC MS2 mas cerca (intercambiar con b-beads)
 
