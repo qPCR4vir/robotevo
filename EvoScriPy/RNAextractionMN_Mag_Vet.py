@@ -45,6 +45,11 @@ mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode
 def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
+    DiTi1000_1.fill('B06')
+    DiTi1000_2.fill('A11')
+    DiTi1000_3.fill('A10')
+    Itr.set_DITI_Counter2(posInRack='B06').exec()
+
     React.NumOfSamples = NumOfSamples
     all_samples = range(React.NumOfSamples)
 

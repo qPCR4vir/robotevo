@@ -317,19 +317,28 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
         self.posInRack = posInRack
 
     def validateArg(self):
+        if isinstance(self.labware, Lab.DiTi_Rack):
+            self.labware.type.pick_next_rack = self.labware
+        else:
+            assert isinstance(self.labware, Lab.Labware.DITIrack)
+            self.labware = self.labware.pick_next_rack
         self.arg = [string1(self.labware.type.name),
                     string1(self.labware.location.grid),
                     string1(self.labware.location.site+1),
-                    string1(self.posInRack+1),
+                    string1(self.labware.offset(self.posInRack)+1),
                     integer(self.lastPos)] # todo extract from Location
         return True
 
     def actualize_robot_state(self):
-        self.labware.type.pick_next_rack = self.labware
-        if self.lastPos:
-            self.labware.type.pick_next_back = self.posInRack
+        if isinstance(self.labware, Lab.DiTi_Rack):
+            self.labware.type.pick_next_rack = self.labware
         else:
-            self.labware.type.pick_next      = self.posInRack
+            assert isinstance(self.labware, Lab.Labware.DITIrack)
+            self.labware = self.labware.pick_next_rack
+        if self.lastPos:
+            self.labware.type.pick_next_back = self.labware.offset(self.posInRack)
+        else:
+            self.labware.type.pick_next      = self.labware.offset(self.posInRack)
 
 class pickUp_DITIs(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI)
