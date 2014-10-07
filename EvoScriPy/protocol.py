@@ -285,6 +285,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
         Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
+        drop = set_dropTips(True)
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
@@ -299,31 +300,35 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                     Dst.tipMask = tm
                     Ctr.tipMask = tm
                 Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-                r = volume   # r - Waste_available, volume - Waste
+                r = volume   # r: Waste_available yet; volume: to be Waste
                 with tips(tm):
-                    while r > 0:      # dont aspire Rest with these Liq Class (Liq Detect)
+                    while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
                         dV = r if r < mV else mV
-                        if dV < Rest: break
-                        dV -= Rest
-                        Asp.volume = dV  #  with Liq Class with Detect) ">> AVR-Serum 1000 <<	365"
+                        if dV < Rest: break # ??
+                        dV -= Rest       # the last Rest uL have to be aspired with the other Liq Class
+                        Asp.volume = dV  #  with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
                         Asp.liquidClass = ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
                         Dst.volume = dV
                         Asp.exec()
                         Ctr.exec()
                         Dst.exec()
                         r -= dV
+
                     Asp.volume = Rest
                     Asp.liquidClass = ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
+                    Asp.exec()
                     Ctr.exec()
                     Asp.volume = RestPlus
                     Asp.liquidClass = ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
+                    Asp.exec()
                     Ctr.exec()
-                    Dst.volume = dV + Rest + RestPlus
+                    Dst.volume = Rest + RestPlus
                     Dst.exec()
 
 
                 SampleCnt -= nt
             Asp.labware.selectOnly(oriSel)
+        set_dropTips(drop)
         return oriSel
 
 def mix( in_labware_region, using_liquid_class, volume, optimize=True):
@@ -407,16 +412,17 @@ def opening_example(filename):
     finally:
         f.close() # Ditto for errors here (however unlikely)
 
+# TODO  reimplementar rest... for waste
+# TODO  actualize liquid classes
+# TODO  mix well <B-beads
 # TODO  write the total vol to spread.
 # TODO  Elution buffer to eppis !!!
-# TODO  mix well <B-beads
-# TODO  reimplementar rest... for waste
 # TODO  implementar acc vol
 # TODO  implementar actualize vol in reactives in pipette
-# TODO  actualize liquid classes
+# TODO  comentar las replicas, como 2x b-beads
+# TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings
+# TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
 # TODO  test no drop                                        - ok ?!
 # TODO  implementar reuse tips                              - ok ?!
-# TODO  comentar las replicas, como 2x b-beads
-# TODO  poner IC MS2 mas cerca (intercambiar con b-beads)
 
 
