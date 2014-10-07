@@ -421,8 +421,10 @@ def opening_example(filename):
 # TODO  implementar actualize vol in reactives in pipette
 # TODO  comentar las replicas, como 2x b-beads
 # TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings
+# TODO  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
 # TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
 # TODO  test no drop                                        - ok ?!
 # TODO  implementar reuse tips                              - ok ?!
+# TODO implement preserveTips and usePreservedTips !!
 
 
