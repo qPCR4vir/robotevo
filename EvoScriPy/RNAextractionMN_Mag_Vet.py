@@ -37,7 +37,7 @@ IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
                                  Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)  #, pos=14
 pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
                                  Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
-                                 ,defLiqClass=W_liquidClass)
+                                 ,defLiqClass=W_liquidClass, replicas=2)
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
 
@@ -72,6 +72,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with incubation(10): pass
 
     reuse_tips_and_drop(reuse=False, drop=True)
+
     spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 
     reuse_tips_and_drop(reuse=False, drop=True)
@@ -103,6 +104,13 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
              volume=100, optimizeTo=False )
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
+        """
+
+        :param reactive:
+        :param wells:
+        :param using_liquid_class: dict
+        :param vol:
+        """
         wells = wells or reactive.labware.selected() or range(Rtv.NumOfSamples)
         using_liquid_class = using_liquid_class or (reactive.defLiqClass, reactive.defLiqClass)
         with group("Wash in TeMag with " + reactive.name):
