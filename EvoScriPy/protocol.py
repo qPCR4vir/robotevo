@@ -290,10 +290,11 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         nt = to_waste_labware.autoselect(maxTips=nt)
         mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
 
-        Rest = 100  # the volume we cannot more aspire with liquid detection, to small, collisions
-        RestPlus = 100
+        Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
+        RestPlus = 50
 
-        Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
+        # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
+        Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
         Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
         Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
         drop = set_dropTips(True)
@@ -318,21 +319,30 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                         if dV < Rest: break # ??
                         dV -= Rest       # the last Rest uL have to be aspired with the other Liq Class
                         Asp.volume = dV  #  with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
-                        Asp.liquidClass = ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
                         Dst.volume = dV
+                        Asp.liquidClass = Te_Mag_LC # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
                         Asp.exec()
-                        Ctr.exec()
+                        Asp.volume = 0.5
+                        Asp.liquidClass = Te_Mag_Centre
+                        Asp.exec()
+                        # Ctr.exec()
                         Dst.exec()
                         r -= dV
 
                     Asp.volume = Rest
-                    Asp.liquidClass = ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
+                    Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
                     Asp.exec()
-                    Ctr.exec()
+                    # Ctr.exec()
+                    Asp.volume = 0.5
+                    Asp.liquidClass = Te_Mag_Force_Centre
+                    Asp.exec()
                     Asp.volume = RestPlus
-                    Asp.liquidClass = ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
+                    Asp.liquidClass =  Te_Mag_RestPlus # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
                     Asp.exec()
-                    Ctr.exec()
+                    #Ctr.exec()
+                    Asp.volume = 0.5
+                    Asp.liquidClass = Te_Mag_Force_Centre
+                    Asp.exec()
                     Dst.volume = Rest + RestPlus
                     Dst.exec()
 
@@ -423,17 +433,20 @@ def opening_example(filename):
     finally:
         f.close() # Ditto for errors here (however unlikely)
 
-# TODO  reimplementar rest... for waste
-# TODO  actualize liquid classes
+# TODO  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
+# TODO  implementar reuse tips
 # TODO  mix well <B-beads
-# TODO  write the total vol to spread.
 # TODO  Elution buffer to eppis !!!
 # TODO  implementar acc vol
 # TODO  implementar actualize vol in reactives in pipette
 # TODO  comentar las replicas, como 2x b-beads
 # TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings
+# TODO  implement use only tips filled
+# TODO  implement Debugger: prompt and or wait
+# TODO  write the total vol to spread.                      - ok ?!
+# TODO  actualize liquid classes                            - ok ?!
 # TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
 # TODO  test no drop                                        - ok ?!
-# TODO  implementar reuse tips                              - ok ?!
+# TODO  reimplementar rest... for waste                     - ok ?!
 
 
