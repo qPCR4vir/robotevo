@@ -260,3 +260,6 @@ class DITIs(Instruction):
         self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
         self.arg += [integer(self.arm)]      # arg 4
         return True
+
+    def exec(self, mode=None):
+        if self.tipMask: Instruction.exec(self, mode)
