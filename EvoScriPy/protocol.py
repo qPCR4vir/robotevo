@@ -114,7 +114,6 @@ def makePreMix( preMix, NumSamples=None):
                 "Temporally the mix can not contain more than {:d} components.".format(Rbt.Robot.current.curArm().nTips)
 
             with tips(Rbt.tipsMask[nc]):
-
                 for i, react in enumerate(preMix.components):
                     l = react.labware
                     msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(

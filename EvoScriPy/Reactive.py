@@ -15,14 +15,14 @@ class Reactive:
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
-        :param name:
-        :param labware:
-        :param volpersample:
-        :param pos: if not set (=None) we will try to assign consecutive wells
-        :param replicas: def 1
-        :param defLiqClass:
-        :param excess:
-        :param init_vol: is set for each replica. If default (=None) is calculated als minimum.
+        :param name: str; Reactive name. Ex: "Buffer 1", "forward primer", "IC MS2"
+        :param labware: Labware;
+        :param volpersample: float; in uL
+        :param pos: if not set (=None) we will try to assign consecutive wells for all the replicas
+        :param replicas: int; def 1
+        :param defLiqClass: str;
+        :param excess: float; in %
+        :param init_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
         ex= def_react_excess if excess is None else excess
         self.excess = 1 + ex/100
@@ -30,13 +30,13 @@ class Reactive:
         self.name = name
         self.volpersample = volpersample
         self.labware = labware
-        self.Replicas = labware.put(self,pos,replicas)
+        self.Replicas = labware.put(self, pos, replicas)
         self.pos = self.Replicas[0].offset
 
         for w in  self.Replicas :
              w.vol = init_vol
 
-    def minVol(self, NumSamples=None):
+    def minVol(self, NumSamples=None)->float:
         NumSamples = NumSamples or NumOfSamples or 0
         return self.volpersample * NumSamples * self.excess
 
