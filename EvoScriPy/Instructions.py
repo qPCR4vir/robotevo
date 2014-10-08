@@ -1,5 +1,7 @@
 __author__ = 'qPCR4vir'
 
+# http://sydney.edu.au/medicine/bosch/facilities/molecular-biology/automation/Manual%20Freedom%20EVOware%202.3%20Research%20Use%20Only.pdf
+
 from Instruction_Base import *
 import Robot
 #todo organize the arg in each instruction according to the more common use

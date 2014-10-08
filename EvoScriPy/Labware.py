@@ -55,7 +55,7 @@ class WorkTable:  # todo Implement !, parse WT from export file, template and sc
             self.labTypes[labware.type.name] = []
         self.labTypes[labware.type.name] += [labware]
 
-class Rack:
+class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
 
     class Type:
@@ -409,7 +409,7 @@ class DiTi_Rack (Labware):
             if i == len (racks):
                 i = 0
 
-            racks[i].fill() # TODO USER PROMPT Fill Rack i+1
+            racks[i].fill() # TODO USER PROMPT Fill Carrier i+1
             print ("WARNING !!!! USER PROMPT Fill Rack " + str(i+1))
             nr = racks[i]
             assert self is not nr
@@ -421,8 +421,15 @@ class DiTi_Rack (Labware):
 
 Trough_100ml    = Labware.Type("Trough 100ml",                      8,      maxVol=100000, conectedWells=True)
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=2000)
+GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=2000)
 EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=1500)
 EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=1500)
+EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, nSite=16)
+Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=2000)
+Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=2000)
+Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=1500)
+
+
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=1500)
 CleanerSWS      = Labware.Type("Washstation 2Grid Cleaner short",   8,      maxVol=100000, conectedWells=True)
 WasteWS         = Labware.Type("Washstation 2Grid Waste",           8,      maxVol=100000, conectedWells=True)

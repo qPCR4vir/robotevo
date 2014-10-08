@@ -8,7 +8,8 @@ from protocol import *
 from Instructions_Te_MagS import *
 import Instructions as Itr
 
-Reactives     = Lab.Labware(Lab.EppRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
+Reactives     = Lab.Labware(Lab.GreinRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
+# Reactives     = Lab.Labware(Lab.EppRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
 Eluat         = Lab.Labware(Lab.EppRack3x16R,  Lab.Labware.Location(8, 1 ), "Eluat" )
 Samples       = Lab.Labware(Lab.EppRack3x16,   Lab.Labware.Location(11, 1), "Proben")
 
