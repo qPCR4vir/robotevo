@@ -353,27 +353,45 @@ class DiTi_Rack (Labware):
         for w in self.Wells: w.reactive=None
         for w in beg: self.Wells[w].reactive = Tip(self.type)   # todo Set some kind of tip
 
-    def find_new_tips(self, TIP_MASK, labware, lastPos):
+    @staticmethod
+    def find_tips(TIP_MASK, rack_type, lastPos):
+        assert isinstance(rack_type, Labware.DITIrack)
+        sr.pick_next_rack
+        dr = -1 if lastPos else 1
+        r = sr.Wells[bg,ed+1,dr]
+        for i in range(len(r)-n):
+            if any(w.reactive for w in sr.Wells[i:i + n]): continue
+            return continuous, sr.Wells[i:i + n]
+        for w in sr.Wells:
+            if w.reactive: continue
+            free_wells += [w]
+            if len(free_wells) == n:
+                return not continuous, free_wells
+        # we need to find in other rack
+
+    def find_new_tips(self, TIP_MASK, lastPos):
         n = 0
         while TIP_MASK:
             n += (TIP_MASK & 1)
             TIP_MASK = TIP_MASK >> 1
         tips = []
-        sr = labware.type
+        sr = self.type
         assert isinstance(sr, Labware.DITIrack)
         bg, ed, sr = sr.pick_next, sr.pick_next_rack, sr.pick_next_rack
         dr = -1 if lastPos else 1
-        r = self.Wells[bg,ed+1,dr]
+        r = sr.Wells[bg,ed+1,dr]
         for i in range(len(r)-n):
-            if any(w.reactive for w in self.Wells[i:i + n]): continue
-            return continuous, self.Wells[i:i + n]
-        for w in self.Wells:
+            if any(w.reactive for w in sr.Wells[i:i + n]): continue
+            return continuous, sr.Wells[i:i + n]
+        for w in sr.Wells:
             if w.reactive: continue
             free_wells += [w]
-            if len(free_wells) == n: break
-        return not continuous, free_wells
+            if len(free_wells) == n:
+                return not continuous, free_wells
+        # we need to find in other rack
 
-    def remove_tips(self, TIP_MASK, labware, worktable, lastPos=False):
+
+    def remove_tips(self, TIP_MASK, labware, worktable=WorkTable.curWorkTable, lastPos=False):
         n = 0
         while TIP_MASK:
             n += (TIP_MASK & 1)
@@ -382,7 +400,7 @@ class DiTi_Rack (Labware):
         tp = tp if isinstance(tp, Labware.Type) else tp.type
         self._remove_tip(n, tp, worktable, lastPos)
 
-    def _remove_tip(self, n, tp, worktable, lastPos=False):
+    def _remove_tip(self, n, tp, worktable=WorkTable.curWorkTable, lastPos=False):
         assert isinstance(tp, Labware.DITIrack)
         beg, end, sr = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
         assert isinstance(sr, DiTi_Rack)
@@ -401,24 +419,29 @@ class DiTi_Rack (Labware):
             if lastPos:  tp.pick_next_back -= 1
             else:        tp.pick_next      += 1
 
-    def set_next_to_next_rack(self, worktable):
-            tp = self.type
-            assert isinstance(worktable, WorkTable)
-            racks = worktable.labTypes[tp.name]
-            assert isinstance(racks,list)
-            i = racks.index(self)
-            i = i+1
-            if i == len (racks):
-                i = 0
+    def next_rack(self, worktable=WorkTable.curWorkTable)->DiTi_Rack:
+        tp = self.type
+        assert isinstance(worktable, WorkTable)
+        racks = worktable.labTypes[tp.name]
+        assert isinstance(racks,list)
+        i = racks.index(self)
+        i = i+1
+        if i == len (racks):
+            i = 0
+        # if racks[i] is self: return None
+        return racks[i]
 
-            racks[i].fill() # TODO USER PROMPT Fill Carrier i+1
-            print ("WARNING !!!! USER PROMPT Fill Rack " + str(i+1))
-            nr = racks[i]
-            assert self is not nr
-            assert isinstance(nr, DiTi_Rack)
-            tp.pick_next = 0
-            tp.pick_next_back = tp.nCol * tp.nRow -1
-            tp.pick_next_rack = nr
+
+    def set_next_to_next_rack(self, worktable=WorkTable.curWorkTable):
+        rack = self.next_rack(worktable)
+        assert isinstance(rack, DiTi_Rack)
+        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)
+        assert self is not rack
+        rack.fill()
+        tp = self.type
+        tp.pick_next = 0
+        tp.pick_next_back = tp.nCol * tp.nRow -1
+        tp.pick_next_rack = rack
 
 
 Trough_100ml    = Labware.Type("Trough 100ml",                      8,      maxVol=100000, conectedWells=True)
