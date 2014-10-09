@@ -24,22 +24,20 @@ def getTips(TIP_MASK=-1, type=None):
     Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.def_arm).exec()
     # return TIP_MASK
 
-def set_dropTips(drop=True):
+def set_dropTips(drop=True)->bool:
     return Rbt.Robot.current.set_dropTips(drop)
 
-def reuseTips(reuse=True):
+def reuseTips(reuse=True)->bool:
     return Rbt.Robot.current.reuseTips(reuse)
 
-def reuse_tips_and_drop(reuse=True, drop=True):
-    set_dropTips(drop)
-    reuseTips(reuse)
+def reuse_tips_and_drop(reuse=True, drop=True)->(bool, bool):
+    return set_dropTips(drop), reuseTips(reuse)
 
-def dropTips(TIP_MASK=-1): # todo is this a correct solution or it is best to do a double check? To force drop?
-        #if not Rbt.Robot.current.droptips: return 0
-        #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
-        #if TIP_MASK:
-        Itr.dropDITI(TIP_MASK).exec()
-        #return TIP_MASK
+def preserveTips(self, preserve=True)->bool:
+    return Rbt.Robot.current.preserveTips(preserve)
+
+def usePreservedTips(self, usePreserved=True)->bool:
+    return Rbt.Robot.current.usePreservedTips(usePreserved)
 
 def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
     pass # Itr.moveLiha
@@ -113,7 +111,7 @@ def makePreMix( preMix, NumSamples=None):
             assert nc <= Rbt.Robot.current.curArm().nTips, \
                 "Temporally the mix can not contain more than {:d} components.".format(Rbt.Robot.current.curArm().nTips)
 
-            with tips(Rbt.tipsMask[nc]):
+            with tips(Rbt.tipsMask[nc]):   # todo want to use preserved ?? selected=??
                 for i, react in enumerate(preMix.components):
                     l = react.labware
                     msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
@@ -166,7 +164,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
-            with tips(Rbt.tipsMask[nt]):
+            with tips(Rbt.tipsMask[nt]):  # todo want to use preserved ?? selected=??
                 maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
                 while SampleCnt:
                     if nt > SampleCnt: nt = SampleCnt
@@ -248,10 +246,11 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                     Asp.tipMask = Rbt.tipsMask[nt]
                     Dst.tipMask = Rbt.tipsMask[nt]
 
-                with tips(Rbt.tipsMask[nt]):  # todo what if volume > maxVol_tip ?
-                    Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
+                sel = oriSel[curSample:curSample + nt]
+                with tips(Rbt.tipsMask[nt], selected=sel):  # todo what if volume > maxVol_tip ?
+                    Asp.labware.selectOnly(sel)
                     Asp.exec()
-                    Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
+                    Dst.labware.selectOnly(sel)
                     Dst.exec()
                 SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
@@ -295,8 +294,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
         Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
-        Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
-        drop = set_dropTips(True)
+        # Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
@@ -309,10 +307,11 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                     tm = Rbt.tipsMask[nt]
                     Asp.tipMask = tm
                     Dst.tipMask = tm
-                    Ctr.tipMask = tm
-                Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
+                    # Ctr.tipMask = tm
+                sel = oriSel[curSample:curSample + nt]
+                Asp.labware.selectOnly(sel)
                 r = volume   # r: Waste_available yet; volume: to be Waste
-                with tips(tm):
+                with tips(tm, drop=True, preserve=False, selected=sel):
                     while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
                         dV = r if r < mV else mV
                         if dV < Rest: break # ??
@@ -345,10 +344,8 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                     Dst.volume = Rest + RestPlus
                     Dst.exec()
 
-
                 SampleCnt -= nt
             Asp.labware.selectOnly(oriSel)
-        set_dropTips(drop)
         return oriSel
 
 def mix( in_labware_region, using_liquid_class, volume, optimize=True):
@@ -391,8 +388,9 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
                     nt = SampleCnt
                     mx.tipMask = Rbt.tipsMask[nt]
 
-                with tips(Rbt.tipsMask[nt]):
-                    mx.labware.selectOnly(oriSel[curSample:curSample + nt])
+                sel = oriSel[curSample:curSample + nt]
+                with tips(Rbt.tipsMask[nt], selected=sel):
+                    mx.labware.selectOnly(sel)
                     mx.exec()
                 SampleCnt -= nt
         mx.labware.selectOnly(oriSel)
@@ -405,10 +403,22 @@ def group(titel, mode=None):
     Itr.group_end().exec(mode)
 
 @contextmanager
-def tips(tipsMask):
-    getTips(tipsMask)
+def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None, selected=None):
+    if reuse        is not None: reuse        = reuseTips       (reuse       )
+    if drop         is not None: drop         = set_dropTips    (drop        )
+    if preserve     is not None: preserve     = preserveTips    (preserve    )
+    if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
+
+    if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected=selected)
+
     yield
-    dropTips(tipsMask)
+
+    if tipsMask     is not None: tipsMask     = dropTips        (tipsMask, selected=selected)
+
+    if reuse        is not None: reuse        = reuseTips       (reuse       )
+    if drop         is not None: drop         = set_dropTips    (drop        )
+    if preserve     is not None: preserve     = preserveTips    (preserve    )
+    if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
 
 @contextmanager
 def parallel_execution_of(subroutine):
@@ -433,15 +443,16 @@ def opening_example(filename):
         f.close() # Ditto for errors here (however unlikely)
 
 # TODO  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
-# TODO  implementar reuse tips
+# TODO  implement usePreserved tips
 # TODO  implement preserveTips and usePreservedTips !!
 # TODO  mix well <B-beads
 # TODO  Elution buffer to eppis !!!
-# TODO  implementar acc vol
-# TODO  implementar actualize vol in reactives in pipette
+# TODO  implement accumulated volume
+# TODO  implement actualize vol in reactives in pipette
 # TODO  comentar las replicas, como 2x b-beads
 # TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings
 # TODO  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
+# TODO  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
 # TODO  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait
 # TODO  write the total vol to spread.                      - ok ?!

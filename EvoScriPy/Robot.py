@@ -205,15 +205,15 @@ class Robot:
         self.droptips, drop = drop, self.droptips
         return drop
 
-    def reuseTips(self, reuse=True):
+    def reuseTips(self, reuse=True)->bool:
         self.reusetips, reuse = reuse, self.reusetips
         return reuse
 
-    def preserveTips(self, preserve=True):
+    def preserveTips(self, preserve=True)->bool:
         self.preservetips, preserve = preserve, self.preservetips
         return preserve
 
-    def usePreservedTips(self, usePreserved=True):
+    def usePreservedTips(self, usePreserved=True)->bool:
         self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
         return usePreserved
 
