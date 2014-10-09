@@ -371,6 +371,8 @@ class pickUp_DITIs(Pipette):
 
 class set_DITIs_Back(Pipette):
     """ A.15.4.9 Set DITIs Back (Worklist: Set_DITIs_Back)
+    return used DITIs to specified positions on a DITI rack for later use.
+    This command requires the Lower DITI Eject option.
     """
     def __init__(self , tipMask     = curTipMask,
                              labware     = None,

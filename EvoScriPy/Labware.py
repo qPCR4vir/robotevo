@@ -108,7 +108,8 @@ class Labware:
             self.maxVol = maxVol
 
     class DITIrack(Type):
-        def __init__(self, name, nRow=8, nCol=12, maxVol=None):
+        def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
+            if portrait: nCol, nRow = nRow, nCol # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol, conectedWells=False)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
