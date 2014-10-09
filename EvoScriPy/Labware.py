@@ -89,12 +89,14 @@ class Carrier:
 
 class Well:
     def __init__(self, labware, Well_Offset):
+        self.labware = labware
         assert isinstance(Well_Offset, int)
         self.offset = Well_Offset
         self.vol = 0
         self.selFlag = False
         self.reactive = None
         self.label = ""
+
 
 class Labware:
     class Type:
@@ -238,7 +240,7 @@ class Labware:
             well.selFlag = True
         return self
 
-    def selectOnly(self, sel_idx_list):
+    def selectOnly(self, sel_idx_list)->Labware:
         self.clearSelection()
         self.select(sel_idx_list)
         return self
