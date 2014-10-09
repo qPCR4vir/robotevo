@@ -18,11 +18,37 @@ Te_Mag_Rest     = "Te-Mag Rest"
 Te_Mag_Force_Centre   = "Te-Mag Force Centre"
 Te_Mag_RestPlus = "Te-Mag RestPlus"
 
-def getTips(TIP_MASK=-1, type=None):
+def getTips(TIP_MASK=-1, type=None, selected=None):
     type=type or Lab.def_DiTi
     # TIP_MASK = Rbt.Robot.current.mask_to_getTips(TIP_MASK,maxVol)
-    Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.def_arm).exec()
+    Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.curArm()).exec()
     # return TIP_MASK
+
+def dropTips(TIP_MASK=-1, selected=None):
+    robot = Rbt.Robot.current
+    assert isinstance(robot, Rbt.Robot)
+    if robot.preservetips:
+        where = robot.where_preserve_tips(selected)
+        nTips = robot.curArm().nTips
+        TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[nTips]
+        for rack in where:
+            tipsMask = 0
+            l = len(rack.selected())
+            for i in range(nTips):
+                if not l: break
+                b =  (1 << i)
+                if TIP_MASK & b:
+                    tipsMask |= b
+                    TIP_MASK ^= b
+                    l -= 1
+            Itr.set_DITIs_Back(tipsMask,rack).exec()
+        assert l == 0
+        return
+    #if not Rbt.Robot.current.droptips: return 0
+    #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
+    #if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
+    Itr.dropDITI(TIP_MASK).exec()
+    #return TIP_MASK
 
 def set_dropTips(drop=True)->bool:
     return Rbt.Robot.current.set_dropTips(drop)

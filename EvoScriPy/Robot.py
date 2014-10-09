@@ -188,6 +188,45 @@ class Robot:
         self.reusetips = False
         self.preservetips = False
         self.usePreservedtips = False
+        self.preservedtips = {} # order:well
+        self.last_preserved_tips = None # Lab.DiTi_Rack, offset
+
+    def set_tips_back(self,):
+
+    def where_preserve_tips(self, selection)->[Lab.DiTi_Rack]: # with the tips already selected
+        if self.last_preserved_tips:
+            rack, offset = self.last_preserved_tips
+            assert isinstance(rack, Lab.DiTi_Rack)
+            if self.usePreservedtips: # re-back DiTi for multiple reuse
+                offsets=[]
+                where=[]
+                for i in selection:
+                    well = self.preservedtips[i]
+                    assert isinstance(well, Lab.Well)
+                    assert well in self.preservedtips, "There are no tip preserved for sample "+str(well)
+                    if rack is well.labware:
+                        offsets += [well.offset]
+                    else:
+                        where += [rack.selectOnly(offsets)]
+                        rack = well.labware
+                        offset = [well.offset]
+                where += [rack.selectOnly(offsets)]
+                return where
+            else:
+                continuous, free_wells = rack.find_free_wells(len(selection))
+                offsets=[]
+                where=[]
+                for well in free_wells:
+                    assert isinstance(well, Lab.Well)
+                    if rack is well.labware:
+                        offsets += [well.offset]
+                    else:
+                        where += [rack.selectOnly(offsets)]
+                        rack = well.labware
+                        offset = [well.offset]
+                where += [rack.selectOnly(offsets)]
+                return where
+
 
     def set_worktable(self,templateFile):
         w = Lab.WorkTable.curWorkTable
