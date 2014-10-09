@@ -36,7 +36,7 @@ def dropTips(TIP_MASK=-1, selected=None):
             l = len(rack.selected())
             for i in range(nTips):
                 if not l: break
-                b =  (1 << i)
+                b = (1 << i)
                 if TIP_MASK & b:
                     tipsMask |= b
                     TIP_MASK ^= b
@@ -469,18 +469,17 @@ def opening_example(filename):
         f.close() # Ditto for errors here (however unlikely)
 
 # TODO  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
-# TODO  implement usePreserved tips
 # TODO  implement preserveTips and usePreservedTips !!
 # TODO  mix well <B-beads
 # TODO  Elution buffer to eppis !!!
 # TODO  implement accumulated volume
 # TODO  implement actualize vol in reactives in pipette
 # TODO  comentar las replicas, como 2x b-beads
-# TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings
 # TODO  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
 # TODO  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
 # TODO  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait
+# TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
 # TODO  write the total vol to spread.                      - ok ?!
 # TODO  actualize liquid classes                            - ok ?!
 # TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
