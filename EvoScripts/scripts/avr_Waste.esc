@@ -1,6 +1,6 @@
-674D39BC
-20141008_142031 Admin           
-Worktable link                                                                                                                  
+BD08B0CC
+20141010_091203 Admin           
+                                                                                                                                
 Administrator                                                                                                                   
 --{ RES }--
 V;200
@@ -197,11 +197,11 @@ Variable(WELL_OFFSET,"WELL_sample",0,"",0,1.000000,10.000000,0,2,0,0);
 If("Disp_V",3,"Rest","Rest");
 Variable(Disp_V ,"Disp_V - Rest",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Comment("++++ Aspirate Waste in Mag");
-Aspirate(15,">> AVR-Serum 1000 <<	365","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
 Variable(Waste_available,"Waste_available - Disp_V",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 If("Tip_maxV",2,"Disp_V +  Rest + RestPlus","Rest");
 Comment("++++  Aspirate Waste in Mag");
-Aspirate(15,">> AVR-Serum 1000 <<	366","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Centre","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
 Variable(WELL_OFFSET,"0",0,"",0,1.000000,10.000000,0,2,0,0);
 Dispense(15,"Buffer free DITi 1000-AVR","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,22,1,1,"0108l0",0,0);
 If("Waste_available",2,"0","Aspirate Waste");
@@ -209,10 +209,10 @@ Variable(WELL_OFFSET,"WELL_sample",0,"",0,1.000000,10.000000,0,2,0,0);
 Variable(Disp_V ,"0",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Comment("Rest");
 Comment("+++Aspirate Waste in Mag");
-Aspirate(15,">> AVR-Serum 1000 <<	367","Rest","Rest","Rest","Rest",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
-Aspirate(15,">> AVR-Serum 1000 <<	368","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
-Aspirate(15,">> AVR-Serum 1000 <<	369","RestPlus","RestPlus","RestPlus","RestPlus",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
-Aspirate(15,">> AVR-Serum 1000 <<	370","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Rest","Rest","Rest","Rest","Rest",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Force Centre","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag RestPlus","RestPlus","RestPlus","RestPlus","RestPlus",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Force Centre","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
 Variable(Disp_V ,"Disp_V + Rest + RestPlus",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Variable(WELL_OFFSET,"0",0,"",0,1.000000,10.000000,0,2,0,0);
 Dispense(15,"Buffer free DITi 1000-AVR","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,22,1,1,"0108l0",0,0);
