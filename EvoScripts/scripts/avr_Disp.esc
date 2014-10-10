@@ -212,7 +212,7 @@ IfThen("From",0,"reactive_");
 Variable(Vol,"tipV[~LOOP_tip~] * Disp_V",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Variable(WELL_OFFSET,"WELL_react-1",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Variable(TIP_OFFSET,"LOOP_tip-1",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
-Aspirate(1,"AVR-Water free DITi 1000","Vol",0,0,0,0,0,0,0,0,0,0,0,7,0,1,"0110100",0,0);
+Aspirate(1,"AVR-Water free DITi 1000","Vol",0,0,0,0,0,0,0,0,0,0,0,5,0,1,"0110100",0,0);
 Variable(TIP_OFFSET,"0",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Variable(WELL_OFFSET,"0",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Else();
