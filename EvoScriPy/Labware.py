@@ -349,14 +349,15 @@ class DiTi_Rack (Labware):
         if isinstance(beg, list): assert end is None
         else:
             beg = self.offset(beg)
-            end = self.offset(end or self.type.nRow*self.type.nCol)
-            beg = range(beg, end+1)
+            end = self.offset(end or self.type.nRow*self.type.nCol-1)
+            r = range(beg, end+1)
         for w in self.Wells: w.reactive=None
-        for w in beg: self.Wells[w].reactive = Tip(self.type)   # todo Set some kind of tip
+        for w in r: self.Wells[w].reactive = Tip(self.type)   # How we can actualize the "counters"?
 
     @staticmethod
     def find_tips(TIP_MASK, rack_type, lastPos):
         assert isinstance(rack_type, Labware.DITIrack)
+        continuous = True
         sr.pick_next_rack
         dr = -1 if lastPos else 1
         r = sr.Wells[bg,ed+1,dr]
