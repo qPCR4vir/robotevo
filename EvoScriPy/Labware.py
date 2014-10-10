@@ -208,7 +208,15 @@ class Labware:
             if len(free_wells) == n: break
         return not continuous, free_wells
 
-    def put(self, reactive, pos=None, replicas=None):
+    def put(self, reactive, pos=None, replicas=None)->list:
+        """ Put a reactive with replicas in the given wells position of this labware,
+        and return a list of the wells used
+
+        :param reactive:
+        :param pos:
+        :param replicas:
+        :return:
+        """
         if pos is None:  # find self where to put the replicas of this reactive
             replicas = replicas or 1  # default one replica
             continuous, pos = self.find_free_wells(replicas)
@@ -221,10 +229,14 @@ class Labware:
         else:
             replicas = replicas or 1  # put one replica beginning from the given position
             if isinstance(pos, Well):
-                pos = self.Wells[pos.offset: pos.offset + replicas]
+                # assert pos.labware is self, "Trying to put the reactive in another labware?"
+                pos = pos.labware.Wells[pos.offset: pos.offset + replicas]
+                # pos = self.Wells[pos.offset: pos.offset + replicas]
             else:
-                pos = self.offset(pos) + 1
-                pos = range(pos, pos + replicas)
+                pos = self.offset(pos)
+                pos = self.Wells[pos: pos + replicas]
+                # pos = self.offset(pos) + 1
+                # pos = range(pos, pos + replicas)
 
         Replicas = []
         for w in pos:
@@ -232,6 +244,7 @@ class Labware:
             assert not w.reactive, self.label + ": Can not put " + reactive.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reactive.name
             w.reactive = reactive
+            # w.labware = self
             Replicas += [w]
         return Replicas
 
