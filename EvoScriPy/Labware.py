@@ -362,17 +362,21 @@ class DiTi_Rack (Labware):
         assert isinstance(type, Labware.DITIrack)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
         self.fill()
-        if type.pick_next_rack is None:
+        if type.pick_next_rack is None: # update an iRobot state !! Only initialization, please!
             type.pick_next_rack = self
 
-    def fill(self, beg=1, end=None):
+    def fill(self, beg=1, end=None):   # todo it belong to Robot ??
         if isinstance(beg, list): assert end is None
         else:
             beg = self.offset(beg)
             end = self.offset(end or self.type.nRow*self.type.nCol-1)
             r = range(beg, end+1)
-        for w in self.Wells: w.reactive=None
-        for w in r: self.Wells[w].reactive = Tip(self.type)   # How we can actualize the "counters"?
+        for w in self.Wells:
+            w.reactive = None
+            # w.labware = None   #   hummm ??
+        for w in r:
+            self.Wells[w].reactive = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
+            # self.Wells[w].labware = self    #   hummm ??
 
     def find_new_tips(self, TIP_MASK, lastPos=False)->(bool, list):
         return self.find_tips(TIP_MASK, self.type, lastPos)
@@ -381,21 +385,34 @@ class DiTi_Rack (Labware):
     def find_tips(TIP_MASK, rack_type, lastPos=False)->(bool, list):
         assert isinstance(rack_type, Labware.DITIrack)
         n = count_tips(TIP_MASK)
-        r = rack_type.pick_next_rack.Wells[rack_type.pick_next,
-                                           rack_type.pick_next_back+1,
-                                           -1 if lastPos else 1]
+        rack = rack_type.pick_next_rack
+        r = rack.Wells[rack_type.pick_next,
+                       rack_type.pick_next_back+1,
+                       -1 if lastPos else 1]
         continuous = True
-        for i in range(len(r)-n):
-            if all(isinstance(w.reactive, Tip) for w in r[i:i + n]):
-                return continuous, r[i:i + n]
+        try_in_next_rack = 2        # hummm !
         tips = []
-        for w in r:
-            if isinstance(w.reactive, Tip):
-                tips += [w]
-                n -= 1
-                if n==0:
-                    return not continuous, tips
-        # we need to find in other rack
+        while (try_in_next_rack):
+            try_in_next_rack -= 1
+
+            for i in range(len(r)-n):
+                if all(isinstance(w.reactive, Tip) for w in r[i:i + n]):
+                    return continuous, tips + r[i:i + n]
+
+            continuous = False
+            for w in r:
+                if isinstance(w.reactive, Tip):
+                    tips += [w]
+                    n -= 1
+                    if n==0:
+                        return continuous, tips
+            # we need to find in other rack
+            next_rack = rack_type.pick_next_rack.next_rack()
+            assert next_rack is not rack_type.pick_next_rack
+            r = next_rack.Wells[0,
+                                rack_type.nCol*rack_type.nRow,
+                                -1 if lastPos else 1]
+
 
     def remove_tips(self, TIP_MASK,
                           labware,
