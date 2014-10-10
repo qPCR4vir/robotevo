@@ -1,22 +1,26 @@
-84D7842F
-20140805_161249 Admin           
+B19131E1
+20141009_094545 Admin           
                                                                                                                                 
 Administrator                                                                                                                   
 --{ RES }--
 V;200
 --{ CFG }--
 999;219;32;
-14;-1;-1;-1;-1;-1;-1;16;43;251;-1;-1;251;-1;-1;37;-1;-1;-1;-1;-1;-1;-1;104;-1;16;5;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;
+14;-1;43;43;-1;312;312;16;312;251;-1;-1;251;-1;-1;37;-1;-1;-1;-1;-1;-1;-1;104;-1;16;5;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;
 998;0;
+998;1;;
+998;;
+998;1;;
+998;;
 998;0;
-998;0;
-998;0;
-998;0;
-998;0;
+998;16;Tube Eppendorf 1 Pos;Tube Eppendorf 2mL 1 Pos;Tube Greiner conic 2mL 1 Pos;;;;;;;;;;;;;;
+998;Labware1;Labware2;Labware3;;;;;;;;;;;;;;
+998;16;Tube Eppendorf 2mL 16 Pos;;;;;;;;;;;;;;;;
+998;Reactives2;;;;;;;;;;;;;;;;
 998;3;Trough 100ml;Trough 100ml;Trough 100ml;
 998;1-VEL-ElutionBuffer;2-Vl Lysis Buffer;3-VEB Binding Buffer;
-998;1;Tube Eppendorf 2mL 16 Pos;
-998;Reactives;
+998;16;Tube Greinerconic 2mL 16 Pos;;;;;;;;;;;;;;;;
+998;Reactives;;;;;;;;;;;;;;;;
 998;1;Tube Eppendorf 3x 16 PosR;
 998;Eluat;
 998;0;
@@ -127,6 +131,12 @@ V;200
 Comment("NucleoMag VET for up to 48 samples");
 Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_InitGeneral.esc",0);
 Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_Init_MN_RNAextVet.esc",0);
+Group("Flush");
+IfThen("NoDrops",0,"0");
+Wash(15,22,1,22,0,"8.0",500,"4.0",500,10,70,30,1,0,1000,0);
+Else();
+EndIf();
+GroupEnd();
 Group("Lysis");
 Comment("--- LYSIS ---");
 IfThen("isTRIzolSamples",0,"yes");
@@ -195,10 +205,10 @@ Else();
 EndIf();
 GroupEnd();
 Variable(WELL_OFFSET,"B_Beads_w-1",0,"",0,50.000000,400.000000,0,2,0,0);
-Detect_Liquid(1,"AVR-Serum 1000",7,0,1,"0110100",0,0);
+Detect_Liquid(1,"AVR-Serum 1000",5,0,1,"0110100",0,0);
 Variable(Vol,"600",0,"Sample volumen to use?(µL)",0,50.000000,200.000000,0,2,0,0);
-Mix(1,">> AVR-Serum 1000 <<	348","Vol",0,0,0,0,0,0,0,0,0,0,0,7,0,1,"0110100",2,0,0);
-Mix(1,">> AVR-Serum 1000 <<	349","Vol",0,0,0,0,0,0,0,0,0,0,0,7,0,1,"0110100",2,0,0);
+Mix(1,">> AVR-Serum 1000 <<	348","Vol",0,0,0,0,0,0,0,0,0,0,0,5,0,1,"0110100",2,0,0);
+Mix(1,">> AVR-Serum 1000 <<	349","Vol",0,0,0,0,0,0,0,0,0,0,0,5,0,1,"0110100",2,0,0);
 Variable(Drop,"yes",0,"",0,1.000000,1000.000000,0,2,0,0);
 Variable(Dispense,"ReactiveToMag",0,"",0,50.000000,400.000000,0,2,0,0);
 Variable(Disp_V,"B_Beads",0,"Proteinase K Vol",0,1.000000,1000.000000,0,2,0,0);
@@ -247,5 +257,11 @@ Variable(Drop,"no",0,"",0,1.000000,1000.000000,0,2,0,0);
 Variable(Dispense,"ToMag",0,"",0,50.000000,400.000000,0,2,0,0);
 Variable(reactive,"ElutBuf_02",0,"Proteinase K Vol",0,1.000000,1000.000000,0,2,0,0);
 Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_Elution.esc",0);
+GroupEnd();
+Group("Flush");
+IfThen("NoDrops",0,"0");
+Wash(15,22,1,22,0,"8.0",500,"4.0",500,10,70,30,1,0,1000,0);
+Else();
+EndIf();
 GroupEnd();
 EndScript(0);

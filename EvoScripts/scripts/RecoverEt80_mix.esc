@@ -1,6 +1,6 @@
-F7CFC3FE
-20141008_142019 Admin           
-Worktable link                                                                                                                  
+F1895828
+20141010_091248 Admin           
+                                                                                                                                
 Administrator                                                                                                                   
 --{ RES }--
 V;200
@@ -128,13 +128,46 @@ V;200
 998;1;
 996;0;0;
 --{ RPG }--
-Group("End_ReuseTips");
-IfThen("ReUseTips",0,"yes");
-IfThen("PreserveTips",0,"yes");
-Variable(ReUsedTipBeg,"ReUsedTipBegTEMP",0,"",0,1.000000,10.000000,0,2,0,0);
+Comment("NucleoMag VET for up to 48 samples");
+Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_InitGeneral.esc",0);
+Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_Init_MN_RNAextVet.esc",0);
+Group("Flush");
+IfThen("NoDrops",0,"0");
+Wash(15,22,1,22,0,"8.0",500,"4.0",500,10,70,30,1,0,1000,0);
 Else();
 EndIf();
-Else();
-EndIf();
-Variable(ReUseTips,"ReUseTipsTemp",0,"",0,1.000000,10.000000,0,2,0,0);
 GroupEnd();
+Group("Wash");
+Comment("--- Wash ---");
+Variable(ReUseTips,"yes",0,"",0,1.000000,10.000000,0,2,0,0);
+Variable(PreserveTips,"yes",0,"",0,1.000000,10.000000,0,2,0,0);
+Variable(Dispense,"BufferToMag",0,"",0,50.000000,400.000000,0,2,0,0);
+Variable(Drop,"no",0,"",0,1.000000,1000.000000,0,2,0,0);
+Comment("          Ethanol 80%");
+Variable(Disp_V,"EtHO80",0,"Proteinase K Vol",0,1.000000,1000.000000,0,2,0,0);
+Variable(AccumulatedVol,"EtHO80",0,"Proteinase K Vol",0,1.000000,1000.000000,0,2,0,0);
+Variable(RACK_buff,"EtHO80_r",0,"Proteinase K Vol",0,1.000000,1000.000000,0,2,0,0);
+Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_Mix_Waste.esc",0);
+Comment("+++++ Mag move to pos 3");
+FACTS("Te-MagS","Te-MagS_MoveToPosition","3","0","");
+StartTimer("1");
+WaitTimer("1","5 * 60");
+Comment("+++++ Mag move to pos 0");
+FACTS("Te-MagS","Te-MagS_MoveToPosition","0","0","");
+StartTimer("1");
+WaitTimer("1","5 * 60");
+Comment("+++++  Mag move to pos 0");
+GroupEnd();
+Group("Elution");
+Variable(Drop,"no",0,"",0,1.000000,1000.000000,0,2,0,0);
+Variable(Dispense,"ToMag",0,"",0,50.000000,400.000000,0,2,0,0);
+Variable(reactive,"ElutBuf_02",0,"Proteinase K Vol",0,1.000000,1000.000000,0,2,0,0);
+Subroutine("C:\ProgramData\Tecan\EVOware\database\Scripts\avr_Elution.esc",0);
+GroupEnd();
+Group("Flush");
+IfThen("NoDrops",0,"0");
+Wash(15,22,1,22,0,"8.0",500,"4.0",500,10,70,30,1,0,1000,0);
+Else();
+EndIf();
+GroupEnd();
+EndScript(0);
