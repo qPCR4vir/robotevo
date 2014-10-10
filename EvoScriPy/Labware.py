@@ -196,10 +196,10 @@ class Labware:
     def position(self, offset):
         return self.Position(offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
-    def find_free_wells(self, n=1):
+    def find_free_wells(self, n=1)-> (bool, list):
         continuous = True
         free_wells = []
-        for i in range(len(self.Wells) - n):
+        for i in range(len(self.Wells) - n+1):
             if any(w.reactive for w in self.Wells[i:i + n]): continue
             return continuous, self.Wells[i:i + n]
         for w in self.Wells:
