@@ -191,8 +191,6 @@ class Robot:
         self.preservedtips = {} # order:well
         self.last_preserved_tips = None # Lab.DiTi_Rack, offset
 
-    def set_tips_back(self,):
-
     def where_preserve_tips(self, selection)->[Lab.DiTi_Rack]: # with the tips already selected
         if self.last_preserved_tips:
             rack, offset = self.last_preserved_tips
@@ -227,7 +225,6 @@ class Robot:
                 where += [rack.selectOnly(offsets)]
                 return where
 
-
     def set_worktable(self,templateFile):
         w = Lab.WorkTable.curWorkTable
         if not w:
@@ -239,6 +236,9 @@ class Robot:
     def set_as_current(self):
         Lab.curWorkTable=self.worktable
 
+    # Functions to observe the iRobot status (intern-physical status, or user status with are modificators of future
+    # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
+    # instruction and even by the final user.
 
     def set_dropTips(self, drop=True):
         self.droptips, drop = drop, self.droptips
@@ -260,14 +260,6 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, rack, tip_mask=-1,lastPos=False) -> int:
-        if isinstance(rack, Lab.Labware.DITIrack):
-            rack = rack.pick_next_rack
-        assert isinstance(rack, Lab.DiTi_Rack)
-        tip_mask = self.getTips_test(rack.type, tip_mask)
-        rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
-        return self.curArm().getTips(rack.type, tip_mask)
-
     def getTips_test(self, rack_type, tip_mask=-1) -> int:   # todo REVISE
         if self.reusetips:
             tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
@@ -276,15 +268,31 @@ class Robot:
             tip_mask = self.curArm().getTips_test(tip_mask)
         return tip_mask
 
+    # function to change the physical status, to model physical actions, or that directly
+    # correspond to actions in the hardware. It can be call only from the official low level instructions
+    # in the method Itr.actualize_robot_state(self):
+
+    def getTips(self, rack, tip_mask=-1,lastPos=False) -> int:
+        if isinstance(rack, Lab.Labware.DITIrack):
+            rack = rack.pick_next_rack
+        assert isinstance(rack, Lab.DiTi_Rack)
+        tip_mask = self.getTips_test(rack.type, tip_mask)
+        rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
+        return self.curArm().getTips(rack.type, tip_mask)
+
     def dropTips(self, TIP_MASK=-1): # todo coordine protocol
         if not self.droptips: return 0
         TIP_MASK = self.curArm().drop(TIP_MASK)
         return TIP_MASK
 
     def dispense(self, tip, labware, vol=None): # todo implement a coordinate call to arm and lab
-
         self.curArm().dispense(vol, tipMask[tip])
 
+
+    def set_tips_back(self, TIP_MASK=-1, labware):
+        # todo what if self.droptips: is True ???
+        
+        pass
 
 
 

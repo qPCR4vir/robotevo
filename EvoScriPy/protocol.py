@@ -18,6 +18,24 @@ Te_Mag_Rest     = "Te-Mag Rest"
 Te_Mag_Force_Centre   = "Te-Mag Force Centre"
 Te_Mag_RestPlus = "Te-Mag RestPlus"
 
+def set_dropTips(drop=True)->bool:
+    return Rbt.Robot.current.set_dropTips(drop)
+
+def reuseTips(reuse=True)->bool:
+    return Rbt.Robot.current.reuseTips(reuse)
+
+def reuse_tips_and_drop(reuse=True, drop=True)->(bool, bool):
+    return set_dropTips(drop), reuseTips(reuse)
+
+def preserveTips(self, preserve=True)->bool:
+    return Rbt.Robot.current.preserveTips(preserve)
+
+def usePreservedTips(self, usePreserved=True)->bool:
+    return Rbt.Robot.current.usePreservedTips(usePreserved)
+
+def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
+    pass # Itr.moveLiha
+
 def getTips(TIP_MASK=-1, type=None, selected=None):
     type=type or Lab.def_DiTi
     # TIP_MASK = Rbt.Robot.current.mask_to_getTips(TIP_MASK,maxVol)
@@ -49,24 +67,6 @@ def dropTips(TIP_MASK=-1, selected=None):
     #if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
     Itr.dropDITI(TIP_MASK).exec()
     #return TIP_MASK
-
-def set_dropTips(drop=True)->bool:
-    return Rbt.Robot.current.set_dropTips(drop)
-
-def reuseTips(reuse=True)->bool:
-    return Rbt.Robot.current.reuseTips(reuse)
-
-def reuse_tips_and_drop(reuse=True, drop=True)->(bool, bool):
-    return set_dropTips(drop), reuseTips(reuse)
-
-def preserveTips(self, preserve=True)->bool:
-    return Rbt.Robot.current.preserveTips(preserve)
-
-def usePreservedTips(self, usePreserved=True)->bool:
-    return Rbt.Robot.current.usePreservedTips(usePreserved)
-
-def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
-    pass # Itr.moveLiha
 
 def aspire( tip, reactive, vol=None):
         """

@@ -343,7 +343,10 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
             self.labware.type.pick_next      = self.labware.offset(self.posInRack)
 
 class pickUp_DITIs(Pipette):
-    """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI)
+    """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI) pag. A-131 and 15-16
+    The Pick Up DITIs command is used to pick up DITIs which have already been
+    used and put back into a DITI rack with the Set DITIs Back command. You must
+    specify the DITIs you want to pick up.
     """
     def __init__(self, tipMask     = curTipMask,
                              labware     = None,

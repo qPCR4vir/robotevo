@@ -383,6 +383,13 @@ class DiTi_Rack (Labware):
 
     @staticmethod
     def find_tips(TIP_MASK, rack_type, lastPos=False)->(bool, list):
+        """
+
+        :param TIP_MASK:
+        :param rack_type:
+        :param lastPos:
+        :return:
+        """
         assert isinstance(rack_type, Labware.DITIrack)
         n = count_tips(TIP_MASK)
         rack = rack_type.pick_next_rack
@@ -394,14 +401,17 @@ class DiTi_Rack (Labware):
         tips = []
         while (try_in_next_rack):
             try_in_next_rack -= 1
+            # todo do we really need a correspondence mask - wells??
 
-            for i in range(len(r)-n):
+            for i in range(len(r)-n+1):
                 if all(isinstance(w.reactive, Tip) for w in r[i:i + n]):
                     return continuous, tips + r[i:i + n]
 
             continuous = False
             for w in r:
                 if isinstance(w.reactive, Tip):
+                    tip = w.reactive
+                    assert tip.type is rack_type
                     tips += [w]
                     n -= 1
                     if n==0:
@@ -413,29 +423,40 @@ class DiTi_Rack (Labware):
                                 rack_type.nCol*rack_type.nRow,
                                 -1 if lastPos else 1]
 
-
     def remove_tips(self, TIP_MASK,
                           labware,
                           worktable=WorkTable.curWorkTable,
                           lastPos=False):
-        n = count_tips(TIP_MASK)
+        """
+        A response to a getTips: the tips have to be removed from the rack
+        and only after that can appear mounted in the robot arm to pipette.
+        The tips are removed at the "current" position, the position where
+        begin the fresh tips, with is maintained internally by the robot and
+        is unknown to the user
+        :param TIP_MASK:
+        :param labware:
+        :param worktable:
+        :param lastPos:
+        :return:
+        """
+        n = count_tips(TIP_MASK)# todo do we really need a correspondence mask - wells??
         tp = labware
         tp = tp if isinstance(tp, Labware.Type) else tp.type
         self._remove_tip(n, tp, worktable, lastPos)
 
     def _remove_tip(self, n, tp, worktable=WorkTable.curWorkTable, lastPos=False):
         assert isinstance(tp, Labware.DITIrack)
-        beg, end, sr = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
-        assert isinstance(sr, DiTi_Rack)
+        beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
+        assert isinstance(rack, DiTi_Rack)
         rest = end - beg + 1
-        i,d = [end, -1] if lastPos else [beg, 1]
+        i, d = [end, -1] if lastPos else [beg, 1]
         while n:
-            assert sr.Wells[i].reactive.type is tp
-            sr.Wells[i].reactive = None
-            print ("Pick tip "+str(i+1)+" from site "+str(sr.location.site+1))
+            assert rack.Wells[i].reactive.type is tp
+            rack.Wells[i].reactive = None
+            print ("Pick tip "+str(i+1)+" from site "+str(rack.location.site+1))
             n -= 1
             rest -= 1
-            if not rest:
+            if rest:
                 self.set_next_to_next_rack(worktable)
                 return self._remove_tip(n, tp, worktable, lastPos)
             i+=d
