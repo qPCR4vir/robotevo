@@ -372,6 +372,10 @@ class pickUp_DITIs(Pipette):
         self.arg[-1:-1] = [integer(self.type)]
         return True
 
+    def actualize_robot_state(self):
+        assert isinstance(self.labware, Lab.DiTi_Rack)
+        self.tipMask = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+
 class set_DITIs_Back(Pipette):
     """ A.15.4.9 Set DITIs Back (Worklist: Set_DITIs_Back)
     return used DITIs to specified positions on a DITI rack for later use.
@@ -397,6 +401,10 @@ class set_DITIs_Back(Pipette):
         Pipette.validateArg(self)
         self.arg[4:5] = []
         return True
+
+    def actualize_robot_state(self):
+        assert isinstance(self.labware, Lab.DiTi_Rack)
+        self.tipMask = Robot.Robot.current.set_tips_back(self.tipMask, self.labware)
 
 class pickUp_ZipTip(Pipette): # todo implement !!!
     """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)

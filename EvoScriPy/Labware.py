@@ -20,6 +20,13 @@ class Tip:    # todo play with this idea
         self.vol = 0
         self.type = rack_type
 
+class usedTip(Tip):
+    def __init__(self, tip):
+        Tip.__init__(self, tip.type, origin=None)
+        self.vol = tip.vol
+        self.origin = origin
+
+
 class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
     """ Collection of Racks.Types and Labware.Types and pos of instances """
 
@@ -103,7 +110,10 @@ class Well:
         self.selFlag = False
         self.reactive = None
         self.label = ""
+        self.actions = []
 
+    def log(self, vol, origin=None):
+        self.actions += (vol, origin if origin else self)
 
 class Labware:
     class Type:
@@ -121,6 +131,8 @@ class Labware:
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
             self.pick_next_rack = None  # labware (DITIrack or grid,site)
+            self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
+
 
     class Cuvette(Type):        pass
     class Te_Mag (Type):        pass
@@ -255,6 +267,9 @@ class Labware:
 
     def selected(self):
         return [well.offset for well in self.Wells if well.selFlag]
+
+    def selected_wells(self):
+        return [well for well in self.Wells if well.selFlag]
 
     def selectAll(self):
         for well in self.Wells:
@@ -486,6 +501,45 @@ class DiTi_Rack (Labware):
         tp.pick_next = 0
         tp.pick_next_back = tp.nCol * tp.nRow -1
         tp.pick_next_rack = rack
+
+    def set_back(self, TIP_MASK, tips):
+        """ Low level.
+
+        :param TIP_MASK:
+        :param labware_selection:
+        :param tips:
+        """
+        n = count_tips(TIP_MASK)
+        assert n == len(self.selected()), "Too much or too few wells selected to put tip back"
+        for i, w in enumerate(self.selected_wells()):
+            assert w.reactive is not Tip, ("Another tip " + w.reactive.type.name +
+                            "is already in position " + str(self.position(i)) + " of " + self.label)
+            tp = tips[i]
+            assert isinstance(tp, usedTip)
+            # w.reactive = tp if isinstance(tp, usedTip) else usedTip(tp)
+
+            w.reactive = tp
+            self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+
+    def pick_up(self, TIP_MASK, tips):
+        """ Low level.
+
+        :param TIP_MASK:
+        :param labware_selection:
+        :param tips:
+        """
+        n = count_tips(TIP_MASK)
+        assert n == len(self.selected()), "Too much or too few wells selected to pick up tips"
+        for i, w in enumerate(self.selected_wells()):
+            assert isinstance(w.reactive, usedTip), ("No tip " + w.reactive.type.name +
+                            "were found in position " + str(self.position(i)) + " of " + self.label)
+            tp = tips[i]
+            assert isinstance(tp, usedTip)
+            # w.reactive = tp if isinstance(tp, usedTip) else usedTip(tp)
+
+            w.reactive = tp
+            self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+
 
 
 Trough_100ml    = Labware.Type("Trough 100ml",                      8,      maxVol=100000, conectedWells=True)

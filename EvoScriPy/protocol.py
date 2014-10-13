@@ -36,22 +36,16 @@ def usePreservedTips(self, usePreserved=True)->bool:
 def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
     pass # Itr.moveLiha
 
-def getTips(TIP_MASK=-1, type=None, selected=None):
-    type=type or Lab.def_DiTi
-    # TIP_MASK = Rbt.Robot.current.mask_to_getTips(TIP_MASK,maxVol)
-    Itr.getDITI2(TIP_MASK, type, arm=Rbt.Robot.current.curArm()).exec()
-    # return TIP_MASK
-
-def dropTips(TIP_MASK=-1, selected=None):
+def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
     robot = Rbt.Robot.current
     assert isinstance(robot, Rbt.Robot)
-    if robot.preservetips:
-        where = robot.where_preserve_tips(selected)
-        nTips = robot.curArm().nTips
+    if robot.usePreservedtips:
         TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[nTips]
-        for rack in where:
+        where = robot.where_are_preserve_tips(selected_reactive, TIP_MASK)
+        nTips = robot.curArm().nTips
+        for tip_rack in where:
             tipsMask = 0
-            l = len(rack.selected())
+            l = len(tip_rack.selected())
             for i in range(nTips):
                 if not l: break
                 b = (1 << i)
@@ -59,7 +53,32 @@ def dropTips(TIP_MASK=-1, selected=None):
                     tipsMask |= b
                     TIP_MASK ^= b
                     l -= 1
-            Itr.set_DITIs_Back(tipsMask,rack).exec()
+            Itr.pickUp_DITIs(tipsMask, tip_rack).exec()
+        assert l == 0
+        return
+
+    else:
+        type=type or Lab.def_DiTi
+        Itr.getDITI2(TIP_MASK, type, arm=robot.curArm()).exec()
+
+def dropTips(TIP_MASK=-1, selected_reactive=None):
+    TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[nTips]
+    robot = Rbt.Robot.current
+    assert isinstance(robot, Rbt.Robot)
+    if robot.preservetips:
+        where = robot.where_preserve_tips(selected_reactive, TIP_MASK)
+        nTips = robot.curArm().nTips
+        for tip_rack in where:
+            tipsMask = 0
+            l = len(tip_rack.selected())
+            for i in range(nTips):
+                if not l: break
+                b = (1 << i)
+                if TIP_MASK & b:
+                    tipsMask |= b
+                    TIP_MASK ^= b
+                    l -= 1
+            Itr.set_DITIs_Back(tipsMask, tip_rack).exec()
         assert l == 0
         return
     #if not Rbt.Robot.current.droptips: return 0
@@ -276,6 +295,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                 with tips(Rbt.tipsMask[nt], selected=sel):  # todo what if volume > maxVol_tip ?
                     Asp.labware.selectOnly(sel)
                     Asp.exec()
+                    # Rbt.setUsed(Asp.tipMask, Asp.labware) # todo this in robot.aspire()
                     Dst.labware.selectOnly(sel)
                     Dst.exec()
                 SampleCnt -= nt
