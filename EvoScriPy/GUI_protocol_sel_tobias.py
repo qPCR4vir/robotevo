@@ -34,8 +34,8 @@ class App(tk.Frame):
         tk.Frame.__init__(self, master)
         self.grid()
 
-        logo = tk.PhotoImage(file='..\EvoScriPy\FLI-Logo_mit_Farbverlauf.png')
-        tk.Label(self, image=logo).grid(row=0, rowspan=2, columnspan=3)
+        # logo = tk.PhotoImage(file='..\EvoScriPy\FLI-Logo_mit_Farbverlauf.png')
+        # tk.Label(self, image=logo).grid(row=0, rowspan=2, columnspan=3)
 
         tk.Label(self, text='Number of Samples (1-48):').grid(row=1, column=0)
 
