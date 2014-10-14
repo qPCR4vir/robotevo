@@ -503,7 +503,9 @@ class DiTi_Rack (Labware):
         tp.pick_next_rack = rack
 
     def set_back(self, TIP_MASK, tips):
-        """ Low level.
+        """ Low level. Part of the job have been already done: tips is a list of the tips in
+        the robot arm, passed here just to prevent a call and a link back to the robot.
+        And the rack self hat already the target tip-wells selected.
 
         :param TIP_MASK:
         :param labware_selection:
@@ -522,7 +524,8 @@ class DiTi_Rack (Labware):
             self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
 
     def pick_up(self, TIP_MASK, tips):
-        """ Low level.
+        """ Low level. Part of the job have been already done: the rack self hat
+        already the source tip-wells selected. We need to return the tips.
 
         :param TIP_MASK:
         :param labware_selection:
@@ -530,6 +533,7 @@ class DiTi_Rack (Labware):
         """
         n = count_tips(TIP_MASK)
         assert n == len(self.selected()), "Too much or too few wells selected to pick up tips"
+        tips = []
         for i, w in enumerate(self.selected_wells()):
             assert isinstance(w.reactive, usedTip), ("No tip " + w.reactive.type.name +
                             "were found in position " + str(self.position(i)) + " of " + self.label)
