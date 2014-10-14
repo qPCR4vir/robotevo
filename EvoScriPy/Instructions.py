@@ -237,7 +237,7 @@ class getDITI2(DITIs):
         ln= self.LabwareTypeName
         if   ln is None                     : ln = Lab.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
         elif isinstance(ln, Lab.DiTi_Rack)    : ln = ln.type.name
-        elif isinstance(ln, Lab.Labware.DITIrack): ln = ln.name
+        elif isinstance(ln, Lab.Labware.DITIrackType): ln = ln.name
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or expression?
         self.arg += [integer(self.AirgapVolume), integer(self.AirgapSpeed)]   # arg 5, 6 (3, 4 are grid, site)
@@ -252,7 +252,7 @@ class getDITI2(DITIs):
             curW = Robot.Robot.current.worktable
             assert isinstance(curW, Lab.WorkTable)
             ln = Robot.Robot.current.worktable.labTypes [ln][0].type
-        assert isinstance(ln, Lab.DiTi_Rack) or isinstance(ln, Lab.Labware.DITIrack)
+        assert isinstance(ln, Lab.DiTi_Rack) or isinstance(ln, Lab.Labware.DITIrackType)
         self.tipMask = Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
         self.LabwareTypeName = ln
 
@@ -322,7 +322,7 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
         if isinstance(self.labware, Lab.DiTi_Rack):
             self.labware.type.pick_next_rack = self.labware
         else:
-            assert isinstance(self.labware, Lab.Labware.DITIrack)
+            assert isinstance(self.labware, Lab.Labware.DITIrackType)
             self.labware = self.labware.pick_next_rack
         self.arg = [string1(self.labware.type.name),
                     string1(self.labware.location.grid),
@@ -335,7 +335,7 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
         if isinstance(self.labware, Lab.DiTi_Rack):
             self.labware.type.pick_next_rack = self.labware
         else:
-            assert isinstance(self.labware, Lab.Labware.DITIrack)
+            assert isinstance(self.labware, Lab.Labware.DITIrackType)
             self.labware = self.labware.pick_next_rack
         if self.lastPos:
             self.labware.type.pick_next_back = self.labware.offset(self.posInRack)

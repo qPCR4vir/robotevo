@@ -72,7 +72,7 @@ class Robot:
                 t = 0
             else:
                 if rack_type:
-                    assert isinstance(rack_type, Lab.Labware.DITIrack)
+                    assert isinstance(rack_type, Lab.Labware.DITIrackType)
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
@@ -292,7 +292,7 @@ class Robot:
         m = t_masks[0]
 
         if not self.usePreservedtips:  # no re-back DiTi for multiple reuse
-            assert isinstance(tpe, Lab.Labware.DITIrack)
+            assert isinstance(tpe, Lab.Labware.DITIrackType)
             if not tpe.last_preserved_tips:
                 tpe.last_preserved_tips = tpe.pick_next_rack.Wells[0]
             w = tpe.last_preserved_tips
@@ -369,7 +369,7 @@ class Robot:
         :param lastPos: begging in backward direction?
         :return: int
         """
-        if isinstance(rack, Lab.Labware.DITIrack):
+        if isinstance(rack, Lab.Labware.DITIrackType):
             rack = rack.pick_next_rack
         assert isinstance(rack, Lab.DiTi_Rack)
         tip_mask = self.getTips_test(rack.type, tip_mask)

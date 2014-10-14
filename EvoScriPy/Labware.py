@@ -16,7 +16,7 @@ def count_tips(TIP_MASK)->int:
 
 class Tip:    # todo play with this idea
     def __init__(self, rack_type):
-        assert isinstance(rack_type, Labware.DITIrack)
+        assert isinstance(rack_type, Labware.DITIrackType)
         self.vol = 0
         self.type = rack_type
 
@@ -129,13 +129,13 @@ class Labware:
             self.nCol = nCol
             self.maxVol = maxVol
 
-    class DITIrack(Type):
+    class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
             if portrait: nCol, nRow = nRow, nCol # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol, conectedWells=False)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
-            self.pick_next_rack = None  # labware (DITIrack or grid,site)
+            self.pick_next_rack = None  # labware (DITIrackType or grid,site)
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
@@ -381,7 +381,7 @@ class Labware:
 
 class DiTi_Rack (Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
-        assert isinstance(type, Labware.DITIrack)
+        assert isinstance(type, Labware.DITIrackType)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
         self.fill()
         if type.pick_next_rack is None: # update an iRobot state !! Only initialization, please!
@@ -413,7 +413,7 @@ class DiTi_Rack (Labware):
         :param lastPos:
         :return:
         """
-        assert isinstance(rack_type, Labware.DITIrack)
+        assert isinstance(rack_type, Labware.DITIrackType)
         n = count_tips(TIP_MASK)
         rack = rack_type.pick_next_rack
         r = rack.Wells[rack_type.pick_next,
@@ -564,7 +564,7 @@ CleanerSWS      = Labware.Type("Washstation 2Grid Cleaner short",   8,      maxV
 WasteWS         = Labware.Type("Washstation 2Grid Waste",           8,      maxVol=100000, conectedWells=True)
 CleanerLWS      = Labware.Type("Washstation 2Grid Cleaner long",    8,      maxVol=100000, conectedWells=True)
 DiTi_Waste      = Labware.Type("Washstation 2Grid DiTi Waste",      8,      maxVol=100000, conectedWells=True)
-DiTi_1000ul     = Labware.DITIrack("DiTi 1000ul", maxVol=940)
+DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul", maxVol=940)
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190
 def_DiTi        = DiTi_1000ul

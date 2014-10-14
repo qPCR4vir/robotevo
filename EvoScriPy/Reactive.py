@@ -11,7 +11,7 @@ NumOfSamples     = None
 
 class Reactive:
     def __init__(self, name, labware,  volpersample,
-                 pos=None, replicas=None, defLiqClass=None, excess=None, init_vol=None):
+                 pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
@@ -22,7 +22,7 @@ class Reactive:
         :param replicas: int; def 1
         :param defLiqClass: str;
         :param excess: float; in %
-        :param init_vol: float; is set for each replica. If default (=None) is calculated als minimum.
+        :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
         ex= def_react_excess if excess is None else excess
         self.excess = 1.0 + ex/100.0
@@ -53,7 +53,7 @@ class Reactive:
         return self.labware.autoselect(self.pos,maxTips,len(self.Replicas))
 
 class preMix(Reactive):
-    def __init__(self, name, labware, pos, components, replicas=1, init_vol=None,
+    def __init__(self, name, labware, pos, components, replicas=1, initial_vol=None,
                  defLiqClass=None, excess=None):
         ex= def_mix_excess if excess is None else excess
         vol=0.0
@@ -62,8 +62,9 @@ class preMix(Reactive):
             react.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
             react.put_min_vol()
 
-        if init_vol is None: init_vol = 0.0
-        Reactive.__init__(self,name,labware,vol,pos,replicas,defLiqClass,ex, init_vol=init_vol)
+        if initial_vol is None: initial_vol = 0.0
+        Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
+                          defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
         self.components = components
 
     def make(self, NumSamples=None):
