@@ -159,16 +159,16 @@ def makePreMix( preMix, NumSamples=None):
             with tips(Rbt.tipsMask[nc]):   # todo want to use preserved ?? selected=??
                 for i, react in enumerate(preMix.components):
                     l = react.labware
+                    r = react.volpersample*NumSamples*preMix.excess
                     msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                        i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
+                        i + 1, r, react.name, l.label, l.location.grid, l.location.site + 1,
                         react.pos + 1)
                     Itr.comment(msg).exec()
                     mV = Rbt.Robot.current.curArm().Tips[i].type.maxVol # todo what if the tip are different?
-                    r = react.minVol(NumSamples)
                     while r > 0:
                         dV = r if r < mV else mV
                         aspire(i, react, dV)
-                        dispense(i, preMix, dV)
+                        dispense(i, preMix, dV)  # todo use all the replicas and create it if needed
                         r -= dV
 
 def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
