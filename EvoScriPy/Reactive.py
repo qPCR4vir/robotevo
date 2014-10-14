@@ -32,16 +32,19 @@ class Reactive:
         self.labware = labware
         self.Replicas = labware.put(self, pos, replicas)
         self.pos = self.Replicas[0].offset
-        if init_vol:
+        if initial_vol is not None:
             for w in  self.Replicas:
-                 w.vol = init_vol
-        self.put_min_vol()
+                 w.vol = initial_vol
+        self.init_vol()
 
     def minVol(self, NumSamples=None)->float:
         NumSamples = NumSamples or NumOfSamples or 0
         return self.volpersample * NumSamples * self.excess
 
-    def put_min_vol(self, NumSamples=None):
+    def init_vol(self, NumSamples=None):
+        self.put_min_vol(NumSamples)
+
+    def put_min_vol(self, NumSamples=None):   # todo create replicas if needed !!!!
         NumSamples = NumSamples or NumOfSamples
         V = self.volpersample * self.excess
         replicas=len(self.Replicas)
@@ -66,6 +69,10 @@ class preMix(Reactive):
         Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
                           defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
         self.components = components
+
+    def init_vol(self, NumSamples=None):
+        pass # self.put_min_vol(NumSamples)
+
 
     def make(self, NumSamples=None):
         if self.Replicas[0].vol is None:
