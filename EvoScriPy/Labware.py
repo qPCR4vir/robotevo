@@ -21,8 +21,8 @@ class Tip:    # todo play with this idea
         self.type = rack_type
 
 class usedTip(Tip):
-    def __init__(self, tip):
-        Tip.__init__(self, tip.type, origin=None)
+    def __init__(self, tip, origin=None):
+        Tip.__init__(self, tip.type)
         self.vol = tip.vol
         self.origin = origin
 
@@ -63,7 +63,7 @@ class WorkTable:  # todo Implement !, parse WT from export file, template and sc
         :raise "This WT have only " + self.nGrid + " grid.":
         """
         if labware.location.grid >= self.nGrid:
-            raise "This WT have only " + self.nGrid + " grid."
+            raise "This WT have only " + str(self.nGrid) + " grid."
 
         if labware.type.name not in self.labTypes:
             self.labTypes[labware.type.name] = []
@@ -115,6 +115,11 @@ class Well:
     def log(self, vol, origin=None):
         self.actions += (vol, origin if origin else self)
 
+    def select(self, sel=True):
+        self.selFlag = sel
+
+banned_well = Well(None,0)
+
 class Labware:
     class Type:
         def __init__(self, name, nRow, nCol=1, maxVol=None, conectedWells=False):
@@ -132,7 +137,7 @@ class Labware:
             self.pick_next_back = nRow*nCol-1
             self.pick_next_rack = None  # labware (DITIrack or grid,site)
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
-
+            self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
     class Cuvette(Type):        pass
     class Te_Mag (Type):        pass
@@ -208,17 +213,19 @@ class Labware:
     def position(self, offset):
         return self.Position(offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
-    def find_free_wells(self, n=1)-> (bool, list):
+    def find_free_wells(self, n=1, init_pos=0)-> (bool, [Well]):
         continuous = True
         free_wells = []
-        for i in range(len(self.Wells) - n+1):
+        for i in range(init_pos, len(self.Wells) - n+1):
             if any(w.reactive for w in self.Wells[i:i + n]): continue
             return continuous, self.Wells[i:i + n]
-        for w in self.Wells:
+        for w in self.Wells[init_pos:]:
             if w.reactive: continue
             free_wells += [w]
             if len(free_wells) == n: break
-        return not continuous, free_wells
+        continuous = all((free_wells[i].offset+1 == free_wells[i+1].offset)
+                            for i in range(len(free_wells)-1))
+        return continuous, free_wells
 
     def put(self, reactive, pos=None, replicas=None)->list:
         """ Put a reactive with replicas in the given wells position of this labware,
@@ -276,7 +283,7 @@ class Labware:
             well.selFlag = True
         return self
 
-    def selectOnly(self, sel_idx_list)->Labware:
+    def selectOnly(self, sel_idx_list):
         self.clearSelection()
         self.select(sel_idx_list)
         return self
@@ -379,6 +386,7 @@ class DiTi_Rack (Labware):
         self.fill()
         if type.pick_next_rack is None: # update an iRobot state !! Only initialization, please!
             type.pick_next_rack = self
+            # type.last_preserved_tips = ?
 
     def fill(self, beg=1, end=None):   # todo it belong to Robot ??
         if isinstance(beg, list): assert end is None
@@ -478,7 +486,7 @@ class DiTi_Rack (Labware):
             if lastPos:  tp.pick_next_back -= 1
             else:        tp.pick_next      += 1
 
-    def next_rack(self, worktable=WorkTable.curWorkTable)->DiTi_Rack:
+    def next_rack(self, worktable=WorkTable.curWorkTable):
         tp = self.type
         assert isinstance(worktable, WorkTable)
         racks = worktable.labTypes[tp.name]
@@ -518,18 +526,15 @@ class DiTi_Rack (Labware):
                             "is already in position " + str(self.position(i)) + " of " + self.label)
             tp = tips[i]
             assert isinstance(tp, usedTip)
-            # w.reactive = tp if isinstance(tp, usedTip) else usedTip(tp)
-
             w.reactive = tp
-            self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+            self.type.preserved_tips[tp.origin.offset] = w
+            self.type.last_preserved_tips = w
 
-    def pick_up(self, TIP_MASK, tips):
+    def pick_up(self, TIP_MASK)->[usedTip]:
         """ Low level. Part of the job have been already done: the rack self hat
-        already the source tip-wells selected. We need to return the tips.
+        already the source tip-wells selected. We need to return these tips.
 
         :param TIP_MASK:
-        :param labware_selection:
-        :param tips:
         """
         n = count_tips(TIP_MASK)
         assert n == len(self.selected()), "Too much or too few wells selected to pick up tips"
@@ -537,12 +542,9 @@ class DiTi_Rack (Labware):
         for i, w in enumerate(self.selected_wells()):
             assert isinstance(w.reactive, usedTip), ("No tip " + w.reactive.type.name +
                             "were found in position " + str(self.position(i)) + " of " + self.label)
-            tp = tips[i]
-            assert isinstance(tp, usedTip)
-            # w.reactive = tp if isinstance(tp, usedTip) else usedTip(tp)
-
-            w.reactive = tp
-            self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+            tips[i] = w.reactive
+            w.reactive = None
+            #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
 
 
 

@@ -41,7 +41,7 @@ def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
     assert isinstance(robot, Rbt.Robot)
     if robot.usePreservedtips:
         TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[nTips]
-        where = robot.where_are_preserve_tips(selected_reactive, TIP_MASK)
+        where = robot.where_are_preserved_tips(selected_reactive, TIP_MASK, type)
         nTips = robot.curArm().nTips
         for tip_rack in where:
             tipsMask = 0
@@ -61,12 +61,12 @@ def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
         type=type or Lab.def_DiTi
         Itr.getDITI2(TIP_MASK, type, arm=robot.curArm()).exec()
 
-def dropTips(TIP_MASK=-1, selected_reactive=None):
-    TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[nTips]
+def dropTips(TIP_MASK=-1):
+
     robot = Rbt.Robot.current
     assert isinstance(robot, Rbt.Robot)
     if robot.preservetips:
-        where = robot.where_preserve_tips(selected_reactive, TIP_MASK)
+        where = robot.where_preserve_tips(TIP_MASK)
         nTips = robot.curArm().nTips
         for tip_rack in where:
             tipsMask = 0
