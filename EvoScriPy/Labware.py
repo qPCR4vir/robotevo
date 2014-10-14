@@ -483,7 +483,7 @@ class DiTi_Rack (Labware):
                    + " of rack " + rack.label)
             n -= 1
             rest -= 1
-            if rest:
+            if not rest:
                 self.set_next_to_next_rack(worktable)
                 return tips + self._remove_tip(n, tp, worktable, lastPos)
             i+=d
