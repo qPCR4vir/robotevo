@@ -78,6 +78,7 @@ class Robot:
                     if tp is not None:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
                     self.Tips[i] = tips[t] if tips else Lab.Tip(rack_type)
+                    t += 1
             return tip_mask
 
         def getMoreTips_test(self, rack_type, tip_mask=-1) -> int:
