@@ -57,7 +57,7 @@ class Robot:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
             return tip_mask
 
-        def getTips(self, rack_type=None, tips=None, tip_mask=-1) -> int:
+        def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> int:
             """     Mount only one kind of new tip at a time or just the tips given in the list
             :param rack_type:
             :param tips:
@@ -400,15 +400,19 @@ class Robot:
         for i, tp in enumerate(self.curArm().Tips):
                 if tip_mask & (1 << i):
                     w += 1
-                    assert 0 <= wells[w].vol + action*volume[i] <= wells[w].maxVol
-                    v = action*volume[i]
-                    wells[w].vol = wells[w].vol + v
+                    dv = action*volume[i]
+                    assert wells[w].vol is not None, "Volume of " + wells[w].reactive.name + " not initialized."
+                    nv = wells[w].vol - dv
+                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error tryin to change the volume of " + \
+                         wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv)
+
+                    wells[w].vol = nv
                     if    action == Robot.Arm.Aspire:
                         self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])
-                        wells[w].log(v)
+                        wells[w].log(dv)
                     elif  action == Robot.Arm.Dispense:
                         assert isinstance(tp, Lab.usedTip)
-                        wells[w].log(v, tp.origin)
+                        wells[w].log(dv, tp.origin)
         return volume, tip_mask
 
     def set_tips_back(self, TIP_MASK, labware_selection):

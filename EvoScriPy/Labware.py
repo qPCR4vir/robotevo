@@ -106,7 +106,7 @@ class Well:
         self.labware = labware
         assert isinstance(Well_Offset, int)
         self.offset = Well_Offset
-        self.vol = 0
+        self.vol = 0.0
         self.selFlag = False
         self.reactive = None
         self.label = ""

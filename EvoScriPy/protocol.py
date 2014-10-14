@@ -59,7 +59,7 @@ def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
 
     else:
         type=type or Lab.def_DiTi
-        Itr.getDITI2(TIP_MASK, type, arm=robot.curArm()).exec()
+        Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm).exec()
 
 def dropTips(TIP_MASK=-1):
 
@@ -449,17 +449,17 @@ def group(titel, mode=None):
     Itr.group_end().exec(mode)
 
 @contextmanager
-def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None, selected=None):
+def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None):
     if reuse        is not None: reuse        = reuseTips       (reuse       )
     if drop         is not None: drop         = set_dropTips    (drop        )
     if preserve     is not None: preserve     = preserveTips    (preserve    )
     if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
 
-    if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected=selected)
+    if tipsMask     is not None: tipsMask     = getTips         (tipsMask)
 
     yield
 
-    if tipsMask     is not None: tipsMask     = dropTips        (tipsMask, selected=selected)
+    if tipsMask     is not None: tipsMask     = dropTips        (tipsMask)
 
     if reuse        is not None: reuse        = reuseTips       (reuse       )
     if drop         is not None: drop         = set_dropTips    (drop        )

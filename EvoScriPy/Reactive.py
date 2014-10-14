@@ -25,16 +25,17 @@ class Reactive:
         :param init_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
         ex= def_react_excess if excess is None else excess
-        self.excess = 1 + ex/100
+        self.excess = 1.0 + ex/100.0
         self.defLiqClass = defLiqClass or def_liquidClass
         self.name = name
         self.volpersample = volpersample
         self.labware = labware
         self.Replicas = labware.put(self, pos, replicas)
         self.pos = self.Replicas[0].offset
-
-        for w in  self.Replicas :
-             w.vol = init_vol
+        if init_vol:
+            for w in  self.Replicas:
+                 w.vol = init_vol
+        self.put_min_vol()
 
     def minVol(self, NumSamples=None)->float:
         NumSamples = NumSamples or NumOfSamples or 0
@@ -45,7 +46,8 @@ class Reactive:
         V = self.volpersample * self.excess
         replicas=len(self.Replicas)
         for i, w in enumerate(self.Replicas):
-            w.vol = V * (NumOfSamples + replicas - (i+1))//replicas
+            v = V * (NumOfSamples + replicas - (i+1))//replicas
+            if v > w.vol:  w.vol = v
 
     def autoselect(self,maxTips=1):
         return self.labware.autoselect(self.pos,maxTips,len(self.Replicas))
@@ -54,12 +56,13 @@ class preMix(Reactive):
     def __init__(self, name, labware, pos, components, replicas=1, init_vol=None,
                  defLiqClass=None, excess=None):
         ex= def_mix_excess if excess is None else excess
-        vol=0
+        vol=0.0
         for react in components:
             vol += react.volpersample
-            react.excess =  1 + ex/100      # todo revise! best to calculate at the moment of making?
+            react.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
+            react.put_min_vol()
 
-        if init_vol is None: init_vol = 0
+        if init_vol is None: init_vol = 0.0
         Reactive.__init__(self,name,labware,vol,pos,replicas,defLiqClass,ex, init_vol=init_vol)
         self.components = components
 
