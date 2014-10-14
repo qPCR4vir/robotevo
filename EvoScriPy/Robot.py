@@ -374,8 +374,8 @@ class Robot:
             rack = rack.pick_next_rack
         assert isinstance(rack, Lab.DiTi_Rack)
         tip_mask = self.getTips_test(rack.type, tip_mask)
-        rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
-        return self.curArm().getTips(rack.type, tip_mask)
+        tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
+        return self.curArm().getTips(rack.type, tip_mask, tips)
 
     def dropTips(self, TIP_MASK=-1):
         if not self.droptips: return 0

@@ -465,26 +465,31 @@ class DiTi_Rack (Labware):
         n = count_tips(TIP_MASK)# todo do we really need a correspondence mask - wells??
         tp = labware
         tp = tp if isinstance(tp, Labware.Type) else tp.type
-        self._remove_tip(n, tp, worktable, lastPos)
+        return self._remove_tip(n, tp, worktable, lastPos)
 
     def _remove_tip(self, n, tp, worktable=WorkTable.curWorkTable, lastPos=False):
-        assert isinstance(tp, Labware.DITIrack)
+        #  return removed tips and set it in the arm
+        assert isinstance(tp, Labware.DITIrackType)
         beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
         assert isinstance(rack, DiTi_Rack)
         rest = end - beg + 1
         i, d = [end, -1] if lastPos else [beg, 1]
+        tips = []
         while n:
             assert rack.Wells[i].reactive.type is tp
+            tips += [rack.Wells[i].reactive]
             rack.Wells[i].reactive = None
-            print ("Pick tip "+str(i+1)+" from site "+str(rack.location.site+1))
+            print ("Pick tip "+str(i+1)+" from site "+str(rack.location.site+1)
+                   + " of rack " + rack.label)
             n -= 1
             rest -= 1
             if rest:
                 self.set_next_to_next_rack(worktable)
-                return self._remove_tip(n, tp, worktable, lastPos)
+                return tips + self._remove_tip(n, tp, worktable, lastPos)
             i+=d
             if lastPos:  tp.pick_next_back -= 1
             else:        tp.pick_next      += 1
+        return tips
 
     def next_rack(self, worktable=WorkTable.curWorkTable):
         tp = self.type
