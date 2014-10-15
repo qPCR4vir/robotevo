@@ -1,24 +1,18 @@
 __author__ = 'Ariel'
 
-
-
-
+# from Labware import *
+# import Robot
 import EvoMode
-from Instructions import *
-from Instructions_Te_MagS import *
-from Labware import *
-import Robot
-import Reactive as React
-from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
+from Instructions import Pipette
 
-comments=EvoMode.EvoComments()
+comments=EvoMode.Comments()
 
-EvoMode.CurEvo = EvoMode.multiEvo([EvoMode.AdvancedWorkList('AWL.gwl'),
-                                   EvoMode.ScriptBody('AWL.esc.txt'),
-                                   EvoMode.EvoScript(template='RNAext_MNVet.ewt',
-                                                     filename='AWL.esc',
-                                                     arms=Robot.Robot.Arm(4) ),
-                                   EvoMode.EvoStdOut(), comments
+EvoMode.current = EvoMode.multiple([EvoMode.iRobot( Pipette.LiHa1, nTips=4),
+                                    EvoMode.Script(template = 'RNAext_MNVet.ewt',
+                                                   filename = 'AWL.esc' ),
+                                    EvoMode.AdvancedWorkList('AWL.gwl'),
+                                    EvoMode.ScriptBody('AWL.esc.txt'),
+                                    EvoMode.StdOut(), comments
                                     ])
 
 
@@ -28,22 +22,20 @@ from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 import tkinter as tk
 
 
-
 def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
 class App(tk.Frame):
     """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
     """
-    def __init__(self, master=None):
-
+    def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.pack(side="left")
 
         logo = tk.PhotoImage(file='..\EvoScriPy\FLI-Logo_mit_Farbverlauf.png')
-        #tk.Label(self, image=logo,width=800).pack(side="top")
+        tk.Label(self, image=logo).pack(side="top")
 
-        tk.Label(self,text='Number of Samples:').pack(side='top')
+        tk.Label(self,text='Number of Samples (1-48):').pack(side='top')
 
         self.NumOfSamples=tk.StringVar(master,'12')
 
@@ -64,7 +56,7 @@ class App(tk.Frame):
         self.protocol_selection.activate(1)
 
 
-        self.run = tk.Button(self, text="Run the selected protocol",  command=self.run_selected)
+        self.run = tk.Button(self, text="Synthetize a TECAN script for the selected protocol",  command=self.run_selected)
         self.run.pack(side='top')
 
         self.quit = tk.Button(self,   text="Quit",   command=self.quit)

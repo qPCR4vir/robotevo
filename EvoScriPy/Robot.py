@@ -1,13 +1,8 @@
 __author__ = 'qPCR4vir'
 
-from Instructions import *
-from Labware import *
-import Reactive as React
-
-
-
-TeMg_Heat     = Labware(TeMag48, Labware.Location(14,0),"48 Pos Heat")
-TeMag         = Labware(TeMag48, Labware.Location(14,1),"48PosMagnet")
+#from Instruction_Base import *
+#from Instructions import *
+import Labware as Lab
 
 
 tipMask = []  # mask for one tip of index ...
@@ -17,123 +12,192 @@ for tip in range(13):
     tipsMask += [2 ** tip - 1]
 
 def_nTips = 4
-nTips=def_nTips
-Tip_1000maxVol=940
-Tip_200maxVol=190
-
-
-class Tip:
-    def __init__(self, maxVol=1000):
-        self.vol = 0
-        self.maxVol = maxVol
+nTips = def_nTips
 
 
 class Robot:
+    """ Maintain an intern state.
+    Can have more than one arm in a dictionary that map an index with the actual arm.
+    One of the arms can be set as "current" and is returned by curArm()
+    Most of the changes in state are made by the implementation of the low level instructions, while the protocols can
+    "observe" the state to make all kind of optimizations and organizations previous to the actual instruction call
+    """
+    current=None
+
     class Arm:
         DiTi = 0
         Fixed = 1
+        Aspire = 1
+        Dispense = -1
 
-        def __init__(self, nTips, index=Pippet.LiHa1, workingTips=None, tipsType=DiTi):
+        def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
             """
-
             :param nTips:
-            :param index:
-            :param workingTips:
+            :param index: int. for example: index=Pipette.LiHa1
+            :param workingTips: some tips maybe broken or permanently unused.
             :param tipsType:
             """
             self.index = index
-            self.workingTips = workingTips if workingTips is not None else tipsMask[nTips]
+            self.workingTips = workingTips if workingTips is not None else tipsMask[nTips] # todo implement
             self.tipsType = tipsType
             self.nTips = nTips
             self.Tips = [None] * nTips
 
-
-        def getTips(self, tip_mask=-1, maxVol=Tip_1000maxVol):
+        def getTips_test(self, tip_mask=-1) -> int:
+            """ Simple test that the asked positions are free for mounting new tips.
+                    :rtype : int
+                    :param tip_mask:
+                    :return: the mask that can be used
+                    :raise "Tip already in position " + str(i):
+                    """
             if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
-                        raise "Tip already in position " + str(i)
-                    self.Tips[i] = Tip(maxVol)
+                        raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
             return tip_mask
 
-        def getMoreTips(self, tip_mask=-1, maxVol=Tip_1000maxVol):
+        def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> int:
+            """     Mount only one kind of new tip at a time or just the tips given in the list
+            :param rack_type:
+            :param tips:
+            :rtype : int
+            :param tip_mask:
+            :return: the mask that can be used
+            :raise "Tip already in position " + str(i):
+            """
+            if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
+            if tips:
+                assert Lab.count_tips(tip_mask) == len(tips)
+                t = 0
+            else:
+                if rack_type:
+                    assert isinstance(rack_type, Lab.Labware.DITIrackType)
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    if tp is not None:
+                        raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
+                    self.Tips[i] = tips[t] if tips else Lab.Tip(rack_type)
+                    t += 1
+            return tip_mask
+
+        def getMoreTips_test(self, rack_type, tip_mask=-1) -> int:
+            """ Mount only the tips with are not already mounted.
+                Mount only one kind of tip at a time, but not necessary the same of the already mounted.
+                    :rtype : int
+                    :param tip_mask: int
+                    :return: the mask that can be used
+                    """
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp:  # already in position
+                        if tp.type is not rack_type:
+                            raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
+                                    " and we need " + rack_type.name
                         tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                     else:
-                        self.Tips[i] = Tip(maxVol)
+                        pass # self.Tips[i] = Lab.Tip(rack_type)
             return tip_mask
 
-        def drop(self, tip_mask=-1):
-            """
-            :rtype : True if actually ned to be drooped
+        def getMoreTips(self, rack_type, tip_mask=-1) -> int:
+            """ Mount only the tips with are not already mounted.
+                Mount only one kind of tip at a time, but not necessary the same of the already mounted.
+                    :rtype : int
+                    :param tip_mask: int
+                    :return: the mask that can be used
+                    """
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    if tp:  # already in position
+                        if tp.type is not rack_type:
+                            raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
+                                    " and we need " + rack_type.name
+                        tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
+                    else:
+                        pass # self.Tips[i] = Lab.Tip(rack_type)
+            return tip_mask
+
+        def drop_test(self, tip_mask=-1) -> (int, [int]):
+            """ Return the mask and the tips index to be really used.
+            :param tip_mask: int
+            :return: the mask that can be used with, is "True" if tips actually ned to be drooped
+            :rtype : int
             """
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
+            tips_index = []
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp:  # in position
+                        tips_index += [i] # tips += [tp]
+                        pass # self.Tips[i] = None
+                    else:
+                        tip_mask ^= (1 << i)  # already drooped
+            return tip_mask, tips_index
+
+        def drop(self, tip_mask=-1) -> (int, list):
+            """ Drop tips only if needed. Return the mask and the tips really used.
+            :param tip_mask: int
+            :return: the mask that can be used with, is "True" if tips actually ned to be drooped
+            :rtype : int
+            """
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
+            tips = []
+            for i, tp in enumerate(self.Tips):
+                if tip_mask & (1 << i):
+                    if tp:  # in position
+                        tips += [tp]
                         self.Tips[i] = None
                     else:
                         tip_mask ^= (1 << i)  # already drooped
-            return tip_mask
+            return tip_mask, tips
 
-        def aspire(self, vol, tip_mask=-1):  # todo more checks
-            if isinstance(vol,(float,int)):
-                vol=[vol]*self.nTips
+        def pipette(self, action, volume, tip_mask=-1) -> (list, int):
+            """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
+                    Using the tip mask will check that you are not trying to use an unmounted tip.
+                    vol values for unsettled tip mask are ignored.
+
+                    :rtype : (list, int)
+                    :param action: +1:aspire, -1:dispense
+                    :param volume: one vol for all tips, or a list of vol
+                    :param tip_mask: -1:all tips
+                    :return: a lis of vol to pipette, and the mask
+
+                    """
+            if isinstance(volume, (float, int)):
+                vol = [volume] * self.nTips
+            else:
+                vol = list(volume)
+                d = self.nTips - len(vol)
+                vol += [0]*(d if d > 0 else 0 )
             if tip_mask == -1:
                 tip_mask = tipsMask[self.nTips]
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
-                    assert tp is not None, "No tp in position " + str(i)
-                    nv = tp.vol + vol[i]
-                    if nv > tp.maxVol:
-                        raise BaseException(
-                            'To much Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '+' + str(vol[i]))
-                    self.Tips[i].vol = nv
+                    assert isinstance(tp, Lab.Tip), "No tip in position " + str(i)
+                    nv = tp.vol + action * vol[i]
+                    if 0 <= nv <= tp.type.maxVol:
+                        self.Tips[i].vol = nv
+                        continue
+                    msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
+                    if nv < 0:
+                        raise BaseException('To few Vol in tip ' + msg)
+                    raise BaseException('To much Vol in tip ' + msg)
+                else:
+                    pass # vol[i] = None
+            return vol, tip_mask
 
-        def dispense(self, vol, tip_mask=-1):  # todo more checks
-            if isinstance(vol,(float,int)):
-                vol=[vol]*self.nTips
-            if tip_mask == -1:
-                tip_mask = tipsMask[self.nTips]
-            for i, tp in enumerate(self.Tips):
-                if tip_mask & (1 << i):
-                    if tp is None:
-                        raise "No tip in position " + str(i)
-                    nv = tp.vol - vol[i]
-                    assert nv >= 0, 'To few Vol in tip ' + str(i + 1) + ' V=' + str(tp.vol) + '-' + str(vol[i])
-                    self.Tips[i].vol = nv
-
-    class ProtocolStep:
-        pass
-
-    class MakeMix(ProtocolStep):
-        pass
-
-    class DistrReactive(ProtocolStep):
-        pass
-
-    class Transfer(ProtocolStep):
-        def __init__(self, src, dest, vol):
-            pass
-
-    class Collect(ProtocolStep):
-        def __init__(self, src, dest, vol):
-            pass
-
-    class Waste(Collect):
-        def __init__(self, src, dest, vol):
-            pass
-
-
-    def __init__(self, arms=None, nTips=None,
-                 index=Pippet.LiHa1, workingTips=None,
-                 tipsType=Arm.DiTi, templateFile=None):
+    def __init__(self,  index       = None,
+                        arms        = None,
+                        nTips       = None,
+                        workingTips = None,
+                        tipsType    = Arm.DiTi,
+                        templateFile= None): # index=Pipette.LiHa1
         """
 
         :param arms:
@@ -141,30 +205,141 @@ class Robot:
         :param workingTips:
         :param tipsType:
         """
-        self.arms = arms if isinstance(arms, dict) else \
-            {arms.index: arms} if isinstance(arms, Robot.Arm) else \
-                {arms.index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
-
-        self.worktable = WorkTable(templateFile)
-        self.def_arm = index
+        assert Robot.current is None
+        Robot.current = self
+        self.arms = arms              if isinstance(arms, dict     ) else \
+                   {arms.index: arms} if isinstance(arms, Robot.Arm) else \
+                   {     index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
+        self.set_worktable(templateFile)
+        self.def_arm = index  # or Pipette.LiHa1
         self.droptips = True
         self.reusetips = False
         self.preservetips = False
         self.usePreservedtips = False
+        # self.preservedtips = {} # order:well
+        # self.last_preserved_tips = None # Lab.DiTi_Rack, offset
 
-    def dropTips(self, drop=True):
+    def set_worktable(self,templateFile):
+        w = Lab.WorkTable.curWorkTable
+        if not w:
+            w = Lab.WorkTable(templateFile)
+        else:
+            w.parseWorTableFile(templateFile)
+        self.worktable = w
+
+    def set_as_current(self):
+        Lab.curWorkTable=self.worktable
+
+    def setUsed(self, tipMask, labware_selection):
+        # Deprecated ??????
+        mask, tips = self.curArm().drop_test(tipMask)
+        assert len(tips, labware_selection.selected())
+        for i, w in enumerate(labware_selection.selected_wells()):
+            self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
+
+
+    # Functions to observe the iRobot status (intern-physical status, or user status with are modificators of future
+    # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
+    # instruction and even by the final user.
+
+    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->[Lab.DiTi_Rack]:
+        """
+
+        :param TIP_MASK:
+        :param type:
+        :return:  Return a list of racks with the tips-wells already selected.
+        """
+        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[nTips]
+        type = type if type else Lab.def_DiTi
+        n = Lab.count_tips(TIP_MASK)
+        assert n == len(selected_reactive)
+        where = []
+        for react_offset in selected_reactive:
+            assert react_offset in type.preserved_tips
+            well_tip = type.preserved_tips[react_offset]
+            assert isinstance(well_tip, Lab.Well)
+            if well_tip.labware in where:
+                well_tip.selFlag = True
+            else:
+                where += [well_tip.labware]
+                well_tip.labware.selectOnly(well_tip.offset)
+        return where
+
+    def where_preserve_tips(self, TIP_MASK)->[Lab.DiTi_Rack]:
+        """ Return a list of racks with the tips-wells already selected.
+
+        :param selection:
+        :return:
+        """   # todo this in Labware??
+
+        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[nTips]
+        types = []
+        t_masks = []
+        racks = []
+        tips = []
+
+        for i, tip in enumerate(self.curArm().Tips):
+            if TIP_MASK & (1 << i):
+                assert tip, "There are no tip mounted in position " + str(i)
+                tips += [tip]
+                if tip.type in types:
+                    t_masks[types.index(tip.type)] |= (1 << i)
+                else:
+                    types += [tip.type]
+                    t_masks += [(1 << i)]
+
+        assert len(types)==1   # todo temporally assumed only one type of tips
+        tpe = types[0]
+        m = t_masks[0]
+
+        if not self.usePreservedtips:  # no re-back DiTi for multiple reuse
+            assert isinstance(tpe, Lab.Labware.DITIrackType)
+            if not tpe.last_preserved_tips:
+                tpe.last_preserved_tips = tpe.pick_next_rack.Wells[0]
+            w = tpe.last_preserved_tips
+            assert isinstance(w, Lab.Well)
+            cont = False
+            rack = w.labware
+            assert isinstance(rack, Lab.DiTi_Rack)
+            ip = w.offset
+            n = Lab.count_tips(m)
+            while n:
+                cont, fw = rack.find_free_wells(n, init_pos=ip)
+                if cont:
+                    racks += [rack]
+                    rack.selectOnly([w.offset for w in fw])
+                    n -= len(fw)
+                    rack = rack.next_rack(self.worktable)
+                    ip = 0
+            return racks
+
+        for tp in tips:
+            assert isinstance(tp, Lab.usedTip)
+            react_well = tp.origin
+            assert react_well.offset in tp.type.preservedtips, "There are no tip preserved for sample "+str(i)
+            tip_well = tp.type.preservedtips[react_well.offset]
+            assert isinstance(tip_well, Lab.Well)
+            if tip_well.labware in racks:
+                tip_well.selFlag = True
+            else:
+                racks += [ tip_well.labware]
+                tip_well.labware.selectOnly(tip_well.offset)
+        return racks
+
+
+    def set_dropTips(self, drop=True)->bool:
         self.droptips, drop = drop, self.droptips
         return drop
 
-    def reuseTips(self, reuse=True):
+    def reuseTips(self, reuse=True)->bool:
         self.reusetips, reuse = reuse, self.reusetips
         return reuse
 
-    def preserveTips(self, preserve=True):
+    def preserveTips(self, preserve=True)->bool:
         self.preservetips, preserve = preserve, self.preservetips
         return preserve
 
-    def usePreservedTips(self, usePreserved=True):
+    def usePreservedTips(self, usePreserved=True)->bool:
         self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
         return usePreserved
 
@@ -172,365 +347,100 @@ class Robot:
         if arm is not None: self.def_arm = arm
         return self.arms[self.def_arm]
 
-    def getTips(self, TIP_MASK=-1, maxVol=Tip_1000maxVol):
+    def getTips_test(self, rack_type, tip_mask=-1) -> int:   # todo REVISE
         if self.reusetips:
-            TIP_MASK = self.curArm().getMoreTips(TIP_MASK, maxVol)
+            tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
         else:
-            self.dropTips(TIP_MASK)
-            TIP_MASK = self.curArm().getTips(TIP_MASK, maxVol)
-        if TIP_MASK:
-            getDITI2(TIP_MASK, arm=self.def_arm).exec()
-        return TIP_MASK
+            # self.dropTips(tip_mask)  # todo REVISE  here ???
+            tip_mask = self.curArm().getTips_test(tip_mask)
+        return tip_mask
+
+    # Functions to change the physical status, to model physical actions, or that directly
+    # correspond to actions in the hardware.
+    # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method Itr.actualize_robot_state(self):
+
+    def getTips(self, rack, tip_mask=-1,lastPos=False) -> int:
+        """ To be call from Itr.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
+        Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
+        status and the number of tips already mounted.
+        If it return 0 no evo-instruction for the real robot will be generated in some cases.
+
+        :param rack: the king of tip.
+        :param tip_mask:
+        :param lastPos: begging in backward direction?
+        :return: int
+        """
+        if isinstance(rack, Lab.Labware.DITIrackType):
+            rack = rack.pick_next_rack
+        assert isinstance(rack, Lab.DiTi_Rack)
+        tip_mask = self.getTips_test(rack.type, tip_mask)
+        tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
+        return self.curArm().getTips(rack.type, tip_mask, tips)
 
     def dropTips(self, TIP_MASK=-1):
         if not self.droptips: return 0
-        TIP_MASK = self.curArm().drop(TIP_MASK)
-        if TIP_MASK:
-            dropDITI(TIP_MASK).exec()
+        TIP_MASK, tips = self.curArm().drop(TIP_MASK)
+        for tp in tips:
+            if isinstance(tp, Lab.usedTip):  # this tip is dropped and cannot be used any more
+                react_well = tp.origin
+                if react_well.offset in tp.type.preserved_tips:
+                    tip_well = tp.type.preserved_tips[react_well.offset]
+                    assert isinstance(tip_well, Lab.Well)
+                    if tip_well.reactive is None:
+                        tip_well.reactive = Lab.banned_well  # don't used this well again (is "contaminated")
+                        del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
+                    else:
+                        assert tp is not tip_well.reactive
         return TIP_MASK
 
-    def make(self, what, NumSamples=None):
-        if isinstance(what, React.preMix): self.makePreMix(what, NumSamples)
+    def pipette(self, action, volume, labware_selection, tip_mask=-1) -> (list, int):
+        volume, tip_mask = self.curArm().pipette(action, volume, tip_mask)
+        w = -1
+        # assert isinstance(labware_selection, Lab.Labware)
+        wells = labware_selection.selected_wells()
+        for i, tp in enumerate(self.curArm().Tips):
+                if tip_mask & (1 << i):
+                    w += 1
+                    dv = action*volume[i]
+                    assert wells[w].vol is not None, "Volume of " + wells[w].reactive.name + " not initialized."
+                    nv = wells[w].vol - dv
+                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error tryin to change the volume of " + \
+                         wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv)
 
-    def aspire(self, tip, reactive, vol=None):
-        if vol is None:
-            vol = reactive.minVol()
-        v = [0] * self.curArm().nTips
-        v[tip] = vol
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        self.curArm().aspire(v, tipMask[tip])
-        aspirate(tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+                    wells[w].vol = nv
+                    if    action == Robot.Arm.Aspire:
+                        self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])
+                        wells[w].log(dv)
+                    elif  action == Robot.Arm.Dispense:
+                        assert isinstance(tp, Lab.usedTip)
+                        wells[w].log(dv, tp.origin)
+        return volume, tip_mask
 
-    def dispense(self, tip, reactive, vol=None):
-        vol = vol or reactive.minVol()  # really ??
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        v = [0] * self.curArm().nTips
-        v[tip] = vol
-        self.curArm().dispense(v, tipMask[tip])
-        dispense(tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+    def set_tips_back(self, TIP_MASK, labware_selection):
+        """ The low level instruction have to be generated already with almost all the information needed.
+        Here we don't check any more where we really need to put the tips.
+        Be careful by manual creation of low level instructions: they are safe if they are generated
+        by protocol instructions (dropTips(), and preserve and usePreserved were previously set).
+        :param TIP_MASK:
+        :param labware:
+        """
+        # todo what if self.droptips: is False ???
+        TIP_MASK, tips = self.curArm().drop(TIP_MASK)
+        labware_selection.set_back(TIP_MASK, tips)
+        return TIP_MASK
 
-    def aspiremultiTips(self, tips, reactive, vol=None):
-        if not isinstance(vol, list):
-            vol = [vol] * tips
-        mask = tipsMask[tips]
-        nTip = reactive.autoselect(tips)
-        asp = aspirate(mask, reactive.defLiqClass, vol, reactive.labware)
-        curTip = 0
-        while curTip < tips:
-            nextTip = curTip + nTip
-            nextTip = nextTip if nextTip <= tips else tips
-            mask = tipsMask[curTip] ^ tipsMask[nextTip]
-            self.curArm().aspire(vol, mask)
-            asp.tipMask = mask
-            asp.exec()
-            curTip = nextTip
-
-    def dispensemultiwells(self, tips, liq_class, labware, vol):
-        if not isinstance(vol, list):
-            vol = [vol] * tips
-        om = tipsMask[tips]
-        self.curArm().dispense(vol, om)
-        dispense(om, liq_class, vol, labware).exec()
-
-
-    def makePreMix(self, pMix, NumSamples=None):
-        NumSamples = NumSamples or React.NumOfSamples
-
-        l = pMix.labware
-        msg = "preMix: {:.1f} µL of {:s} into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-            pMix.minVol(NumSamples), pMix.name, l.label, l.location.grid, l.location.site + 1, pMix.pos + 1,
-            len(pMix.components))
-        comment(msg).exec()
-        nc = len(pMix.components)
-        assert nc <= self.curArm().nTips, \
-            "Temporally the mix can not contain more than {:d} components.".format(self.curArm().nTips)
-
-        self.getTips(tipsMask[nc])
-
-        for i, react in enumerate(pMix.components):
-            l = react.labware
-            msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                i + 1, react.minVol(NumSamples), react.name, l.label, l.location.grid, l.location.site + 1,
-                react.pos + 1)
-            comment(msg).exec()
-            mV=self.curArm().Tips[i].maxVol
-            r=react.minVol(NumSamples)
-            while r>0:
-                dV=r if r<mV else mV
-                self.aspire(i, react, dV)
-                self.dispense(i, pMix, dV)
-                r-=dV
-
-        self.dropTips()
-
-    def spread(self, volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
+    def pick_up_tips(self, TIP_MASK, labware_selection) -> int:
+        """ The low level instruction have to be generated already with almost all the information needed.
+        Here we don't check any more from where we really need to pick the tips
+        and assume they are all in the same rack.
+        Be careful by manual creation of low level instructions: they are safe if they are generated
+        by protocol instructions (dropTips(), and preserve and usePreserved were previously set).
+        :param labware_selection:
+        :param TIP_MASK:
         """
 
-
-        :param NumSamples: Priorized   !!!! If true reset the selection
-        :param reactive: Reactive to spread
-        :param to_labware_region: Labware in which the destine well are selected
-        :param volume: if not, volume is set from the default of the source reactive
-        :param optimize: minimize zigzag of multipippeting
-        """
-        assert isinstance(reactive, React.Reactive), 'A Reactive expected in reactive to spread'
-        assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to spread'
-
-        if NumSamples:
-            to_labware_region.selectOnly(range(NumSamples))
-        else:
-            if not to_labware_region.selected():
-                to_labware_region.selectOnly(range(React.NumOfSamples))
-
-        to = to_labware_region.selected()
-        if optimize: to = to_labware_region.parallelOrder(to)
-        NumSamples = len(to)
-        SampleCnt = NumSamples
-
-        volume = volume or reactive.volpersample
-
-        nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if nt > SampleCnt: nt = SampleCnt
-
-        self.getTips(tipsMask[nt])
-
-        maxMultiDisp_N = self.curArm().Tips[0].maxVol // volume  # assume all tips equal
-
-        lf = reactive.labware
-        lt = to_labware_region
-        msg = "Spread: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-            .format(v=volume, n=reactive.name, fg=lf.location.grid, fs=lf.location.site, fw=reactive.pos, do=str(to),
-                    to=lt.label, tg=lt.location.grid, ts=lt.location.site)
-        comment(msg).exec()
-        availableDisp = 0
-
-        while SampleCnt:
-            if nt > SampleCnt: nt = SampleCnt
-            if availableDisp == 0:
-                dsp, rst = divmod(SampleCnt, nt)
-                if dsp >= maxMultiDisp_N:
-                    dsp = maxMultiDisp_N
-                    vol = [volume * dsp] * nt
-                    availableDisp = dsp
-                else:
-                    vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
-                    availableDisp = dsp + bool(rst)
-                self.aspiremultiTips(nt, reactive, vol)
-
-            curSample = NumSamples - SampleCnt
-            sel =  to[curSample: curSample + nt]     #todo what if volume > maxVol_tip ?
-            self.dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
-            availableDisp -= 1
-            SampleCnt -= nt
-        self.dropTips()
-
-    def transfer(self, from_labware_region, to_labware_region, volume, using_liquid_class,
-                 optimizeFrom=True, optimizeTo=True, NumSamples=None):
-        """
-
-
-        :param NumSamples: Priorized   !!!! If true reset the selection
-        :param from_reactive: Reactive to spread
-        :param to_labware_region: Labware in which the destine well are selected
-        :param volume: if not, volume is set from the default of the source reactive
-        :param optimize: minimize zigzag of multipippeting
-        """
-        assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
-        assert isinstance(to_labware_region, Labware), 'A Labware expected in to_labware_region to transfer'
-        assert isinstance(using_liquid_class, tuple)
-
-        if NumSamples:  # todo  select convenient def
-            oriSel = range(NumSamples)
-            dstSel = range(NumSamples)
-        else:
-            oriSel = to_labware_region.selected()
-            dstSel = from_labware_region.selected()
-
-            if not dstSel:
-                if not oriSel:
-                    oriSel = range(React.NumOfSamples)
-                    dstSel = range(React.NumOfSamples)
-                else:
-                    dstSel = oriSel
-            else:
-                if not oriSel:
-                    oriSel = dstSel
-                else:
-                    l = min(len(oriSel), len(dstSel))  # todo transfer the minimun of the selected ???? Best reise error
-                    oriSel = oriSel[:l]
-                    dstSel = dstSel[:l]
-        if optimizeFrom: oriSel = from_labware_region.parallelOrder(oriSel)
-        if optimizeTo: dstSel = to_labware_region.parallelOrder(dstSel)
-
-        NumSamples = len(dstSel)
-        SampleCnt = NumSamples
-
-        assert isinstance(volume, (int, float))
-        nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if nt > SampleCnt: nt = SampleCnt
-
-        self.getTips(tipsMask[nt])
-
-        lf = from_labware_region
-        lt = to_labware_region
-        msg = "Transfer: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site,oo=str(oriSel), do=str(dstSel),
-                    to=lt.label, tg=lt.location.grid, ts=lt.location.site)
-        comment(msg).exec()
-        Asp = aspirate(tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
-        Dst = dispense(tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
-        while SampleCnt:
-            curSample = NumSamples - SampleCnt
-            if nt > SampleCnt:
-                nt = SampleCnt
-                Asp.tipMask = tipsMask[nt]
-                Dst.tipMask = tipsMask[nt]
-
-            self.getTips(tipsMask[nt])     #todo what if volume > maxVol_tip ?
-            self.curArm().aspire(volume, tipsMask[nt])
-            Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            Asp.exec()
-
-            Dst.labware.selectOnly(dstSel[curSample:curSample + nt])
-            self.curArm().dispense(volume, tipsMask[nt])
-            Dst.exec()
-            self.dropTips()
-
-            SampleCnt -= nt
-        self.dropTips()
-        Asp.labware.selectOnly(oriSel)
-        Dst.labware.selectOnly(dstSel)
-        return oriSel, dstSel
-
-    def waste(self, from_labware_region, using_liquid_class, volume, to_waste_labware=None, optimize=True):
-
-        """
-
-        :param from_labware_region:
-        :param using_liquid_class:
-        :param volume:
-        :param to_waste_labware:
-        :param optimize:
-        :return:
-        """
-        to_waste_labware=to_waste_labware or WashWaste
-        assert isinstance(from_labware_region, Labware), 'A Labware expected in from_labware_region to transfer'
-        assert isinstance(volume, (int, float))
-        # todo  select convenient def
-        oriSel = from_labware_region.selected()
-        if not oriSel:
-            oriSel = range(React.NumOfSamples)
-        if optimize:
-            oriSel = from_labware_region.parallelOrder(oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
-
-        nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if nt > SampleCnt:
-            nt = SampleCnt
-        tm=tipsMask[nt]
-        self.getTips(tm)
-
-        lf = from_labware_region
-        msg = "Waste: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
-        comment(msg).exec()
-        Asp = aspirate(tm, using_liquid_class[0], volume, from_labware_region)
-        Dst = dispense(tm, using_liquid_class[1], volume, to_waste_labware)
-        nt = to_waste_labware.autoselect(maxTips=nt)
-        while SampleCnt:
-            curSample = NumSamples - SampleCnt
-            if nt > SampleCnt:
-                nt = SampleCnt
-                tm=tipsMask[nt]
-                Asp.tipMask = tm
-                Dst.tipMask = tm
-
-            self.getTips(tm)
-            Asp.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mV=self.curArm().Tips[0].maxVol
-            r =volume
-            while r >0:
-                dV = r if r< mV else mV
-                r-=dV
-                Asp.volume=dV
-                self.curArm().aspire(dV, tm)
-                Asp.exec()
-                Dst.volume=dV
-                self.curArm().dispense(dV, tm)
-                Dst.exec()
-
-            self.dropTips()
-
-            SampleCnt -= nt
-        self.dropTips()
-        Asp.labware.selectOnly(oriSel)
-        return oriSel
-
-    def mix(self, in_labware_region, using_liquid_class, volume, optimize=True):
-
-        """
-
-        :param in_labware_region:
-        :param using_liquid_class:
-        :param volume:
-        :param optimize:
-        :return:
-        """
-        in_labware_region=in_labware_region or WashWaste
-        assert isinstance(in_labware_region, Labware), 'A Labware expected in in_labware_region to be mixed'
-        assert isinstance(volume, (int, float))
-        oriSel = in_labware_region.selected()
-        if not oriSel:
-            oriSel = range(React.NumOfSamples)
-        if optimize:
-            oriSel = in_labware_region.parallelOrder(oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
-        nt = self.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if nt > SampleCnt:
-            nt = SampleCnt
-
-        self.getTips(tipsMask[nt])
-        volume = volume*0.8
-        mV=self.curArm().Tips[0].maxVol*0.8
-        volume = volume if volume < mV else mV
-
-        lf = in_labware_region
-        msg = "Mix: {v:.1f} µL of {n:s}[grid:{fg:d} site:{fs:d}] in order:" \
-            .format(v=volume, n=lf.label, fg=lf.location.grid, fs=lf.location.site) + str(oriSel)
-        comment(msg).exec()
-        mx = mix(tipsMask[nt], using_liquid_class, volume, in_labware_region)
-        while SampleCnt:
-            curSample = NumSamples - SampleCnt
-            if nt > SampleCnt:
-                nt = SampleCnt
-                mx.tipMask = tipsMask[nt]
-
-            self.getTips(tipsMask[nt])
-            mx.labware.selectOnly(oriSel[curSample:curSample + nt])
-            mx.exec()
-
-            self.dropTips()
-
-            SampleCnt -= nt
-        self.dropTips()
-        mx.labware.selectOnly(oriSel)
-        return oriSel
-
-    def wash_in_TeMag(self, reactive, wells=None, using_liquid_class=None, vol=None):
-        if wells is None:
-            wells=reactive.labware.selected() or range(React.NumOfSamples)
-        if using_liquid_class is None:
-            using_liquid_class=(reactive.defLiqClass,reactive.defLiqClass)
-
-        self.spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
-        subroutine("avr_MagMix.esc",subroutine.Continues).exec()
-        self.mix( TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
-        subroutine("avr_MagMix.esc",subroutine.Waits_previous).exec()
-        self.waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
-
-
-curRobot = None
+        TIP_MASK = self.curArm().getTips_test(TIP_MASK)
+        tips = labware_selection.pick_up(TIP_MASK)
+        return self.curArm().getTips(TIP_MASK, tips)
 
 

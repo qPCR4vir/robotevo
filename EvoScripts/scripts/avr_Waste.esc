@@ -1,22 +1,26 @@
-48F3E793
-20140806_154357 Admin           
+BD08B0CC
+20141010_091203 Admin           
                                                                                                                                 
 Administrator                                                                                                                   
 --{ RES }--
 V;200
 --{ CFG }--
 999;219;32;
-14;-1;-1;-1;-1;-1;-1;16;43;251;-1;-1;251;-1;-1;37;-1;-1;-1;-1;-1;-1;-1;104;-1;16;5;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;
+14;-1;43;43;-1;312;312;16;312;251;-1;-1;251;-1;-1;37;-1;-1;-1;-1;-1;-1;-1;104;-1;16;5;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;
 998;0;
+998;1;;
+998;;
+998;1;;
+998;;
 998;0;
-998;0;
-998;0;
-998;0;
-998;0;
+998;16;Tube Eppendorf 1 Pos;Tube Eppendorf 2mL 1 Pos;Tube Greiner conic 2mL 1 Pos;;;;;;;;;;;;;;
+998;Labware1;Labware2;Labware3;;;;;;;;;;;;;;
+998;16;Tube Eppendorf 2mL 16 Pos;;;;;;;;;;;;;;;;
+998;Reactives2;;;;;;;;;;;;;;;;
 998;3;Trough 100ml;Trough 100ml;Trough 100ml;
 998;1-VEL-ElutionBuffer;2-Vl Lysis Buffer;3-VEB Binding Buffer;
-998;1;Tube Eppendorf 2mL 16 Pos;
-998;Reactives;
+998;16;Tube Greinerconic 2mL 16 Pos;;;;;;;;;;;;;;;;
+998;Reactives;;;;;;;;;;;;;;;;
 998;1;Tube Eppendorf 3x 16 PosR;
 998;Eluat;
 998;0;
@@ -193,11 +197,11 @@ Variable(WELL_OFFSET,"WELL_sample",0,"",0,1.000000,10.000000,0,2,0,0);
 If("Disp_V",3,"Rest","Rest");
 Variable(Disp_V ,"Disp_V - Rest",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Comment("++++ Aspirate Waste in Mag");
-Aspirate(15,">> AVR-Serum 1000 <<	365","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
 Variable(Waste_available,"Waste_available - Disp_V",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 If("Tip_maxV",2,"Disp_V +  Rest + RestPlus","Rest");
 Comment("++++  Aspirate Waste in Mag");
-Aspirate(15,">> AVR-Serum 1000 <<	366","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Centre","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
 Variable(WELL_OFFSET,"0",0,"",0,1.000000,10.000000,0,2,0,0);
 Dispense(15,"Buffer free DITi 1000-AVR","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,22,1,1,"0108l0",0,0);
 If("Waste_available",2,"0","Aspirate Waste");
@@ -205,10 +209,10 @@ Variable(WELL_OFFSET,"WELL_sample",0,"",0,1.000000,10.000000,0,2,0,0);
 Variable(Disp_V ,"0",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Comment("Rest");
 Comment("+++Aspirate Waste in Mag");
-Aspirate(15,">> AVR-Serum 1000 <<	367","Rest","Rest","Rest","Rest",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
-Aspirate(15,">> AVR-Serum 1000 <<	368","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
-Aspirate(15,">> AVR-Serum 1000 <<	369","RestPlus","RestPlus","RestPlus","RestPlus",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
-Aspirate(15,">> AVR-Serum 1000 <<	370","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Rest","Rest","Rest","Rest","Rest",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Force Centre","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag RestPlus","RestPlus","RestPlus","RestPlus","RestPlus",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
+Aspirate(15,"Te-Mag Force Centre","0.5","0.5","0.5","0.5",0,0,0,0,0,0,0,0,14,1,1,"0608?000000",0,0);
 Variable(Disp_V ,"Disp_V + Rest + RestPlus",0,"Max Vol to aspire",0,1.000000,1000.000000,0,2,0,0);
 Variable(WELL_OFFSET,"0",0,"",0,1.000000,10.000000,0,2,0,0);
 Dispense(15,"Buffer free DITi 1000-AVR","Disp_V","Disp_V","Disp_V","Disp_V",0,0,0,0,0,0,0,0,22,1,1,"0108l0",0,0);
