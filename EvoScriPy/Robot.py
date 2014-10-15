@@ -57,7 +57,7 @@ class Robot:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
             return tip_mask
 
-        def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> int:
+        def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> (int, list):
             """     Mount only one kind of new tip at a time or just the tips given in the list
             :param rack_type:
             :param tips:
@@ -104,7 +104,7 @@ class Robot:
                         pass # self.Tips[i] = Lab.Tip(rack_type)
             return tip_mask
 
-        def getMoreTips(self, rack_type, tip_mask=-1, tips=None) ->(int, [Lab.Tip]):
+        def getMoreTips(self, rack_type, tip_mask=-1, tips=None) ->(int, list):
             """ Mount only the tips with are not already mounted.
                 Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                     :rtype : int
@@ -254,7 +254,7 @@ class Robot:
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
     # instruction and even by the final user.
 
-    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->[Lab.DITIrack]:
+    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->list:  # [Lab.DITIrack]
         """
 
         :param TIP_MASK:
@@ -277,7 +277,7 @@ class Robot:
                 well_tip.labware.selectOnly(well_tip.offset)
         return where
 
-    def where_preserve_tips(self, TIP_MASK)->[Lab.DITIrack]:
+    def where_preserve_tips(self, TIP_MASK)->list:      #  [Lab.DITIrack]
         """ Return a list of racks with the tips-wells already selected.
 
         :param selection:
@@ -371,7 +371,7 @@ class Robot:
     # correspond to actions in the hardware.
     # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method Itr.actualize_robot_state(self):
 
-    def getTips(self, rack, tip_mask=-1,lastPos=False) -> (int, [Lab.Tip]):
+    def getTips(self, rack, tip_mask=-1,lastPos=False) -> (int, list):  # (int, [Lab.Tip])
         """ To be call from Itr.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
         status and the number of tips already mounted.
