@@ -245,7 +245,7 @@ class Robot:
     def setUsed(self, tipMask, labware_selection):
         # Deprecated ??????
         mask, tips = self.curArm().drop_test(tipMask)
-        assert len(tips, labware_selection.selected())
+        assert len(tips) == len(labware_selection.selected())
         for i, w in enumerate(labware_selection.selected_wells()):
             self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
 
