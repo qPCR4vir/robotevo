@@ -129,6 +129,9 @@ class Labware:
             self.nCol = nCol
             self.maxVol = maxVol
 
+        def size(self)-> int:
+            return self.nRow * self.nCol
+
     class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
             if portrait: nCol, nRow = nRow, nCol # todo revise !
