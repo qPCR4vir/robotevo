@@ -17,7 +17,8 @@ class EvoTypes:  # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], in
 
 class string1(EvoTypes):
     def __str__(self):
-        return '"' + str(self.data) + '"'
+        s = "{:.1f}".format(self.data) if isinstance(self.data, float) else str(self.data)
+        return '"' + s + '"'
 
 
 class expression(string1):
@@ -49,7 +50,7 @@ class integer(EvoTypes):  # todo implement exceptions
 
 class floating_point(EvoTypes):  # todo implement exceptions
     def __str__(self):
-        return str(float(self.data))
+        return "{:.2f}".format(float(self.data))
 
 
 class LoopOption:
