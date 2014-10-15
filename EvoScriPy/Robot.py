@@ -417,10 +417,10 @@ class Robot:
                     wells[w].vol = nv
                     if    action == Robot.Arm.Aspire:
                         self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])
-                        wells[w].log(dv)
+                        wells[w].log(-dv)
                     elif  action == Robot.Arm.Dispense:
                         assert isinstance(tp, Lab.usedTip)
-                        wells[w].log(dv, tp.origin)
+                        wells[w].log(-dv, tp.origin)
         return volume, tip_mask
 
     def set_tips_back(self, TIP_MASK, labware_selection):

@@ -123,7 +123,7 @@ class Well:
             pos=self.offset+1, lab=self.labware.label, label=self.label, vol=self.vol, what=str(self.reactive))
 
     def log(self, vol, origin=None):
-        self.actions += (vol, origin if origin else self)
+        self.actions += [(vol, (origin if origin else self))]
 
     def select(self, sel=True):
         self.selFlag = sel
