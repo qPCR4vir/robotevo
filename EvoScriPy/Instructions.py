@@ -205,7 +205,7 @@ class getDITI(DITIs):
         return True
 
 class getDITI2(DITIs):
-    """ A.15.4.5 Get DITIs (Worklist: GetDITI)
+    """ A.15.4.5 Get DITIs (Worklist: GetDITI) pag. A - 129
     It take a labware name instead of the labware itself because the real robot take track of the next position to pick
     including the rack and the site (that is - the labware). 
     It need a labware type and it know where to pick the next tip.
@@ -289,7 +289,30 @@ class dropDITI(Pipette):
         self.tipMask = Robot.Robot.current.dropTips(self.tipMask, self.labware)
 
 class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.def_LabW
-    """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""
+    """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter) pag. 15 - 15
+        If you are using DITIs, Freedom EVOware remembers the position in the DITI
+    rack of the last DITI which was fetched. When starting a new run, the Get DITIs
+    command starts picking up DITIs at the next available position. After loading a
+    new DITI rack onto the worktable during script runtime (e.g. using the RoMa), you
+    should use the Set DITI Position command in your script to set the DITI Position
+    counter to 1. This ensures that the next DITI is fetched from position 1 rather than
+    from the middle of the new rack.
+    You can specify the next position separately for each of the available DITI types
+    (i.e. DITI racks on the worktable).
+    Note: If you want to specify the next DITI position manually before the script or
+    process is started, use the direct command Set DITI Position (see 5.4.1.3 “Direct
+    commands”,  5-10) or create a maintenance script which contains the Set DITI
+    Position command (see 6.4.2 “Run Maintenance”,  6-10).
+    Note: DiTi handling is automatic in Freedom EVOware Plus.
+    This command is only shown in the Control Bar if you are using DiTis on the LiHa.
+    Freedom EVOware does not detect the LiHa tip type automatically. If you are
+    using DITIs you must configure them manually (see 8.4.2.1 “LiHa (Liquid Handling
+    Arm)”,  8-22).
+    If your pipetting instrument is fitted with two liquid handling arms, the Set DITI
+    Position command will be provided in the Control Bar for both arms. However,
+    please note that the same DITI position counter (and the same pool of unused
+    DITIs) is used by both arms.
+    """
 
     def __init__(self, type,
                        posInRack = 0,
@@ -307,11 +330,28 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.
     def actualize_robot_state(self):
         # Robot.Robot.current.worktable.labTypes[self.type]
         self.labware.type.pick_next_rack = self.labware
-        self.labware.type.pick_next      = self.posInRack
+        self.labware.type.pick_next      = self.labware.offset(self.posInRack)
 
 class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
+        last position
+    If you have activated the feature Optimize positions when fetching DITIs,
+    Freedom EVOware fetches new DITIs either starting from the beginning of the
+    DITI rack or starting from the end of the DITI rack, depending on the situation
+    (see 8.4.2.1 “LiHa (Liquid Handling Arm)”,  8-22, Optimize positions when
+    fetching DITIs). In this case, Freedom EVOware maintains two counters for
+    the last used DITI position (for DITIs which are taken from the beginning of the
+    rack and for DITIs which are taken from the end of the rack). Check this
+    checkbox if you want to set the last used DITI position for the end counter
+    instead of for the beginning counter.
+    If you have activated the feature Optimize positions when fetching DITIs, after
+    loading a new DITI rack onto the worktable during script runtime you should
+    use the Set DITI Position command twice in your script, to set the beginning
+    counter to 1 and the end counter to 96.
+    The Set last position checkbox is inactive (grey) if you have not activated
+    Optimize positions when fetching DITIs. If you have previously specified the
+    last used DITI position, it will be ignored during script execution
     """
 
     def __init__(self, labware   = None,
