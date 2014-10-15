@@ -229,7 +229,7 @@ class Robot:
         self.preservetips = False
         self.usePreservedtips = False
         # self.preservedtips = {} # order:well
-        # self.last_preserved_tips = None # Lab.DiTi_Rack, offset
+        # self.last_preserved_tips = None # Lab.DITIrack, offset
 
     def set_worktable(self,templateFile):
         w = Lab.WorkTable.curWorkTable
@@ -277,7 +277,7 @@ class Robot:
                 well_tip.labware.selectOnly(well_tip.offset)
         return where
 
-    def where_preserve_tips(self, TIP_MASK)->[Lab.DiTi_Rack]:
+    def where_preserve_tips(self, TIP_MASK)->[Lab.DITIrack]:
         """ Return a list of racks with the tips-wells already selected.
 
         :param selection:
@@ -312,7 +312,7 @@ class Robot:
             assert isinstance(w, Lab.Well)
             cont = False
             rack = w.labware
-            assert isinstance(rack, Lab.DiTi_Rack)
+            assert isinstance(rack, Lab.DITIrack)
             ip = w.offset
             n = Lab.count_tips(m)
             while n:
@@ -384,7 +384,7 @@ class Robot:
         """
         if isinstance(rack, Lab.Labware.DITIrackType):
             rack = rack.pick_next_rack
-        assert isinstance(rack, Lab.DiTi_Rack)
+        assert isinstance(rack, Lab.DITIrack)
         tip_mask = self.getTips_test(rack.type, tip_mask)
         tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
         return self.curArm().getTips(rack.type, tip_mask, tips)

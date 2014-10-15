@@ -236,7 +236,7 @@ class getDITI2(DITIs):
 
         ln= self.LabwareTypeName
         if   ln is None                     : ln = Lab.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
-        elif isinstance(ln, Lab.DiTi_Rack)    : ln = ln.type.name
+        elif isinstance(ln, Lab.DITIrack)    : ln = ln.type.name
         elif isinstance(ln, Lab.Labware.DITIrackType): ln = ln.name
 
         self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or expression?
@@ -252,7 +252,7 @@ class getDITI2(DITIs):
             curW = Robot.Robot.current.worktable
             assert isinstance(curW, Lab.WorkTable)
             ln = Robot.Robot.current.worktable.labTypes [ln][0].type
-        assert isinstance(ln, Lab.DiTi_Rack) or isinstance(ln, Lab.Labware.DITIrackType)
+        assert isinstance(ln, Lab.DITIrack) or isinstance(ln, Lab.Labware.DITIrackType)
         self.tipMask = Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
         self.LabwareTypeName = ln
 
@@ -319,7 +319,7 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
         self.posInRack = posInRack
 
     def validateArg(self):
-        if isinstance(self.labware, Lab.DiTi_Rack):
+        if isinstance(self.labware, Lab.DITIrack):
             self.labware.type.pick_next_rack = self.labware
         else:
             assert isinstance(self.labware, Lab.Labware.DITIrackType)
@@ -332,7 +332,7 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
         return True
 
     def actualize_robot_state(self):
-        if isinstance(self.labware, Lab.DiTi_Rack):
+        if isinstance(self.labware, Lab.DITIrack):
             self.labware.type.pick_next_rack = self.labware
         else:
             assert isinstance(self.labware, Lab.Labware.DITIrackType)
@@ -373,7 +373,7 @@ class pickUp_DITIs(Pipette):
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, Lab.DiTi_Rack)
+        assert isinstance(self.labware, Lab.DITIrack)
         self.tipMask = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
 
 class set_DITIs_Back(Pipette):
@@ -403,7 +403,7 @@ class set_DITIs_Back(Pipette):
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, Lab.DiTi_Rack)
+        assert isinstance(self.labware, Lab.DITIrack)
         self.tipMask = Robot.Robot.current.set_tips_back(self.tipMask, self.labware)
 
 class pickUp_ZipTip(Pipette): # todo implement !!!

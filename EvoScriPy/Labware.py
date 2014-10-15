@@ -379,7 +379,7 @@ class Labware:
             sel.append(null + bitMask)
         return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
 
-class DiTi_Rack (Labware):
+class DITIrack (Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
         assert isinstance(type, Labware.DITIrackType)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
@@ -471,7 +471,7 @@ class DiTi_Rack (Labware):
         #  return removed tips and set it in the arm
         assert isinstance(tp, Labware.DITIrackType)
         beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
-        assert isinstance(rack, DiTi_Rack)
+        assert isinstance(rack, DITIrack)
         rest = end - beg + 1
         i, d = [end, -1] if lastPos else [beg, 1]
         tips = []
@@ -506,7 +506,7 @@ class DiTi_Rack (Labware):
 
     def set_next_to_next_rack(self, worktable=WorkTable.curWorkTable):
         rack = self.next_rack(worktable)
-        assert isinstance(rack, DiTi_Rack)
+        assert isinstance(rack, DITIrack)
         print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)
         assert self is not rack
         rack.fill()
