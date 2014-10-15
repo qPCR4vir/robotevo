@@ -117,6 +117,20 @@ def dispense( tip, reactive, vol=None): # todo coordinate with robot
         # Rbt.Robot.current.curArm().dispense(v, Rbt.tipMask[tip])
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
+def multidispense_in_replicas(tip, reactive, vol):
+    """ Multi-dispense of the content of ONE tip into the reactive replicas
+
+    :param tip:
+    :param reactive:
+    :param vol:
+    """
+    assert isinstance(vol, list)
+    re = reactive.Replicas
+    assert len(vol) == len(re)
+    for v, w in zip(vol, re):
+        Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v,
+                     w.labware.selectOnly([w.offset])).exec()
+
 def aspiremultiTips( tips, reactive, vol=None):
         if not isinstance(vol, list):
             vol = [vol] * tips
@@ -134,6 +148,13 @@ def aspiremultiTips( tips, reactive, vol=None):
             curTip = nextTip
 
 def dispensemultiwells( tips, liq_class, labware, vol):
+        """ One dispense of multitip in multiwell with different vol
+
+        :param tips:
+        :param liq_class:
+        :param labware:
+        :param vol:
+        """
         if not isinstance(vol, list):
             vol = [vol] * tips
         om = Rbt.tipsMask[tips]
@@ -145,7 +166,6 @@ def make( what, NumSamples=None): # todo coordinate with protocol
 
 def makePreMix( preMix, NumSamples=None):
         NumSamples = NumSamples or Rtv.NumOfSamples
-
         l = preMix.labware
         msg = "preMix: {:.1f} µL of {:s}".format(preMix.minVol(NumSamples), preMix.name)
         with group(msg):
@@ -153,9 +173,11 @@ def makePreMix( preMix, NumSamples=None):
                 l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
             Itr.comment(msg).exec()
             nc = len(preMix.components)
-            assert nc <= Rbt.Robot.current.curArm().nTips, \
-                "Temporally the mix can not contain more than {:d} components.".format(Rbt.Robot.current.curArm().nTips)
-
+            nr = len(preMix.Replicas)
+            nt = Rbt.Robot.current.curArm().nTips
+            assert nc <= nt, "Temporally the mix can not contain more than {:d} components.".format(nt)
+            dt = nt - nc
+            samples_per_replicas = [(NumSamples + nr - (i+1))//nr for i in range(nr)]
             with tips(Rbt.tipsMask[nc]):   # todo want to use preserved ?? selected=??
                 for i, react in enumerate(preMix.components):
                     l = react.labware
@@ -168,7 +190,7 @@ def makePreMix( preMix, NumSamples=None):
                     while r > 0:
                         dV = r if r < mV else mV
                         aspire(i, react, dV)
-                        dispense(i, preMix, dV)  # todo use all the replicas and create it if needed
+                        multidispense_in_replicas(i, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
                         r -= dV
 
 def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
