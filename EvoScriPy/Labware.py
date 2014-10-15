@@ -16,7 +16,7 @@ def count_tips(TIP_MASK)->int:
 
 class Tip:    # todo play with this idea
     def __init__(self, rack_type):
-        assert isinstance(rack_type, Labware.DITIrack)
+        assert isinstance(rack_type, Labware.DITIrackType)
         self.vol = 0
         self.type = rack_type
 
@@ -129,13 +129,13 @@ class Labware:
             self.nCol = nCol
             self.maxVol = maxVol
 
-    class DITIrack(Type):
+    class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
             if portrait: nCol, nRow = nRow, nCol # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol, conectedWells=False)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
-            self.pick_next_rack = None  # labware (DITIrack or grid,site)
+            self.pick_next_rack = None  # labware (DITIrackType or grid,site)
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
@@ -381,7 +381,7 @@ class Labware:
 
 class DiTi_Rack (Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
-        assert isinstance(type, Labware.DITIrack)
+        assert isinstance(type, Labware.DITIrackType)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
         self.fill()
         if type.pick_next_rack is None: # update an iRobot state !! Only initialization, please!
@@ -413,7 +413,7 @@ class DiTi_Rack (Labware):
         :param lastPos:
         :return:
         """
-        assert isinstance(rack_type, Labware.DITIrack)
+        assert isinstance(rack_type, Labware.DITIrackType)
         n = count_tips(TIP_MASK)
         rack = rack_type.pick_next_rack
         r = rack.Wells[rack_type.pick_next,
@@ -465,26 +465,31 @@ class DiTi_Rack (Labware):
         n = count_tips(TIP_MASK)# todo do we really need a correspondence mask - wells??
         tp = labware
         tp = tp if isinstance(tp, Labware.Type) else tp.type
-        self._remove_tip(n, tp, worktable, lastPos)
+        return self._remove_tip(n, tp, worktable, lastPos)
 
     def _remove_tip(self, n, tp, worktable=WorkTable.curWorkTable, lastPos=False):
-        assert isinstance(tp, Labware.DITIrack)
+        #  return removed tips and set it in the arm
+        assert isinstance(tp, Labware.DITIrackType)
         beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
         assert isinstance(rack, DiTi_Rack)
         rest = end - beg + 1
         i, d = [end, -1] if lastPos else [beg, 1]
+        tips = []
         while n:
             assert rack.Wells[i].reactive.type is tp
+            tips += [rack.Wells[i].reactive]
             rack.Wells[i].reactive = None
-            print ("Pick tip "+str(i+1)+" from site "+str(rack.location.site+1))
+            print ("Pick tip "+str(i+1)+" from site "+str(rack.location.site+1)
+                   + " of rack " + rack.label)
             n -= 1
             rest -= 1
-            if rest:
+            if not rest:
                 self.set_next_to_next_rack(worktable)
-                return self._remove_tip(n, tp, worktable, lastPos)
+                return tips + self._remove_tip(n, tp, worktable, lastPos)
             i+=d
             if lastPos:  tp.pick_next_back -= 1
             else:        tp.pick_next      += 1
+        return tips
 
     def next_rack(self, worktable=WorkTable.curWorkTable):
         tp = self.type
@@ -564,7 +569,7 @@ CleanerSWS      = Labware.Type("Washstation 2Grid Cleaner short",   8,      maxV
 WasteWS         = Labware.Type("Washstation 2Grid Waste",           8,      maxVol=100000, conectedWells=True)
 CleanerLWS      = Labware.Type("Washstation 2Grid Cleaner long",    8,      maxVol=100000, conectedWells=True)
 DiTi_Waste      = Labware.Type("Washstation 2Grid DiTi Waste",      8,      maxVol=100000, conectedWells=True)
-DiTi_1000ul     = Labware.DITIrack("DiTi 1000ul", maxVol=940)
+DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul", maxVol=940)
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190
 def_DiTi        = DiTi_1000ul
