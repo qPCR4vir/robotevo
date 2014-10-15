@@ -257,7 +257,8 @@ class getDITI2(DITIs):
         self.LabwareTypeName = ln
 
 class dropDITI(Pipette):
-    """ A.15.4.6 Drop DITIs command (Worklist: DropDITI) """
+    """ A.15.4.6 Drop DITIs command (Worklist: DropDITI). pag A - 130 and 15 - 14
+     """
 
     def __init__(self,  tipMask     = curTipMask,
                         labware     = None,
@@ -267,7 +268,8 @@ class dropDITI(Pipette):
         """
         :param conditional: exec only if there are some tip to droop.
         :param tipMask:
-        :param labware:
+        :param labware: Specify the worktable position for the DITI waste you want to use.
+                        You must first put a DITI waste in the Worktable at the required position.
         :param AirgapVolume: floating point, 0 - 100.  airgap in μl which is aspirated after dropping the DITIs
         :param AirgapSpeed: int 1-1000. Speed for the airgap in μl/s
         :param arm:
@@ -283,7 +285,7 @@ class dropDITI(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = Robot.Robot.current.dropTips(self.tipMask)
+        self.tipMask = Robot.Robot.current.dropTips(self.tipMask, self.labware)
 
 class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)"""

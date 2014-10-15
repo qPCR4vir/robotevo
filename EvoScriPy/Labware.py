@@ -142,6 +142,10 @@ class Labware:
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
+    class DITIwasteType(Type):
+        def __init__(self, name, capacity=10*96):
+            Labware.Type.__init__(self, name, nRow=capacity)
+
     class Cuvette(Type):        pass
     class Te_Mag (Type):        pass
 
@@ -553,6 +557,29 @@ class DITIrack (Labware):
             tips[i] = w.reactive
             w.reactive = None
             #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+
+class DITIwaste(Labware):
+    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
+        assert isinstance(type, Labware.DITIwasteType)
+        Labware.__init__(self, type, location, label=label, worktable=worktable)
+        self.wasted = 0
+
+    def waste(self, tips):
+        for tp in tips:
+            self.Wells[self.wasted] = tp
+            self.wasted += 1
+            assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
+            if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
+                react_well = tp.origin
+                if react_well.offset in tp.type.preserved_tips:
+                    tip_well = tp.type.preserved_tips[react_well.offset]
+                    assert isinstance(tip_well, Well)
+                    if tip_well.reactive is None:
+                        tip_well.reactive = banned_well  # don't used this well again (is "contaminated")
+                        del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
+                    else:
+                        assert tp is not tip_well.reactive
+
 
 
 

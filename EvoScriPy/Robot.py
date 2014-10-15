@@ -254,7 +254,7 @@ class Robot:
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
     # instruction and even by the final user.
 
-    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->[Lab.DiTi_Rack]:
+    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->[Lab.DITIrack]:
         """
 
         :param TIP_MASK:
@@ -389,20 +389,14 @@ class Robot:
         tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
         return self.curArm().getTips(rack.type, tip_mask, tips)
 
-    def dropTips(self, TIP_MASK=-1):
+    def dropTips(self, TIP_MASK=-1, waste=None):
         if not self.droptips: return 0
+
+        waste = waste if waste else Lab.def_DiTiWaste
+        assert isinstance(waste, Lab.DITIwaste)
+
         TIP_MASK, tips = self.curArm().drop(TIP_MASK)
-        for tp in tips:
-            if isinstance(tp, Lab.usedTip):  # this tip is dropped and cannot be used any more
-                react_well = tp.origin
-                if react_well.offset in tp.type.preserved_tips:
-                    tip_well = tp.type.preserved_tips[react_well.offset]
-                    assert isinstance(tip_well, Lab.Well)
-                    if tip_well.reactive is None:
-                        tip_well.reactive = Lab.banned_well  # don't used this well again (is "contaminated")
-                        del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
-                    else:
-                        assert tp is not tip_well.reactive
+        waste.waste(tips)
 
         return TIP_MASK
 
