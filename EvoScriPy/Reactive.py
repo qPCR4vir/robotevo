@@ -37,6 +37,10 @@ class Reactive:
                  w.vol = initial_vol
         self.init_vol()
 
+
+    def __str__(self):
+        return "{name:s}".format(name=self.name)
+
     def minVol(self, NumSamples=None)->float:
         NumSamples = NumSamples or NumOfSamples or 0
         return self.volpersample * NumSamples * self.excess

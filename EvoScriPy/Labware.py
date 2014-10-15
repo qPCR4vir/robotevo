@@ -20,11 +20,17 @@ class Tip:    # todo play with this idea
         self.vol = 0
         self.type = rack_type
 
+    def __str__(self):
+        return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
+
 class usedTip(Tip):
     def __init__(self, tip, origin=None):
         Tip.__init__(self, tip.type)
         self.vol = tip.vol
         self.origin = origin
+
+    def __str__(self):
+        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
 
 
 class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
@@ -111,6 +117,10 @@ class Well:
         self.reactive = None
         self.label = ""
         self.actions = []
+
+    def __str__(self):
+        return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}".format(
+            pos=self.offset+1, lab=self.labware.label, label=self.label, vol=self.vol, what=str(self.reactive))
 
     def log(self, vol, origin=None):
         self.actions += (vol, origin if origin else self)
