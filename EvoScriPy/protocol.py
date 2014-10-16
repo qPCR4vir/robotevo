@@ -318,12 +318,13 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                     Asp.tipMask = Rbt.tipsMask[nt]
                     Dst.tipMask = Rbt.tipsMask[nt]
 
-                sel = oriSel[curSample:curSample + nt]
-                with tips(Rbt.tipsMask[nt], selected=sel):  # todo what if volume > maxVol_tip ?
-                    Asp.labware.selectOnly(sel)
+                src = oriSel[curSample:curSample + nt]
+                trg = dstSel[curSample:curSample + nt]
+                with tips(Rbt.tipsMask[nt], selected=src):  # todo what if volume > maxVol_tip ?
+                    Asp.labware.selectOnly(src)
                     Asp.exec()
                     # Rbt.setUsed(Asp.tipMask, Asp.labware) # todo this in robot.aspire()
-                    Dst.labware.selectOnly(sel)
+                    Dst.labware.selectOnly(trg)
                     Dst.exec()
                 SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
