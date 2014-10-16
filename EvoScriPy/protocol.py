@@ -21,6 +21,9 @@ Te_Mag_RestPlus = "Te-Mag RestPlus"
 def set_dropTips(drop=True)->bool:
     return Rbt.Robot.current.set_dropTips(drop)
 
+def set_allow_air(allow_air=0.0)->float:
+    return Rbt.Robot.current.set_allow_air(allow_air)
+
 def reuseTips(reuse=True)->bool:
     return Rbt.Robot.current.reuseTips(reuse)
 
@@ -366,6 +369,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
         Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
         RestPlus = 50
+        CtrVol = 0.5
 
         # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
         Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
@@ -396,29 +400,34 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                         Dst.volume = dV
                         Asp.liquidClass = Te_Mag_LC # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
                         Asp.exec()
-                        Asp.volume = 0.5
+                        Asp.volume = CtrVol
                         Asp.liquidClass = Te_Mag_Centre
-                        Asp.exec()
-                        # Ctr.exec()
-                        Dst.exec()
+                        with tips(allow_air=CtrVol):
+                            Asp.exec()
+                            Dst.exec()
                         r -= dV
 
                     Asp.volume = Rest
                     Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
-                    Asp.exec()
+                    with tips(allow_air=Rest):
+                            Asp.exec()
                     # Ctr.exec()
-                    Asp.volume = 0.5
+                    Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
-                    Asp.exec()
+                    with tips(allow_air=CtrVol):
+                            Asp.exec()
                     Asp.volume = RestPlus
                     Asp.liquidClass =  Te_Mag_RestPlus # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
-                    Asp.exec()
+                    with tips(allow_air=RestPlus):
+                            Asp.exec()
                     #Ctr.exec()
-                    Asp.volume = 0.5
+                    Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
-                    Asp.exec()
                     Dst.volume = Rest + RestPlus
-                    Dst.exec()
+                    with tips(allow_air=CtrVol):
+                            Asp.exec()
+                    with tips(allow_air=Rest + RestPlus):
+                            Dst.exec()
 
                 SampleCnt -= nt
             Asp.labware.selectOnly(oriSel)
@@ -479,11 +488,14 @@ def group(titel, mode=None):
     Itr.group_end().exec(mode)
 
 @contextmanager
-def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None, selected_reactive=None):
+def tips(tipsMask=None, reuse=None,     drop=None,
+                        preserve=None,  usePreserved=None, selected_reactive=None,
+                        allow_air=None):
     if reuse        is not None: reuse        = reuseTips       (reuse       )
     if drop         is not None: drop         = set_dropTips    (drop        )
     if preserve     is not None: preserve     = preserveTips    (preserve    )
     if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
+    if allow_air    is not None: allow_air    = set_allow_air   (allow_air  )
 
     if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected_reactive=selected_reactive)
 
@@ -495,6 +507,7 @@ def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None,
     if drop         is not None: drop         = set_dropTips    (drop        )
     if preserve     is not None: preserve     = preserveTips    (preserve    )
     if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
+    if allow_air    is not None: allow_air    = set_allow_air   (allow_air  )
 
 @contextmanager
 def parallel_execution_of(subroutine):
