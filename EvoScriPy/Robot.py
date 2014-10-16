@@ -54,7 +54,7 @@ class Robot:
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
-                        raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
+                        raise BaseException("A Tip from rack type " + tp.type.name + " is already in position " + str(i))
             return tip_mask
 
         def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> (int, list):
