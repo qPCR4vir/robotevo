@@ -8,7 +8,7 @@ TeMag           = Lab.Labware(Lab.TeMag48,      Lab.Labware.Location(14, 2), "48
 WashCleanerS    = Lab.Labware(Lab.CleanerSWS,   Lab.Labware.Location(22, 1))
 WashWaste       = Lab.Labware(Lab.WasteWS,      Lab.Labware.Location(22, 2))
 WashCleanerL    = Lab.Labware(Lab.CleanerLWS,   Lab.Labware.Location(22, 3))
-DiTiWaste       = Lab.Labware(Lab.DiTi_Waste,   Lab.Labware.Location(22, 7))
+DiTiWaste       = Lab.DITIwaste(Lab.DiTi_Waste,   Lab.Labware.Location(22, 7))
 
 Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.Labware.Location(1,2))
 Lab.def_WashWaste   = WashWaste
