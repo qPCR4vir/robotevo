@@ -34,7 +34,7 @@ class Reactive:
         self.pos = self.Replicas[0].offset
         if initial_vol is not None:
             for w in  self.Replicas:
-                 w.vol = initial_vol
+                 w.vol += initial_vol
         self.init_vol()
 
 
@@ -54,10 +54,10 @@ class Reactive:
         replicas=len(self.Replicas)
         for i, w in enumerate(self.Replicas):
             v = V * (NumOfSamples + replicas - (i+1))//replicas
-            if v > w.vol:  w.vol = v
+            if v > w.vol:  w.vol += (v-w.vol)
 
-    def autoselect(self,maxTips=1):
-        return self.labware.autoselect(self.pos,maxTips,len(self.Replicas))
+    def autoselect(self, maxTips=1):
+        return self.labware.autoselect(self.pos, maxTips, len(self.Replicas))
 
 class preMix(Reactive):
     def __init__(self, name, labware, pos, components, replicas=1, initial_vol=None,
@@ -79,8 +79,9 @@ class preMix(Reactive):
 
 
     def make(self, NumSamples=None):
-        if self.Replicas[0].vol is None:
+        if self.Replicas[0].vol is None:   # ????
             self.put_min_vol(NumSamples)
+            assert False
         from protocol import makePreMix
         makePreMix(self, NumSamples)
 
