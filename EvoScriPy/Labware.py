@@ -112,10 +112,14 @@ class Well:
         self.labware = labware
         assert isinstance(Well_Offset, int)
         self.offset = Well_Offset
-        self.vol = 0.0
         self.selFlag = False
-        self.reactive = None
         self.label = ""
+        self._vol = 0.0
+        self._reactive = None
+        self._actions = []
+
+        self.vol = 0.0
+        self.reactive = None
         self.actions = []
 
     def __str__(self):
@@ -128,12 +132,43 @@ class Well:
     def select(self, sel=True):
         self.selFlag = sel
 
-banned_well = Well(None,0)
+    @property
+    def vol(self):              return self._vol
+    @vol.setter
+    def vol(self, newvol):      self._vol = newvol
+
+    @property
+    def reactive(self):              return self._reactive
+    @reactive.setter
+    def reactive(self, reactive):      self._reactive = reactive
+
+    @property
+    def actions(self):              return self._actions
+    @actions.setter
+    def actions(self, actions):      self._actions = actions
+
+class conectedWell(Well):
+    @property
+    def vol(self):              return self.labware.vol
+    @vol.setter
+    def vol(self, newvol):      self.labware.vol = newvol
+
+    @property
+    def reactive(self):              return self.labware.reactive
+    @reactive.setter
+    def reactive(self, reactive):      self.labware.reactive = reactive
+
+    @property
+    def actions(self):              return self.labware.actions
+    @actions.setter
+    def actions(self, actions):      self.labware.actions = actions
+
+
+banned_well = object() # Well(None, 0)
 
 class Labware:
     class Type:
-        def __init__(self, name, nRow, nCol=1, maxVol=None, conectedWells=False):
-            self.conectedWells = conectedWells
+        def __init__(self, name, nRow, nCol=1, maxVol=None):
             self.name = name
             self.nRow = nRow
             self.nCol = nCol
@@ -145,7 +180,7 @@ class Labware:
     class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
             if portrait: nCol, nRow = nRow, nCol # todo revise !
-            Labware.Type.__init__(self, name, nRow, nCol, maxVol, conectedWells=False)
+            Labware.Type.__init__(self, name, nRow, nCol, maxVol)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
             self.pick_next_rack = None  # labware (DITIrackType or grid,site)
@@ -156,19 +191,28 @@ class Labware:
         def __init__(self, name, capacity=10*96):
             Labware.Type.__init__(self, name, nRow=capacity)
 
-    class Cuvette(Type):        pass
-    class Te_Mag (Type):        pass
+    class CuvetteType(Type):
+        def __init__(self, name, nPseudoWells, maxVol, nCol=1):
+            Labware.Type.__init__(self, name, nRow=nPseudoWells, maxVol=maxVol)
+
+    class Te_Mag (Type):
+        pass
 
     def __init__(self, type, location, label=None, worktable=None):
         self.type = type
         self.label = label
         self.location = location
-        self.Wells = [Well(self, offset) for offset in range(self.offset(self.type.nRow, self.type.nCol) + 1)]
+        self.Wells = []
         worktable = worktable or WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
         worktable.addLabware(self)
         if location.rack:
             location.rack.addLabware(self, location.rack_site)
+        self.init_wells()
+
+    def init_wells(self):
+        self.Wells = [Well(self, offset) for offset in range(self.type.size())]
+
 
     class Location:
         def __init__(self, grid=None, site=None, rack=None, rack_site=None):
@@ -203,16 +247,11 @@ class Labware:
         :param replys:
         :return:
         """
-        nWells = self.type.nCol * self.type.nRow
-        assert nWells > offset, "Can not select to far"  # todo better msg
-        if self.type.conectedWells:
-            if nWells < maxTips: maxTips = nWells
-            self.selectOnly(range((nWells - maxTips) // 2, (nWells - maxTips) // 2 + maxTips))
-            return maxTips
-        else:
-            if maxTips > replys: maxTips = replys
-            self.selectOnly(range(offset, offset + maxTips))
-            return maxTips
+        nWells = self.type.size()
+        maxTips = min(replys, maxTips)
+        assert nWells >= offset + maxTips, "Can not select to far"  # todo better msg
+        self.selectOnly(range(offset, offset + maxTips))
+        return maxTips
 
     def offset(self, row, col=1):
         if isinstance(row, Labware.Position):
@@ -407,10 +446,10 @@ class DITIrack (Labware):
 
     def fill(self, beg=1, end=None):   # todo it belong to Robot ??
         if isinstance(beg, list): assert end is None
-        else:
-            beg = self.offset(beg)
-            end = self.offset(end or self.type.nRow*self.type.nCol-1)
-            r = range(beg, end+1)
+        end = end if end else self.type.size()
+        beg = self.offset(beg)
+        end = self.offset(end)
+        r = range(beg, end+1)
         for w in self.Wells:
             w.reactive = None
             # w.labware = None   #   hummm ??
@@ -529,7 +568,7 @@ class DITIrack (Labware):
         rack.fill()
         tp = self.type
         tp.pick_next = 0
-        tp.pick_next_back = tp.nCol * tp.nRow -1
+        tp.pick_next_back = tp.size() -1
         tp.pick_next_rack = rack
 
     def set_back(self, TIP_MASK, tips):
@@ -590,10 +629,34 @@ class DITIwaste(Labware):
                     else:
                         assert tp is not tip_well.reactive
 
+class Cuvette(Labware):
+    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
+        assert isinstance(type, Labware.CuvetteType)
+        self.vol = 0.0
+        self.reactive = None
+        self.actions = []
+        Labware.__init__(self, type, location, label=label, worktable=worktable)
+
+    def init_wells(self):
+        self.Wells = [conectedWell(self, offset) for offset in range(self.type.size())]
 
 
+    def autoselect(self, offset=0, maxTips=1, replys=1):
+        """
 
-Trough_100ml    = Labware.Type("Trough 100ml",                      8,      maxVol=100000, conectedWells=True)
+        :param offset:
+        :param maxTips:
+        :param replys:
+        :return:
+        """
+        nWells = self.type.size()
+        assert nWells > offset, "Can not select to far"  # todo better msg
+        maxTips = min(maxTips, nWells)
+        self.selectOnly(range((nWells - maxTips) // 2, (nWells - maxTips) // 2 + maxTips))
+        return maxTips
+
+
+Trough_100ml    = Labware.CuvetteType("Trough 100ml",               8,      maxVol=100000)
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=2000)
 EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=1500)
@@ -605,9 +668,9 @@ Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxV
 
 
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=1500)
-CleanerSWS      = Labware.Type("Washstation 2Grid Cleaner short",   8,      maxVol=100000, conectedWells=True)
-WasteWS         = Labware.Type("Washstation 2Grid Waste",           8,      maxVol=100000, conectedWells=True)
-CleanerLWS      = Labware.Type("Washstation 2Grid Cleaner long",    8,      maxVol=100000, conectedWells=True)
+CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=100000)
+WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=100000)
+CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=100000)
 DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul", maxVol=940)
 Tip_1000maxVol  = DiTi_1000ul.maxVol

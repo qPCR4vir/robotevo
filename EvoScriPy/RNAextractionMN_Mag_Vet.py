@@ -47,8 +47,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     all_samples = range(React.NumOfSamples)
     par = TeMag.parallelOrder(Rbt.nTips, all_samples)
     for s in all_samples:
-        React.Reactive("probe_{:2d}".format(s+1),  Samples, initial_vol=200.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
-        React.Reactive("reaction_{:2d}".format(s+1), TeMag, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive(   "probe_{:02d}".format(s+1), Samples, initial_vol=200.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive("reaction_{:02d}".format(s+1), TeMag, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive(     "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
 
 
     LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
@@ -76,6 +77,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
                                      Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                      ,defLiqClass=W_liquidClass, replicas=2)
+    Waste           = React.Reactive("Waste"  , WashWaste )
+
 
 
     Te_MagS_ActivateHeater(50).exec()
@@ -97,7 +100,6 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with incubation(10): pass
 
     reuse_tips_and_drop(reuse=False, drop=True)
-
     spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 
     reuse_tips_and_drop(reuse=False, drop=True)

@@ -228,6 +228,7 @@ class Robot:
         self.reusetips = False
         self.preservetips = False
         self.usePreservedtips = False
+        self.allow_air = 0.0
         # self.preservedtips = {} # order:well
         # self.last_preserved_tips = None # Lab.DITIrack, offset
 
@@ -343,6 +344,10 @@ class Robot:
         self.droptips, drop = drop, self.droptips
         return drop
 
+    def set_allow_air(self, allow_air=0.0)->float:
+        self.allow_air, allow_air = allow_air, self.allow_air
+        return allow_air
+
     def reuseTips(self, reuse=True)->bool:
         self.reusetips, reuse = reuse, self.reusetips
         return reuse
@@ -413,10 +418,17 @@ class Robot:
                                                                                             labware_selection.label))
                     assert wells[w].vol is not None, "Volume of " + wells[w].reactive.name + " not initialized."
                     nv = wells[w].vol - dv
-                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \
+
+                    assert  nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \
                          wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv)
 
-                    wells[w].vol = nv
+                    if nv < 0 :
+                        if nv < -self.allow_air:
+                            print("WARNING !!! trying to change the volume of " + \
+                            wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + ". Set to 0.")
+                        dv = wells[w].vol
+
+                    wells[w].vol -= dv
                     if    action == Robot.Arm.Aspire:
                         self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])
                         wells[w].log(-dv)
