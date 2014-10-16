@@ -61,7 +61,10 @@ def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
 
     else:
         type=type or Lab.def_DiTi
-        Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm).exec()
+        I = Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm)
+        I.exec()
+        return TIP_MASK # I.tipMask
+
 
 def dropTips(TIP_MASK=-1):
 
