@@ -39,8 +39,10 @@ def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
 def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
     robot = Rbt.Robot.current
     assert isinstance(robot, Rbt.Robot)
+    #if not Rbt.Robot.reusetips: # and Rbt.Robot.droptips
+
     if robot.usePreservedtips:
-        TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[nTips]
+        TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[Rbt.nTips]
         where = robot.where_are_preserved_tips(selected_reactive, TIP_MASK, type)
         nTips = robot.curArm().nTips
         for tip_rack in where:
