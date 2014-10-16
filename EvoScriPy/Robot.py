@@ -32,10 +32,10 @@ class Robot:
 
         def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
             """
-            :param nTips:
+            :param nTips: the number of possible tips
             :param index: int. for example: index=Pipette.LiHa1
             :param workingTips: some tips maybe broken or permanently unused.
-            :param tipsType:
+            :param tipsType: DITI or fixed (not implemented)
             """
             self.index = index
             self.workingTips = workingTips if workingTips is not None else tipsMask[nTips] # todo implement
@@ -54,10 +54,10 @@ class Robot:
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
-                        raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
+                        raise BaseException("A Tip from rack type " + tp.type.name + " is already in position " + str(i))
             return tip_mask
 
-        def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> int:
+        def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> (int, list):
             """     Mount only one kind of new tip at a time or just the tips given in the list
             :param rack_type:
             :param tips:
@@ -67,19 +67,22 @@ class Robot:
             :raise "Tip already in position " + str(i):
             """
             if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
-            if tips:
-                assert Lab.count_tips(tip_mask) == len(tips)
-                t = 0
+            n = Lab.count_tips(tip_mask)
+            assert n <= self.nTips
+            t = 0
+            if tips is None:   # deprecated
+                assert isinstance(rack_type, Lab.Labware.DITIrack)
+                tips = [Lab.Tip(rack_type) for i in range(n)]
             else:
-                if rack_type:
-                    assert isinstance(rack_type, Lab.Labware.DITIrackType)
+                assert n == len(tips)
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
-                    self.Tips[i] = tips[t] if tips else Lab.Tip(rack_type)
+                    self.Tips[i] = tips[t]
                     t += 1
-            return tip_mask
+            return tip_mask, tips[t:] if t < n else []
 
         def getMoreTips_test(self, rack_type, tip_mask=-1) -> int:
             """ Mount only the tips with are not already mounted.
@@ -101,25 +104,34 @@ class Robot:
                         pass # self.Tips[i] = Lab.Tip(rack_type)
             return tip_mask
 
-        def getMoreTips(self, rack_type, tip_mask=-1) -> int:
+        def getMoreTips(self, rack_type, tip_mask=-1, tips=None) ->(int, list):
             """ Mount only the tips with are not already mounted.
                 Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                     :rtype : int
                     :param tip_mask: int
                     :return: the mask that can be used
                     """
-            if tip_mask == -1:
-                tip_mask = tipsMask[self.nTips]
+            if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
+            n = Lab.count_tips(tip_mask)
+            assert n <= self.nTips
+            t = 0
+            if tips is None:   # deprecated
+                assert isinstance(rack_type, Lab.Labware.DITIrack)
+                tips = [Lab.Tip(rack_type) for i in range(n)]
+            else:
+                assert n == len(tips)
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp:  # already in position
-                        if tp.type is not rack_type:
+                        if tp.type is not tips[t].type:
                             raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
-                                    " and we need " + rack_type.name
+                                    " and we need " + tips[t].type.name
                         tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                     else:
-                        pass # self.Tips[i] = Lab.Tip(rack_type)
-            return tip_mask
+                        self.Tips[i] = tips[t]
+                        t += 1
+            return tip_mask, tips[t:] if t < n else []
 
         def drop_test(self, tip_mask=-1) -> (int, [int]):
             """ Return the mask and the tips index to be really used.
@@ -217,7 +229,7 @@ class Robot:
         self.preservetips = False
         self.usePreservedtips = False
         # self.preservedtips = {} # order:well
-        # self.last_preserved_tips = None # Lab.DiTi_Rack, offset
+        # self.last_preserved_tips = None # Lab.DITIrack, offset
 
     def set_worktable(self,templateFile):
         w = Lab.WorkTable.curWorkTable
@@ -233,7 +245,7 @@ class Robot:
     def setUsed(self, tipMask, labware_selection):
         # Deprecated ??????
         mask, tips = self.curArm().drop_test(tipMask)
-        assert len(tips, labware_selection.selected())
+        assert len(tips) == len(labware_selection.selected())
         for i, w in enumerate(labware_selection.selected_wells()):
             self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
 
@@ -242,7 +254,7 @@ class Robot:
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
     # instruction and even by the final user.
 
-    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->[Lab.DiTi_Rack]:
+    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->list:  # [Lab.DITIrack]
         """
 
         :param TIP_MASK:
@@ -265,7 +277,7 @@ class Robot:
                 well_tip.labware.selectOnly(well_tip.offset)
         return where
 
-    def where_preserve_tips(self, TIP_MASK)->[Lab.DiTi_Rack]:
+    def where_preserve_tips(self, TIP_MASK)->list:      #  [Lab.DITIrack]
         """ Return a list of racks with the tips-wells already selected.
 
         :param selection:
@@ -300,7 +312,7 @@ class Robot:
             assert isinstance(w, Lab.Well)
             cont = False
             rack = w.labware
-            assert isinstance(rack, Lab.DiTi_Rack)
+            assert isinstance(rack, Lab.DITIrack)
             ip = w.offset
             n = Lab.count_tips(m)
             while n:
@@ -359,11 +371,11 @@ class Robot:
     # correspond to actions in the hardware.
     # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method Itr.actualize_robot_state(self):
 
-    def getTips(self, rack, tip_mask=-1,lastPos=False) -> int:
+    def getTips(self, rack, tip_mask=-1,lastPos=False) -> (int, list):  # (int, [Lab.Tip])
         """ To be call from Itr.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
         status and the number of tips already mounted.
-        If it return 0 no evo-instruction for the real robot will be generated in some cases.
+        If it return mask = 0 no evo-instruction for the real robot will be generated in some cases.
 
         :param rack: the king of tip.
         :param tip_mask:
@@ -372,48 +384,46 @@ class Robot:
         """
         if isinstance(rack, Lab.Labware.DITIrackType):
             rack = rack.pick_next_rack
-        assert isinstance(rack, Lab.DiTi_Rack)
+        assert isinstance(rack, Lab.DITIrack)
         tip_mask = self.getTips_test(rack.type, tip_mask)
         tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
         return self.curArm().getTips(rack.type, tip_mask, tips)
 
-    def dropTips(self, TIP_MASK=-1):
+    def dropTips(self, TIP_MASK=-1, waste=None):
         if not self.droptips: return 0
+
+        waste = waste if waste else Lab.def_DiTiWaste
+        assert isinstance(waste, Lab.DITIwaste)
+
         TIP_MASK, tips = self.curArm().drop(TIP_MASK)
-        for tp in tips:
-            if isinstance(tp, Lab.usedTip):  # this tip is dropped and cannot be used any more
-                react_well = tp.origin
-                if react_well.offset in tp.type.preserved_tips:
-                    tip_well = tp.type.preserved_tips[react_well.offset]
-                    assert isinstance(tip_well, Lab.Well)
-                    if tip_well.reactive is None:
-                        tip_well.reactive = Lab.banned_well  # don't used this well again (is "contaminated")
-                        del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
-                    else:
-                        assert tp is not tip_well.reactive
+        waste.waste(tips)
+
         return TIP_MASK
 
     def pipette(self, action, volume, labware_selection, tip_mask=-1) -> (list, int):
         volume, tip_mask = self.curArm().pipette(action, volume, tip_mask)
-        w = -1
+        w = 0
         # assert isinstance(labware_selection, Lab.Labware)
         wells = labware_selection.selected_wells()
         for i, tp in enumerate(self.curArm().Tips):
                 if tip_mask & (1 << i):
-                    w += 1
                     dv = action*volume[i]
+                    if wells[w].reactive is None:
+                        print("WARNING !!! There is nothing in well {:d} of rack {:s}".format(wells[w].offset+1,
+                                                                                            labware_selection.label))
                     assert wells[w].vol is not None, "Volume of " + wells[w].reactive.name + " not initialized."
                     nv = wells[w].vol - dv
-                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error tryin to change the volume of " + \
+                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \
                          wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv)
 
                     wells[w].vol = nv
                     if    action == Robot.Arm.Aspire:
                         self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])
-                        wells[w].log(dv)
+                        wells[w].log(-dv)
                     elif  action == Robot.Arm.Dispense:
                         assert isinstance(tp, Lab.usedTip)
-                        wells[w].log(dv, tp.origin)
+                        wells[w].log(-dv, tp.origin)
+                    w += 1
         return volume, tip_mask
 
     def set_tips_back(self, TIP_MASK, labware_selection):

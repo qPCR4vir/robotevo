@@ -20,11 +20,17 @@ class Tip:    # todo play with this idea
         self.vol = 0
         self.type = rack_type
 
+    def __str__(self):
+        return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
+
 class usedTip(Tip):
     def __init__(self, tip, origin=None):
         Tip.__init__(self, tip.type)
         self.vol = tip.vol
         self.origin = origin
+
+    def __str__(self):
+        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
 
 
 class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
@@ -112,8 +118,12 @@ class Well:
         self.label = ""
         self.actions = []
 
+    def __str__(self):
+        return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}".format(
+            pos=self.offset+1, lab=self.labware.label, label=self.label, vol=self.vol, what=str(self.reactive))
+
     def log(self, vol, origin=None):
-        self.actions += (vol, origin if origin else self)
+        self.actions += [(vol, (origin if origin else self))]
 
     def select(self, sel=True):
         self.selFlag = sel
@@ -129,6 +139,9 @@ class Labware:
             self.nCol = nCol
             self.maxVol = maxVol
 
+        def size(self)-> int:
+            return self.nRow * self.nCol
+
     class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
             if portrait: nCol, nRow = nRow, nCol # todo revise !
@@ -138,6 +151,10 @@ class Labware:
             self.pick_next_rack = None  # labware (DITIrackType or grid,site)
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
+
+    class DITIwasteType(Type):
+        def __init__(self, name, capacity=10*96):
+            Labware.Type.__init__(self, name, nRow=capacity)
 
     class Cuvette(Type):        pass
     class Te_Mag (Type):        pass
@@ -379,7 +396,7 @@ class Labware:
             sel.append(null + bitMask)
         return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
 
-class DiTi_Rack (Labware):
+class DITIrack (Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
         assert isinstance(type, Labware.DITIrackType)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
@@ -471,7 +488,7 @@ class DiTi_Rack (Labware):
         #  return removed tips and set it in the arm
         assert isinstance(tp, Labware.DITIrackType)
         beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
-        assert isinstance(rack, DiTi_Rack)
+        assert isinstance(rack, DITIrack)
         rest = end - beg + 1
         i, d = [end, -1] if lastPos else [beg, 1]
         tips = []
@@ -506,7 +523,7 @@ class DiTi_Rack (Labware):
 
     def set_next_to_next_rack(self, worktable=WorkTable.curWorkTable):
         rack = self.next_rack(worktable)
-        assert isinstance(rack, DiTi_Rack)
+        assert isinstance(rack, DITIrack)
         print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)
         assert self is not rack
         rack.fill()
@@ -551,6 +568,29 @@ class DiTi_Rack (Labware):
             w.reactive = None
             #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
 
+class DITIwaste(Labware):
+    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
+        assert isinstance(type, Labware.DITIwasteType)
+        Labware.__init__(self, type, location, label=label, worktable=worktable)
+        self.wasted = 0
+
+    def waste(self, tips):
+        for tp in tips:
+            self.Wells[self.wasted].reactive = tp
+            self.wasted += 1
+            assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
+            if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
+                react_well = tp.origin
+                if react_well.offset in tp.type.preserved_tips:
+                    tip_well = tp.type.preserved_tips[react_well.offset]
+                    assert isinstance(tip_well, Well)
+                    if tip_well.reactive is None:
+                        tip_well.reactive = banned_well  # don't used this well again (is "contaminated")
+                        del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
+                    else:
+                        assert tp is not tip_well.reactive
+
+
 
 
 Trough_100ml    = Labware.Type("Trough 100ml",                      8,      maxVol=100000, conectedWells=True)
@@ -568,7 +608,7 @@ TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxV
 CleanerSWS      = Labware.Type("Washstation 2Grid Cleaner short",   8,      maxVol=100000, conectedWells=True)
 WasteWS         = Labware.Type("Washstation 2Grid Waste",           8,      maxVol=100000, conectedWells=True)
 CleanerLWS      = Labware.Type("Washstation 2Grid Cleaner long",    8,      maxVol=100000, conectedWells=True)
-DiTi_Waste      = Labware.Type("Washstation 2Grid DiTi Waste",      8,      maxVol=100000, conectedWells=True)
+DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul", maxVol=940)
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190

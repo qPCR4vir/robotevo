@@ -1,5 +1,23 @@
 __author__ = 'Ariel'
 
+
+if __name__ == "__main__":
+    import EvoMode
+    from Instructions import Pipette
+    iRobot = EvoMode.iRobot( Pipette.LiHa1, nTips=4)
+    Script = EvoMode.Script(template = 'RNAext_MNVet.ewt',    filename = 'AWL.esc' )
+    comments=EvoMode.Comments()
+
+    EvoMode.current = EvoMode.multiple([iRobot,
+                                        Script,
+                                        EvoMode.AdvancedWorkList('AWL.gwl'),
+                                        EvoMode.ScriptBody('AWL.esc.txt'),
+                                        EvoMode.StdOut(), comments
+                                        ])
+
+
+
+
 from RobotInitRNAextraction import *
 import Labware as Lab
 import Reactive as React
@@ -23,10 +41,14 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     # DiTi1000_1.fill('B06')
     #DiTi1000_2.fill('A11')
     #DiTi1000_3.fill('A10')
-    #Itr.set_DITI_Counter2(posInRack='B06').exec()
+    #Itr.set_DITI_Counter2(DiTi1000_1, posInRack='B06').exec()
 
     React.NumOfSamples = NumOfSamples
     all_samples = range(React.NumOfSamples)
+    par = TeMag.parallelOrder(Rbt.nTips, all_samples)
+    for s in all_samples:
+        React.Reactive("probe_{:2d}".format(s+1),  Samples, initial_vol=200.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive("reaction_{:2d}".format(s+1), TeMag, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
 
 
     LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
@@ -123,3 +145,6 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             with parallel_execution_of(mix_mag_sub):
                 mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
             waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
+
+if __name__ == "__main__":
+    extractRNA_with_MN_Vet_Kit(30)
