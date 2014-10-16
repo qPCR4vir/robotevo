@@ -576,7 +576,7 @@ class DITIwaste(Labware):
 
     def waste(self, tips):
         for tp in tips:
-            self.Wells[self.wasted] = tp
+            self.Wells[self.wasted].reactive = tp
             self.wasted += 1
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
