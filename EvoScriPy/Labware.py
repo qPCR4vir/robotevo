@@ -446,10 +446,10 @@ class DITIrack (Labware):
 
     def fill(self, beg=1, end=None):   # todo it belong to Robot ??
         if isinstance(beg, list): assert end is None
-        else:
-            beg = self.offset(beg)
-            end = self.offset(end or self.type.nRow*self.type.nCol-1)
-            r = range(beg, end+1)
+        end = end if end else self.type.size()
+        beg = self.offset(beg)
+        end = self.offset(end)
+        r = range(beg, end+1)
         for w in self.Wells:
             w.reactive = None
             # w.labware = None   #   hummm ??
@@ -568,7 +568,7 @@ class DITIrack (Labware):
         rack.fill()
         tp = self.type
         tp.pick_next = 0
-        tp.pick_next_back = tp.nCol * tp.nRow -1
+        tp.pick_next_back = tp.size() -1
         tp.pick_next_rack = rack
 
     def set_back(self, TIP_MASK, tips):
