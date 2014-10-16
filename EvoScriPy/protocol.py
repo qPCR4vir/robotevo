@@ -477,13 +477,13 @@ def group(titel, mode=None):
     Itr.group_end().exec(mode)
 
 @contextmanager
-def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None):
+def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None, selected_reactive=None):
     if reuse        is not None: reuse        = reuseTips       (reuse       )
     if drop         is not None: drop         = set_dropTips    (drop        )
     if preserve     is not None: preserve     = preserveTips    (preserve    )
     if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
 
-    if tipsMask     is not None: tipsMask     = getTips         (tipsMask)
+    if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected_reactive)
 
     yield
 
