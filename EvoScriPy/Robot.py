@@ -402,16 +402,18 @@ class Robot:
 
     def pipette(self, action, volume, labware_selection, tip_mask=-1) -> (list, int):
         volume, tip_mask = self.curArm().pipette(action, volume, tip_mask)
-        w = -1
+        w = 0
         # assert isinstance(labware_selection, Lab.Labware)
         wells = labware_selection.selected_wells()
         for i, tp in enumerate(self.curArm().Tips):
                 if tip_mask & (1 << i):
-                    w += 1
                     dv = action*volume[i]
+                    if wells[w].reactive is None:
+                        print("WARNING !!! There is nothing in well {:d} of rack {:s}".format(wells[w].offset+1,
+                                                                                            labware_selection.label))
                     assert wells[w].vol is not None, "Volume of " + wells[w].reactive.name + " not initialized."
                     nv = wells[w].vol - dv
-                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error tryin to change the volume of " + \
+                    assert 0 <= nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \
                          wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv)
 
                     wells[w].vol = nv
@@ -421,6 +423,7 @@ class Robot:
                     elif  action == Robot.Arm.Dispense:
                         assert isinstance(tp, Lab.usedTip)
                         wells[w].log(-dv, tp.origin)
+                    w += 1
         return volume, tip_mask
 
     def set_tips_back(self, TIP_MASK, labware_selection):
