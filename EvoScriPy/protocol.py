@@ -38,25 +38,27 @@ def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
 
 def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
     robot = Rbt.Robot.current
+    TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[Rbt.nTips]
     assert isinstance(robot, Rbt.Robot)
     #if not Rbt.Robot.reusetips: # and Rbt.Robot.droptips
 
     if robot.usePreservedtips:
-        TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[Rbt.nTips]
+        with tips(drop=True, preserve=False): # drop tips from previous "buffer" in first pipetting
+            dropTips(TIP_MASK)
         where = robot.where_are_preserved_tips(selected_reactive, TIP_MASK, type)
         nTips = robot.curArm().nTips
         for tip_rack in where:
             tipsMask = 0
-            l = len(tip_rack.selected())
-            for i in range(nTips):
-                if not l: break
-                b = (1 << i)
-                if TIP_MASK & b:
-                    tipsMask |= b
-                    TIP_MASK ^= b
-                    l -= 1
+            tips_in_rack = len(tip_rack.selected())
+            for idx in range(nTips):
+                if not tips_in_rack: break
+                tip = (1 << idx)
+                if TIP_MASK & tip:
+                    tipsMask |= tip
+                    TIP_MASK ^= tip
+                    tips_in_rack -= 1
             Itr.pickUp_DITIs(tipsMask, tip_rack).exec()
-        assert l == 0
+        assert tips_in_rack == 0
         return
 
     else:
@@ -320,7 +322,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
 
                 src = oriSel[curSample:curSample + nt]
                 trg = dstSel[curSample:curSample + nt]
-                with tips(Rbt.tipsMask[nt], selected=src):  # todo what if volume > maxVol_tip ?
+                with tips(Rbt.tipsMask[nt], selected_reactive=src):  # todo what if volume > maxVol_tip ?
                     Asp.labware.selectOnly(src)
                     Asp.exec()
                     # Rbt.setUsed(Asp.tipMask, Asp.labware) # todo this in robot.aspire()
@@ -385,7 +387,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 sel = oriSel[curSample:curSample + nt]
                 Asp.labware.selectOnly(sel)
                 r = volume   # r: Waste_available yet; volume: to be Waste
-                with tips(tm, drop=True, preserve=False, selected=sel):
+                with tips(tm, drop=True, preserve=False, selected_reactive=sel):
                     while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
                         dV = r if r < mV else mV
                         if dV < Rest: break # ??
@@ -463,7 +465,7 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
                     mx.tipMask = Rbt.tipsMask[nt]
 
                 sel = oriSel[curSample:curSample + nt]
-                with tips(Rbt.tipsMask[nt], selected=sel):
+                with tips(Rbt.tipsMask[nt], selected_reactive=sel):
                     mx.labware.selectOnly(sel)
                     mx.exec()
                 SampleCnt -= nt
@@ -483,7 +485,7 @@ def tips(tipsMask=None, reuse=None, drop=None, preserve=None, usePreserved=None,
     if preserve     is not None: preserve     = preserveTips    (preserve    )
     if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
 
-    if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected_reactive)
+    if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected_reactive=selected_reactive)
 
     yield
 

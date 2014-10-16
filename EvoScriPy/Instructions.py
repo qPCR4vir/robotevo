@@ -252,7 +252,7 @@ class getDITI2(DITIs):
             curW = Robot.Robot.current.worktable
             assert isinstance(curW, Lab.WorkTable)
             ln = Robot.Robot.current.worktable.labTypes [ln][0].type
-        assert isinstance(ln, Lab.DITIrack) or isinstance(ln, Lab.Labware.DITIrackType)
+        assert isinstance(ln, (Lab.DITIrack, Lab.Labware.DITIrackType))
         self.tipMask, tips = Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
         self.LabwareTypeName = ln
