@@ -10,7 +10,7 @@ def_mix_excess   =  8
 NumOfSamples     = None
 
 class Reactive:
-    def __init__(self, name, labware,  volpersample,
+    def __init__(self, name, labware,  volpersample=0,
                  pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
