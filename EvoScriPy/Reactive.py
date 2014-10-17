@@ -10,7 +10,7 @@ def_mix_excess   =  8
 NumOfSamples     = None
 
 class Reactive:
-    def __init__(self, name, labware,  volpersample=0,
+    def __init__(self, name, labware,  volpersample=0, single_use=None,
                  pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
@@ -35,7 +35,14 @@ class Reactive:
         if initial_vol is not None:
             for w in  self.Replicas:
                  w.vol += initial_vol
-        self.init_vol()
+        if single_use:
+            assert not volpersample, str(name) + \
+                            ": this is a single use-reactive. Please, don't set any volume per sample."
+            assert len(self.Replicas) == 1, "Temporally use only one vial for " + str(name)
+            self.volpersample = single_use
+            self.init_vol(NumSamples=1)
+        else:
+            self.init_vol()
 
 
     def __str__(self):
@@ -53,7 +60,7 @@ class Reactive:
         V = self.volpersample * self.excess
         replicas=len(self.Replicas)
         for i, w in enumerate(self.Replicas):
-            v = V * (NumOfSamples + replicas - (i+1))//replicas
+            v = V * (NumSamples + replicas - (i+1))//replicas
             if v > w.vol:  w.vol += (v-w.vol)
 
     def autoselect(self, maxTips=1):
