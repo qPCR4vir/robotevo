@@ -38,8 +38,18 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     #DiTi1000_3.fill('A10')
     Itr.set_DITI_Counter2(DiTi1000_1, posInRack='A01').exec()
 
-    SampleVolume        = 200
     React.NumOfSamples  = NumOfSamples
+    SampleVolume        = 200.0
+    LysisBufferVolume   = 180.0
+    IC2Volume           = 4.0
+    BindingBufferVolume = 600.0
+    B_BeadsVolume       = 20.0
+    VEW1Volume          = 600.0
+    VEW2Volume          = 600.0
+    EtOH80pVolume       = 600.0
+    ProtKVolume         = 20.0
+    cRNAVolume          = 4.0
+    IC_MS2Volume        = 20.0
 
     all_samples = range(React.NumOfSamples)
     par = TeMag.parallelOrder(Rbt.nTips, all_samples)
@@ -53,32 +63,32 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
 
     LysisBuffer     = React.Reactive("VL - Lysis Buffer "              ,
-                                     LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
+                                     LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
     IC2             = React.Reactive("IC2 -synthetic RNA"              ,
-                                     Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
+                                     Reactives, pos=11, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
     BindingBuffer   = React.Reactive("VEB - Binding Buffer "           ,
-                                     BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
+                                     BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
     B_Beads         = React.Reactive("B-Beads"                         ,
-                                     Reactives, pos=1, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)
+                                     Reactives, pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=W_liquidClass)
 
     VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"),
-                                     volpersample=600 , defLiqClass=B_liquidClass)
+                                     volpersample=VEW1Volume , defLiqClass=B_liquidClass)
     VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer" ),
-                                     volpersample=600 , defLiqClass=B_liquidClass)
+                                     volpersample=VEW2Volume , defLiqClass=B_liquidClass)
     EtOH80p         = React.Reactive("Ethanol 80%"                     ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
-                                     volpersample=600 , defLiqClass=B_liquidClass)
+                                     volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
     ElutionBuffer   = React.Reactive("Elution Buffer"                  ,
                                      ElutBuf,     volpersample=100 , defLiqClass=B_liquidClass)
 
     ProtK           = React.Reactive("Proteinase K"                    ,
-                                     Reactives, pos=16, volpersample= 20 , defLiqClass=W_liquidClass)
+                                     Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=W_liquidClass)
     cRNA            = React.Reactive("Carrier RNA"                     ,
-                                     Reactives, pos=15, volpersample=  4 , defLiqClass=W_liquidClass)
+                                     Reactives, pos=15, volpersample=  cRNAVolume , defLiqClass=W_liquidClass)
     IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
-                                     Reactives, pos=14, volpersample= 20 , defLiqClass=W_liquidClass)  #, pos=14
+                                     Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=W_liquidClass)
     pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
                                      Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                      ,defLiqClass=W_liquidClass, replicas=2)
@@ -114,8 +124,6 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     reuse_tips_and_drop(reuse=False, drop=True)
     wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
                   using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"))
-                  #, vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
-                  #          + B_Beads.volpersample+BindingBuffer.volpersample)
 
     wash_in_TeMag(reactive=VEW1, wells=all_samples)
 
@@ -124,20 +132,19 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with group("Wash in TeMag with " + EtOH80p.name):
         spread( reactive=EtOH80p,to_labware_region=TeMag.selectOnly(all_samples))
         Itr.subroutine(mix_mag_sub,Itr.subroutine.Continues).exec()
-        mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass,600)
+        mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass, EtOH80pVolume)
         Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
         waste( from_labware_region=TeMag.selectOnly(all_samples),
-               using_liquid_class =("Serum Asp preMix3","Serum Disp postMix3"),
-               volume=600)
+               using_liquid_class =("Serum Asp preMix3","Serum Disp postMix3"))
 
     spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
     Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
-    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass,100)
+    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass, 100)
     Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
-    transfer(from_labware_region=TeMag.selectOnly(all_samples),
-             to_labware_region=Eluat.selectOnly(all_samples),
-             using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"),
-             volume=100, optimizeTo=False )
+    transfer(from_labware_region=   TeMag.selectOnly(all_samples),
+             to_labware_region=     Eluat.selectOnly(all_samples),
+             using_liquid_class=    ("Serum Asp preMix3", "Serum Disp postMix3"),
+             optimizeTo=            False )
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         """
@@ -155,7 +162,7 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             reuse_tips_and_drop(reuse=True, drop=True)
             with parallel_execution_of(mix_mag_sub):
                 mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
-            waste(TeMag.selectOnly(wells), using_liquid_class, vol or reactive.volpersample)
+            waste(TeMag.selectOnly(wells), using_liquid_class, vol)
 
 if __name__ == "__main__":
     extractRNA_with_MN_Vet_Kit(30)
