@@ -424,13 +424,14 @@ class set_DITIs_Back(Pipette):
     return used DITIs to specified positions on a DITI rack for later use.
     This command requires the Lower DITI Eject option.
     """
-    def __init__(self , tipMask     = curTipMask,
-                             labware     = None,
+    def __init__(self , tipMask     , #= curTipMask,
+                             labware     , #= None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
                              arm         = Pipette.LiHa1,
                              RackName    = None,
                              Well        = None):
+        assert isinstance(labware, Lab.DITIrack)
         Pipette.__init__(self, 'Set_DITIs_Back',
                              tipMask     = tipMask,
                              labware     = labware or Lab.def_DiTi,
@@ -442,11 +443,10 @@ class set_DITIs_Back(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[4:5] = []
+        self.arg[3:4] = []
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, Lab.DITIrack)
         self.tipMask = Robot.Robot.current.set_tips_back(self.tipMask, self.labware)
 
 class pickUp_ZipTip(Pipette): # todo implement !!!
