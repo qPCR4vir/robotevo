@@ -430,7 +430,7 @@ class pickUp_DITIs2(Pipette):
                              labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
-                             arm         = Pipette.LiHa1,
+                             arm         = Pipette.LiHa1,   # last parameter
                              RackName    = None,
                              Well        = None):
         Pipette.__init__(self, 'PickUp_DITIs2',
@@ -445,8 +445,8 @@ class pickUp_DITIs2(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[3:4] = []
-        self.arg[-1:-1] = [integer(self.type)]
+        self.arg[3:4] = []        # delete arg tip spacing
+        self.arg[-1:-1] = [string1(self.labware.type.name)]
         return True
 
     def actualize_robot_state(self):
