@@ -33,6 +33,9 @@ def reuse_tips_and_drop(reuse=True, drop=True)->(bool, bool):
 def preserveTips(preserve=True)->bool:
     return Rbt.Robot.current.preserveTips(preserve)
 
+def preserveingTips()->bool:
+    return Rbt.Robot.current.preservetips
+
 def usePreservedTips(usePreserved=True)->bool:
     return Rbt.Robot.current.usePreservedTips(usePreserved)
 
@@ -41,7 +44,7 @@ def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
 
 def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
     robot = Rbt.Robot.current
-    TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[Rbt.nTips]
+    mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[Rbt.nTips]
     assert isinstance(robot, Rbt.Robot)
     #if not Rbt.Robot.reusetips: # and Rbt.Robot.droptips
 
@@ -62,13 +65,11 @@ def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
                     tips_in_rack -= 1
             Itr.pickUp_DITIs2(tipsMask, tip_rack).exec()
         assert tips_in_rack == 0
-        return
-
     else:
         type=type or Lab.def_DiTi
         I = Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm)
         I.exec()
-        return TIP_MASK # I.tipMask
+    return mask # todo REVISE !!   I.tipMask
 
 
 def dropTips(TIP_MASK=-1):

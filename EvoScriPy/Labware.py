@@ -607,6 +607,7 @@ class DITIrack (Labware):
             tips += [w.reactive]
             w.reactive = None
             #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+        return tips
 
 class DITIwaste(Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):

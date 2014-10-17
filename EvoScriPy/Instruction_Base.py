@@ -172,7 +172,7 @@ class Pipette(Instruction):
         """
         Instruction.__init__(self, name)
         self.tipMask=tipMask
-        self.labware=labware or Lab.def_LabW
+        self.labware=labware or Lab.def_LabW  # the labware with the selected wells
         self.spacing = spacing
         self.loopOptions = LoopOptions
         self.RackName = RackName

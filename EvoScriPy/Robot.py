@@ -82,7 +82,7 @@ class Robot:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i)
                     self.Tips[i] = tips[t]
                     t += 1
-            return tip_mask, tips[t:] if t < n else []
+            return tip_mask, (tips[t:] if t < n else [])
 
         def getMoreTips_test(self, rack_type, tip_mask=-1) -> int:
             """ Mount only the tips with are not already mounted.
@@ -268,7 +268,7 @@ class Robot:
         assert n == len(selected_reactive)
         where = []
         for react_offset in selected_reactive:
-            assert react_offset in type.preserved_tips
+            assert react_offset in type.preserved_tips, "There are no tip preserved for sample "+str(react_offset+1)
             well_tip = type.preserved_tips[react_offset]
             assert isinstance(well_tip, Lab.Well)
             if well_tip.labware in where:
@@ -329,8 +329,8 @@ class Robot:
         for tp in tips:
             assert isinstance(tp, Lab.usedTip)
             react_well = tp.origin
-            assert react_well.offset in tp.type.preservedtips, "There are no tip preserved for sample "+str(i)
-            tip_well = tp.type.preservedtips[react_well.offset]
+            assert react_well.offset in tp.type.preserved_tips, "There are no tip preserved for sample "+str(i)
+            tip_well = tp.type.preserved_tips[react_well.offset]
             assert isinstance(tip_well, Lab.Well)
             if tip_well.labware in racks:
                 tip_well.selFlag = True
@@ -392,7 +392,7 @@ class Robot:
         assert isinstance(rack, Lab.DITIrack)
         tip_mask = self.getTips_test(rack.type, tip_mask)
         tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
-        return self.curArm().getTips(rack.type, tip_mask, tips)
+        return self.curArm().getTips(rack_type=rack.type, tip_mask=tip_mask, tips=tips)
 
     def dropTips(self, TIP_MASK=-1, waste=None):
         if not self.droptips: return 0
@@ -463,6 +463,6 @@ class Robot:
 
         TIP_MASK = self.curArm().getTips_test(TIP_MASK)
         tips = labware_selection.pick_up(TIP_MASK)
-        return self.curArm().getTips(TIP_MASK, tips)
+        return self.curArm().getTips(tip_mask=TIP_MASK, tips=tips)
 
 

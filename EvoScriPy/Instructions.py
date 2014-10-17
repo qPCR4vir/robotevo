@@ -417,7 +417,8 @@ class pickUp_DITIs(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        assert not tips
 
 class pickUp_DITIs2(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI) pag. A-131 and 15-16
@@ -451,7 +452,8 @@ class pickUp_DITIs2(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        assert not tips
 
 class set_DITIs_Back(Pipette):
     """ A.15.4.9 Set DITIs Back (Worklist: Set_DITIs_Back)
