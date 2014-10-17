@@ -4,9 +4,9 @@ __author__ = 'Ariel'
 if __name__ == "__main__":
     import EvoMode
     from Instructions import Pipette
-    iRobot = EvoMode.iRobot( Pipette.LiHa1, nTips=4)
-    Script = EvoMode.Script(template = 'RNAext_MNVet.ewt',    filename = 'AWL.esc' )
-    comments=EvoMode.Comments()
+    iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
+    Script = EvoMode.Script(template='RNAext_MNVet.ewt', filename='AWL.esc')
+    comments = EvoMode.Comments()
 
     EvoMode.current = EvoMode.multiple([iRobot,
                                         Script,
@@ -15,19 +15,17 @@ if __name__ == "__main__":
                                         EvoMode.StdOut(), comments
                                         ])
 
-
-
 from RobotInitRNAextraction import *
-import Labware  as Lab
+import Labware as Lab
 import Reactive as React
 from protocol import *
 
 from Instructions_Te_MagS import *
 import Instructions as Itr
 
-Reactives     = Lab.Labware(Lab.GreinRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
-Eluat         = Lab.Labware(Lab.EppRack3x16R,    Lab.Labware.Location(8, 1 ), "Eluat" )
-Samples       = Lab.Labware(Lab.EppRack3x16,     Lab.Labware.Location(11, 1), "Proben")
+Reactives  = Lab.Labware(Lab.GreinRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
+Eluat      = Lab.Labware(Lab.EppRack3x16R,    Lab.Labware.Location(8, 1 ), "Eluat" )
+Samples    = Lab.Labware(Lab.EppRack3x16,     Lab.Labware.Location(11, 1), "Proben")
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
 
@@ -64,23 +62,23 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                                      Reactives, pos=1, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)
 
     VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
-                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"   ),
-                                     volpersample=600 ,defLiqClass=B_liquidClass)
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"),
+                                     volpersample=600 , defLiqClass=B_liquidClass)
     VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
-                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer"   ),
-                                     volpersample=600 ,defLiqClass=B_liquidClass)
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer" ),
+                                     volpersample=600 , defLiqClass=B_liquidClass)
     EtOH80p         = React.Reactive("Ethanol 80%"                     ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
-                                     volpersample=600 ,defLiqClass=B_liquidClass)
+                                     volpersample=600 , defLiqClass=B_liquidClass)
     ElutionBuffer   = React.Reactive("Elution Buffer"                  ,
-                                     ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
+                                     ElutBuf,     volpersample=100 , defLiqClass=B_liquidClass)
 
     ProtK           = React.Reactive("Proteinase K"                    ,
-                                     Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
+                                     Reactives, pos=16, volpersample= 20 , defLiqClass=W_liquidClass)
     cRNA            = React.Reactive("Carrier RNA"                     ,
-                                     Reactives, pos=15, volpersample=  4 ,defLiqClass=W_liquidClass)
+                                     Reactives, pos=15, volpersample=  4 , defLiqClass=W_liquidClass)
     IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
-                                     Reactives, pos=14, volpersample= 20 ,defLiqClass=W_liquidClass)  #, pos=14
+                                     Reactives, pos=14, volpersample= 20 , defLiqClass=W_liquidClass)  #, pos=14
     pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
                                      Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                      ,defLiqClass=W_liquidClass, replicas=2)
@@ -115,9 +113,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
     reuse_tips_and_drop(reuse=False, drop=True)
     wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
-                        using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"),
-                        vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
-                            + B_Beads.volpersample+BindingBuffer.volpersample)
+                  using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"))
+                  #, vol=pK_cRNA_MS2.volpersample+200+LysisBuffer.volpersample
+                  #          + B_Beads.volpersample+BindingBuffer.volpersample)
 
     wash_in_TeMag(reactive=VEW1, wells=all_samples)
 
