@@ -241,7 +241,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
-            with tips(Rbt.tipsMask[nt]):  # todo want to use preserved ?? selected=??
+            with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # todo want to use preserved ?? selected=??
                 maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
                 while SampleCnt:
                     if nt > SampleCnt: nt = SampleCnt
