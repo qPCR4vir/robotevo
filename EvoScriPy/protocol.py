@@ -30,10 +30,10 @@ def reuseTips(reuse=True)->bool:
 def reuse_tips_and_drop(reuse=True, drop=True)->(bool, bool):
     return set_dropTips(drop), reuseTips(reuse)
 
-def preserveTips(self, preserve=True)->bool:
+def preserveTips(preserve=True)->bool:
     return Rbt.Robot.current.preserveTips(preserve)
 
-def usePreservedTips(self, usePreserved=True)->bool:
+def usePreservedTips(usePreserved=True)->bool:
     return Rbt.Robot.current.usePreservedTips(usePreserved)
 
 def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
