@@ -58,13 +58,13 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=1, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
 
     VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
-                                     Lab.Labware(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"   ),
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"   ),
                                      volpersample=600 ,defLiqClass=B_liquidClass)
     VEW2            = React.Reactive("VEW2 - WashBuffer"               ,
-                                     Lab.Labware(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer"   ),
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer"   ),
                                      volpersample=600 ,defLiqClass=B_liquidClass)
     EtOH80p         = React.Reactive("Ethanol 80%"                     ,
-                                     Lab.Labware(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
                                      volpersample=600 ,defLiqClass=B_liquidClass)
     ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
 
