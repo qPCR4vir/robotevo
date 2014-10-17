@@ -60,7 +60,7 @@ def getTips(TIP_MASK=-1, type=None, selected_reactive=None):
                     tipsMask |= tip
                     TIP_MASK ^= tip
                     tips_in_rack -= 1
-            Itr.pickUp_DITIs(tipsMask, tip_rack).exec()
+            Itr.pickUp_DITIs2(tipsMask, tip_rack).exec()
         assert tips_in_rack == 0
         return
 

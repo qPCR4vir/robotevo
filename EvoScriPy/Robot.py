@@ -71,7 +71,7 @@ class Robot:
             assert n <= self.nTips
             t = 0
             if tips is None:   # deprecated
-                assert isinstance(rack_type, Lab.Labware.DITIrack)
+                assert isinstance(rack_type, Lab.Labware.DITIrackType)
                 tips = [Lab.Tip(rack_type) for i in range(n)]
             else:
                 assert n == len(tips)
