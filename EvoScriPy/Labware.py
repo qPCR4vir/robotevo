@@ -604,7 +604,7 @@ class DITIrack (Labware):
         for i, w in enumerate(self.selected_wells()):
             assert isinstance(w.reactive, usedTip), ("No tip " + w.reactive.type.name +
                             "were found in position " + str(self.position(i)) + " of " + self.label)
-            tips[i] = w.reactive
+            tips += [w.reactive]
             w.reactive = None
             #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
 
