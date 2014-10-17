@@ -66,6 +66,14 @@ class Reactive:
     def autoselect(self, maxTips=1):
         return self.labware.autoselect(self.pos, maxTips, len(self.Replicas))
 
+class Reaction(Reactive):
+    def __init__(self, name, track_sample, labware,
+                 pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
+        Reactive.__init__(self, name, labware, single_use=0,
+                 pos=pos, replicas=replicas, defLiqClass=defLiqClass, excess=excess, initial_vol=initial_vol)
+        self.track_sample = track_sample
+
+
 class preMix(Reactive):
     def __init__(self, name, labware, pos, components, replicas=1, initial_vol=None,
                  defLiqClass=None, excess=None):
