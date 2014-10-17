@@ -49,7 +49,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     for s in all_samples:
         React.Reactive(   "probe_{:02d}".format(s+1), Samples, initial_vol=200.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
         React.Reactive("reaction_{:02d}".format(s+1), TeMag, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
-        React.Reactive(     "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive(     "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
 
 
     LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
