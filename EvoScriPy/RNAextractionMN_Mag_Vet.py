@@ -50,6 +50,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     ProtKVolume         = 20.0
     cRNAVolume          = 4.0
     IC_MS2Volume        = 20.0
+    ElutionBufferVolume = 100.0
 
     all_samples = range(React.NumOfSamples)
     par = TeMag.parallelOrder(Rbt.nTips, all_samples)
@@ -81,7 +82,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
                                      volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
     ElutionBuffer   = React.Reactive("Elution Buffer"                  ,
-                                     ElutBuf,     volpersample=100 , defLiqClass=B_liquidClass)
+                                     ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass=B_liquidClass)
 
     ProtK           = React.Reactive("Proteinase K"                    ,
                                      Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=W_liquidClass)
@@ -132,17 +133,18 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with group("Wash in TeMag with " + EtOH80p.name):
         spread( reactive=EtOH80p,to_labware_region=TeMag.selectOnly(all_samples))
         Itr.subroutine(mix_mag_sub,Itr.subroutine.Continues).exec()
-        mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass, EtOH80pVolume)
+        mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
         Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
         waste( from_labware_region=TeMag.selectOnly(all_samples),
                using_liquid_class =("Serum Asp preMix3","Serum Disp postMix3"))
 
     spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
     Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
-    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass, 100)
+    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
     Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
     transfer(from_labware_region=   TeMag.selectOnly(all_samples),
              to_labware_region=     Eluat.selectOnly(all_samples),
+             volume=                ElutionBufferVolume,
              using_liquid_class=    ("Serum Asp preMix3", "Serum Disp postMix3"),
              optimizeTo=            False )
 
@@ -161,7 +163,7 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
             reuse_tips_and_drop(reuse=True, drop=True)
             with parallel_execution_of(mix_mag_sub):
-                mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol or reactive.volpersample)
+                mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol)
             waste(TeMag.selectOnly(wells), using_liquid_class, vol)
 
 if __name__ == "__main__":

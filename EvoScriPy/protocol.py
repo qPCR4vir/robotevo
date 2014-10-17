@@ -338,162 +338,178 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
 
 def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_waste_labware=None, optimize=True):
 
-        """
+    """
 
-        :param from_labware_region:
-        :param using_liquid_class:
-        :param volume:
-        :param to_waste_labware:
-        :param optimize:
-        :return:
-        """
-        to_waste_labware = to_waste_labware or Lab.def_WashWaste
-        assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
-        if not volume or volume< 0.0 : volume = 0.0
-        assert isinstance(volume, (int, float))
-        oriSel = from_labware_region.selected()
-        nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if not oriSel:
-            oriSel = range(Rtv.NumOfSamples)
-        if optimize:
-            oriSel = from_labware_region.parallelOrder(nt, oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
+    :param from_labware_region:
+    :param using_liquid_class:
+    :param volume:
+    :param to_waste_labware:
+    :param optimize:
+    :return:
+    """
+    to_waste_labware = to_waste_labware or Lab.def_WashWaste
+    assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
+    if not volume or volume< 0.0 : volume = 0.0
+    assert isinstance(volume, (int, float))
+    oriSel = from_labware_region.selected()
+    nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+    if not oriSel:
+        oriSel = range(Rtv.NumOfSamples)
+    if optimize:
+        oriSel = from_labware_region.parallelOrder(nt, oriSel)
+    NumSamples = len(oriSel)
+    SampleCnt = NumSamples
 
-        if nt > SampleCnt:
-            nt = SampleCnt
-        tm = Rbt.tipsMask[nt]
-        nt = to_waste_labware.autoselect(maxTips=nt)
-        mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
+    if nt > SampleCnt:
+        nt = SampleCnt
+    tm = Rbt.tipsMask[nt]
+    nt = to_waste_labware.autoselect(maxTips=nt)
+    mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
 
-        Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
-        RestPlus = 50
-        CtrVol = 0.5
+    Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
+    RestPlus = 50
+    CtrVol = 0.5
 
-        if volume:
-            v = volume
-        else:
-            v = from_labware_region.Wells[oriSel[0]].vol
+    if volume:
+        v = volume
+    else:
+        v = from_labware_region.Wells[oriSel[0]].vol
 
-        Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
-        # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
-        Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
-        # Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
+    Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
+    # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
+    Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
+    # Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
 
-        lf = from_labware_region
-        msg = "Waste: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
-        with group(msg):
-            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
-                                     + str([i+1 for i in oriSel])
-            Itr.comment(msg).exec()
-            while SampleCnt:
-                curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:
-                    nt = SampleCnt
-                    tm = Rbt.tipsMask[nt]
-                    Asp.tipMask = tm
-                    Dst.tipMask = tm
-                    # Ctr.tipMask = tm
-                sel = oriSel[curSample:curSample + nt]
-                Asp.labware.selectOnly(sel)
+    lf = from_labware_region
+    msg = "Waste: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
+    with group(msg):
+        msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+                                 + str([i+1 for i in oriSel])
+        Itr.comment(msg).exec()
+        while SampleCnt:
+            curSample = NumSamples - SampleCnt
+            if nt > SampleCnt:
+                nt = SampleCnt
+                tm = Rbt.tipsMask[nt]
+                Asp.tipMask = tm
+                Dst.tipMask = tm
+                # Ctr.tipMask = tm
+            sel = oriSel[curSample:curSample + nt]
+            Asp.labware.selectOnly(sel)
+            if volume:
+                r = volume   # r: Waste_available yet; volume: to be Waste
+            else:
+                vols = [w.vol for w in Asp.labware.selected_wells()]
+                r_min, r_max = min(vols), max(vols)
+                assert r_min == r_max
+                r = r_max
+
+            with tips(tm, drop=True, preserve=False, selected_reactive=sel):
+                while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
+                    dV = r if r < mV else mV
+                    if dV < Rest: break # ??
+                    dV -= Rest       # the last Rest uL have to be aspired with the other Liq Class
+                    Asp.volume = dV  #  with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
+                    Dst.volume = dV
+                    Asp.liquidClass = Te_Mag_LC # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
+                    Asp.exec()
+                    Asp.volume = CtrVol
+                    Asp.liquidClass = Te_Mag_Centre
+                    with tips(allow_air=CtrVol):
+                        Asp.exec()
+                        Dst.exec()
+                    r -= dV
+
+                Asp.volume = Rest
+                Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
+                with tips(allow_air=Rest):
+                        Asp.exec()
+                # Ctr.exec()
+                Asp.volume = CtrVol
+                Asp.liquidClass = Te_Mag_Force_Centre
+                with tips(allow_air=CtrVol):
+                        Asp.exec()
+                Asp.volume = RestPlus
+                Asp.liquidClass =  Te_Mag_RestPlus # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
+                with tips(allow_air=RestPlus):
+                        Asp.exec()
+                #Ctr.exec()
+                Asp.volume = CtrVol
+                Asp.liquidClass = Te_Mag_Force_Centre
+                Dst.volume = Rest + RestPlus
+                with tips(allow_air=CtrVol):
+                        Asp.exec()
+                with tips(allow_air=Rest + RestPlus):
+                        Dst.exec()
+
+            SampleCnt -= nt
+        Asp.labware.selectOnly(oriSel)
+    return oriSel
+
+def mix( in_labware_region, using_liquid_class, volume=None, optimize=True):
+
+    """
+
+    :param in_labware_region:
+    :param using_liquid_class:
+    :param volume:
+    :param optimize:
+    :return:
+    """
+    in_labware_region = in_labware_region or Lab.WashWaste
+    assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
+    if not volume or volume< 0.0 : volume = 0.0
+    assert isinstance(volume, (int, float))
+    oriSel = in_labware_region.selected()
+    nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+    if not oriSel:
+        oriSel = range(Rtv.NumOfSamples)
+    if optimize:
+        oriSel = in_labware_region.parallelOrder( nt, oriSel)
+    NumSamples = len(oriSel)
+    SampleCnt = NumSamples
+    if nt > SampleCnt:
+        nt = SampleCnt
+    # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+    mV = Lab.def_DiTi.maxVol * 0.8    # What tip tp use !
+    if volume:
+        v = volume
+    else:
+        v = in_labware_region.Wells[oriSel[0]].vol
+    v = v * 0.8
+    v = v if v < mV else mV
+
+    lf = in_labware_region
+    mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
+    msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
+    with group(msg):
+        msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+                                    + str([i+1 for i in oriSel])
+        Itr.comment(msg).exec()
+        while SampleCnt:
+            curSample = NumSamples - SampleCnt
+            if nt > SampleCnt:
+                nt = SampleCnt
+                mx.tipMask = Rbt.tipsMask[nt]
+
+            sel = oriSel[curSample:curSample + nt]
+            with tips(Rbt.tipsMask[nt], selected_reactive=sel):
+                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+                mx.labware.selectOnly(sel)
                 if volume:
                     r = volume   # r: Waste_available yet; volume: to be Waste
                 else:
-                    vols = [w.vol for w in Asp.labware.selected()]
+                    vols = [w.vol for w in mx.labware.selected_wells()]
                     r_min, r_max = min(vols), max(vols)
                     assert r_min == r_max
                     r = r_max
-
-                with tips(tm, drop=True, preserve=False, selected_reactive=sel):
-                    while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
-                        dV = r if r < mV else mV
-                        if dV < Rest: break # ??
-                        dV -= Rest       # the last Rest uL have to be aspired with the other Liq Class
-                        Asp.volume = dV  #  with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
-                        Dst.volume = dV
-                        Asp.liquidClass = Te_Mag_LC # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
-                        Asp.exec()
-                        Asp.volume = CtrVol
-                        Asp.liquidClass = Te_Mag_Centre
-                        with tips(allow_air=CtrVol):
-                            Asp.exec()
-                            Dst.exec()
-                        r -= dV
-
-                    Asp.volume = Rest
-                    Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
-                    with tips(allow_air=Rest):
-                            Asp.exec()
-                    # Ctr.exec()
-                    Asp.volume = CtrVol
-                    Asp.liquidClass = Te_Mag_Force_Centre
-                    with tips(allow_air=CtrVol):
-                            Asp.exec()
-                    Asp.volume = RestPlus
-                    Asp.liquidClass =  Te_Mag_RestPlus # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
-                    with tips(allow_air=RestPlus):
-                            Asp.exec()
-                    #Ctr.exec()
-                    Asp.volume = CtrVol
-                    Asp.liquidClass = Te_Mag_Force_Centre
-                    Dst.volume = Rest + RestPlus
-                    with tips(allow_air=CtrVol):
-                            Asp.exec()
-                    with tips(allow_air=Rest + RestPlus):
-                            Dst.exec()
-
-                SampleCnt -= nt
-            Asp.labware.selectOnly(oriSel)
-        return oriSel
-
-def mix( in_labware_region, using_liquid_class, volume, optimize=True):
-
-        """
-
-        :param in_labware_region:
-        :param using_liquid_class:
-        :param volume:
-        :param optimize:
-        :return:
-        """
-        in_labware_region = in_labware_region or Lab.WashWaste
-        assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
-        assert isinstance(volume, (int, float))
-        oriSel = in_labware_region.selected()
-        nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if not oriSel:
-            oriSel = range(Rtv.NumOfSamples)
-        if optimize:
-            oriSel = in_labware_region.parallelOrder( nt, oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
-        if nt > SampleCnt:
-            nt = SampleCnt
-        volume = volume * 0.8
-        mV = Lab.def_DiTi.maxVol * 0.8    # todo revise !! What tip tp use !
-        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-        volume = volume if volume < mV else mV
-
-        lf = in_labware_region
-        mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
-        msg = "Mix: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
-        with group(msg):
-            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
-                                        + str([i+1 for i in oriSel])
-            Itr.comment(msg).exec()
-            while SampleCnt:
-                curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:
-                    nt = SampleCnt
-                    mx.tipMask = Rbt.tipsMask[nt]
-
-                sel = oriSel[curSample:curSample + nt]
-                with tips(Rbt.tipsMask[nt], selected_reactive=sel):
-                    mx.labware.selectOnly(sel)
-                    mx.exec()
-                SampleCnt -= nt
-        mx.labware.selectOnly(oriSel)
-        return oriSel
+                r = r * 0.8
+                r = r if r < mV else mV
+                mx.volume = r
+                mx.exec()
+            SampleCnt -= nt
+    mx.labware.selectOnly(oriSel)
+    return oriSel
 
 @contextmanager
 def group(titel, mode=None):
