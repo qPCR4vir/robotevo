@@ -123,7 +123,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
     spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
     Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
-    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass,600)
+    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass,100)
     Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
     transfer(from_labware_region=TeMag.selectOnly(all_samples),
              to_labware_region=Eluat.selectOnly(all_samples),
