@@ -371,7 +371,7 @@ class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
                     string1(self.labware.location.grid),
                     string1(self.labware.location.site+1),
                     string1(self.labware.offset(self.posInRack)+1),
-                    integer(self.lastPos)] # todo extract from Location
+                    integer(self.lastPos)]
         return True
 
     def actualize_robot_state(self):
@@ -411,7 +411,41 @@ class pickUp_DITIs(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[4:5] = []
+        self.arg[3:4] = []
+        self.arg[-1:-1] = [integer(self.type)]
+        return True
+
+    def actualize_robot_state(self):
+        assert isinstance(self.labware, Lab.DITIrack)
+        self.tipMask = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+
+class pickUp_DITIs2(Pipette):
+    """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI) pag. A-131 and 15-16
+                 NOT DOCUMENTED
+    The Pick Up DITIs command is used to pick up DITIs which have already been
+    used and put back into a DITI rack with the Set DITIs Back command. You must
+    specify the DITIs you want to pick up.
+    """
+    def __init__(self, tipMask     = curTipMask,
+                             labware     = None,
+                             wellSelection= None,
+                             LoopOptions = def_LoopOp,
+                             arm         = Pipette.LiHa1,
+                             RackName    = None,
+                             Well        = None):
+        Pipette.__init__(self, 'PickUp_DITIs2',
+                             tipMask     = tipMask,
+                             labware     = labware or Lab.def_DiTi,
+                             wellSelection= wellSelection,
+                             LoopOptions = LoopOptions,
+                             RackName    = RackName,
+                             Well        = Well,
+                             arm         = arm)
+        self.type = type
+
+    def validateArg(self):
+        Pipette.validateArg(self)
+        self.arg[3:4] = []
         self.arg[-1:-1] = [integer(self.type)]
         return True
 
