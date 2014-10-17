@@ -130,18 +130,20 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Continues).exec()
             mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
-            waste( from_labware_region=TeMag.selectOnly(all_samples),
-                   using_liquid_class =("Serum Asp preMix3","Serum Disp postMix3"))
+            with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
+                waste( from_labware_region=    TeMag.selectOnly(all_samples),
+                       using_liquid_class=   ("Serum Asp preMix3","Serum Disp postMix3"))
 
-    spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
-    Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
-    mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
-    Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
-    transfer(from_labware_region=   TeMag.selectOnly(all_samples),
-             to_labware_region=     Eluat.selectOnly(all_samples),
-             volume=                ElutionBufferVolume,
-             using_liquid_class=    ("Serum Asp preMix3", "Serum Disp postMix3"),
-             optimizeTo=            False )
+        spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
+        Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
+        mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
+        Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
+        with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
+            transfer(from_labware_region=   TeMag.selectOnly(all_samples),
+                     to_labware_region=     Eluat.selectOnly(all_samples),
+                     volume=                ElutionBufferVolume,
+                     using_liquid_class=    ("Serum Asp preMix3", "Serum Disp postMix3"),
+                     optimizeTo=            False )
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         """
@@ -161,4 +163,4 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
                 waste(TeMag.selectOnly(wells), using_liquid_class, vol)
 
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(6)
+    extractRNA_with_MN_Vet_Kit(48)
