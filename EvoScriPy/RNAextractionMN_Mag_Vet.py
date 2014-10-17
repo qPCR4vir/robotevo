@@ -17,9 +17,8 @@ if __name__ == "__main__":
 
 
 
-
 from RobotInitRNAextraction import *
-import Labware as Lab
+import Labware  as Lab
 import Reactive as React
 from protocol import *
 
@@ -27,10 +26,8 @@ from Instructions_Te_MagS import *
 import Instructions as Itr
 
 Reactives     = Lab.Labware(Lab.GreinRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
-# Reactives     = Lab.Labware(Lab.EppRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
-Eluat         = Lab.Labware(Lab.EppRack3x16R,  Lab.Labware.Location(8, 1 ), "Eluat" )
-Samples       = Lab.Labware(Lab.EppRack3x16,   Lab.Labware.Location(11, 1), "Proben")
-
+Eluat         = Lab.Labware(Lab.EppRack3x16R,    Lab.Labware.Location(8, 1 ), "Eluat" )
+Samples       = Lab.Labware(Lab.EppRack3x16,     Lab.Labware.Location(11, 1), "Proben")
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
 
@@ -38,24 +35,33 @@ mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode
 def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
-    # DiTi1000_1.fill('B06')
+    #DiTi1000_1.fill('B06')
     #DiTi1000_2.fill('A11')
     #DiTi1000_3.fill('A10')
-    #Itr.set_DITI_Counter2(DiTi1000_1, posInRack='B06').exec()
+    Itr.set_DITI_Counter2(DiTi1000_1, posInRack='A01').exec()
 
-    React.NumOfSamples = NumOfSamples
+    SampleVolume        = 200
+    React.NumOfSamples  = NumOfSamples
+
     all_samples = range(React.NumOfSamples)
     par = TeMag.parallelOrder(Rbt.nTips, all_samples)
     for s in all_samples:
-        React.Reactive(   "probe_{:02d}".format(s+1), Samples, initial_vol=200.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
-        React.Reactive("reaction_{:02d}".format(s+1), TeMag, initial_vol= 0.0, pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
-        React.Reactive(     "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0, pos=s+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
+                                            pos=s+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive("lysis_{:02d}".format(s+1), TeMag, initial_vol= 0.0,
+                                            pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
+        React.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
+                                            pos=s+1, defLiqClass=def_liquidClass, excess=0)
 
 
-    LysisBuffer     = React.Reactive("VL - Lysis Buffer "              , LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
-    IC2             = React.Reactive("IC2 -synthetic RNA"              , Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
-    BindingBuffer   = React.Reactive("VEB - Binding Buffer "           , BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
-    B_Beads         = React.Reactive("B-Beads"                         , Reactives, pos=1, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)#todo change, define new in Evo
+    LysisBuffer     = React.Reactive("VL - Lysis Buffer "              ,
+                                     LysBuf,    volpersample=180 ,defLiqClass=B_liquidClass)
+    IC2             = React.Reactive("IC2 -synthetic RNA"              ,
+                                     Reactives, pos=11, volpersample=  4 ,defLiqClass=W_liquidClass)
+    BindingBuffer   = React.Reactive("VEB - Binding Buffer "           ,
+                                     BindBuf,   volpersample=600 ,defLiqClass=B_liquidClass)
+    B_Beads         = React.Reactive("B-Beads"                         ,
+                                     Reactives, pos=1, volpersample= 20 , replicas=2, defLiqClass=W_liquidClass)
 
     VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"   ),
@@ -66,7 +72,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     EtOH80p         = React.Reactive("Ethanol 80%"                     ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
                                      volpersample=600 ,defLiqClass=B_liquidClass)
-    ElutionBuffer   = React.Reactive("Elution Buffer"                  , ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
+    ElutionBuffer   = React.Reactive("Elution Buffer"                  ,
+                                     ElutBuf,     volpersample=100 ,defLiqClass=B_liquidClass)
 
     ProtK           = React.Reactive("Proteinase K"                    ,
                                      Reactives, pos=16, volpersample= 20 ,defLiqClass=W_liquidClass)
@@ -91,8 +98,12 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.selectOnly(all_samples))
 
     reuse_tips_and_drop(reuse=True, drop=True)
-    transfer(  Samples.selectOnly(all_samples),TeMag,200,("Serum Asp preMix3","Serum Disp postMix3"),
-                     False, True, NumSamples=React.NumOfSamples)
+    transfer(  from_labware_region= Samples.selectOnly(all_samples),
+               to_labware_region=   TeMag,
+               volume=              SampleVolume,
+               using_liquid_class=  ("Serum Asp preMix3","Serum Disp postMix3"),
+               optimizeFrom         =False,     optimizeTo= True,
+               NumSamples=          React.NumOfSamples)
 
     reuse_tips_and_drop(reuse=False, drop=True)
     spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
