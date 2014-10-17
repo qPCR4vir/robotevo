@@ -117,6 +117,7 @@ class Well:
         self._vol = 0.0
         self._reactive = None
         self._actions = []
+        self.track = self
 
         self.vol = 0.0
         self.reactive = None
@@ -589,7 +590,7 @@ class DITIrack (Labware):
             tp = tips[i]
             assert isinstance(tp, usedTip)
             w.reactive = tp
-            self.type.preserved_tips[tp.origin.offset] = w
+            self.type.preserved_tips[tp.origin.track.offset] = w
             self.type.last_preserved_tips = w
 
     def pick_up(self, TIP_MASK)->[usedTip]:

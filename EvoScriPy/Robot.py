@@ -328,7 +328,7 @@ class Robot:
 
         for tp in tips:
             assert isinstance(tp, Lab.usedTip)
-            react_well = tp.origin
+            react_well = tp.origin.track
             assert react_well.offset in tp.type.preserved_tips, "There are no tip preserved for sample "+str(i)
             tip_well = tp.type.preserved_tips[react_well.offset]
             assert isinstance(tip_well, Lab.Well)
