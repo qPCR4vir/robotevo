@@ -313,8 +313,8 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
             msg = "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                .format(fg=lf.location.grid, fs=lf.location.site+1, oo=str(oriSel), do=str(dstSel),
-                        to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
+                .format(fg=lf.location.grid, fs=lf.location.site+1, oo=str([i+1 for i in oriSel]),
+                        do=str([i+1 for i in dstSel]),  to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
@@ -378,7 +378,8 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         lf = from_labware_region
         msg = "Waste: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) + str(oriSel)
+            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+                                     + str([i+1 for i in oriSel])
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
@@ -465,7 +466,8 @@ def mix( in_labware_region, using_liquid_class, volume, optimize=True):
         mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
         msg = "Mix: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) + str(oriSel)
+            msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+                                        + str([i+1 for i in oriSel])
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
