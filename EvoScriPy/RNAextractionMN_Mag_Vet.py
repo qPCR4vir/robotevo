@@ -107,6 +107,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.selectOnly(all_samples))
 
     reuse_tips_and_drop(reuse=True, drop=True)
+    preserveTips()
     transfer(  from_labware_region= Samples.selectOnly(all_samples),
                to_labware_region=   TeMag,
                volume=              SampleVolume,
@@ -167,4 +168,4 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             waste(TeMag.selectOnly(wells), using_liquid_class, vol)
 
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(30)
+    extractRNA_with_MN_Vet_Kit(48)

@@ -669,7 +669,7 @@ Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxV
 
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=1500)
 CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=100000)
-WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=100000)
+WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)
 CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=100000)
 DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul", maxVol=940)
