@@ -345,6 +345,7 @@ class Labware:
         return self
 
     def select(self, sel_idx_list):
+        if isinstance(sel_idx_list, int): sel_idx_list = [sel_idx_list]
         for i in sel_idx_list:
             self.Wells[i].selFlag = True
         return self
