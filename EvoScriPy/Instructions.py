@@ -117,7 +117,13 @@ class mix(Pipetting):
         pass
 
 class wash_tips(Pipette):                     # TODO revise def values of arg, how to model with iRobot?
-    """ A.15.4.4 Wash Tips (Worklist: Wash)
+    """ A.15.4.4 Wash Tips (Worklist: Wash) pag. A - 128; pag. 15 - 8.
+    to flush and wash fixed tips or to flush DITI
+adapters using a wash station. It is not intended for flushing DITI tips (DITI tips
+should not normally be flushed). Tips should be washed as often as necessary, e.g. after a pipetting sequence and
+before taking a new sample. DITI adapters should be flushed after replacing the
+DITIs several times to renew the system liquid column in the DITI adapters. This
+ensures maximum pipetting accuracy.
     """
     def __init__(self,  tipMask     = curTipMask,
                         WashWaste   = None,
@@ -135,6 +141,39 @@ class wash_tips(Pipette):                     # TODO revise def values of arg, h
                         RackName    = None,
                         Well        = None,
                         arm         = Pipette.LiHa1):
+        """
+
+        :param tipMask:
+        :param WashWaste: labware ; the waste you want to use. You must first put a wash station
+            with waste unit in the Worktable Editor at the required position.
+        :param WashCleaner: labware ; the cleaner you want to use. You must first put a wash
+            station with cleaner unit in the Worktable Editor at the required position.
+            Choose a shallow cleaner if you only need to clean the ends of the tips.
+            Choose a deep cleaner if there is a possibility of contamination along the shaft
+            of the tip. The deep cleaner requires a larger volume of system liquid and
+            cleaning takes somewhat longer.
+            The wash cycle is skipped if you are flushing DITI adapters and Use Cleaner
+            is ignored in this case.
+        :param wasteVol: int ; volume of system liquid which should be used to flush the inside of
+            the tips. Flushing takes place with the tips positioned above the waste of the
+            specified wash station (tip height for fixed tips = Z-dispense; tip height for DITI
+            adapters = Z-travel).
+        :param wasteDelay:
+        :param cleanerVol: int ; Specify the volume of system liquid which should be used to wash the outside
+            of the tips. Washing takes place with the tips lowered into the cleaner of the
+            specified wash station (tip height = Z-max). The wash cycle is skipped if you
+            are flushing DITI adapters and Volume in Cleaner is ignored in this case.
+        :param cleanerDelay:
+        :param Airgap:
+        :param airgapSpeed:
+        :param retractSpeed:
+        :param FastWash:
+        :param lowVolume:
+        :param atFrequency:
+        :param RackName:
+        :param Well:
+        :param arm:
+        """
         Pipette.__init__(self, 'Wash',
                             tipMask,
                             labware=WashWaste or Lab.def_WashWaste,
@@ -151,7 +190,7 @@ class wash_tips(Pipette):                     # TODO revise def values of arg, h
         self.cleanerVol = cleanerVol
         self.wasteDelay = wasteDelay
         self.wasteVol = wasteVol
-        self.WashCleaner = WashCleaner or Lab.def_WashCleaner,
+        self.WashCleaner = WashCleaner or Lab.def_WashCleaner
         #self.WashWaste = WashWaste
 
     def validateArg(self):
