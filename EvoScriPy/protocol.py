@@ -12,6 +12,9 @@ Water_free = "Water free"  # General. No detect and no track small volumes < 50 
 B_liquidClass   = Water_free #    or "Buffer free DITi 1000-AVR" ?
 W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
+Beads_LC_1      = Water_free
+Beads_LC_2      = Water_free
+
 Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentred
 Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
 Te_Mag_Rest     = "Te-Mag Rest"
@@ -99,34 +102,45 @@ def dropTips(TIP_MASK=-1):
     #return TIP_MASK
 
 def aspire( tip, reactive, vol=None):
-        """
-        Aspire vol with ONE tip from reactive
-        :param self:
-        :param tip:
-        :param reactive:
-        :param vol:
-        """
-        if vol is None:
-            vol = reactive.minVol()
-        v = [0] * Rbt.Robot.current.curArm().nTips
-        v[tip] = vol
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        # Rbt.Robot.current.curArm().aspire(v, Rbt.tipMask[tip])
-        Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+    """
+    Aspire vol with ONE tip from reactive
+    :param self:
+    :param tip:
+    :param reactive:
+    :param vol:
+    """
+    if vol is None:
+        vol = reactive.minVol()
+    v = [0] * Rbt.Robot.current.curArm().nTips
+    v[tip] = vol
+    reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
+    Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 def dispense( tip, reactive, vol=None): # todo coordinate with robot
-        """
-        Dispense vol with ONE tip to reactive
-        :param tip:
-        :param reactive:
-        :param vol:
-        """
-        vol = vol or reactive.minVol()  # really ??
-        reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
-        v = [0] * Rbt.Robot.current.curArm().nTips
-        v[tip] = vol
-        # Rbt.Robot.current.curArm().dispense(v, Rbt.tipMask[tip])
-        Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+    """
+    Dispense vol with ONE tip to reactive
+    :param tip:
+    :param reactive:
+    :param vol:
+    """
+    vol = vol or reactive.minVol()  # really ??
+    reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
+    v = [0] * Rbt.Robot.current.curArm().nTips
+    v[tip] = vol
+    Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+
+def mix_reactive(reactive, LiqClass=None, cycles=3):
+    assert isinstance(reactive, Rtv.Reactive)
+    vol = []
+    reactive.autoselect()
+    for w in reactive.labware.selected_wells():
+        vol += [w.vol * 0.8]
+    Itr.mix(Rbt.tipMask[len(vol)],
+            liquidClass=LiqClass,
+            volume=vol,
+            labware=reactive.labware,
+            cycles=cycles).exec()
+
 
 def multidispense_in_replicas(tip, reactive, vol):
     """ Multi-dispense of the content of ONE tip into the reactive replicas
