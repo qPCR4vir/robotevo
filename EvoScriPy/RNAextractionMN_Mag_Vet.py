@@ -53,6 +53,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     ElutionBufferVolume = 100.0
 
     all_samples = range(React.NumOfSamples)
+    maxMask=Rbt.tipsMask[min(Rbt.nTips, NumOfSamples)]
     par = TeMag.parallelOrder(Rbt.nTips, all_samples)
     for s in all_samples:
         React.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
@@ -100,7 +101,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Te_MagS_ActivateHeater(50).exec()
     Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
 
-    with tips(reuse=True, drop=False):
+    with tips(tipsMask=maxMask, reuse=True, drop=False):
         pK_cRNA_MS2.make()
         spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.selectOnly(all_samples))
 
@@ -116,9 +117,10 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
         spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
 
     with incubation(10): pass
-    with tips(tipsMask=Rbt.tipsMask[min(Rbt.nTips, NumOfSamples)], reuse=True, drop=False):
+
+    with tips(tipsMask=maxMask, reuse=True, drop=False):
         mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=3)
-        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=5)
 
     with tips(reuse=True, drop=True):
         spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
@@ -136,7 +138,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Continues).exec()
             mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
-            with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
+            with tips(usePreserved=preserveingTips()):
                 waste( from_labware_region=    TeMag.selectOnly(all_samples),
                        using_liquid_class=   ("Serum Asp preMix3","Serum Disp postMix3"))
 
