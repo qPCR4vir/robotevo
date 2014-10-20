@@ -129,8 +129,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
         spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 
     with tips(reuse=True, drop=False, preserve=True, usePreserved=True):
-        wash_in_TeMag(reactive=BindingBuffer, wells=all_samples,
-                      using_liquid_class=("Serum Asp preMix3", "Serum Disp postMix3"))
+        wash_in_TeMag(reactive=BindingBuffer, wells=all_samples)
 
     with tips(reuse=True, drop=False, preserve=True):
         wash_in_TeMag(reactive=VEW1, wells=all_samples)
@@ -143,8 +142,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
             with tips(usePreserved=preserveingTips()):
                 Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
-                waste( from_labware_region=    TeMag.selectOnly(all_samples),
-                       using_liquid_class=   ("Serum Asp preMix3","Serum Disp postMix3"))
+                waste( from_labware_region=    TeMag.selectOnly(all_samples))
 
         spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
         Itr.subroutine(mix_mag_sub, Itr.subroutine.Continues).exec()
@@ -155,7 +153,6 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             transfer(from_labware_region=   TeMag.selectOnly(all_samples),
                      to_labware_region=     Eluat.selectOnly(all_samples),
                      volume=                ElutionBufferVolume,
-                     using_liquid_class=    ("Serum Asp preMix3", "Serum Disp postMix3"),
                      optimizeTo=            False )
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
@@ -167,11 +164,12 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         :param vol:
         """
         wells = wells or reactive.labware.selected() or range(Rtv.NumOfSamples)
-        using_liquid_class = using_liquid_class or (reactive.defLiqClass, reactive.defLiqClass)
+        if not using_liquid_class:
+            using_liquid_class =  reactive.defLiqClass
         with group("Wash in TeMag with " + reactive.name):
             spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
             with parallel_execution_of(mix_mag_sub):
-                mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol)
+                mix(TeMag.selectOnly(wells), using_liquid_class, vol)
             Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
             with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
                 waste(TeMag.selectOnly(wells), using_liquid_class, vol)
