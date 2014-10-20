@@ -17,7 +17,7 @@ class EvoTypes:  # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], in
 
 class string1(EvoTypes):
     def __str__(self):
-        s = "{:.1f}".format(self.data) if isinstance(self.data, float) else str(self.data)
+        s = "{:.2f}".format(self.data) if isinstance(self.data, float) else str(self.data)
         return '"' + s + '"'
 
 
