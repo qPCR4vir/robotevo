@@ -12,8 +12,8 @@ Water_free = "Water free"  # General. No detect and no track small volumes < 50 
 B_liquidClass   = Water_free #    or "Buffer free DITi 1000-AVR" ?
 W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
-Beads_LC_1      = Water_free
-Beads_LC_2      = Water_free
+Beads_LC_1      = "MixBeads_1"
+Beads_LC_2      = "MixBeads_2"
 
 Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentred
 Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
@@ -277,7 +277,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                     availableDisp -= 1
                     SampleCnt -= nt
 
-def transfer( from_labware_region, to_labware_region, volume, using_liquid_class,
+def transfer( from_labware_region, to_labware_region, volume, using_liquid_class=None,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
         """
 

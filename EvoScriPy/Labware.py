@@ -189,7 +189,7 @@ class Labware:
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
     class DITIwasteType(Type):
-        def __init__(self, name, capacity=10*96):
+        def __init__(self, name, capacity=5*96):
             Labware.Type.__init__(self, name, nRow=capacity)
 
     class CuvetteType(Type):

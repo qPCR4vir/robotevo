@@ -122,8 +122,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with incubation(10): pass
 
     with tips(tipsMask=maxMask, reuse=True, drop=False):
-        mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=3, maxTips=maxTips)
-        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=5, maxTips=maxTips)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=2, maxTips=maxTips)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips)
 
     with tips(reuse=True, drop=True):
         spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
@@ -173,5 +173,7 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
                 waste(TeMag.selectOnly(wells), using_liquid_class, vol)
 
+
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(48)
+    extractRNA_with_MN_Vet_Kit(6)
+    pass
