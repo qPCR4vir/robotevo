@@ -53,8 +53,10 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     ElutionBufferVolume = 100.0
 
     all_samples = range(React.NumOfSamples)
-    maxMask=Rbt.tipsMask[min(Rbt.nTips, NumOfSamples)]
-    par = TeMag.parallelOrder(Rbt.nTips, all_samples)
+    maxTips     = min(Rbt.nTips, NumOfSamples)
+    maxMask     = Rbt.tipsMask[maxTips]
+    par         = TeMag.parallelOrder(Rbt.nTips, all_samples)
+
     for s in all_samples:
         React.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
                                             pos=s+1, defLiqClass=def_liquidClass, excess=0)
@@ -119,8 +121,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with incubation(10): pass
 
     with tips(tipsMask=maxMask, reuse=True, drop=False):
-        mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=3)
-        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=5)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=3, maxTips=maxTips)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=5, maxTips=maxTips)
 
     with tips(reuse=True, drop=True):
         spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))

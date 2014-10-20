@@ -129,13 +129,13 @@ def dispense( tip, reactive, vol=None): # todo coordinate with robot
     v[tip] = vol
     Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def mix_reactive(reactive, LiqClass=None, cycles=3):
+def mix_reactive(reactive, LiqClass=None, cycles=3, maxTips=1):
     assert isinstance(reactive, Rtv.Reactive)
     vol = []
-    reactive.autoselect()
+    reactive.autoselect(maxTips)
     for w in reactive.labware.selected_wells():
         vol += [w.vol * 0.8]
-    Itr.mix(Rbt.tipMask[len(vol)],
+    Itr.mix(Rbt.tipsMask[len(vol)],
             liquidClass=LiqClass,
             volume=vol,
             labware=reactive.labware,
@@ -463,6 +463,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
+    Itr.wash_tips(wasteVol=8000).exec()
     return oriSel
 
 def mix( in_labware_region, using_liquid_class, volume=None, optimize=True):
