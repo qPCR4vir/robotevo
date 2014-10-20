@@ -9,7 +9,7 @@ import Labware as Lab
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
-B_liquidClass   = Water_free #    or "Buffer free DITi 1000-AVR" ?
+B_liquidClass   = "Water free cuvette"
 W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
 Small_vol_disp  = "Water wet"
