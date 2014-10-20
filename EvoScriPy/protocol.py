@@ -396,7 +396,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
     Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
     # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
-    Dst = Itr.dispense(tm, using_liquid_class[1], volume, to_waste_labware)
+    Dst = Itr.dispense(tm, using_liquid_class, volume, to_waste_labware)
     # Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
 
     lf = from_labware_region
@@ -412,10 +412,11 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 tm = Rbt.tipsMask[nt]
                 Asp.tipMask = tm
                 Dst.tipMask = tm
-                # Ctr.tipMask = tm
+
             sel = oriSel[curSample:curSample + nt]
             spl = range(curSample, curSample + nt)
             Asp.labware.selectOnly(sel)
+
             if volume:
                 r = volume   # r: Waste_available yet; volume: to be Waste
             else:
@@ -426,7 +427,8 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             if not using_liquid_class:
                     if sel:
-                        Dst.liquidClass = Dst.labware.selected_wells()[0].reactive.defLiqClass
+                        Dst.liquidClass = Asp.labware.selected_wells()[0].reactive.defLiqClass
+
             with tips(tm, drop=True, preserve=False, selected_samples=spl):
                 while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
                     dV = r if r < mV else mV
@@ -449,7 +451,6 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
                 with tips(allow_air=Rest):
                         Asp.exec()
-                # Ctr.exec()
                 Asp.volume = CtrVol
                 Asp.liquidClass = Te_Mag_Force_Centre
                 with tips(allow_air=CtrVol):
