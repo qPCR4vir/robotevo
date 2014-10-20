@@ -142,6 +142,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
             with tips(usePreserved=preserveingTips()):
+                Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
                 waste( from_labware_region=    TeMag.selectOnly(all_samples),
                        using_liquid_class=   ("Serum Asp preMix3","Serum Disp postMix3"))
 
@@ -150,6 +151,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
         mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
         Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
         with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
+            Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
             transfer(from_labware_region=   TeMag.selectOnly(all_samples),
                      to_labware_region=     Eluat.selectOnly(all_samples),
                      volume=                ElutionBufferVolume,
@@ -170,6 +172,7 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
             with parallel_execution_of(mix_mag_sub):
                 mix(TeMag.selectOnly(wells), reactive.defLiqClass, vol)
+            Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
             with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
                 waste(TeMag.selectOnly(wells), using_liquid_class, vol)
 
