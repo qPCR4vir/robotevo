@@ -308,7 +308,7 @@ class Robot:
         if not self.usePreservedtips:  # no re-back DiTi for multiple reuse
             assert isinstance(tpe, Lab.Labware.DITIrackType)
             if not tpe.last_preserved_tips:
-                tpe.last_preserved_tips = tpe.pick_next_rack.Wells[0]
+                tpe.last_preserved_tips = tpe.pick_next_rack.Wells[0] # todo set to first tip used !!!!!
             w = tpe.last_preserved_tips
             assert isinstance(w, Lab.Well)
             cont = False

@@ -622,7 +622,7 @@ class DITIwaste(Labware):
             self.wasted += 1
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
-                react_well = tp.origin
+                react_well = tp.origin.track
                 if react_well.offset in tp.type.preserved_tips:
                     tip_well = tp.type.preserved_tips[react_well.offset]
                     assert isinstance(tip_well, Well)
