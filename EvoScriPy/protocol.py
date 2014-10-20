@@ -154,8 +154,9 @@ def multidispense_in_replicas(tip, reactive, vol):
     re = reactive.Replicas
     assert len(vol) == len(re)
     for v, w in zip(vol, re):
-        Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v,
-                     w.labware.selectOnly([w.offset])).exec()
+        Itr.dispense(Rbt.tipMask[tip], Rbt.Robot.current.curArm().Tips[tip].origin.reactive.defLiqClass,
+                     # reactive.defLiqClass,
+                     v, w.labware.selectOnly([w.offset])).exec()
 
 def aspiremultiTips( tips, reactive, vol=None):
         if not isinstance(vol, list):
@@ -291,7 +292,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         """
         assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
         assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to transfer'
-        assert isinstance(using_liquid_class, tuple)
+        # assert isinstance(using_liquid_class, tuple)
         nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
 
         if NumSamples:  # todo  select convenient def
@@ -324,8 +325,8 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         if nt > SampleCnt: nt = SampleCnt
         lf = from_labware_region
         lt = to_labware_region
-        Asp = Itr.aspirate(Rbt.tipsMask[nt], using_liquid_class[0], volume, from_labware_region)
-        Dst = Itr.dispense(Rbt.tipsMask[nt], using_liquid_class[1], volume, to_labware_region)
+        Asp = Itr.aspirate(Rbt.tipsMask[nt], volume=volume, labware=from_labware_region)
+        Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
         msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
             msg = "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
@@ -342,6 +343,22 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                 src = oriSel[curSample:curSample + nt]
                 trg = dstSel[curSample:curSample + nt]
                 spl = range(curSample, curSample + nt)
+
+                sw = Asp.labware.selected_wells()
+
+                if isinstance(using_liquid_class, tuple):
+                    if using_liquid_class[0]:
+                        Asp.liquidClass = using_liquid_class[0]
+                    else:
+                        Asp.liquidClass = sw[0].reactive.defLiqClass
+                    if using_liquid_class[1]:
+                        Dst.liquidClass = using_liquid_class[1]
+                    else:
+                        Dst.liquidClass = sw[0].reactive.defLiqClass
+                else:
+                    Asp.liquidClass = sw[0].reactive.defLiqClass
+                    Dst.liquidClass = sw[0].reactive.defLiqClass
+
                 with tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
                     Asp.labware.selectOnly(src)
                     Asp.exec()
