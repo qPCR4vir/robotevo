@@ -114,7 +114,13 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
     with tips(reuse=False, drop=True):
         spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
-        with incubation(10): pass
+
+    with incubation(10): pass
+    with tips(tipsMask=Rbt.tipsMask[min(Rbt.nTips, NumOfSamples)], reuse=True, drop=False):
+        mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=3)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3)
+
+    with tips(reuse=True, drop=True):
         spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 
     with tips(reuse=True, drop=False, preserve=True, usePreserved=True):
