@@ -463,7 +463,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
-    Itr.wash_tips(wasteVol=8000).exec()
+    Itr.wash_tips(wasteVol=8).exec()
     return oriSel
 
 def mix( in_labware_region, using_liquid_class, volume=None, optimize=True):

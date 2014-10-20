@@ -154,7 +154,7 @@ ensures maximum pipetting accuracy.
             cleaning takes somewhat longer.
             The wash cycle is skipped if you are flushing DITI adapters and Use Cleaner
             is ignored in this case.
-        :param wasteVol: int ; volume of system liquid which should be used to flush the inside of
+        :param wasteVol: int ; volume [in mL !!] of system liquid which should be used to flush the inside of
             the tips. Flushing takes place with the tips positioned above the waste of the
             specified wash station (tip height for fixed tips = Z-dispense; tip height for DITI
             adapters = Z-travel).

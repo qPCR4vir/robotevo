@@ -99,7 +99,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Waste           = React.Reactive("Waste"  , WashWaste )
 
 
-
+    Itr.wash_tips(wasteVol=8).exec()
     Te_MagS_ActivateHeater(50).exec()
     Te_MagS_MoveToPosition(T_Mag_Instr.Dispense).exec()
 
@@ -114,6 +114,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                    using_liquid_class=  ("Serum Asp preMix3","Serum Disp postMix3"),
                    optimizeFrom         =False,     optimizeTo= True,
                    NumSamples=          React.NumOfSamples)
+    Itr.wash_tips(wasteVol=8).exec()
 
     with tips(reuse=False, drop=True):
         spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
