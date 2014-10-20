@@ -88,11 +88,11 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                                      ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass=B_liquidClass)
 
     ProtK           = React.Reactive("Proteinase K"                    ,
-                                     Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=W_liquidClass)
+                                     Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=Small_vol_disp)
     cRNA            = React.Reactive("Carrier RNA"                     ,
-                                     Reactives, pos=15, volpersample=  cRNAVolume , defLiqClass=W_liquidClass)
+                                     Reactives, pos=15, volpersample=  cRNAVolume , defLiqClass=Small_vol_disp)
     IC_MS2          = React.Reactive("IC MS2 - bacterial phage culture",
-                                     Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=W_liquidClass)
+                                     Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
     pK_cRNA_MS2     = React.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
                                      Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                      ,defLiqClass=W_liquidClass, replicas=2)

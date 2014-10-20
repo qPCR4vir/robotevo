@@ -12,6 +12,7 @@ Water_free = "Water free"  # General. No detect and no track small volumes < 50 
 B_liquidClass   = Water_free #    or "Buffer free DITi 1000-AVR" ?
 W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
+Small_vol_disp  = "Water wet"
 Beads_LC_1      = "MixBeads_1"
 Beads_LC_2      = "MixBeads_2"
 
@@ -423,6 +424,9 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 assert r_min == r_max
                 r = r_max
 
+            if not using_liquid_class:
+                    if sel:
+                        Dst.liquidClass = Dst.labware.selected_wells()[0].reactive.defLiqClass
             with tips(tm, drop=True, preserve=False, selected_samples=spl):
                 while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
                     dV = r if r < mV else mV
@@ -434,6 +438,8 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                     Asp.exec()
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Centre
+
+
                     with tips(allow_air=CtrVol):
                         Asp.exec()
                         Dst.exec()
@@ -466,7 +472,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     Itr.wash_tips(wasteVol=8).exec()
     return oriSel
 
-def mix( in_labware_region, using_liquid_class, volume=None, optimize=True):
+def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True):
 
     """
 
@@ -517,6 +523,9 @@ def mix( in_labware_region, using_liquid_class, volume=None, optimize=True):
             with tips(Rbt.tipsMask[nt], selected_samples=spl):
                 mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
                 mx.labware.selectOnly(sel)
+                if not using_liquid_class:
+                    if sel:
+                        mx.liquidClass = mx.labware.selected_wells()[0].reactive.defLiqClass
                 if volume:
                     r = volume   # r: Waste_available yet; volume: to be Waste
                 else:
