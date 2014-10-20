@@ -33,9 +33,4 @@ DiTi1000_3    = Lab.DITIrack(Lab.DiTi_1000ul, Lab.Labware.Location(25,3),"1000-3
 
 # set_DITI_Counter2( DiTi1000_2,  DiTi1000_2.offsetFromName('E7')  ).exec()
 
-Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
-B_liquidClass   = Water_free #    or "Buffer free DITi 1000-AVR" ?
-W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
-Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
-Te_Mag = "Te-Mag" # "Water free" but uncentred
