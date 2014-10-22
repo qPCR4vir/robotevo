@@ -588,10 +588,13 @@ def tips(tipsMask=None, reuse=None,     drop=None,
     if allow_air    is not None: allow_air    = set_allow_air   (allow_air  )
 
 @contextmanager
-def parallel_execution_of(subroutine):
-    Itr.subroutine(subroutine, Itr.subroutine.Continues).exec()
-    yield
-    Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
+def parallel_execution_of(subroutine, repeat=1):
+    # todo implement this idea: execute repeatably one after other and only at end wait.
+    # for rep in range(repeat):
+        Itr.variable("repetitions",1,)
+        Itr.subroutine(subroutine, Itr.subroutine.Continues).exec()
+        yield
+        Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
 
 @contextmanager
 def incubation(minutes, timer=1):

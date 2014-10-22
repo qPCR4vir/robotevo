@@ -129,7 +129,7 @@ class T_Mag_Instr(Device):
 
 def_TipMask     = 15          # todo revise. here? use Robot?
 curTipMask      = def_TipMask
-def_liquidClass = "Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
+def_liquidClass = "Water free"  #"Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
 def_vol         = [0]*12
 def_LoopOp      = []
 def_AirgapSpeed = 300

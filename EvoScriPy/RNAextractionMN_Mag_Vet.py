@@ -33,7 +33,7 @@ mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode
 def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
-    #DiTi1000_1.fill('B06')
+    #DiTi1000_1.fill('C06')
     #DiTi1000_2.fill('A11')
     #DiTi1000_3.fill('A10')
     Itr.set_DITI_Counter2(DiTi1000_1, posInRack='A01').exec()
@@ -73,7 +73,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     BindingBuffer   = React.Reactive("VEB - Binding Buffer "           ,
                                      BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
     B_Beads         = React.Reactive("B-Beads"                         ,
-                                     Reactives, pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=W_liquidClass)
+                                     Reactives, pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
 
     VEW1            = React.Reactive("VEW1 - Wash Buffer"              ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"),
@@ -137,11 +137,14 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
         with group("Wash in TeMag with " + EtOH80p.name), tips():
             spread( reactive=EtOH80p,to_labware_region=TeMag.selectOnly(all_samples))
+
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Continues).exec()
             mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
             Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits_previous).exec()
+
+            Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
+            with incubation(minutes=0.5, timer=2): pass
             with tips(usePreserved=preserveingTips()):
-                Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
                 waste( from_labware_region=    TeMag.selectOnly(all_samples))
 
         spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
@@ -150,6 +153,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
         Itr.subroutine(mix_mag_sub,Itr.subroutine.Waits).exec()
         with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
             Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
+            with incubation(minutes=0.5, timer=2): pass
             transfer(from_labware_region=   TeMag.selectOnly(all_samples),
                      to_labware_region=     Eluat.selectOnly(all_samples),
                      volume=                ElutionBufferVolume,
@@ -168,8 +172,9 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             using_liquid_class =  reactive.defLiqClass
         with group("Wash in TeMag with " + reactive.name):
             spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
-            with parallel_execution_of(mix_mag_sub):
+            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips):
                 mix(TeMag.selectOnly(wells), using_liquid_class, vol)
+            with incubation(minutes=0.5, timer=2): pass
             Te_MagS_MoveToPosition(Itr.T_Mag_Instr.Aspirate).exec()
             with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
                 waste(TeMag.selectOnly(wells), using_liquid_class, vol)
