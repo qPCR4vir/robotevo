@@ -7,6 +7,7 @@ import Instructions as Itr
 import Reactive as Rtv
 import Labware as Lab
 
+
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
 B_liquidClass   = "Water free cuvette"
@@ -596,14 +597,14 @@ def parallel_execution_of(subroutine, repeat=1):
         yield
         Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
     else:
-        rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
-        Itr.variable("repetitions",repeat, queryString="How many time repeat the subroutine?",
+        # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
+        Itr.variable("repetitions", repeat, queryString="How many time repeat the subroutine?",
                       type=Itr.variable.Numeric).exec()
         Itr.variable("subroutine",subroutine, queryString="The subroutine path",
                       type=Itr.variable.String).exec()
-        Itr.subroutine(rep_sub, Itr.subroutine.Continues).exec()
+        Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Continues).exec()
         yield
-        Itr.subroutine(rep_sub, Itr.subroutine.Waits_previous).exec()
+        Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Waits_previous).exec()
 
 @contextmanager
 def incubation(minutes, timer=1):
