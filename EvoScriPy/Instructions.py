@@ -853,11 +853,11 @@ class variable(Instruction):    # todo declare const
     User_query = 1
     File_import =2
 
-    def __init__(self, name, default, queryFlag = False, queryString="", checkLimits=False,
+    def __init__(self, var_name, default, queryFlag = False, queryString="", checkLimits=False,
                  lowerLimit=0.0, upperLimit=0.0, type=0, scope=0,InitMode=0, QueryAtStart=False):
         """
 
-        :param name: string2 ; name of variable
+        :param var_name: string2 ; name of variable
         :param default: expression ; value assigned to variable or default value if user query
         :param queryFlag: bool
         :param queryString: string1 ; text shown in user query
@@ -878,16 +878,16 @@ class variable(Instruction):    # todo declare const
         self.lowerLimit = lowerLimit
         self.checkLimits = checkLimits
         self.queryString = queryString
-        self.name = name
+        self.var_name = var_name
         self.default = default
         self.queryFlag = queryFlag
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg= [string2(self.name), expression(self.default), integer(self.queryFlag)]
-        self.arg += [string1( self.queryString), integer(string1.checkLimits), floating_point(self.lowerLimit) ]
-        self.arg += [floating_point(self.upperLimit), integer(string1.type), integer(string1.scope)  ]
-        self.arg += [  integer(string1.InitMode), integer(string1.QueryAtStart)  ]
+        self.arg= [string2(self.var_name), expression(self.default), integer(self.queryFlag)]
+        self.arg += [string1( self.queryString), integer(self.checkLimits), floating_point(self.lowerLimit) ]
+        self.arg += [floating_point(self.upperLimit), integer(self.type), integer(self.scope)  ]
+        self.arg += [  integer(self.InitMode), integer(self.QueryAtStart)  ]
         return True
 
 class execute_VBscript(Instruction):

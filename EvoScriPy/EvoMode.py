@@ -1,6 +1,7 @@
 __author__ = 'qPCR4vir'
 
 import Robot as Rbt
+
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
     this script generator. Some options are: A worklist; a full Evoware script; only comments, etc.
@@ -16,7 +17,6 @@ class Mode:
 
     def __del__(self):
         pass
-
 
 class toString(Mode):
     """ (Base class) Create an string representation of the instructions.
