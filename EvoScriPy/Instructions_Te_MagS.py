@@ -11,9 +11,25 @@ class Te_MagS_MoveToPosition(T_Mag_Instr):
     """
     A.15.10.1 MoveToPosition (Worklist: Te-MagS_MoveToPosition)
     """
+    Dispense    = 0
+    Aspirate    = 1
+    Re_suspension = 2
+    Incubation  = 3
 
     def __init__(self,  position, z_pos=31, needs_allwd_lw=0, allowed_labware="" ):
 
+        """
+
+        :param position: Aspirate Position  - Carrier above the magnet block, magnet block raised.
+                         Dispense Position - Carrier above the magnet block, magnet block lowered.
+                         Incubation Position - Carrier above the heating block, heating block raised.
+                         Re-suspension Position - Carrier above the heating block, heating block lowered.
+                             Use this position to carry out re-suspension by mixing the liquid with
+                             the pipetting tips (e.g. with the LiHa - Mix script command).
+        :param z_pos:
+        :param needs_allwd_lw:
+        :param allowed_labware:
+        """
         T_Mag_Instr.__init__(self, "Te-MagS_MoveToPosition"  )
 
         self.allowed_labware = allowed_labware
@@ -27,7 +43,7 @@ class Te_MagS_MoveToPosition(T_Mag_Instr):
         assert self.allowed_labware == ""
 
         pos = int(self.position)
-        if pos == T_Mag_Instr.Aspirate:
+        if pos == Te_MagS_MoveToPosition.Aspirate:
             pos = "{:d} {:d}".format( pos, int(self.z_pos) )
 
         self.arg += [ expression(pos), expression(self.needs_allwd_lw), expression(self.allowed_labware) ]

@@ -116,12 +116,14 @@ class Device(Instruction):
 
 
 class T_Mag_Instr(Device):
-    """ A.15.10 Advanced Worklist Commands for the Te-MagS
+    """ A.15.10 Advanced Worklist Commands for the Te-MagS. pag. A - 198, pag. 16 - 100
+        The Magnetic Bead Separator option (also called Te-MagS) is a magnetic bead
+    separator with an optional heating function. It uses a commercially-available liquid
+    containing microscopic magnetic beads to rapidly isolate bio-molecules (e.g.
+    DNA, RNA, proteins etc.) or whole cells from various crude mixtures by means of
+    magnetic forces. The magnetic beads are pulled through the liquid in the tubes
+    using magnets and collect the required substance as they move.
     """
-    Dispense    = 0
-    Aspirate    = 1
-    Resuspension = 2
-    Incubation  = 3
 
     def __init__(self, commandname):
         Device.__init__(self, "Te-MagS", commandname)
