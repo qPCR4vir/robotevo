@@ -141,7 +141,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
         with group("Wash in TeMag with " + EtOH80p.name), tips():
             spread( reactive=EtOH80p,to_labware_region=TeMag.selectOnly(all_samples))
 
-            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips):
+            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
                 mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
             with incubation(minutes=0.5):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
@@ -158,7 +158,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
 
         Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-        with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips):
+        with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips+1):
             mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
 
         with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
@@ -185,7 +185,7 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
             spread(reactive=reactive, to_labware_region=TeMag.selectOnly(wells))
 
-            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips):
+            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
                 mix(TeMag.selectOnly(wells), using_liquid_class, vol)
 
             with incubation(minutes=0.5, timer=2):
