@@ -844,9 +844,30 @@ class userPrompt(Instruction):    # todo declare const
 class variable(Instruction):    # todo declare const
     """ A.15.4.23 Set Variable (Worklist: Variable)
     """
-    def __init__(self, name, default, queryFlag = False, queryString="", checkLimits  = False,
+    Numeric = 0
+    String = 1
+    Run = 0
+    Instance = 1
+    Script = 2
+    Fixed_value = 0
+    User_query = 1
+    File_import =2
+
+    def __init__(self, name, default, queryFlag = False, queryString="", checkLimits=False,
                  lowerLimit=0.0, upperLimit=0.0, type=0, scope=0,InitMode=0, QueryAtStart=False):
         """
+
+        :param name: string2 ; name of variable
+        :param default: expression ; value assigned to variable or default value if user query
+        :param queryFlag: bool
+        :param queryString: string1 ; text shown in user query
+        :param checkLimits: bool
+        :param lowerLimit:
+        :param upperLimit:
+        :param type: type of variable; 0 = Numeric; 1 = String
+        :param scope: scope of variable (see 6.4.6,  6-12):0 = Run; 1 = Instance; 2 = Script
+        :param InitMode: 0 = Fixed value; 1 = User query; 2 = File import;
+        :param QueryAtStart: bool ; 1 = Prompt for value at start of script
         """
         Instruction.__init__(self, "Variable")
         self.QueryAtStart = QueryAtStart
