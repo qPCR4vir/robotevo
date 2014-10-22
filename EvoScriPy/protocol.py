@@ -610,7 +610,7 @@ def parallel_execution_of(subroutine, repeat=1):
 def incubation(minutes, timer=1):
     Itr.startTimer(timer).exec()
     yield
-    Itr.waitTimer(timer=timer, timeSpan= 10*60).exec()
+    Itr.waitTimer(timer=timer, timeSpan= minutes*60).exec()
 
 
 
