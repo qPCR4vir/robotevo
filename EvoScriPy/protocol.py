@@ -589,12 +589,21 @@ def tips(tipsMask=None, reuse=None,     drop=None,
 
 @contextmanager
 def parallel_execution_of(subroutine, repeat=1):
-    # todo implement this idea: execute repeatably one after other and only at end wait.
+    # todo improve this idea: execute repeatably one after other and only at end wait.
     # for rep in range(repeat):
-        Itr.variable("repetitions",1,)
+    if repeat == 1:
         Itr.subroutine(subroutine, Itr.subroutine.Continues).exec()
         yield
         Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
+    else:
+        rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
+        Itr.variable("repetitions",repeat, queryString="How many time repeat the subroutine?",
+                      type=Itr.variable.Numeric).exec()
+        Itr.variable("subroutine",subroutine, queryString="The subroutine path",
+                      type=Itr.variable.String).exec()
+        Itr.subroutine(rep_sub, Itr.subroutine.Continues).exec()
+        yield
+        Itr.subroutine(rep_sub, Itr.subroutine.Waits_previous).exec()
 
 @contextmanager
 def incubation(minutes, timer=1):
