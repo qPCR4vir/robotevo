@@ -4,10 +4,10 @@ import EvoMode
 import Labware as Lab
 import Robot as Rbt
 
-supportVirtualRobot = True  # todo explore this idea ! (problems with "asynchronous" and multiple mode)
+supportVirtualRobot = True  # OK explore this idea ! (problems with "asynchronous" and multiple mode)
 
 
-class EvoTypes:  # TODO improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
+class EvoTypes:  # OK improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
 
@@ -30,7 +30,7 @@ class expr(EvoTypes):
         EvoTypes.__init__(self, data)
         self.dim = dim
 
-    def split(self):  # TODO 0 instant "0" ???? ; split - is not an elegant solution
+    def split(self):  # OK 0 instant "0" ???? ; split - is not an elegant solution
         if isinstance(self.data, list):
             d = self.dim - len(self.data)
             assert (d >= 0)
@@ -43,12 +43,12 @@ class string2(EvoTypes):
     pass
 
 
-class integer(EvoTypes):  # todo implement exceptions
+class integer(EvoTypes):  #  implement exceptions ?
     def __str__(self):
         return str(int(self.data))
 
 
-class floating_point(EvoTypes):  # todo implement exceptions
+class floating_point(EvoTypes):  #  implement exceptions ?
     def __str__(self):
         return "{:.2f}".format(float(self.data))
 

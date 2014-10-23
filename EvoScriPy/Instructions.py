@@ -15,10 +15,10 @@ class aspirate(Pipetting):
                         volume      = def_vol,
                         labware     = None,
                         spacing     = 1,
-                        wellSelection= None,       # TODO implement
+                        wellSelection= None,
                         LoopOptions = def_LoopOp,
-                        RackName    = None,        # TODO implement
-                        Well        = None,        # TODO implement
+                        RackName    = None,
+                        Well        = None,
                         arm         = Pipette.LiHa1):
         """
 
@@ -266,7 +266,7 @@ class getDITI2(DITIs):
         :param AirgapSpeed: int. Speed for the airgap in μl/s
         """
         DITIs.__init__(self, "GetDITI2", tipMask, options, arm)
-        self.LabwareTypeName = LabwareTypeName # todo Implement!! Find the rack and the current position to pick.
+        self.LabwareTypeName = LabwareTypeName # OK Implement!! Find the rack and the current position to pick.
         self.AirgapSpeed = AirgapSpeed
         self.AirgapVolume = AirgapVolume
 
@@ -363,7 +363,7 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.
     def validateArg(self):
         self.arg = [integer(self.type), string1(self.labware.location.grid),
                                         string1(self.labware.location.site),
-                                        string1(self.posInRack)] # todo extract from Location
+                                        string1(self.posInRack)] # OK extract from Location
         return True
 
     def actualize_robot_state(self):
@@ -371,7 +371,7 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.
         self.labware.type.pick_next_rack = self.labware
         self.labware.type.pick_next      = self.labware.offset(self.posInRack)
 
-class set_DITI_Counter2(Pipette): # todo  set other Lab.def_LabW
+class set_DITI_Counter2(Pipette): # OK  set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
         last position
@@ -841,7 +841,7 @@ class userPrompt(Instruction):    # todo declare const
         self.arg= [string1(self.text), integer(self.sound), integer(self.closeTime)]
         return True
 
-class variable(Instruction):    # todo declare const
+class variable(Instruction):    # OK declare const
     """ A.15.4.23 Set Variable (Worklist: Variable)
     """
     Numeric = 0

@@ -118,7 +118,7 @@ def aspire( tip, reactive, vol=None):
     reactive.autoselect()  # reactive.labware.selectOnly([reactive.pos])
     Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def dispense( tip, reactive, vol=None): # todo coordinate with robot
+def dispense( tip, reactive, vol=None): # OK coordinate with robot
     """
     Dispense vol with ONE tip to reactive
     :param tip:
@@ -189,7 +189,7 @@ def dispensemultiwells( tips, liq_class, labware, vol):
         # Rbt.Robot.current.curArm().dispense(vol, om)
         Itr.dispense(om, liq_class, vol, labware).exec()
 
-def make( what, NumSamples=None): # todo coordinate with protocol
+def make( what, NumSamples=None): # OK coordinate with protocol
         if isinstance(what, Rtv.preMix): makePreMix(what, NumSamples)
 
 def makePreMix( preMix, NumSamples=None):
@@ -206,7 +206,7 @@ def makePreMix( preMix, NumSamples=None):
             assert nc <= nt, "Temporally the mix can not contain more than {:d} components.".format(nt)
             dt = nt - nc
             samples_per_replicas = [(NumSamples + nr - (i+1))//nr for i in range(nr)]
-            with tips(Rbt.tipsMask[nc]):   # todo want to use preserved ?? selected=??
+            with tips(Rbt.tipsMask[nc]):   #  want to use preserved ?? selected=??
                 for i, react in enumerate(preMix.components):
                     l = react.labware
                     r = react.volpersample*NumSamples*preMix.excess
@@ -259,7 +259,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
-            with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # todo want to use preserved ?? selected=??
+            with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
                 maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
                 while SampleCnt:
                     if nt > SampleCnt: nt = SampleCnt
@@ -296,7 +296,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         # assert isinstance(using_liquid_class, tuple)
         nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
 
-        if NumSamples:  # todo  select convenient def
+        if NumSamples:  # OK?  select convenient def
             oriSel = range(NumSamples)
             dstSel = range(NumSamples)
         else:
@@ -363,7 +363,6 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
                 with tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
                     Asp.labware.selectOnly(src)
                     Asp.exec()
-                    # Rbt.setUsed(Asp.tipMask, Asp.labware) # todo this in robot.aspire()
                     Dst.labware.selectOnly(trg)
                     Dst.exec()
                     for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
@@ -623,21 +622,21 @@ def opening_example(filename):
         f.close() # Ditto for errors here (however unlikely)
 
 # TODO  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
-# TODO  implement preserveTips and usePreservedTips !!
-# TODO  mix well <B-beads
+# OK  implement preserveTips and usePreservedTips !!
+# OK  mix well <B-beads
 # TODO  Elution buffer to eppis !!!
-# TODO  implement accumulated volume
-# TODO  implement actualize vol in reactives in pipette
+# OK  implement accumulated volume
+# OK  implement actualize vol in reactives in pipette
 # TODO  comentar las replicas, como 2x b-beads
 # TODO  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
 # TODO  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
-# TODO  implement use only tips filled
+# OK?  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait
-# TODO  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
+# OK  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
 # TODO  write the total vol to spread.                      - ok ?!
 # TODO  actualize liquid classes                            - ok ?!
 # TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
-# TODO  test no drop                                        - ok ?!
-# TODO  reimplementar rest... for waste                     - ok ?!
+# OK  test no drop                                        - ok ?!
+# OK  reimplementar rest... for waste                     - ok ?!
 
 

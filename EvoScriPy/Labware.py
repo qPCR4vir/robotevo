@@ -14,7 +14,7 @@ def count_tips(TIP_MASK)->int:
         TIP_MASK = TIP_MASK >> 1
     return n
 
-class Tip:    # todo play with this idea
+class Tip:    # OK play with this idea
     def __init__(self, rack_type):
         assert isinstance(rack_type, Labware.DITIrackType)
         self.vol = 0
@@ -33,7 +33,7 @@ class usedTip(Tip):
         return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
 
 
-class WorkTable:  # todo Implement !, parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
+class WorkTable:  # todo Implement parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
     """ Collection of Racks.Types and Labware.Types and pos of instances """
 
     curWorkTable = None
@@ -240,7 +240,7 @@ class Labware:
             self.row = row
             self.col = col
 
-    def autoselect(self, offset=0, maxTips=1, replys=1): #todo make this "virtual". Implement cuvette
+    def autoselect(self, offset=0, maxTips=1, replys=1): #OK make this "virtual". Implement cuvette
         """
 
         :param offset:
@@ -387,7 +387,7 @@ class Labware:
         p = self.posAtParallelMove(step, nTips)
         return self.offset(p.row, p.col)
 
-    def moveParallel(self, pos, offset):  # TODO
+    def moveParallel(self, pos, offset):  #
         return offset % self.type.nCol + 1, offset // self.type.nCol + 1
 
     def wellSelectionStr(self):
