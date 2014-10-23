@@ -28,6 +28,7 @@ Eluat      = Lab.Labware(Lab.EppRack3x16R,    Lab.Labware.Location(8, 1 ), "Elua
 Samples    = Lab.Labware(Lab.EppRack3x16,     Lab.Labware.Location(11, 1), "Proben")
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
+mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoMode.Mode.encoding)
 # Rbt.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 
@@ -88,7 +89,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
                                      volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
     ElutionBuffer   = Rtv.Reactive("Elution Buffer"                  ,
-                                     ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass=B_liquidClass)
+                                     ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass="Eluat")
 
     ProtK           = Rtv.Reactive("Proteinase K"                    ,
                                      Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=Small_vol_disp)
@@ -144,30 +145,31 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
             with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
                 mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
             with incubation(minutes=0.5):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
+                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
             with tips(usePreserved=preserveingTips()):
                 waste( from_labware_region=    TeMag.selectOnly(all_samples))
 
             with incubation(minutes=4):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
             with incubation(minutes=4):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
+                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
 
         spread( reactive=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
         with incubation(minutes=2):
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
 
         Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-        with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips+1):
+        with parallel_execution_of(mix_mag_eluat, repeat=Rtv.NumOfSamples//Rbt.nTips+1):
             mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
 
         with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
-            with incubation(minutes=0.5, timer=2):
+            with incubation(minutes=1.0, timer=2):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
             transfer(from_labware_region=   TeMag.selectOnly(all_samples),
                      to_labware_region=     Eluat.selectOnly(all_samples),
                      volume=                ElutionBufferVolume,
-                     optimizeTo=            False )
+                     optimizeTo=            False,
+                     using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
 
 def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
         """
@@ -195,5 +197,5 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
 
 
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(6)
+    extractRNA_with_MN_Vet_Kit(48)
     pass
