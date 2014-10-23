@@ -520,7 +520,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
         v = volume
     else:
         v = in_labware_region.Wells[oriSel[0]].vol
-    v = v * 0.8
+    v = v * 0.9
     v = v if v < mV else mV
 
     lf = in_labware_region
