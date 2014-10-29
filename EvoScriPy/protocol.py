@@ -504,6 +504,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     :param optimize:
     :return:
     """
+    mix_p = 0.9
     in_labware_region = in_labware_region or Lab.WashWaste
     assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
     if not volume or volume< 0.0 : volume = 0.0
@@ -519,12 +520,12 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     if nt > SampleCnt:
         nt = SampleCnt
     # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-    mV = Lab.def_DiTi.maxVol * 0.8    # What tip tp use !
+    mV = Lab.def_DiTi.maxVol * mix_p    # What tip tp use !
     if volume:
         v = volume
     else:
         v = in_labware_region.Wells[oriSel[0]].vol
-    v = v * 0.9
+    v = v * mix_p
     v = v if v < mV else mV
 
     lf = in_labware_region
@@ -543,7 +544,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
             sel = oriSel[curSample:curSample + nt]
             spl = range(curSample, curSample + nt)
             with tips(Rbt.tipsMask[nt], selected_samples=spl):
-                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * mix_p
                 mx.labware.selectOnly(sel)
                 if not using_liquid_class:
                     if sel:
@@ -555,7 +556,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
                     r_min, r_max = min(vols), max(vols)
                     assert r_min == r_max
                     r = r_max
-                r = r * 0.8
+                r = r * mix_p
                 r = r if r < mV else mV
                 mx.volume = r
                 mx.exec()
