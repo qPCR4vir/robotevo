@@ -197,7 +197,7 @@ def makePreMix( preMix, NumSamples=None):
         l = preMix.labware
         msg = "preMix: {:.1f} µL of {:s}".format(preMix.minVol(NumSamples), preMix.name)
         with group(msg):
-            msg = " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
+            msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
                 l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
             Itr.comment(msg).exec()
             nc = len(preMix.components)
@@ -254,7 +254,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         lt = to_labware_region
         msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
         with group(msg):
-            msg = "{v:.1f} µL total from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+            msg += " {v:.1f} µL total from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                 .format(v=reactive.minVol(), fg=lf.location.grid, fs=lf.location.site+1, fw=reactive.pos+1, do=str([i+1 for i in to]),
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
@@ -330,7 +330,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
         msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg = "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+            msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                 .format(fg=lf.location.grid, fs=lf.location.site+1, oo=str([i+1 for i in oriSel]),
                         do=str([i+1 for i in dstSel]),  to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
@@ -419,7 +419,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     lf = from_labware_region
     msg = "Waste: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
     with group(msg):
-        msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+        msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
                                  + str([i+1 for i in oriSel])
         Itr.comment(msg).exec()
         while SampleCnt:
@@ -461,8 +461,12 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
                     with tips(allow_air=CtrVol):
                         Asp.exec()
-                        Dst.exec()
-                    r -= dV
+                        if dV + Rest + RestPlus + 2*CtrVol > mV:
+                            Dst.exec()
+                            r -= dV
+                            Dst.volume = 0
+                        else:
+                            break
 
                 Asp.volume = Rest
                 Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
@@ -479,7 +483,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 #Ctr.exec()
                 Asp.volume = CtrVol
                 Asp.liquidClass = Te_Mag_Force_Centre
-                Dst.volume = Rest + RestPlus
+                Dst.volume += Rest + RestPlus
                 with tips(allow_air=CtrVol):
                         Asp.exec()
                 with tips(allow_air=Rest + RestPlus):
@@ -500,6 +504,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     :param optimize:
     :return:
     """
+    mix_p = 0.9
     in_labware_region = in_labware_region or Lab.WashWaste
     assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
     if not volume or volume< 0.0 : volume = 0.0
@@ -515,19 +520,19 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     if nt > SampleCnt:
         nt = SampleCnt
     # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-    mV = Lab.def_DiTi.maxVol * 0.8    # What tip tp use !
+    mV = Lab.def_DiTi.maxVol * mix_p    # What tip tp use !
     if volume:
         v = volume
     else:
         v = in_labware_region.Wells[oriSel[0]].vol
-    v = v * 0.9
+    v = v * mix_p
     v = v if v < mV else mV
 
     lf = in_labware_region
     mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
     msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
     with group(msg):
-        msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+        msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
                                     + str([i+1 for i in oriSel])
         Itr.comment(msg).exec()
         while SampleCnt:
@@ -539,7 +544,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
             sel = oriSel[curSample:curSample + nt]
             spl = range(curSample, curSample + nt)
             with tips(Rbt.tipsMask[nt], selected_samples=spl):
-                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * mix_p
                 mx.labware.selectOnly(sel)
                 if not using_liquid_class:
                     if sel:
@@ -551,7 +556,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
                     r_min, r_max = min(vols), max(vols)
                     assert r_min == r_max
                     r = r_max
-                r = r * 0.8
+                r = r * mix_p
                 r = r if r < mV else mV
                 mx.volume = r
                 mx.exec()
