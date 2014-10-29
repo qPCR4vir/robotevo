@@ -197,7 +197,7 @@ def makePreMix( preMix, NumSamples=None):
         l = preMix.labware
         msg = "preMix: {:.1f} µL of {:s}".format(preMix.minVol(NumSamples), preMix.name)
         with group(msg):
-            msg = " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
+            msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
                 l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
             Itr.comment(msg).exec()
             nc = len(preMix.components)
@@ -254,7 +254,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         lt = to_labware_region
         msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
         with group(msg):
-            msg = "{v:.1f} µL total from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+            msg += " {v:.1f} µL total from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                 .format(v=reactive.minVol(), fg=lf.location.grid, fs=lf.location.site+1, fw=reactive.pos+1, do=str([i+1 for i in to]),
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
@@ -330,7 +330,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
         msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
         with group(msg):
-            msg = "[grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+            msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                 .format(fg=lf.location.grid, fs=lf.location.site+1, oo=str([i+1 for i in oriSel]),
                         do=str([i+1 for i in dstSel]),  to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
@@ -419,7 +419,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     lf = from_labware_region
     msg = "Waste: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
     with group(msg):
-        msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+        msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
                                  + str([i+1 for i in oriSel])
         Itr.comment(msg).exec()
         while SampleCnt:
@@ -527,7 +527,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
     msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
     with group(msg):
-        msg = "[grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+        msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
                                     + str([i+1 for i in oriSel])
         Itr.comment(msg).exec()
         while SampleCnt:
