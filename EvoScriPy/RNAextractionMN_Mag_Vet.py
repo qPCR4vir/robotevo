@@ -103,7 +103,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     Waste           = Rtv.Reactive("Waste"  , WashWaste )
 
 
-    Itr.wash_tips(wasteVol=30).exec()
+    Itr.wash_tips(wasteVol=30, FastWash=True).exec()
     Te_MagS_ActivateHeater(50).exec()
     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
 
