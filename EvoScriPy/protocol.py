@@ -461,8 +461,12 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
                     with tips(allow_air=CtrVol):
                         Asp.exec()
-                        Dst.exec()
-                    r -= dV
+                        if dV + Rest + RestPlus + 2*CtrVol > mV:
+                            Dst.exec()
+                            r -= dV
+                            Dst.volume = 0
+                        else:
+                            break
 
                 Asp.volume = Rest
                 Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
@@ -479,7 +483,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
                 #Ctr.exec()
                 Asp.volume = CtrVol
                 Asp.liquidClass = Te_Mag_Force_Centre
-                Dst.volume = Rest + RestPlus
+                Dst.volume += Rest + RestPlus
                 with tips(allow_air=CtrVol):
                         Asp.exec()
                 with tips(allow_air=Rest + RestPlus):
