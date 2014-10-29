@@ -2,8 +2,8 @@ __author__ = 'tobias.winterfeld'
 
 from tkinter import *
 
-"""
-'''
+
+
 colours = ['red','green','orange','white','yellow','blue']
 
 for r,c in enumerate( colours):
@@ -12,7 +12,7 @@ for r,c in enumerate( colours):
 
 mainloop()
 
-
+"""
 import tkinter as tk
 import random
 
