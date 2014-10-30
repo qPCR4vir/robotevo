@@ -131,12 +131,15 @@ def dispense( tip, reactive, vol=None): # OK coordinate with robot
     v[tip] = vol
     Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def mix_reactive(reactive, LiqClass=None, cycles=3, maxTips=1):
+def mix_reactive(reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
     assert isinstance(reactive, Rtv.Reactive)
+    v_perc /= 100.0
     vol = []
     reactive.autoselect(maxTips)
-    for w in reactive.labware.selected_wells():
-        vol += [w.vol * 0.8]
+    for tip, w in enumerate(reactive.labware.selected_wells()):
+        v = w.vol * v_perc
+        vm = Rbt.Robot.current.curArm().Tips[tip].type.maxVol * 0.9
+        vol += [min(v, vm)]
     Itr.mix(Rbt.tipsMask[len(vol)],
             liquidClass=LiqClass,
             volume=vol,
