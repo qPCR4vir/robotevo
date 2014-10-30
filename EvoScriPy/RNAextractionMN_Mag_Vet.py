@@ -76,8 +76,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                                      Reactives, pos=11, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
     BindingBuffer   = Rtv.Reactive("VEB - Binding Buffer "           ,
                                      BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
-    B_Beads         = Rtv.Reactive("B-Beads"                         ,
-                                     Reactives, pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
+    B_Beads         = Rtv.Reactive("B-Beads" ,Reactives, initial_vol=1200,
+                                     pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
 
     VEW1            = Rtv.Reactive("VEW1 - Wash Buffer"              ,
                                      Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"),
@@ -118,7 +118,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                    using_liquid_class=  ("Serum Asp preMix3","Serum Disp postMix3"),
                    optimizeFrom         =False,     optimizeTo= True,
                    NumSamples=          Rtv.NumOfSamples)
-    Itr.wash_tips(wasteVol=4).exec()
+    Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
     with tips(reuse=False, drop=True):
         spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
@@ -126,8 +126,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with incubation(10): pass
 
     with tips(tipsMask=maxMask, reuse=True, drop=False):
-        mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=2, maxTips=maxTips)
-        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips)
+        for p in [40, 50, 60, 70, 80, 80, 80]:
+            mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips, v_perc=90)
 
     with tips(reuse=True, drop=True):
         spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
