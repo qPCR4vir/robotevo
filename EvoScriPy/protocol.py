@@ -262,26 +262,28 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
-            with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
-                maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
-                while SampleCnt:
-                    if nt > SampleCnt: nt = SampleCnt
-                    if availableDisp == 0:
-                        dsp, rst = divmod(SampleCnt, nt)
-                        if dsp >= maxMultiDisp_N:
-                            dsp = maxMultiDisp_N
-                            vol = [volume * dsp] * nt
-                            availableDisp = dsp
-                        else:
-                            vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
-                            availableDisp = dsp + bool(rst)
-                        aspiremultiTips(nt, reactive, vol)
+            while SampleCnt:
+                if nt > SampleCnt: nt = SampleCnt
+                with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
+                    maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
+                    dsp, rst = divmod(SampleCnt, nt)
+                    if dsp >= maxMultiDisp_N:
+                        dsp = maxMultiDisp_N
+                        vol = [volume * dsp] * nt
+                        availableDisp = dsp
+                    else:
+                        vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
+                        availableDisp = dsp + bool(rst)
 
-                    curSample = NumSamples - SampleCnt
-                    sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
-                    dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
-                    availableDisp -= 1
-                    SampleCnt -= nt
+                    aspiremultiTips(nt, reactive, vol)
+
+                    while availableDisp:
+                        if nt > SampleCnt: nt = SampleCnt
+                        curSample = NumSamples - SampleCnt
+                        sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
+                        dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
+                        availableDisp -= 1
+                        SampleCnt -= nt
 
 def transfer( from_labware_region, to_labware_region, volume, using_liquid_class=None,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
