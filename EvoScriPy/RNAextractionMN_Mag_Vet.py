@@ -126,7 +126,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     with incubation(10): pass
 
     with tips(tipsMask=maxMask, reuse=True, drop=False):
-        for p in [40, 50, 60, 70, 80, 80, 80]:
+        for p in [40, 50, 60, 60, 60, 65]:
             mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
         mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips, v_perc=90)
 
