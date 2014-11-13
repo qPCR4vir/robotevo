@@ -56,6 +56,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
     IC_MS2Volume        = 20.0
     ElutionBufferVolume = 100.0
 
+    SampleLiqClass      = TissueHomLiqClass # ="Serum Asp"   # SerumLiqClass="Serum Asp preMix3"
+
     all_samples = range(Rtv.NumOfSamples)
     maxTips     = min(Rbt.nTips, Rtv.NumOfSamples)
     maxMask     = Rbt.tipsMask[maxTips]
@@ -63,7 +65,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
 
     for s in all_samples:
         Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
-                                            pos=s+1, defLiqClass=def_liquidClass, excess=0)
+                                            pos=s+1, defLiqClass=SampleLiqClass, excess=0)
         Rtv.Reactive("lysis_{:02d}".format(s+1), TeMag, initial_vol= 0.0,
                                             pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
         Rtv.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
@@ -115,7 +117,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
         transfer(  from_labware_region= Samples,
                    to_labware_region=   TeMag,
                    volume=              SampleVolume,
-                   using_liquid_class=  ("Serum Asp preMix3","Serum Disp postMix3"),
+                   using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
                    optimizeFrom         =False,     optimizeTo= True,
                    NumSamples=          Rtv.NumOfSamples)
     Itr.wash_tips(wasteVol=4, FastWash=True).exec()
@@ -198,5 +200,5 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
 
 
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(48)
+    extractRNA_with_MN_Vet_Kit(16)
     pass

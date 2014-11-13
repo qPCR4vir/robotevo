@@ -10,6 +10,10 @@ import Labware as Lab
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
+SerumLiqClass      = "Serum Asp preMix3"
+TissueHomLiqClass  = "Serum Asp"
+
+
 B_liquidClass   = "Water free cuvette"
 W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
@@ -496,7 +500,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
-    Itr.wash_tips(wasteVol=8).exec()
+    Itr.wash_tips(wasteVol=4).exec()
     return oriSel
 
 def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True):
