@@ -10,6 +10,10 @@ import Labware as Lab
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
+SerumLiqClass      = "Serum Asp preMix3"
+TissueHomLiqClass  = "Serum Asp"
+
+
 B_liquidClass   = "Water free cuvette"
 W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
@@ -131,12 +135,15 @@ def dispense( tip, reactive, vol=None): # OK coordinate with robot
     v[tip] = vol
     Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-def mix_reactive(reactive, LiqClass=None, cycles=3, maxTips=1):
+def mix_reactive(reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
     assert isinstance(reactive, Rtv.Reactive)
+    v_perc /= 100.0
     vol = []
     reactive.autoselect(maxTips)
-    for w in reactive.labware.selected_wells():
-        vol += [w.vol * 0.8]
+    for tip, w in enumerate(reactive.labware.selected_wells()):
+        v = w.vol * v_perc
+        vm = Rbt.Robot.current.curArm().Tips[tip].type.maxVol * 0.9
+        vol += [min(v, vm)]
     Itr.mix(Rbt.tipsMask[len(vol)],
             liquidClass=LiqClass,
             volume=vol,
@@ -259,26 +266,28 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
-            with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
-                maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
-                while SampleCnt:
-                    if nt > SampleCnt: nt = SampleCnt
-                    if availableDisp == 0:
-                        dsp, rst = divmod(SampleCnt, nt)
-                        if dsp >= maxMultiDisp_N:
-                            dsp = maxMultiDisp_N
-                            vol = [volume * dsp] * nt
-                            availableDisp = dsp
-                        else:
-                            vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
-                            availableDisp = dsp + bool(rst)
-                        aspiremultiTips(nt, reactive, vol)
+            while SampleCnt:
+                if nt > SampleCnt: nt = SampleCnt
+                with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
+                    maxMultiDisp_N = Rbt.Robot.current.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
+                    dsp, rst = divmod(SampleCnt, nt)
+                    if dsp >= maxMultiDisp_N:
+                        dsp = maxMultiDisp_N
+                        vol = [volume * dsp] * nt
+                        availableDisp = dsp
+                    else:
+                        vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
+                        availableDisp = dsp + bool(rst)
 
-                    curSample = NumSamples - SampleCnt
-                    sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
-                    dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
-                    availableDisp -= 1
-                    SampleCnt -= nt
+                    aspiremultiTips(nt, reactive, vol)
+
+                    while availableDisp:
+                        if nt > SampleCnt: nt = SampleCnt
+                        curSample = NumSamples - SampleCnt
+                        sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
+                        dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
+                        availableDisp -= 1
+                        SampleCnt -= nt
 
 def transfer( from_labware_region, to_labware_region, volume, using_liquid_class=None,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
@@ -491,7 +500,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 
             SampleCnt -= nt
         Asp.labware.selectOnly(oriSel)
-    Itr.wash_tips(wasteVol=8).exec()
+    Itr.wash_tips(wasteVol=4).exec()
     return oriSel
 
 def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True):
