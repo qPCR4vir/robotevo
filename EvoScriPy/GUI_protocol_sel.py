@@ -32,7 +32,7 @@ class App(tk.Frame):
         tk.Frame.__init__(self, master)
         self.pack(side="left")
 
-        logo = tk.PhotoImage(file='..\EvoScriPy\FLI-Logo_mit_Farbverlauf.png')
+        logo = tk.PhotoImage(file='..\EvoScriPy\logo.png')
         tk.Label(self, image=logo).pack(side="top")
 
         tk.Label(self,text='Number of Samples (1-48):').pack(side='top')

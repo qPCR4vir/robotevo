@@ -1,3 +1,5 @@
+from Tobias.RobotEvoTob.EvoScriPy.Instruction_Base import Pipette
+
 __author__ = 'Ariel'
 import Labware
 import Robot
@@ -56,12 +58,6 @@ class App(tkinter.Frame):
         self.sampletypes = {'Serum': not_implemented,
                             'Gewebe': not_implemented}
 
-        '''
-        for name in self.sampletypes.keys():
-            self.sampletype = tk.Radiobutton(self, text=name)
-            self.sampletype.grid(row=6, column=x)
-            x = +1
-        '''
         self.sampletype = tkinter.Radiobutton(self, text='Serum', value=1)
         self.sampletype.grid(row=5, column=2, )
 
