@@ -1,6 +1,22 @@
 from tkinter import *
 import tkinter
-from Tobias.RobotEvoTob.EvoScriPy.EvoMode import Script
+from EvoMode import Script
+
+import EvoMode
+from Instructions import Pipette
+iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
+Script = EvoMode.Script(template='RNAext_MNVet.ewt', filename='AWL.esc')
+comments = EvoMode.Comments()
+
+EvoMode.current = EvoMode.multiple([iRobot,
+                                    Script,
+                                    EvoMode.AdvancedWorkList('AWL.gwl'),
+                                    EvoMode.ScriptBody('AWL.esc.txt'),
+                                    EvoMode.StdOut(), comments
+                                    ])
+
+from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
+
 # import Tobias.RobotEvoTob.EvoScriPy.Labware
 # import Tobias.RobotEvoTob.EvoScriPy.Robot
 # from Tobias.RobotEvoTob.EvoScriPy.Instructions import Pipette
@@ -39,7 +55,7 @@ class App(tkinter.Frame):
         self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
         self.sample_num.grid(row=2, column=1)
 
-        self.protocols = {'RNA extraction with the MN_Vet kit': 'extractRNA_with_MN_Vet_Kit',
+        self.protocols = {'RNA extraction with the MN_Vet kit': extractRNA_with_MN_Vet_Kit,
                           'Others': not_implemented}
         self.protocol = tkinter.StringVar(self, 'RNA extraction with the MN_Vet kit')
 
@@ -87,7 +103,7 @@ class App(tkinter.Frame):
         Script.done()
 
         self.comments.delete(0, self.size())
-        for line in self.comments:
+        for line in comments.comments:
             self.comments.insert(tkinter.END, line)
 
 
