@@ -31,8 +31,8 @@ class App(tkinter.Frame):
         tkinter.Frame.__init__(self, master)
         self.grid()
 
-        logo = tkinter.PhotoImage(file='../EvoScriPy/logo.gif')
-        tkinter.Label(self, image=logo).grid(row=0, column=0, rowspan=4, columnspan=3)
+        logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
+        tkinter.Label(self, image=logo, justify=tkinter.CENTER).grid(row=0, column=0, rowspan=3, columnspan=3)
 
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=5, column=0)
 
