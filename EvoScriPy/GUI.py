@@ -1,9 +1,6 @@
-from tkinter import *
-import tkinter
-from EvoMode import Script
-
 import EvoMode
 from Instructions import Pipette
+
 iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
 Script = EvoMode.Script(template='RNAext_MNVet.ewt', filename='AWL.esc')
 comments = EvoMode.Comments()
@@ -13,16 +10,11 @@ EvoMode.current = EvoMode.multiple([iRobot,
                                     EvoMode.AdvancedWorkList('AWL.gwl'),
                                     EvoMode.ScriptBody('AWL.esc.txt'),
                                     EvoMode.StdOut(), comments
-                                    ])
+])
 
+from tkinter import *
+import tkinter
 from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
-
-# import Tobias.RobotEvoTob.EvoScriPy.Labware
-# import Tobias.RobotEvoTob.EvoScriPy.Robot
-# from Tobias.RobotEvoTob.EvoScriPy.Instructions import Pipette
-# import Tobias.RobotEvoTob.EvoScriPy.EvoMode
-# from Tobias.RobotEvoTob.EvoScriPy.RobotInitRNAextraction import *
-# from Tobias.RobotEvoTob.EvoScriPy.RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
 
 
 __author__ = 'tobias.winterfeld'
@@ -33,7 +25,7 @@ w = Label(master, image=logo)
 w.grid(row=0, column=0, columnspan=3)
 
 
-def not_implemented():
+def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
 
@@ -47,7 +39,7 @@ class App(tkinter.Frame):
         self.grid()
 
         # logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
-        #tkinter.Label(self, image=logo, justify=tkinter.CENTER).grid(row=0, column=0, rowspan=3, columnspan=3)
+        # tkinter.Label(self, image=logo, justify=tkinter.CENTER).grid(row=0, column=0, rowspan=3, columnspan=3)
 
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=1)
 
