@@ -90,20 +90,14 @@ class App(tkinter.Frame):
         self.Checkbuttons=[]
         for rn, react in enumerate(protocol.Reactives):
             assert isinstance(react,Rtv.Reactive)
-            CheckB = tkinter.Checkbutton(text=react.name)
-            CheckB.grid(row=rn, sticky=tkinter.W)
+            CheckB = tkinter.Checkbutton(self.varoutput, text=react.name, ) # width=20
+            CheckB.grid(row=rn, column=0, sticky=tkinter.W)
+           # StringVar = react.volpersample
+            Vol = tkinter.DoubleVar()
+            Vol.set(react.volpersample)
+           # tkinter.Label(self.varoutput, text=StringVar).grid(row=rn, column=1, sticky=tkinter.W)
+            tkinter.Spinbox(self.varoutput,textvariable=Vol, increment=1, from_=0.0, to=1000).grid(row=rn, column=2, sticky=tkinter.W)
 
-
-            tkinter.Label(self.varoutput, justify=tkinter.CENTER, padx=10, text=react.name).grid(row=rn)
-"""
-        for w in rtv:
-            line = rtv[w], ' µl'
-            self.stdVol = tk.Label(text=line)
-            self.stdVol.grid(row=r, column=1)
-            self.enterVol = tk.Entry(text=rtv[w])
-            self.enterVol.grid(row=r, column=2, sticky=tk.W)
-            r += 1
-"""
 
 
     def run_selected(self):
@@ -124,3 +118,12 @@ class App(tkinter.Frame):
 
 app = App()
 master.mainloop()
+"""
+        for w in rtv:
+            line = rtv[w], ' µl'
+            self.stdVol = tk.Label(text=line)
+            self.stdVol.grid(row=r, column=1)
+            self.enterVol = tk.Entry(text=rtv[w])
+            self.enterVol.grid(row=r, column=2, sticky=tk.W)
+            r += 1
+"""
