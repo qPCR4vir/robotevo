@@ -23,7 +23,7 @@ from RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit # extractRNA_with_MN_Vet_
 __author__ = 'tobias.winterfeld'
 
 master = Tk()
-logo = PhotoImage(file="../EvoScriPy/logo.gif")
+logo = PhotoImage(file="../EvoScriPy/logo.png")
 w = Label(master, image=logo)
 w.grid(row=0, column=0, columnspan=3)
 
