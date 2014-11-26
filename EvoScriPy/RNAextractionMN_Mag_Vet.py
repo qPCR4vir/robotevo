@@ -106,6 +106,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
                                      ,defLiqClass=W_liquidClass, replicas=2)
     Waste           = Rtv.Reactive("Waste"  , WashWaste )
 
+    CheckList()
 
     for s in all_samples:
         Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
@@ -116,7 +117,6 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
                                             pos=s+1, defLiqClass=def_liquidClass, excess=0)
 
 
-    CheckList()
 
     Itr.wash_tips(wasteVol=30, FastWash=True).exec()
     Te_MagS_ActivateHeater(50).exec()
