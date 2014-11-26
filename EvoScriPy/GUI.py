@@ -88,16 +88,17 @@ class App(tkinter.Frame):
     class ReactiveFrame(tkinter.Frame):
         def __init__(self, parentFrame, react):
             tkinter.Frame.__init__(self,parentFrame)
+            self.grid(sticky=tkinter.NW)
+            #self.columnconfigure()
             self.react=react
-            self.CheckB = tkinter.Checkbutton(self, text=react.name, width=20) #
+            self.CheckB = tkinter.Checkbutton(self, text=react.name,   justify=tkinter.LEFT) #width=15,
             self.CheckB.grid(column=0, row=0, sticky=tkinter.NW)
-           # StringVar = react.volpersample
             self.Vol = tkinter.DoubleVar()
             self.Vol.set(react.volpersample)
-           # tkinter.Label(self.varoutput, text=StringVar).grid(row=rn, column=1, sticky=tkinter.W)
-            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=1000).grid( column=1,  row=0,sticky=tkinter.NW)
+            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=1000,  width=5).grid( column=1,  row=0,sticky=tkinter.NW)
+            tkinter.Label(self, text="µL/sample.", width=8 ).grid(row=0, column=2, sticky=tkinter.NW)
+           # StringVar = react.volpersample
             #row=rn,
-            self.grid(sticky=tkinter.NW)
 
     def CheckList(self, protocol):
         RL=protocol.Reactives
