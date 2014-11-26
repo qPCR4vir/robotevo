@@ -10,6 +10,9 @@ def_mix_excess   =  8
 NumOfSamples     = None
 
 class Reactive:
+
+    Reactives = None
+
     def __init__(self, name, labware,  volpersample=0, single_use=None,
                  pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
         """
@@ -24,6 +27,7 @@ class Reactive:
         :param excess: float; in %
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
+        if (Reactive.Reactives): Reactive.Reactives.Reactives.append(self)
         ex= def_react_excess if excess is None else excess
         self.excess = 1.0 + ex/100.0
         self.defLiqClass = defLiqClass or def_liquidClass
@@ -44,6 +48,13 @@ class Reactive:
         else:
             self.init_vol()
 
+    @staticmethod
+    def SetReactiveList(protocol):
+        Reactive.Reactives = protocol
+
+    @staticmethod
+    def StopReactiveList():
+        Reactive.Reactives = None
 
     def __str__(self):
         return "{name:s}".format(name=self.name)
