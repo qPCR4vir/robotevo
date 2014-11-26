@@ -74,15 +74,6 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
     maxMask     = Rbt.tipsMask[maxTips]
     par         = TeMag.parallelOrder(Rbt.nTips, all_samples)
 
-    for s in all_samples:
-        Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
-                                            pos=s+1, defLiqClass=SampleLiqClass, excess=0)
-        Rtv.Reactive("lysis_{:02d}".format(s+1), TeMag, initial_vol= 0.0,
-                                            pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
-        Rtv.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
-                                            pos=s+1, defLiqClass=def_liquidClass, excess=0)
-
-
     LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
                                      LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
     IC2             = Rtv.Reactive("IC2 -synthetic RNA"              ,
@@ -114,6 +105,15 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
                                      Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                      ,defLiqClass=W_liquidClass, replicas=2)
     Waste           = Rtv.Reactive("Waste"  , WashWaste )
+
+
+    for s in all_samples:
+        Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
+                                            pos=s+1, defLiqClass=SampleLiqClass, excess=0)
+        Rtv.Reactive("lysis_{:02d}".format(s+1), TeMag, initial_vol= 0.0,
+                                            pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
+        Rtv.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
+                                            pos=s+1, defLiqClass=def_liquidClass, excess=0)
 
 
     CheckList()

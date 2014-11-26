@@ -77,10 +77,10 @@ class App(tkinter.Frame):
         self.quit.grid(row=2, column=3)
 
         self.comments = tkinter.Listbox(self, height=25, width=75)
-        self.comments.grid(row=3, column=0)
+        self.comments.grid(row=3, column=1, columnspan=4)
 
-        self.varoutput = tkinter.Listbox(self, height=25, width=75)
-        self.varoutput.grid(row=3, column=1, columnspan=4)
+        self.varoutput = tkinter.Frame(self, height=25, width=75)
+        self.varoutput.grid(row=3, column=0)
 
         explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=4, columnspan=3)
@@ -89,7 +89,7 @@ class App(tkinter.Frame):
         RL=protocol.Reactives
         for rn, react in enumerate(protocol.Reactives):
             assert isinstance(react,Rtv.Reactive)
-            tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=react.name).grid(row=4+1+rn, columnspan=3)
+            tkinter.Label(self.varoutput, justify=tkinter.CENTER, padx=10, text=react.name).grid(row=rn)
 
 
     def run_selected(self):
