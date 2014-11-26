@@ -88,45 +88,66 @@ class App(tkinter.Frame):
     class ReplicaFrame(tkinter.Frame):
         def __init__(self, parentFrame, reply, num):
             tkinter.Frame.__init__(self,parentFrame)
-            self.grid(sticky=tkinter.NW, row=num, column=3)
-            #self.columnconfigure()
-            self.reply=reply
-            self.num=num
-            self.CheckB = tkinter.Checkbutton(self, text="Reply: "+str(num+1),   justify=tkinter.LEFT) #width=15,
-            self.CheckB.grid(column=0, row=0, sticky=tkinter.NW)
+            self.grid(sticky=tkinter.NW, row=num, column=5)
+
+            self.reply =reply
+            self.num =num
             self.Vol = tkinter.DoubleVar()
             self.Vol.set(reply.vol)
-            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=10000,  width=5).grid( column=1,  row=0,sticky=tkinter.NW)
-            tkinter.Label(self, text="µL/total.", width=8 ).grid(row=0, column=2, sticky=tkinter.NW)
-           # StringVar = react.volpersample
-            #row=rn,
+            self.Well = tkinter.IntVar()
+            self.Well.set(reply.offset+1)
 
+            self.CheckB = tkinter.Checkbutton(self, text=" Reply "+str(num+1),   justify=tkinter.LEFT) #width=15,
+            self.CheckB.grid(column=0, row=0, sticky=tkinter.NW)
+            tkinter.Entry(self, textvariable=self.Well, width=2 ).grid(row=0, column=1, sticky=tkinter.NW)
+            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=100000,  width=7).grid( column=2,  row=0,sticky=tkinter.NW)
 
     class ReactiveFrame(tkinter.Frame):
         def __init__(self, parentFrame, react):
             assert isinstance(react,Rtv.Reactive)
             tkinter.Frame.__init__(self,parentFrame)
             self.grid(sticky=tkinter.NW)
-            self.columnconfigure(0, minsize=150)
+            self.columnconfigure(0, minsize=120)
             self.react=react
             self.Vol = tkinter.DoubleVar()
             self.Vol.set(react.volpersample)
+            self.RackName = tkinter.StringVar()
+            self.RackName.set(react.labware.label)
+            self.RackGrid = tkinter.IntVar()
+            self.RackGrid.set(react.labware.location.grid)
+            self.RackSite = tkinter.IntVar()
+            self.RackSite.set(react.labware.location.site)
+
             tkinter.Label  (self, text=react.name,   justify=tkinter.RIGHT).grid(column=0, row=0, sticky=tkinter.NW)
-            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=1000,  width=5).grid( column=1,  row=0,sticky=tkinter.NW)
-            tkinter.Label(self, text="µL/sample.", width=8 ).grid(row=0, column=2, sticky=tkinter.NW)
+            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=100000,  width=7).grid( column=1,  row=0,sticky=tkinter.NW)
+            #tkinter.Label(self, text="µL/sample. Rack:grid:site", width=18 ).grid(row=0, column=2, sticky=tkinter.NW)
+            self.RackNameEntry=tkinter.Entry(self, textvariable=self.RackName, width=12 ).grid(row=0, column=2, sticky=tkinter.NW)
+            self.RackGridEntry=tkinter.Entry(self, textvariable=self.RackGrid, width=2 ).grid(row=0, column=3, sticky=tkinter.NW)
+            self.RackSiteEntry=tkinter.Entry(self, textvariable=self.RackSite, width=2 ).grid(row=0, column=4, sticky=tkinter.NW)
             for rn, reply in enumerate(react.Replicas):
                 #assert isinstance(react,Rtv.Reactive)
                 App.ReplicaFrame(self,reply,rn)
+            #self.pack()
 
     def CheckList(self, protocol):
         RL=protocol.Reactives
         self.ReactFrames=[]
+        Header=tkinter.Frame(self.varoutput)
+        Header.grid(sticky=tkinter.NW)
+        Header.columnconfigure(0, minsize=120)
+        tkinter.Label (Header, text=" Reactive Name",   justify=tkinter.RIGHT).grid(column=0, row=0, sticky=tkinter.NW)
+        tkinter.Label (Header, text="µL/sample", width=8 ).grid(row=0, column=1, sticky=tkinter.NW)
+        tkinter.Label (Header, text="     Rack      :grid:site", width=18 ).grid(row=0, column=2, sticky=tkinter.NW)
+        tkinter.Label (Header, text="   Well", width=8 ).grid(row=0, column=3, sticky=tkinter.NW)
+        tkinter.Label (Header, text="µL/total", width=8 ).grid(row=0, column=4, sticky=tkinter.NW)
+
+
         for rn, react in enumerate(protocol.Reactives):
             assert isinstance(react,Rtv.Reactive)
             rf=App.ReactiveFrame(self.varoutput,react)
             self.ReactFrames.append(rf)
 
-
+        #self.varoutput.pack()
 
     def run_selected(self):
         selected = self.protocol_selection.curselection()
@@ -142,7 +163,7 @@ class App(tkinter.Frame):
         self.comments.delete(0, self.size())
         for line in comments.comments:
             self.comments.insert(tkinter.END, line)
-
+        #self.pack()
 
 app = App()
 master.mainloop()

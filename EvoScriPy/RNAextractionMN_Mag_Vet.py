@@ -99,9 +99,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
                                      Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=Small_vol_disp)
     cRNA            = Rtv.Reactive("Carrier RNA"                     ,
                                      Reactives, pos=15, volpersample=  cRNAVolume , defLiqClass=Small_vol_disp)
-    IC_MS2          = Rtv.Reactive("IC MS2 - bacterial phage culture",
+    IC_MS2          = Rtv.Reactive("IC MS2 phage culture",
                                      Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
-    pK_cRNA_MS2     = Rtv.preMix  ("ProtK,carrier RNA and interne Control IC-MS2 premix"        ,
+    pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix"        ,
                                      Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                      ,defLiqClass=W_liquidClass, replicas=2)
     Waste           = Rtv.Reactive("Waste"  , WashWaste )
