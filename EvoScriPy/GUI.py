@@ -85,18 +85,27 @@ class App(tkinter.Frame):
         explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=4, columnspan=3)
 
+    class ReactiveFrame(tkinter.Frame):
+        def __init__(self, parentFrame, react):
+            tkinter.Frame.__init__(self,parentFrame)
+            self.react=react
+            self.CheckB = tkinter.Checkbutton(self, text=react.name, width=20) #
+            self.CheckB.grid(column=0, row=0, sticky=tkinter.NW)
+           # StringVar = react.volpersample
+            self.Vol = tkinter.DoubleVar()
+            self.Vol.set(react.volpersample)
+           # tkinter.Label(self.varoutput, text=StringVar).grid(row=rn, column=1, sticky=tkinter.W)
+            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=1000).grid( column=1,  row=0,sticky=tkinter.NW)
+            #row=rn,
+            self.grid(sticky=tkinter.NW)
+
     def CheckList(self, protocol):
         RL=protocol.Reactives
-        self.Checkbuttons=[]
+        self.ReactFrames=[]
         for rn, react in enumerate(protocol.Reactives):
             assert isinstance(react,Rtv.Reactive)
-            CheckB = tkinter.Checkbutton(self.varoutput, text=react.name, ) # width=20
-            CheckB.grid(row=rn, column=0, sticky=tkinter.W)
-           # StringVar = react.volpersample
-            Vol = tkinter.DoubleVar()
-            Vol.set(react.volpersample)
-           # tkinter.Label(self.varoutput, text=StringVar).grid(row=rn, column=1, sticky=tkinter.W)
-            tkinter.Spinbox(self.varoutput,textvariable=Vol, increment=1, from_=0.0, to=1000).grid(row=rn, column=2, sticky=tkinter.W)
+            rf=App.ReactiveFrame(self.varoutput,react)
+            self.ReactFrames.append(rf)
 
 
 
