@@ -1,5 +1,6 @@
 import EvoMode
 from Instructions import Pipette
+import Reactive as Rtv
 
 iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
 Script = EvoMode.Script(template='RNAext_MNVet.ewt', filename='AWL.esc')
@@ -9,12 +10,14 @@ EvoMode.current = EvoMode.multiple([iRobot,
                                     Script,
                                     EvoMode.AdvancedWorkList('AWL.gwl'),
                                     EvoMode.ScriptBody('AWL.esc.txt'),
-                                    EvoMode.StdOut(), comments
-])
+                                    EvoMode.StdOut(),
+                                    comments
+                                   ])
+
 
 from tkinter import *
 import tkinter
-from RNAextractionMN_Mag_Vet import extractRNA_with_MN_Vet_Kit
+from RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit # extractRNA_with_MN_Vet_Kit
 
 
 __author__ = 'tobias.winterfeld'
@@ -47,7 +50,7 @@ class App(tkinter.Frame):
         self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
         self.sample_num.grid(row=2, column=1)
 
-        self.protocols = {'RNA extraction with the MN_Vet kit': extractRNA_with_MN_Vet_Kit,
+        self.protocols = {'RNA extraction with the MN_Vet kit': RNAextr_MN_Vet_Kit,
                           'Others': not_implemented}
         self.protocol = tkinter.StringVar(self, 'RNA extraction with the MN_Vet kit')
 
@@ -82,6 +85,12 @@ class App(tkinter.Frame):
         explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=4, columnspan=3)
 
+    def CheckList(self, protocol):
+        RL=protocol.Reactives
+        for rn, react in enumerate(protocol.Reactives):
+            assert isinstance(react,Rtv.Reactive)
+            tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=react.name).grid(row=4+1+rn, columnspan=3)
+
 
     def run_selected(self):
         selected = self.protocol_selection.curselection()
@@ -91,7 +100,7 @@ class App(tkinter.Frame):
         print(selected)
         NumOfSamples = int(self.sample_num.get())
 
-        self.protocols[selected](NumOfSamples)
+        self.protocols[selected](self, NumOfSamples).Run()
         Script.done()
 
         self.comments.delete(0, self.size())

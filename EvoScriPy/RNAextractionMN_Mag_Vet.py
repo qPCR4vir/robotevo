@@ -23,6 +23,7 @@ from protocol import *
 from Instructions_Te_MagS import *
 import Instructions as Itr
 
+
 Reactives  = Lab.Labware(Lab.GreinRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
 Eluat      = Lab.Labware(Lab.EppRack3x16R,    Lab.Labware.Location(8, 1 ), "Eluat" )
 Samples    = Lab.Labware(Lab.EppRack3x16,     Lab.Labware.Location(11, 1), "Proben")
@@ -32,7 +33,17 @@ mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoM
 # Rbt.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 
-def extractRNA_with_MN_Vet_Kit(NumOfSamples):
+
+class RNAextr_MN_Vet_Kit(Protocol):
+    def __init__(self,GUI, NumOfSamples):
+        self.NumOfSamples = NumOfSamples
+        Protocol.__init__(self,GUI)
+
+    def Run(self):
+        extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
+
+
+def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
 
     Rtv.NumOfSamples = NumOfSamples
 
@@ -104,6 +115,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples):
                                      ,defLiqClass=W_liquidClass, replicas=2)
     Waste           = Rtv.Reactive("Waste"  , WashWaste )
 
+
+    CheckList()
 
     Itr.wash_tips(wasteVol=30, FastWash=True).exec()
     Te_MagS_ActivateHeater(50).exec()

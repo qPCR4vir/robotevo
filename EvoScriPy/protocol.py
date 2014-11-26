@@ -8,6 +8,22 @@ import Reactive as Rtv
 import Labware as Lab
 
 
+class Protocol:
+    def __init__(self,GUI=None):
+        #self.SetCheckList(GUI)
+        self.GUI=GUI
+        self.Reactives=[]
+        Rtv.Reactive.SetReactiveList(self)
+
+    def Run(self):
+        pass
+
+    def SetCheckList(self, GUI):
+        self.GUI=GUI
+
+    def CheckList(self):
+        if (self.GUI): self.GUI.CheckList(self)
+
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
 SerumLiqClass      = "Serum Asp preMix3"
