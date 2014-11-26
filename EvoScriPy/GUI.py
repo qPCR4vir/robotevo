@@ -64,10 +64,10 @@ class App(tkinter.Frame):
         self.protocol_selection.activate(1)
 
         self.sampletype = tkinter.Radiobutton(self, text='Serum', value=1)
-        self.sampletype.grid(row=1, column=2, )
+        self.sampletype.grid(row=1, column=2, sticky=tkinter.W)
 
         self.sampletype = tkinter.Radiobutton(self, text='Gewebe', value=2)
-        self.sampletype.grid(row=2, column=2)
+        self.sampletype.grid(row=2, column=2, sticky=tkinter.W)
 
         self.run = tkinter.Button(self, text="Synthetize a TECAN script\nfor the selected protocol",
                                   command=self.run_selected)
