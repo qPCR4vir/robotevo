@@ -85,20 +85,38 @@ class App(tkinter.Frame):
         explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=4, columnspan=3)
 
-    class ReactiveFrame(tkinter.Frame):
-        def __init__(self, parentFrame, react):
+    class ReplicaFrame(tkinter.Frame):
+        def __init__(self, parentFrame, reply, num):
             tkinter.Frame.__init__(self,parentFrame)
-            self.grid(sticky=tkinter.NW)
+            self.grid(sticky=tkinter.NW, row=num, column=3)
             #self.columnconfigure()
-            self.react=react
-            self.CheckB = tkinter.Checkbutton(self, text=react.name,   justify=tkinter.LEFT) #width=15,
+            self.reply=reply
+            self.num=num
+            self.CheckB = tkinter.Checkbutton(self, text="Reply: "+str(num+1),   justify=tkinter.LEFT) #width=15,
             self.CheckB.grid(column=0, row=0, sticky=tkinter.NW)
             self.Vol = tkinter.DoubleVar()
-            self.Vol.set(react.volpersample)
-            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=1000,  width=5).grid( column=1,  row=0,sticky=tkinter.NW)
-            tkinter.Label(self, text="µL/sample.", width=8 ).grid(row=0, column=2, sticky=tkinter.NW)
+            self.Vol.set(reply.vol)
+            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=10000,  width=5).grid( column=1,  row=0,sticky=tkinter.NW)
+            tkinter.Label(self, text="µL/total.", width=8 ).grid(row=0, column=2, sticky=tkinter.NW)
            # StringVar = react.volpersample
             #row=rn,
+
+
+    class ReactiveFrame(tkinter.Frame):
+        def __init__(self, parentFrame, react):
+            assert isinstance(react,Rtv.Reactive)
+            tkinter.Frame.__init__(self,parentFrame)
+            self.grid(sticky=tkinter.NW)
+            self.columnconfigure(0, minsize=150)
+            self.react=react
+            self.Vol = tkinter.DoubleVar()
+            self.Vol.set(react.volpersample)
+            tkinter.Label  (self, text=react.name,   justify=tkinter.RIGHT).grid(column=0, row=0, sticky=tkinter.NW)
+            tkinter.Spinbox(self,textvariable=self.Vol, increment=1, from_=0.0, to=1000,  width=5).grid( column=1,  row=0,sticky=tkinter.NW)
+            tkinter.Label(self, text="µL/sample.", width=8 ).grid(row=0, column=2, sticky=tkinter.NW)
+            for rn, reply in enumerate(react.Replicas):
+                #assert isinstance(react,Rtv.Reactive)
+                App.ReplicaFrame(self,reply,rn)
 
     def CheckList(self, protocol):
         RL=protocol.Reactives
