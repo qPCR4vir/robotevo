@@ -87,9 +87,22 @@ class App(tkinter.Frame):
 
     def CheckList(self, protocol):
         RL=protocol.Reactives
+        self.Checkbuttons=[]
         for rn, react in enumerate(protocol.Reactives):
             assert isinstance(react,Rtv.Reactive)
+            CheckB = tkinter.Checkbutton(text=react.name)
+            CheckB.grid(row=rn, sticky=tkinter.W)
+
             tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=react.name).grid(row=4+1+rn, columnspan=3)
+
+        for w in rtv:
+            line = rtv[w], ' µl'
+            self.stdVol = tk.Label(text=line)
+            self.stdVol.grid(row=r, column=1)
+            self.enterVol = tk.Entry(text=rtv[w])
+            self.enterVol.grid(row=r, column=2, sticky=tk.W)
+            r += 1
+
 
 
     def run_selected(self):

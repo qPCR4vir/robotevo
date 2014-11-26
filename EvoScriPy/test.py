@@ -13,9 +13,10 @@ class Application(tk.Frame):
     def createWidgets(self):
         rtv = {'VEW1': 600, 'VEW2': 600, 'BindBuff': 800}
         r = 0
+        self.CheckList=[]
         for w in rtv:
-            self.CheckList = tk.Checkbutton(text=w)
-            self.CheckList.grid(row=r, sticky=tk.W)
+            CheckList = tk.Checkbutton(text=w)
+            CheckList.grid(row=r, sticky=tk.W)
             line = rtv[w], ' µl'
             self.stdVol = tk.Label(text=line)
             self.stdVol.grid(row=r, column=1)
