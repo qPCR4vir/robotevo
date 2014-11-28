@@ -172,16 +172,16 @@ class App(tkinter.Frame):
         RL=protocol.Reactives
         self.ReactFrames=[]
         Header=tkinter.Frame(self.varoutput)
-        Header.grid()
-        Header.columnconfigure(1, minsize=140)
+        Header.grid( sticky=tkinter.E)
+        Header.columnconfigure(1, minsize=120)
         tkinter.Label (Header, text='Reagent', justify=tkinter.RIGHT).grid(row=0, column=0,sticky=tkinter.E)
-        tkinter.Label (Header, text="µL/sample     ", ).grid(row=0, column=1, sticky=tkinter.E) #
-        tkinter.Label (Header, text="Rack",     ).grid(row=0, column=2,sticky=tkinter.E)
+        tkinter.Label (Header, text="     µL/sample      ", ).grid(row=0, column=1, ) # sticky=tkinter.CENTER
+        tkinter.Label (Header, text="Rack   ",     ).grid(row=0, column=2,sticky=tkinter.E)
         tkinter.Label (Header, text="Grid",          ).grid(row=0, column=3,sticky=tkinter.E)
-        tkinter.Label (Header, text="Site",          ).grid(row=0, column=4,sticky=tkinter.E)
-        tkinter.Label (Header, text='',      ).grid(row=0, column=5,)
-        tkinter.Label (Header, text="Well",          ).grid(row=0, column=6,)
-        tkinter.Label (Header, text="µL/total",          ).grid(row=0, column=7,sticky=tkinter.E)
+        tkinter.Label (Header, text="Site        ",          ).grid(row=0, column=4,sticky=tkinter.E)
+        tkinter.Label (Header, text='          ',      ).grid(row=0, column=5, sticky=tkinter.E)
+        tkinter.Label (Header, text="Well ",          ).grid(row=0, column=6, sticky=tkinter.E)
+        tkinter.Label (Header, text="µL/total",          ).grid(row=0, column=7, sticky=tkinter.E)
 
 
 
