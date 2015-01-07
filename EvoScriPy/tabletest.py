@@ -23,19 +23,73 @@ from RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
 def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
-        #self.createLOGO()
-        #self.createPROTOKOLLSELECTION()
-        #self.createSAMPLETYPESELECTION()
-        #self.createTRACKINGCHCKBOX()
-        #self.createLiqDetCHCKBOX()
-        #self.createSAMPLENUM()
-        #self.createCtrlButtons()
-        self.createREAKTIVEFRAME()
-        self.createPROTOKOLLFRAME()
+        self.createLOGO()
+        self.createPROTOKOLLSELECTION()
+        self.createSAMPLETYPESELECTION()
+        self.createTRACKINGCHCKBOX()
+        self.createLiqDetCHCKBOX()
+        self.createSAMPLENUM()
+        self.createCtrlButtons()
+        #self.createREAKTIVEFRAME()
+        #self.createPROTOKOLLFRAME()
         self.grid()
+
+    def createLOGO(self):
+        self.logo = tk.PhotoImage(file="../EvoScriPy/logo.png")
+        self.LOGO = tk.Label(image=self.logo)
+        self.LOGO.grid(row=0, column=0, columnspan=4,) # sticky=tk.N+tk.S+tk.W+tk.E
+        self.explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
+        self.LOGObot = tk.Label(text=self.explanation)
+        self.LOGObot.grid(row=1,  columnspan=4)
+
+    def createPROTOKOLLSELECTION(self):
+        self.protocols = {'RNA extraction with the MN_Vet kit': RNAextr_MN_Vet_Kit,
+                          'Others': not_implemented}
+
+        # self.protocol = tk.StringVar(self, 'RNA extraction with the MN_Vet kit')
+
+        self.protocol_selection = tk.Listbox(self, height=5, width=32,
+                                             selectmode=tk.SINGLE)
+        self.protocol_selection.grid(row=2, rowspan=2, column=0, )
+
+        for name in self.protocols.keys():
+            self.protocol_selection.insert(tk.END, name)
+        self.protocol_selection.activate(1)
+
+    def createSAMPLETYPESELECTION(self):
+        self.sampletype = tk.Radiobutton(self, text='Serum', value=1)
+        self.sampletype.grid(row=2, column=1, sticky=tk.W)
+
+        self.sampletype = tk.Radiobutton(self, text='Gewebe', value=2)
+        self.sampletype.grid(row=3, column=1, sticky=tk.W)
+
+    def createTRACKINGCHCKBOX(self):
+        self.asktraking = tk.Checkbutton(self, text='Traking')
+        self.asktraking.grid(row=2, column=2, sticky=tk.W)
+
+    def createLiqDetCHCKBOX(self):
+        self.askliqdetec = tk.Checkbutton(self, text='Liquid\ndetection')
+        self.askliqdetec.grid(row=3, column=2, sticky=tk.W)
+
+    def createSAMPLENUM(self):
+        tk.Label(self, text='Number of Samples (1-48):').grid(row=2, column=3, sticky=tk.S)
+        self.NumOfSamples = tk.StringVar(self, '12')
+        self.sample_num = tk.Spinbox(self, from_=1, to=48, increment=1)
+        self.sample_num.grid(row=3, column=3, sticky=tk.N)
+
+    def createCtrlButtons(self):
+        self.run = tk.Button(self, text="Synthetize script",
+                             command=self.run_selected)
+        self.run.grid(row=2, column=4)
+
+        self.quitButton = tk.Button(self,
+                                    text='Quit',
+                                    command=self.quit)
+        self.quitButton.grid(row=3, column=4, sticky=tk.W+tk.E)
 
     def createREAKTIVEFRAME(self):
 
