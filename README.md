@@ -1,0 +1,1 @@
+My TECAN Evoware scripts and EvoScriPy, a Python project to program and genaret evo script and AWL
