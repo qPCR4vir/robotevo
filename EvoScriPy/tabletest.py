@@ -1,3 +1,4 @@
+"""
 import EvoMode
 from Instructions import Pipette
 import Reactive as Rtv
@@ -208,3 +209,20 @@ class Application(tk.Frame):
 app = Application()
 app.master.title('')
 app.mainloop()
+"""
+
+def SerumLiqClass():
+    print('blubb')
+    return
+
+def TissueHomLiqClass():
+    return
+
+LiquidClasses = {
+    'Aus Tube mit mehr als 300µl Serum': SerumLiqClass,
+    'Aus Tube mit weniger als 300µl Serum': SerumLiqClass,
+    'Aus 2,0ml Tube mit Stahlkugel und Gewebehomogenat': TissueHomLiqClass
+}
+
+for name in LiquidClasses.keys():
+    print(name)

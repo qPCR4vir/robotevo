@@ -14,143 +14,92 @@ EvoMode.current = EvoMode.multiple([iRobot,
                                     comments
 ])
 
-__author__ = 'tobias.winterfeld'
-
 import tkinter as tk
-from RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
-
-
+from RNAextractionMN_Mag_Vet import *
 def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
 class Application(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
-        #self.createLOGO()
-        #self.createPROTOKOLLSELECTION()
-        #self.createSAMPLETYPESELECTION()
-        #self.createTRACKINGCHCKBOX()
-        #self.createLiqDetCHCKBOX()
-        #self.createSAMPLENUM()
-        #self.createCtrlButtons()
-        self.createREAKTIVEFRAME()
-        self.createPROTOKOLLFRAME()
-        self.grid()
+        self.pack()
+        self.logo = tk.PhotoImage(file="../EvoScriPy/logo.png")
+        self.logoFLI = tk.Label(self, image=self.logo)
+        self.logoFLI.pack()
+        self.step1()
 
-    def createREAKTIVEFRAME(self):
+    def step1(self):
 
-        class ReplicaFrame(tk.Frame):
-            def __init__(self, master, reply, num):
-                tk.Frame.__init__(self, master)
-                self.grid()
+        # Probenart bzw LiquidClass
 
-                self.reply = reply
-                self.num = num
-                self.Vol = tk.DoubleVar()
-                self.Vol.set(reply.vol)
-                self.Well = tk.IntVar()
-                self.Well.set(reply.offset + 1)
+        self.lableLC = tk.Label(self, text='Welche LiquidClass soll verwendet werden?\n(Abhängig vom Ausgangsmaterial)')
+        self.lableLC.pack()
+        self.LiquidClasses = {
+                'Aus Tube mit mehr als 300µl Serum'                 : SerumLiqClass,
+                'Aus Tube mit weniger als 300µl Serum'              : SerumLiqClass,
+                'Aus 2,0ml Tube mit Stahlkugel und Gewebehomogenat' : TissueHomLiqClass
+        }
 
-                self.CheckB = tk.Checkbutton(self, text="Reply" + str(num + 1), justify=tk.LEFT)  # width=15,
-                self.CheckB.grid()
-                tk.Entry(self, textvariable=self.Well, width=2).grid()
-                tk.Spinbox(self,
-                           textvariable=self.Vol,
-                           increment=1,
-                           from_=0.0,
-                           to=100000,
-                           width=7).grid()
+        for name in self.LiquidClasses.keys():
 
-        class ReactiveFrame(tk.Frame):
-            def __init__(self, master, react):
-                assert isinstance(react, Rtv.Reactive)
-                tk.Frame.__init__(self, master)
-                self.grid()
-                self.columnconfigure(0, minsize=140)
-                self.react = react
-                self.Vol = tk.DoubleVar()
-                self.Vol.set(react.volpersample)
-                self.RackName = tk.StringVar()
-                self.RackName.set(react.labware.label)
-                self.RackGrid = tk.IntVar()
-                self.RackGrid.set(react.labware.location.grid)
-                self.RackSite = tk.IntVar()
-                self.RackSite.set(react.labware.location.site)
+            self.name = tk.Radiobutton(self, text=name, indicatoron=0, value=name, variable=None, width=50)
+            self.name.pack()
 
 
-                # tk.Label  (self, text='',          ).grid(row=0, column=0)
-                tk.Label(self, text=react.name, justify=tk.RIGHT).grid()
+        # Probenzahl - Lable+Spinbox
+        self.lableProbenzahl = tk.Label(self, text='Wie viele Proben? (1-48)')
+        #lableProbenzahl.place(x=5, y=113)
+        self.lableProbenzahl.pack()
 
-                tk.Spinbox(self,
-                           textvariable=self.Vol,
-                           increment=1, from_=0.0, to=100000, width=5).grid()
+        self.spinProben = tk.Spinbox(self, from_=1, to=48, increment=1, justify=tk.CENTER)
+        #spinProben.place(x=5, y=133)
+        self.spinProben.pack()
 
-                self.RackNameEntry = tk.Entry(self,
-                                              textvariable=self.RackName, width=10).grid()
-                self.RackGridEntry = tk.Entry(self,
-                                              textvariable=self.RackGrid, width=2).grid()
-                self.RackSiteEntry = tk.Entry(self,
-                                              textvariable=self.RackSite, width=2).grid()
+        # Protokoll - Listbox
+        self.protocols = {'RNA extraction with the MN_Vet kit': RNAextr_MN_Vet_Kit,
+                                                 'Others': not_implemented
+                    }
+        self.lableProtocols = tk.Label(self, text='Welches Protokoll?')
+        self.lableProtocols.pack()
+        self.listProtocols = tk.Listbox(self, height=5, width=35, selectmode=tk.SINGLE)
+        #listProtocols.place(x=150, y=113)
+        self.listProtocols.pack()
+        for name in self.protocols.keys():
+            self.listProtocols.insert(tk.END, name)
 
-                for rn, reply in enumerate(react.Replicas):
-                    # assert isinstance(react,Rtv.Reactive)
-                    Application.ReplicaFrame(self, reply, rn)
-                    #self.pack()
+        self.listProtocols.activate(1)
 
-    def CheckList(self, protocol):
-        RL = protocol.Reactives
-        self.ReactFrames = []
-        Header = tk.Frame(self)
-        Header.grid()
-        Header.columnconfigure(1, minsize=120)
-        tk.Label(Header, text='Reagent', justify=tk.RIGHT).grid()
-        tk.Label(Header, text="     µL/sample      ", ).grid()  # sticky=tk.CENTER
-        tk.Label(Header, text="Rack   ", ).grid()
-        tk.Label(Header, text="Grid", ).grid()
-        tk.Label(Header, text="Site        ", ).grid()
-        tk.Label(Header, text='          ', ).grid()
-        tk.Label(Header, text="Well ", ).grid()
-        tk.Label(Header, text="µL/total", ).grid()
+        # Buttons - Quit, Weiter
 
-        for rn, react in enumerate(protocol.Reactives):
-            assert isinstance(react, Rtv.Reactive)
-            rf = Application.ReactiveFrame(self, react)
-            self.ReactFrames.append(rf)
+        self.buttonZurück=tk.Button(self, text='Zurück', command=None)
+        self.buttonZurück.pack()
+        self.buttonBeenden=tk.Button(self, text='Beenden', command=quit)
+        self.buttonBeenden.pack()
+        self.buttonWeiter=tk.Button(self, text='Weiter', command=self.step2)
+        self.buttonWeiter.pack()
 
-    def createPROTOKOLLFRAME(self):
-        self.yScroll = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.yScroll.grid()
-        self.xScroll = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-        self.xScroll.grid()
+    def step2(self):
 
-        self.comments = tk.Listbox(self, height=25, width=100,
-                                   xscrollcommand=self.xScroll.set,
-                                   yscrollcommand=self.yScroll.set)
-        self.comments.grid()
-        self.xScroll['command'] = self.comments.xview
-        self.yScroll['command'] = self.comments.yview
+        self.lableLC.destroy()
+        for name in self.LiquidClasses.keys():
+            self.name.destroy()
+        #self.name.destroy()
 
-        #self.varoutput = tk.Frame(self)
-        #self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
+        self.lableProbenzahl.destroy()
+        self.spinProben.destroy()
+        self.lableProtocols.destroy()
+        self.listProtocols.destroy()
+        self.buttonZurück.destroy()
+        self.buttonBeenden.destroy()
+        self.buttonWeiter.destroy()
 
 
-    def run_selected(self):
-        selected = self.protocol_selection.curselection()
-        print(selected)
-        if not selected: return
-        selected = self.protocol_selection.get(selected[0])
-        print(selected)
-        NumOfSamples = int(self.sample_num.get())
-
-        self.protocols[selected](self, NumOfSamples).Run()
-        Script.done()
-
-        self.comments.delete(0, self.size())
-        for line in comments.comments:
-            self.comments.insert(tk.END, line)
-            # self.pack()
-
+        self.quitButton = tk.Button(self, text='Quit2',
+                                    command=self.quit)
+        self.quitButton.pack()
+        self.lable = tk.Label(self, text="EDNLICH!!!!")
+        self.lable.pack()
 
 app = Application()
-app.master.title('')
+app.master.title('Sample application')
 app.mainloop()
