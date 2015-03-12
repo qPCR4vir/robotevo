@@ -43,6 +43,7 @@ class RNAextr_MN_Vet_Kit(Protocol):
         extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
 
 
+
 def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
 
     Rtv.NumOfSamples = NumOfSamples
@@ -213,5 +214,5 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
 
 
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(16)
+    extractRNA_with_MN_Vet_Kit(48)
     pass
