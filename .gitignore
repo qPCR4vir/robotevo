@@ -1,0 +1,57 @@
+MSVS12/ipch/
+*.cache
+*.suo
+Thumbs.db
+
+bin/
+
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files build by Visual Studio
+*.obj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
