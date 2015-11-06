@@ -4,18 +4,33 @@ Attribute VB_Name = "SourceControl"
 
 Option Explicit
 
+Sub Commit()
+    CommitVBA (Application.ThisWorkbook.Path & "vba\")
+End Sub
+
 Sub CommitToLaptoop()
     CommitVBA ("C:\Prog\HEV\data\vba\")
 End Sub
 
-Sub CommitToC()
+
+Sub CommitToUser()
     CommitVBA ("\\rie-icl01\Homelaufwerk\ariel.rodriguez\Eigene Dokumente\Results\Publica\HEV\HEV\data\vba\")
 End Sub
 
-Sub CommitToDrive() 'dont works
-    CommitVBA ("C:\Users\Ariel\OneDrive\Documents\Tesis\HEV\data\vba\")
+' Sub CommitToDrive() 'dont works
+'     CommitVBA ("C:\Users\Ariel\OneDrive\Documents\Tesis\HEV\data\vba\")
+' End Sub
+
+Sub Restore()
+    RevertVBA (Application.ThisWorkbook.Path & "vba\")
+End Sub
+Sub RestoreFromLaptoop()
+    RevertVBA ("C:\Prog\HEV\data\vba\")
 End Sub
 
+Sub RestoreFromUser()
+    RevertVBA ("\\rie-icl01\Homelaufwerk\ariel.rodriguez\Eigene Dokumente\Results\Publica\HEV\HEV\data\vba\")
+End Sub
 
 
 Sub CommitVBA(dir As String)
@@ -37,13 +52,13 @@ Sub CommitVBA(dir As String)
 End Sub
 
 
-Sub RevertVBA()
+Sub RevertVBA(dir As String)
 
   With ThisWorkbook.VBProject
     For i% = 1 To .VBComponents.Count
         ModuleName = .VBComponents(i%).CodeModule.Name
         .VBComponents.Remove .VBComponents(ModuleName)
-        .VBComponents.Import "C:\Prog\HEV\VBA\" & ModuleName & ".vba"
+        .VBComponents.Import dir & ModuleName & ".vba"
     Next i
   End With
 
