@@ -2,19 +2,35 @@ Attribute VB_Name = "SourceControl"
 '   http://stackoverflow.com/questions/131605/best-way-to-do-version-control-for-ms-excel
 '   http://www.pretentiousname.com/excel_extractvba/
 
+
+
 Option Explicit
 
+
+Function RelativeDir() As String
+    RelativeDir = Application.ThisWorkbook.Path & "\vba\"
+End Function
+
+Function LaptoopDir()
+    LaptoopDir = ("C:\Prog\HEV\data\vba\")
+End Function
+
+Function UserDir()
+    UserDir = ("\\rie-icl01\Homelaufwerk\ariel.rodriguez\Eigene Dokumente\Results\Publica\HEV\HEV\data\vba\")
+End Function
+
+
 Sub Commit()
-    CommitVBA (Application.ThisWorkbook.Path & "vba\")
+    CommitVBA (RelativeDir())
 End Sub
 
 Sub CommitToLaptoop()
-    CommitVBA ("C:\Prog\HEV\data\vba\")
+    CommitVBA (LaptoopDir())
 End Sub
 
 
 Sub CommitToUser()
-    CommitVBA ("\\rie-icl01\Homelaufwerk\ariel.rodriguez\Eigene Dokumente\Results\Publica\HEV\HEV\data\vba\")
+    CommitVBA (UserDir())
 End Sub
 
 ' Sub CommitToDrive() 'dont works
@@ -22,14 +38,14 @@ End Sub
 ' End Sub
 
 Sub Restore()
-    RevertVBA (Application.ThisWorkbook.Path & "vba\")
+    RevertVBA (RelativeDir())
 End Sub
 Sub RestoreFromLaptoop()
-    RevertVBA ("C:\Prog\HEV\data\vba\")
+    RevertVBA (LaptoopDir())
 End Sub
 
 Sub RestoreFromUser()
-    RevertVBA ("\\rie-icl01\Homelaufwerk\ariel.rodriguez\Eigene Dokumente\Results\Publica\HEV\HEV\data\vba\")
+    RevertVBA (UserDir())
 End Sub
 
 
