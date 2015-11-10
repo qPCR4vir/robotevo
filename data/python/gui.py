@@ -65,24 +65,27 @@ class App(tkinter.Frame):
 
 
     def load_to_add(self):
-        self.to_add_file = filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") ))
-        if self.to_add_file:
-            # self.txt_original.edit_reset()
-            # self.txt_blast.delete(1.0, tkinter.END)
-            for line in self.to_add_file:
+        with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as to_add_file:
+            for line in to_add_file:
                 self.txt_blast.insert(tkinter.END,line)
-            self.to_add_file.close()
+
+    def filter_add(self, add):
+        ori  ={ID for ID in self.txt_original.get('1.0',tkinter.END).splitlines()}
+        uniq ={ID for ID in self.txt_unique.get('1.0',tkinter.END).splitlines()}
+        uniq ={ID for ID in add|uniq if ID not in ori}
+        self.clear_blast()
+        self.clear_unique()
+        for ID in uniq:
+            self.txt_unique.insert(tkinter.END,ID+'\n')
 
     def filter(self):
-        res=set()
-        self.txt_unique.delete(1.0, tkinter.END)
-        for line in res:
-            self.txt_blast_unique.insert(tkinter.END,line)
+        add  ={ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()}
+        self.filter_add(add)
 
     def blast(self):
         for ID in self.txt_blast.get('1.0',tkinter.END).splitlines() :
             print (ID)
-            # result_handle = NCBIWWW.qblast("blastn", "nt", ID)
+            result_handle = NCBIWWW.qblast("blastn", "nt", ID)
             print (ID)
             blast_records = NCBIXML.parse(result_handle)
             for blast_record in blast_records:
