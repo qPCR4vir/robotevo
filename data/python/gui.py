@@ -4,69 +4,81 @@ import tkinter
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 from tkinter import filedialog
+from tkinter import scrolledtext
 
 class App(tkinter.Frame):
 
     def __init__(self):
 
-        tkinter.Frame.__init__(self, tkinter.Tk())
+        tkinter.Frame.__init__(self, tkinter.Tk(), width=600, height=600)
         self.grid()
+        # self.pack(fill="both", expand=True)
+        # ensure a consistent GUI size
+        # self.grid_propagate(False)
+        # implement stretchability
+        # self.grid_rowconfigure(3, weight=3)
+        # self.grid_columnconfigure(4, weight=4)
 
         self.original_file_name= None
         self.original_file = None
+        self.IDs =set()
+        w = 15
+        h = 45
 
-        tkinter.Label(self, text='Original list of seq').grid(row=1, column=1, columnspan=1)
-        tkinter.Button(self, text="Load",
-                             command=self.load_original).grid(row=1, column=2, columnspan=1)
-        self.txt_original = tkinter.Text(self)
-        self.txt_original.grid(row=2, column=1, columnspan=2)
+        tkinter.Button(self, text="Load original list of seq",
+                             command=self.load_original)             .grid(row=0, column=0)
+        self.txt_original = scrolledtext.ScrolledText(self, height=h, width=w)
+        self.txt_original                                            .grid(row=1, column=0, sticky="nsew", padx=2, pady=2, columnspan=2)
 
-        tkinter.Button(self, text="Load ID to BLAST",
-                             command=self.load_to_blast).grid(row=1, column=3, columnspan=1)
-        self.txt_blast = tkinter.Text(self)
-        self.txt_blast.grid(row=2, column=3, columnspan=1)
+
+        tkinter.Button(self, text="Load ID to add",
+                             command=self.load_to_add)             .grid(row=0, column=2, columnspan=2)
+        self.txt_blast = scrolledtext.ScrolledText(self, height=h, width=w)
+        self.txt_blast                                               .grid(row=1, column=2, sticky="nsew", padx=2, pady=2, columnspan=2)
+        tkinter.Button(self, text="clear",
+                             command=self.clear_blast)               .grid(row=2, column=2)
         tkinter.Button(self, text="BLAST",
-                                  command=self.print_blast).grid(row=3, column=3, columnspan=1)
+                             command=self.blast)                     .grid(row=2, column=3)
 
-        tkinter.Label(self, text='To insert').grid(row=1, column=4, columnspan=1)
-        self.txt_blast_unique = tkinter.Text(self)
-        self.txt_blast_unique.grid(row=2, column=4, columnspan=1)
+
+        tkinter.Button(self, text="Filter",
+                             command=self.filter)                    .grid(row=0, column=4, columnspan=2)
+        self.txt_unique = scrolledtext.ScrolledText(self, height=h, width=w)
+        self.txt_unique                                              .grid(row=1, column=4, sticky="nsew", padx=2, pady=2, columnspan=2)
+        tkinter.Button(self, text="clear",
+                             command=self.clear_unique)              .grid(row=2, column=4)
         tkinter.Button(self, text="Load BLAST",
-                                  command=self.load_blast).grid(row=3, column=4, columnspan=1)
+                             command=self.load_blast)                .grid(row=2, column=5)
+
+    def clear_blast(self):
+        self.txt_blast.delete(1.0, tkinter.END)
+
+    def clear_unique(self):
+        self.txt_unique.delete(1.0, tkinter.END)
 
     def load_original(self):
-        self.original_file = filedialog.askopenfile(filetypes=( ("TXT", "*.txt"), ("All files", "*.*") ))
-        if self.original_file:
-            # self.txt_original.edit_reset()
+        with filedialog.askopenfile(filetypes=( ("TXT", "*.txt"), ("All files", "*.*") )) as original:
             self.txt_original.delete(1.0, tkinter.END)
-            for line in self.original_file:
+            for line in original:
                 self.txt_original.insert(tkinter.END,line)
-            self.original_file.close()
 
-    def load_to_blast(self):
-        self.to_blast_file = filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") ))
-        if self.to_blast_file:
+
+    def load_to_add(self):
+        self.to_add_file = filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") ))
+        if self.to_add_file:
             # self.txt_original.edit_reset()
-            self.txt_blast.delete(1.0, tkinter.END)
-            for line in self.to_blast_file:
+            # self.txt_blast.delete(1.0, tkinter.END)
+            for line in self.to_add_file:
                 self.txt_blast.insert(tkinter.END,line)
-            self.to_blast_file.close()
+            self.to_add_file.close()
 
-    def load_blast(self):
-        self.blast_file = filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
-        if self.blast_file:
-            to_add = set()
-            blast_records = NCBIXML.parse(self.blast_file)
-            for blast_record in blast_records:
-                for alignment in blast_record.alignments:
-                    to_add.add(alignment.accession) #alignment.title.split('|')[3].split('.')[0])
-            self.txt_blast_unique.delete(1.0, tkinter.END)
-            for line in to_add:
-                self.txt_blast_unique.insert(tkinter.END,line)
-            self.blast_file.close()
+    def filter(self):
+        res=set()
+        self.txt_unique.delete(1.0, tkinter.END)
+        for line in res:
+            self.txt_blast_unique.insert(tkinter.END,line)
 
-    def print_blast(self):
-
+    def blast(self):
         for ID in self.txt_blast.get('1.0',tkinter.END).splitlines() :
             print (ID)
             # result_handle = NCBIWWW.qblast("blastn", "nt", ID)
@@ -86,6 +98,22 @@ class App(tkinter.Frame):
                             print(hsp.match[0:75] + '...')
                             print(hsp.sbjct[0:75] + '...')
                     """
+
+    def load_blast(self):
+        self.blast_file = filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
+        if self.blast_file:
+            to_add = set()
+            blast_records = NCBIXML.parse(self.blast_file)
+            for blast_record in blast_records:
+                for alignment in blast_record.alignments:
+                    to_add.add(alignment.accession) #alignment.title.split('|')[3].split('.')[0])
+            self.txt_blast_unique.delete(1.0, tkinter.END)
+            for line in to_add:
+                self.txt_blast_unique.insert(tkinter.END,line)
+            self.blast_file.close()
+
+
+
 
 
 if __name__=='__main__':
