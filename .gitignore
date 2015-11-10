@@ -1,7 +1,7 @@
 *.pyc
 ~$*.*
 .idea/*
-
+.idea/
 
 #ignore thumbnails created by windows
 Thumbs.db
