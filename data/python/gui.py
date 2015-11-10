@@ -8,9 +8,10 @@ from tkinter import scrolledtext
 
 class App(tkinter.Frame):
 
-    def __init__(self):
+    def __init__(self, mainw):
 
-        tkinter.Frame.__init__(self, tkinter.Tk(), width=600, height=600)
+        tkinter.Frame.__init__(self, mainw,  width=600, height=600)
+        mainw.title('Adding new sequences')
         self.grid()
         # self.pack(fill="both", expand=True)
         # ensure a consistent GUI size
@@ -23,7 +24,7 @@ class App(tkinter.Frame):
         self.original_file = None
         self.IDs =set()
         w = 15
-        h = 45
+        h = 40
 
         tkinter.Button(self, text="Load original list of seq",
                              command=self.load_original)             .grid(row=0, column=0)
@@ -117,4 +118,4 @@ class App(tkinter.Frame):
 
 
 if __name__=='__main__':
-    App().mainloop()
+    App(tkinter.Tk()).mainloop()
