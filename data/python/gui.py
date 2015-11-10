@@ -63,7 +63,7 @@ class App(tkinter.Frame):
             self.txt_blast_unique.delete(1.0, tkinter.END)
             for line in to_add:
                 self.txt_blast_unique.insert(tkinter.END,line)
-            self.to_blast_file.close()
+            self.blast_file.close()
 
     def print_blast(self):
 
