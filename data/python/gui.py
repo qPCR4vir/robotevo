@@ -83,25 +83,11 @@ class App(tkinter.Frame):
         self.filter_add(add)
 
     def blast(self):
-        for ID in self.txt_blast.get('1.0',tkinter.END).splitlines() :
-            print (ID)
-            result_handle = NCBIWWW.qblast("blastn", "nt", ID)
-            print (ID)
-            blast_records = NCBIXML.parse(result_handle)
-            for blast_record in blast_records:
-                for alignment in blast_record.alignments:
-                    print (alignment.title.split('|')[3].split('.')[0])
-                    """
-                    for hsp in alignment.hsps:
-                        if hsp.expect < 0.01 :
-                            print('****Alignment****')
-                            print('sequence:', alignment.title)
-                            print('length:', alignment.length)
-                            print('e value:', hsp.expect)
-                            print(hsp.query[0:75] + '...')
-                            print(hsp.match[0:75] + '...')
-                            print(hsp.sbjct[0:75] + '...')
-                    """
+        IDs=[ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()]
+        print (' '.join(IDs))
+        result_handle = NCBIWWW.qblast("blastn", "nt", ' '.join(IDs))
+        print('returned')
+        self.load_blast_data(result_handle)
 
     def load_blast(self):
         with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") )) as blast_file:
@@ -110,8 +96,8 @@ class App(tkinter.Frame):
     def load_blast_data(self,blast_data):
         add = set()
         blast_records = NCBIXML.parse(blast_data)
-            for blast_record in blast_records:
-                for alignment in blast_record.alignments:
+        for blast_record in blast_records:
+            for alignment in blast_record.alignments:
                 add.add(alignment.accession)           #alignment.title.split('|')[3].split('.')[0])
         self.filter_add(add)
 
