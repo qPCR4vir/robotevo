@@ -11,7 +11,8 @@ class App(tkinter.Frame):
     def __init__(self, mainw):
 
         tkinter.Frame.__init__(self, mainw,  width=600, height=600)
-        mainw.title('Adding new sequences')
+        self.mainwin=mainw
+        self.mainwin.title('Adding new sequences')
         self.grid()
         # self.pack(fill="both", expand=True)
         # ensure a consistent GUI size
@@ -85,9 +86,17 @@ class App(tkinter.Frame):
     def blast(self):
         IDs=[ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()]
         print (' '.join(IDs))
-        result_handle = NCBIWWW.qblast("blastn", "nt", ' '.join(IDs))
+        #result_handle = NCBIWWW.qblast("blastn", "nt", 'HE797853\nHE797854', descriptions=40)
+        self.mainwin.title('Toking to NCBI. Be VERY patient ...')
+        result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
+        self.mainwin.title('Adding new sequences')
         print('returned')
-        self.load_blast_data(result_handle)
+        blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
+        with open(blast_file_name, mode='w') as blast_file:
+            blast_file.write(result_handle.read())
+        result_handle.close() # self.load_blast_data(result_handle)
+        with open(blast_file_name, mode='r') as blast_file:
+            self.load_blast_data(blast_file)
 
     def load_blast(self):
         with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") )) as blast_file:
