@@ -14,16 +14,7 @@ class App(tkinter.Frame):
         self.mainwin=mainw
         self.mainwin.title('Adding new sequences')
         self.grid()
-        # self.pack(fill="both", expand=True)
-        # ensure a consistent GUI size
-        # self.grid_propagate(False)
-        # implement stretchability
-        # self.grid_rowconfigure(3, weight=3)
-        # self.grid_columnconfigure(4, weight=4)
 
-        self.original_file_name= None
-        self.original_file = None
-        self.IDs =set()
         w = 15
         h = 40
 
@@ -64,7 +55,6 @@ class App(tkinter.Frame):
             for line in original:
                 self.txt_original.insert(tkinter.END,line)
 
-
     def load_to_add(self):
         with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as to_add_file:
             for line in to_add_file:
@@ -86,7 +76,6 @@ class App(tkinter.Frame):
     def blast(self):
         IDs=[ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()]
         print (' '.join(IDs))
-        #result_handle = NCBIWWW.qblast("blastn", "nt", 'HE797853\nHE797854', descriptions=40)
         self.mainwin.title('Toking to NCBI. Be VERY patient ...')
         result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
         self.mainwin.title('Adding new sequences')
@@ -94,7 +83,8 @@ class App(tkinter.Frame):
         blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
         with open(blast_file_name, mode='w') as blast_file:
             blast_file.write(result_handle.read())
-        result_handle.close() # self.load_blast_data(result_handle)
+        result_handle.close()
+        # self.load_blast_data(result_handle)
         with open(blast_file_name, mode='r') as blast_file:
             self.load_blast_data(blast_file)
 
@@ -109,10 +99,6 @@ class App(tkinter.Frame):
             for alignment in blast_record.alignments:
                 add.add(alignment.accession)           #alignment.title.split('|')[3].split('.')[0])
         self.filter_add(add)
-
-
-
-
 
 
 if __name__=='__main__':
