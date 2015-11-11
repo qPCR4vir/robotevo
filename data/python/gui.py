@@ -8,11 +8,10 @@ from tkinter import scrolledtext
 
 class App(tkinter.Frame):
 
-    def __init__(self, mainw):
+    def __init__(self):
 
-        tkinter.Frame.__init__(self, mainw,  width=600, height=600)
-        self.mainwin=mainw
-        self.mainwin.title('Adding new sequences')
+        tkinter.Frame.__init__(self, tkinter.Tk(),  width=600, height=600)
+        self.master.title('Adding new sequences')
         self.grid(sticky=tkinter.NS)
 
         self.winfo_toplevel().rowconfigure(1, weight=1)
@@ -114,9 +113,9 @@ class App(tkinter.Frame):
     def blast(self):
         IDs=[ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()]
         print (' '.join(IDs))
-        self.mainwin.title('Toking to NCBI. Be VERY patient ...')
+        self.master.title('Toking to NCBI. Be VERY patient ...')
         result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
-        self.mainwin.title('Adding new sequences')
+        self.master.title('Adding new sequences')
         print('returned')
         blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
         with open(blast_file_name, mode='w') as blast_file:
@@ -140,4 +139,4 @@ class App(tkinter.Frame):
 
 
 if __name__=='__main__':
-    App(tkinter.Tk()).mainloop()
+    App().mainloop()
