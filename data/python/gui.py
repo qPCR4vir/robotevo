@@ -13,7 +13,11 @@ class App(tkinter.Frame):
         tkinter.Frame.__init__(self, mainw,  width=600, height=600)
         self.mainwin=mainw
         self.mainwin.title('Adding new sequences')
-        self.grid()
+        self.grid(sticky=tkinter.NS)
+
+        self.winfo_toplevel().rowconfigure(1, weight=1)
+        self.rowconfigure(1, weight=1)
+        # self.grid_anchor(anchor="nsew")
 
         w = 15
         h = 40
