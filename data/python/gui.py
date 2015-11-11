@@ -104,17 +104,17 @@ class App(tkinter.Frame):
                     """
 
     def load_blast(self):
-        self.blast_file = filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
-        if self.blast_file:
-            to_add = set()
-            blast_records = NCBIXML.parse(self.blast_file)
+        with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") )) as blast_file:
+            self.load_blast_data(blast_file)
+
+    def load_blast_data(self,blast_data):
+        add = set()
+        blast_records = NCBIXML.parse(blast_data)
             for blast_record in blast_records:
                 for alignment in blast_record.alignments:
-                    to_add.add(alignment.accession) #alignment.title.split('|')[3].split('.')[0])
-            self.txt_blast_unique.delete(1.0, tkinter.END)
-            for line in to_add:
-                self.txt_blast_unique.insert(tkinter.END,line)
-            self.blast_file.close()
+                add.add(alignment.accession)           #alignment.title.split('|')[3].split('.')[0])
+        self.filter_add(add)
+
 
 
 
