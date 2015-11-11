@@ -14,7 +14,7 @@ class App(tkinter.Frame):
         self.master.title('Adding new sequences')
         self.grid(sticky=tkinter.NS)
 
-        self.winfo_toplevel().rowconfigure(1, weight=1)
+        self.winfo_toplevel().rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         # self.grid_anchor(anchor="nsew")
 
