@@ -51,8 +51,8 @@ class App(tkinter.Frame):
     def blast(self):
         IDs=[ID for ID in self.ID_add.lines()]
         print (' '.join(IDs))
-        self.master.title('Toking to NCBI. Be VERY patient ...')
-        result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
+        self.master.title('Toking to NCBI. Running BLAST. Be VERY patient ...')
+        result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs))#, hitlist_size=50, perc_ident=90, threshold=1, alignments=50, filter="HEV", format_type='XML', results_file=blast_file_name )
         self.master.title('Adding new sequences')
         print('returned')
         blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
@@ -89,6 +89,8 @@ class ID_list(tkinter.Frame):
                              command=self.clear)                     .grid(row=2, column=0)
         tkinter.Button(self, text="Save",
                              command=self.save)                      .grid(row=2, column=1)
+        tkinter.Button(self, text="Get",
+                             command=self.get)                       .grid(row=2, column=3 )
 
     def clear(self):
         self.txt_list.delete(1.0, tkinter.END)
@@ -105,6 +107,20 @@ class ID_list(tkinter.Frame):
     def lines(self):
         return self.txt_list.get('1.0',tkinter.END).splitlines()
 
+    def get(self):
+        IDs=[ID for ID in self.lines()]
+        print (' '.join(IDs))
+        self.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
+        result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
+        self.master.title('Adding new sequences')
+        print('returned')
+        blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
+        with open(blast_file_name, mode='w') as blast_file:
+            blast_file.write(result_handle.read())
+        result_handle.close()
+        # self.load_blast_data(result_handle)
+        with open(blast_file_name, mode='r') as blast_file:
+            self.load_blast_data(blast_file)
 
 if __name__=='__main__':
     App().mainloop()
