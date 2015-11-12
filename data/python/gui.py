@@ -15,103 +15,41 @@ class App(tkinter.Frame):
         self.grid(sticky=tkinter.NS)
 
         self.winfo_toplevel().rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
-        # self.grid_anchor(anchor="nsew")
+        self.rowconfigure(0, weight=1)
 
         w = 15
         h = 40
 
-        tkinter.Button(self, text="Load original list of seq",
-                             command=self.load_original)             .grid(row=0, column=0)
-        self.txt_original = scrolledtext.ScrolledText(self,  width=w, height=h)#
-        self.txt_original                                            .grid(row=1, column=0, sticky=tkinter.NSEW, padx=2, pady=2)
-        tkinter.Button(self, text="clear",
-                             command=self.clear_original)            .grid(row=2, column=0)
-        tkinter.Button(self, text="Save",
-                             command=self.save_original)             .grid(row=3, column=0)
+        self.ID_original = ID_list(self, "Load original list of ID", w, h)
+        self.ID_original.grid(row=0, column=0, sticky=tkinter.NSEW)
 
-
-
-        tkinter.Button(self, text="Load ID to add",
-                             command=self.load_to_add)               .grid(row=0, column=1)
-        self.txt_blast = scrolledtext.ScrolledText(self,  width=w)#, height=h+5
-        self.txt_blast                                               .grid(row=1, column=1, sticky=tkinter.NSEW, padx=2, pady=2)
-        tkinter.Button(self, text="clear",
-                             command=self.clear_blast)               .grid(row=2, column=1)
-        tkinter.Button(self, text="Save",
-                             command=self.save_blast)                .grid(row=3, column=1)
+        self.ID_add = ID_list(self, "Load ID to add", w, h)
+        self.ID_add.grid(row=0, column=1, sticky=tkinter.NSEW)
         tkinter.Button(self, text="BLAST",
-                             command=self.blast)                     .grid(row=4, column=1)
+                             command=self.blast)                     .grid(row=2, column=1)
 
-
-        tkinter.Button(self, text="Load",
-                             command=self.load_unique)               .grid(row=0, column=2)
-        self.txt_unique = scrolledtext.ScrolledText(self,  width=w)#, height=0
-        self.txt_unique                                              .grid(row=1, column=2, sticky=tkinter.NSEW, padx=2, pady=2)
-        tkinter.Button(self, text="clear",
-                             command=self.clear_unique)              .grid(row=2, column=2)
-        tkinter.Button(self, text="Save",
-                             command=self.save_unique)               .grid(row=3, column=2)
+        self.ID_unique = ID_list(self, "Load", w, h)
+        self.ID_unique.grid(row=0, column=2, sticky=tkinter.NSEW)
         tkinter.Button(self, text="Load BLAST",
-                             command=self.load_blast)                .grid(row=5, column=2)
+                             command=self.load_blast)                .grid(row=2, column=2)
         tkinter.Button(self, text="Filter",
-                             command=self.filter)                    .grid(row=4, column=2)
-
-
-    def clear_txt(self, txt_list):
-        txt_list.delete(1.0, tkinter.END)
-
-    def clear_original(self):
-        self.clear_txt(self.txt_original)
-
-    def clear_blast(self):
-        self.clear_txt(self.txt_blast)
-
-    def clear_unique(self):
-        self.clear_txt(self.txt_unique)
-
-    def load_IDs(self, txt_list):
-        with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
-            for line in ID_file:
-                txt_list.insert(tkinter.END,line)
-
-    def load_original(self):
-        self.load_IDs(self.txt_original)
-
-    def load_to_add(self):
-        self.load_IDs(self.txt_blast)
-
-    def load_unique(self):
-        self.load_IDs(self.txt_unique)
-
-    def save_IDs(self, txt_list):
-        with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
-            ID_file.write('\n'.join(txt_list.get('1.0',tkinter.END).splitlines()))
-
-    def save_original(self):
-        self.save_IDs(self.txt_original)
-
-    def save_blast(self):
-        self.save_IDs(self.txt_blast)
-
-    def save_unique(self):
-        self.save_IDs(self.txt_unique)
+                             command=self.filter)                    .grid(row=3, column=2)
 
     def filter_add(self, add):
-        ori  ={ID for ID in self.txt_original.get('1.0',tkinter.END).splitlines()}
-        uniq ={ID for ID in self.txt_unique.get('1.0',tkinter.END).splitlines()}
+        ori  ={ID for ID in self.ID_original.lines()}
+        uniq ={ID for ID in self.ID_unique.lines()}
         uniq ={ID for ID in add|uniq if ID not in ori}
-        self.clear_blast()
-        self.clear_unique()
+        self.ID_add.clear()
+        self.ID_unique.clear()
         for ID in uniq:
-            self.txt_unique.insert(tkinter.END,ID+'\n')
+            self.ID_unique.txt_list.insert(tkinter.END, ID+'\n')
 
     def filter(self):
-        add  ={ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()}
+        add  ={ID for ID in self.ID_add.lines()}
         self.filter_add(add)
 
     def blast(self):
-        IDs=[ID for ID in self.txt_blast.get('1.0',tkinter.END).splitlines()]
+        IDs=[ID for ID in self.ID_add.lines()]
         print (' '.join(IDs))
         self.master.title('Toking to NCBI. Be VERY patient ...')
         result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
@@ -129,13 +67,43 @@ class App(tkinter.Frame):
         with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") )) as blast_file:
             self.load_blast_data(blast_file)
 
-    def load_blast_data(self,blast_data):
+    def load_blast_data(srefacelf,blast_data):
         add = set()
         blast_records = NCBIXML.parse(blast_data)
         for blast_record in blast_records:
             for alignment in blast_record.alignments:
                 add.add(alignment.accession)           #alignment.title.split('|')[3].split('.')[0])
         self.filter_add(add)
+
+class ID_list(tkinter.Frame):
+    def __init__(self, root, load_titel, width=15, height=40):
+        tkinter.Frame.__init__(self, root)
+        self.grid(sticky=tkinter.NS)
+        self.rowconfigure(1, weight=1)
+
+        tkinter.Button(self, text=load_titel,
+                             command=self.load)                      .grid(row=0, column=0, columnspan=2)
+        self.txt_list = scrolledtext.ScrolledText(self,  width=width, height=height)
+        self.txt_list                                                .grid(row=1, column=0, sticky=tkinter.NSEW, padx=2, pady=2, columnspan=2)
+        tkinter.Button(self, text="clear",
+                             command=self.clear)                     .grid(row=2, column=0)
+        tkinter.Button(self, text="Save",
+                             command=self.save)                      .grid(row=2, column=1)
+
+    def clear(self):
+        self.txt_list.delete(1.0, tkinter.END)
+
+    def load(self):
+        with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
+            for line in ID_file:
+                self.txt_list.insert(tkinter.END,line)
+
+    def save(self):
+        with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
+            ID_file.write('\n'.join(self.txt_list.get('1.0',tkinter.END).splitlines()))
+
+    def lines(self):
+        return self.txt_list.get('1.0',tkinter.END).splitlines()
 
 
 if __name__=='__main__':
