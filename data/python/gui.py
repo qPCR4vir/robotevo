@@ -43,7 +43,7 @@ class App(tkinter.Frame):
         self.ID_add.clear()
         self.ID_unique.clear()
         for ID in uniq:
-            self.ID_unique.txt_list.insert(tkinter.END, ID+'\n')
+            self.ID_unique.add(ID)
 
     def filter(self):
         self.filter_add(self.ID_add.lines())
@@ -68,12 +68,12 @@ class App(tkinter.Frame):
             self.load_blast_data(blast_file)
 
     def load_blast_data(srefacelf,blast_data):
-        add = set()
+        IDs = set()
         blast_records = NCBIXML.parse(blast_data)
         for blast_record in blast_records:
             for alignment in blast_record.alignments:
-                add.add(alignment.accession)           #alignment.title.split('|')[3].split('.')[0])
-        self.filter_add(add)
+                IDs.add(alignment.accession)           # alignment.title.split('|')[3].split('.')[0])
+        self.filter_add(IDs)
 
 class ID_list(tkinter.Frame):
     def __init__(self, root, load_titel, width=15, height=40):
@@ -97,12 +97,12 @@ class ID_list(tkinter.Frame):
 
     def load(self):
         with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
-            for line in ID_file:
-                self.txt_list.insert(tkinter.END,line)
+            for ID in ID_file:
+                self.add(ID)
 
     def save(self):
         with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
-            ID_file.write('\n'.join(self.txt_list.get('1.0',tkinter.END).splitlines()))
+            ID_file.write('\n'.join(self.lines()))
 
     def lines(self):
         return self.txt_list.get('1.0',tkinter.END).splitlines()
