@@ -3,6 +3,8 @@ __author__ = 'Ariel'
 import tkinter
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
+from Bio import Entrez
+Entrez.email = "ArielVina.Rodriguez@fli.bund.de"
 from tkinter import filedialog
 from tkinter import scrolledtext
 
