@@ -110,19 +110,19 @@ class ID_list(tkinter.Frame):
         return self.txt_list.get('1.0',tkinter.END).splitlines()
 
     def get(self):
-        IDs=[ID for ID in self.lines()]
-        print (' '.join(IDs))
-        self.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
-        result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs) )
-        self.master.title('Adding new sequences')
+        IDs = ', '.join(self.lines())
+        print (IDs)
+        self.master.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
+        seq_handle = Entrez.efetch(db="nuccore", id=IDs, rettype="gb", retmode="XML" )# Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
+        self.master.master.title('Adding new sequences')
         print('returned')
-        blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
-        with open(blast_file_name, mode='w') as blast_file:
-            blast_file.write(result_handle.read())
-        result_handle.close()
+        seq_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ))
+        with open(seq_file_name, mode='w') as seq_file:
+            seq_file.write(seq_handle.read())
+        seq_handle.close()
         # self.load_blast_data(result_handle)
-        with open(blast_file_name, mode='r') as blast_file:
-            self.load_blast_data(blast_file)
+        #with open(blast_file_name, mode='r') as blast_file:
+        #    self.load_blast_data(blast_file)
 
 if __name__=='__main__':
     App().mainloop()
