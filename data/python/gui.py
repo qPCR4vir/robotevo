@@ -5,6 +5,7 @@ from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 from Bio import Entrez
 Entrez.email = "ArielVina.Rodriguez@fli.bund.de"
+from Bio import SeqIO
 from tkinter import filedialog
 from tkinter import scrolledtext
 
@@ -59,7 +60,7 @@ class App(tkinter.Frame):
         result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs))#, hitlist_size=50, perc_ident=90, threshold=1, alignments=50, filter="HEV", format_type='XML', results_file=blast_file_name )
         self.master.title('Adding new sequences')
         print('returned')
-        blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ))
+        blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST", "*.xml"), ("All files", "*.*") ), defaultextension='xml', title='Save the BLAST result in XML format')
         with open(blast_file_name, mode='w') as blast_file:
             blast_file.write(result_handle.read())
         result_handle.close()
@@ -68,7 +69,7 @@ class App(tkinter.Frame):
             self.load_blast_data(blast_file)
 
     def load_blast(self):
-        with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") )) as blast_file:
+        with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ), title='Load a BLAST result in XML format') as blast_file:
             self.load_blast_data(blast_file)
 
     def load_blast_data(srefacelf,blast_data):
@@ -106,13 +107,13 @@ class ID_list(tkinter.Frame):
         self.txt_list.delete(1.0, tkinter.END)
 
     def load(self):
-        with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
+        with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") ), title='Load a ID list in txt format') as ID_file:
             self.add(ID_file.read())
             #for ID in ID_file:
             #    self.add(ID)
 
     def save(self):
-        with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
+        with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") ), defaultextension='txt', title='Save the ID list in txt format') as ID_file:
             ID_file.write('\n'.join(self.lines()))
 
     def lines(self):
@@ -125,11 +126,18 @@ class ID_list(tkinter.Frame):
         seq_handle = Entrez.efetch(db="nuccore", id=IDs, rettype="gb", retmode="XML" )# Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
         self.master.master.title('Adding new sequences')
         print('returned')
-        seq_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ))
-        with open(seq_file_name, mode='w') as seq_file:
+        xml_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ), defaultextension='xml', title='Save the GenBank sequences in XML format')
+        fasta_file_name = xml_file_name.replace('.xml', '.fasta')
+        csv_file_name = xml_file_name.replace('.xml', '.csv')
+        with open(xml_file_name, mode='w') as seq_file:
             for line in seq_handle:
                 seq_file.write(line)
         seq_handle.close()
+        for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
+            print(seq_record.id)
+            print(repr(seq_record.seq))
+            print(len(seq_record))
+
         # self.load_blast_data(result_handle)
         #with open(blast_file_name, mode='r') as blast_file:
         #    self.load_blast_data(blast_file)
