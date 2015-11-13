@@ -34,6 +34,8 @@ class App(tkinter.Frame):
         self.ID_unique.grid(row=0, column=2, sticky=tkinter.NSEW)
         tkinter.Button(self, text="Load BLAST",
                              command=self.load_blast)                .grid(row=2, column=2)
+        tkinter.Button(self, text="Seq from GB file",
+                             command=self.parseGB)                   .grid(row=3, column=1)
         tkinter.Button(self, text="Filter",
                              command=self.filter)                    .grid(row=3, column=2)
 
@@ -76,6 +78,9 @@ class App(tkinter.Frame):
             for alignment in blast_record.alignments:
                 IDs.add(alignment.accession)           # alignment.title.split('|')[3].split('.')[0])
         self.filter_add(IDs)
+
+    def parseCG(self):
+        
 
 class ID_list(tkinter.Frame):
     def __init__(self, root, load_titel, width=15, height=40):
