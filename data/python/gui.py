@@ -84,15 +84,18 @@ class ID_list(tkinter.Frame):
         self.rowconfigure(1, weight=1)
 
         tkinter.Button(self, text=load_titel,
-                             command=self.load)                      .grid(row=0, column=0, columnspan=2)
+                             command=self.load)                      .grid(row=0, column=0, columnspan=3)
         self.txt_list = scrolledtext.ScrolledText(self,  width=width, height=height)
-        self.txt_list                                                .grid(row=1, column=0, sticky=tkinter.NSEW, padx=2, pady=2, columnspan=2)
+        self.txt_list                                                .grid(row=1, column=0, sticky=tkinter.NSEW, padx=2, pady=2, columnspan=3)
         tkinter.Button(self, text="clear",
                              command=self.clear)                     .grid(row=2, column=0)
         tkinter.Button(self, text="Save",
                              command=self.save)                      .grid(row=2, column=1)
         tkinter.Button(self, text="Get",
-                             command=self.get)                       .grid(row=2, column=3 )
+                             command=self.get)                       .grid(row=2, column=2 )
+
+    def add(self, ID):
+        self.txt_list.insert(tkinter.END, ID+'\n')
 
     def clear(self):
         self.txt_list.delete(1.0, tkinter.END)
