@@ -102,8 +102,9 @@ class ID_list(tkinter.Frame):
 
     def load(self):
         with filedialog.askopenfile(filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
-            for ID in ID_file:
-                self.add(ID)
+            self.add(ID_file.read())
+            #for ID in ID_file:
+            #    self.add(ID)
 
     def save(self):
         with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") )) as ID_file:
@@ -121,7 +122,8 @@ class ID_list(tkinter.Frame):
         print('returned')
         seq_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ))
         with open(seq_file_name, mode='w') as seq_file:
-            seq_file.write(seq_handle.read())
+            for line in seq_handle:
+                seq_file.write(line)
         seq_handle.close()
         # self.load_blast_data(result_handle)
         #with open(blast_file_name, mode='r') as blast_file:
