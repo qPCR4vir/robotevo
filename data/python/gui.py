@@ -36,7 +36,7 @@ class App(tkinter.Frame):
         tkinter.Button(self, text="Load BLAST",
                              command=self.load_blast)                .grid(row=2, column=2)
         tkinter.Button(self, text="Seq from GB file",
-                             command=self.parseGB)                   .grid(row=3, column=1)
+                             command=self.parseGB)                   .grid(row=2, column=0)
         tkinter.Button(self, text="Filter",
                              command=self.filter)                    .grid(row=3, column=2)
 
@@ -80,8 +80,24 @@ class App(tkinter.Frame):
                 IDs.add(alignment.accession)           # alignment.title.split('|')[3].split('.')[0])
         self.filter_add(IDs)
 
-    def parseCG(self):
-        
+    def parseGBfile(self, seq_xml_file_name):
+        fasta_file_name = seq_xml_file_name.replace('.xml', '.fasta')
+        csv_file_name = seq_xml_file_name.replace('.xml', '.csv')
+        sep = '; '
+        el = '\n'
+        with open(fasta_file_name, 'w') as fasta:
+            with open(csv_file_name, 'w') as csv:
+                for s in SeqIO.parse(seq_xml_file_name, "genbank"):
+                    fasta.write(s.id.split('.')[0]+el+s.seq+el)
+                    csv.write(s.id.split('.')[0]+sep) # MEGA name:(A)
+                    csv.write('no'              +sep) # Tab-Pub:  (B)
+                    csv.write(sep+sep+sep)            #           ( C D E)
+                    csv.write(s['strain']+sep) # Strain name: (F)
+                    csv.write(el)
+
+    def parseGB(self):
+        seq_xml_file_name = filedialog.askopenfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ), title='Parse the GenBank sequences in XML format')
+        self.parseGBfile(seq_xml_file_name)
 
 class ID_list(tkinter.Frame):
     def __init__(self, root, load_titel, width=15, height=40):
@@ -121,26 +137,20 @@ class ID_list(tkinter.Frame):
 
     def get(self):
         IDs = ', '.join(self.lines())
+
         print (IDs)
         self.master.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
         seq_handle = Entrez.efetch(db="nuccore", id=IDs, rettype="gb", retmode="XML" )# Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
         self.master.master.title('Adding new sequences')
         print('returned')
-        xml_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ), defaultextension='xml', title='Save the GenBank sequences in XML format')
-        fasta_file_name = xml_file_name.replace('.xml', '.fasta')
-        csv_file_name = xml_file_name.replace('.xml', '.csv')
-        with open(xml_file_name, mode='w') as seq_file:
+
+        seq_xml_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ), defaultextension='xml', title='Save the GenBank sequences in XML format')
+        with open(seq_xml_file_name, mode='w') as seq_file:
             for line in seq_handle:
                 seq_file.write(line)
         seq_handle.close()
-        for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
-            print(seq_record.id)
-            print(repr(seq_record.seq))
-            print(len(seq_record))
 
-        # self.load_blast_data(result_handle)
-        #with open(blast_file_name, mode='r') as blast_file:
-        #    self.load_blast_data(blast_file)
+        self.master.parseGBfile(seq_xml_file_name)
 
 if __name__=='__main__':
     App().mainloop()
