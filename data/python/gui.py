@@ -80,24 +80,25 @@ class App(tkinter.Frame):
                 IDs.add(alignment.accession)           # alignment.title.split('|')[3].split('.')[0])
         self.filter_add(IDs)
 
-    def parseGBfile(self, seq_xml_file_name):
-        fasta_file_name = seq_xml_file_name.replace('.xml', '.fasta')
-        csv_file_name = seq_xml_file_name.replace('.xml', '.csv')
+    def parseGBfile(self, seq_flat_file_name):
+        fasta_file_name = seq_flat_file_name.replace('.gb', '')+'.fasta'
+        csv_file_name = seq_flat_file_name.replace('.gb', '')+'.csv'
         sep = '; '
         el = '\n'
         with open(fasta_file_name, 'w') as fasta:
             with open(csv_file_name, 'w') as csv:
-                for s in SeqIO.parse(seq_xml_file_name, "genbank"):
-                    fasta.write(s.id.split('.')[0]+el+s.seq+el)
+                for s in SeqIO.parse(seq_flat_file_name, "genbank"):
+                    fasta.write('>'+s.id.split('.')[0]+el+str(s.seq)+el)
                     csv.write(s.id.split('.')[0]+sep) # MEGA name:(A)
                     csv.write('no'              +sep) # Tab-Pub:  (B)
                     csv.write(sep+sep+sep)            #           ( C D E)
+                    strain=s.seq.
                     csv.write(s['strain']+sep) # Strain name: (F)
                     csv.write(el)
 
     def parseGB(self):
-        seq_xml_file_name = filedialog.askopenfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ), title='Parse the GenBank sequences in XML format')
-        self.parseGBfile(seq_xml_file_name)
+        seq_flat_file_name = filedialog.askopenfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ), title='Parse the GenBank sequences in flat format')
+        self.parseGBfile(seq_flat_file_name)
 
 class ID_list(tkinter.Frame):
     def __init__(self, root, load_titel, width=15, height=40):
@@ -136,21 +137,25 @@ class ID_list(tkinter.Frame):
         return self.txt_list.get('1.0',tkinter.END).splitlines()
 
     def get(self):
+        '''
+        Horror !! Surprise ! Biopython don't support sequence GenBank xml files , only flat.
+        :return:
+        '''
         IDs = ', '.join(self.lines())
 
         print (IDs)
         self.master.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
-        seq_handle = Entrez.efetch(db="nuccore", id=IDs, rettype="gb", retmode="XML" )# Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
+        seq_handle = Entrez.efetch(db="nuccore", id=IDs, rettype="gb", retmode="text" )# Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
         self.master.master.title('Adding new sequences')
         print('returned')
 
-        seq_xml_file_name = filedialog.asksaveasfilename(filetypes=(("Seq (xml)", "*.xml"), ("All files", "*.*") ), defaultextension='xml', title='Save the GenBank sequences in XML format')
-        with open(seq_xml_file_name, mode='w') as seq_file:
+        seq_flat_file_name = filedialog.asksaveasfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ), defaultextension='gb', title='Save the GenBank sequences in flat format')
+        with open(seq_flat_file_name, mode='w') as seq_file:
             for line in seq_handle:
                 seq_file.write(line)
         seq_handle.close()
 
-        self.master.parseGBfile(seq_xml_file_name)
+        self.master.parseGBfile(seq_flat_file_name)
 
 if __name__=='__main__':
     App().mainloop()
