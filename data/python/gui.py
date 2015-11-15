@@ -126,39 +126,46 @@ class App(tkinter.Frame):
         with open(fasta_file_name, 'w') as fasta:
             with open(csv_file_name, 'w') as csv:
                 with open(seq_flat_file_name) as seq_flat_file:
-                    for record in GenBank.parse(seq_flat_file):#, "genbank"
+                    for record in GenBank.parse(seq_flat_file):     #, "genbank"
                         fasta.write('>' + record.locus + el + record.sequence +el)   # record.accession[0]  ??
-                        csv.write(record.locus + sep) # MEGA name:(A)
-                        csv.write('no'              +sep) # Tab-Pub:  (B)
-                        csv.write(sep+sep+sep)            #           ( C D E)
+                        csv.write(record.locus + sep)               # MEGA name:(A)
+                        csv.write('no'         + sep)               # Tab-Pub:  (B)
+                        csv.write(sep+sep+sep)                      #           ( C D E)
 
                         strain  = ''
                         isolate = ''
                         host    = ''
                         country = ''
+                        region  = ''
                         collection_date = ''
-                        source = ''
+                        source  = ''
 
                         for feature in record.features:
                             if feature.key == 'source':
                                 for q in feature.qualifiers:
                                     if q.key == '/strain=':
-                                        strain = q.value
+                                        strain = q.value[1:-1]
                                     elif q.key == '/isolate=':
-                                        isolate = q.value
+                                        isolate = q.value[1:-1]
                                     elif q.key == '/country=':
-                                        country = q.value
+                                        country = q.value[1:-1].split(':')
+                                        if len(country) > 1:
+                                            region = country[1].strip() # ok?
+                                        country = country[0]
                                     elif q.key == '/collection_date=':
-                                        collection_date = q.value
+                                        collection_date = q.value[1:-1]
                                     elif q.key == '/source=':
-                                        source = q.value
+                                        source = q.value[1:-1]
 
-                        csv.write(strain  +sep) # Strain name: (F)
-                        csv.write(isolate +sep) # isolate: (G )
-                        csv.write(country +sep +sep + sep+sep) # country: (H I JKL)
-                        csv.write(host +sep) # host: (M)
-                        csv.write(source +sep) # source: (N)
-                        csv.write(collection_date +sep +sep+sep+sep+sep) # year !!! parse !! ()
+                        csv.write(strain  +sep)              # Strain name: (F)
+                        csv.write(isolate +sep)              # isolate:   (G )
+                        csv.write(country +sep +sep +sep)    # country:   (H I J)
+                        csv.write(sep + region + sep)        # country:   (KL)
+                        csv.write(host +sep)                 # host:      (M)
+                        csv.write(source +sep)               # source:    (N)
+                        csv.write(collection_date +sep +sep) # year !!! parse !! (OPQ)
+                        csv.write(sep + sep)                 #            (RS)
+                        csv.write(str(len(record.sequence)) + sep)# Length     (RS)
 
                         csv.write(el)
 
