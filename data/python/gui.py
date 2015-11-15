@@ -5,7 +5,8 @@ from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 from Bio import Entrez
 Entrez.email = "ArielVina.Rodriguez@fli.bund.de"
-from Bio import SeqIO
+#from Bio import SeqIO
+from Bio import GenBank
 from tkinter import filedialog
 from tkinter import scrolledtext
 
@@ -87,14 +88,42 @@ class App(tkinter.Frame):
         el = '\n'
         with open(fasta_file_name, 'w') as fasta:
             with open(csv_file_name, 'w') as csv:
-                for s in SeqIO.parse(seq_flat_file_name, "genbank"):
-                    fasta.write('>'+s.id.split('.')[0]+el+str(s.seq)+el)
-                    csv.write(s.id.split('.')[0]+sep) # MEGA name:(A)
-                    csv.write('no'              +sep) # Tab-Pub:  (B)
-                    csv.write(sep+sep+sep)            #           ( C D E)
-                    strain=s.seq.
-                    csv.write(s['strain']+sep) # Strain name: (F)
-                    csv.write(el)
+                with open(seq_flat_file_name) as seq_flat_file:
+                    for record in GenBank.parse(seq_flat_file):#, "genbank"
+                        fasta.write('>' + record.locus + el + record.sequence +el)   # record.accession[0]  ??
+                        csv.write(record.locus + sep) # MEGA name:(A)
+                        csv.write('no'              +sep) # Tab-Pub:  (B)
+                        csv.write(sep+sep+sep)            #           ( C D E)
+
+                        strain  = ''
+                        isolate = ''
+                        host    = ''
+                        country = ''
+                        collection_date = ''
+                        source = ''
+
+                        for feature in record.features:
+                            if feature.key == 'source':
+                                for q in feature.qualifiers:
+                                    if q.key == '/strain=':
+                                        strain = q.value
+                                    elif q.key == '/isolate=':
+                                        isolate = q.value
+                                    elif q.key == '/country=':
+                                        country = q.value
+                                    elif q.key == '/collection_date=':
+                                        collection_date = q.value
+                                    elif q.key == '/source=':
+                                        source = q.value
+
+                        csv.write(strain  +sep) # Strain name: (F)
+                        csv.write(isolate +sep) # isolate: (G )
+                        csv.write(country +sep +sep + sep+sep) # country: (H I JKL)
+                        csv.write(host +sep) # host: (M)
+                        csv.write(source +sep) # source: (N)
+                        csv.write(collection_date +sep +sep+sep+sep+sep) # year !!! parse !! ()
+
+                        csv.write(el)
 
     def parseGB(self):
         seq_flat_file_name = filedialog.askopenfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ), title='Parse the GenBank sequences in flat format')
