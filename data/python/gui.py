@@ -73,7 +73,7 @@ class App(tkinter.Frame):
         with filedialog.askopenfile(filetypes=(("BLAST (xml)", "*.xml"), ("All files", "*.*") ), title='Load a BLAST result in XML format') as blast_file:
             self.load_blast_data(blast_file)
 
-    def load_blast_data(srefacelf,blast_data):
+    def load_blast_data(self, blast_data):
         IDs = set()
         blast_records = NCBIXML.parse(blast_data)
         for blast_record in blast_records:
