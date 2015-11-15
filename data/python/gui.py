@@ -81,6 +81,43 @@ class App(tkinter.Frame):
                 IDs.add(alignment.accession)           # alignment.title.split('|')[3].split('.')[0])
         self.filter_add(IDs)
 
+    def get_seq_GB(self, IDs):
+        '''
+        Get the sequences corresponding to the list of IDs from GenBank online,
+        save the sequences in a flat file and call the parser
+        Horror !! Surprise ! Biopython don't support sequence GenBank xml files , only flat.
+        :return:
+        '''
+
+        print (IDs)
+        self.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
+        seq_handle = Entrez.efetch(db="nuccore",
+                                   id=IDs,
+                                   rettype="gb",
+                                   retmode="text" )
+        # Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
+        self.master.title('Adding new sequences')
+        print('returned')
+
+        seq_flat_file_name = filedialog.asksaveasfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ),
+                                                          defaultextension='gb',
+                                                          title='Save the GenBank sequences in flat format')
+        with open(seq_flat_file_name, mode='w') as seq_file:
+            for line in seq_handle:
+                seq_file.write(line)
+        seq_handle.close()
+
+        self.parseGBfile(seq_flat_file_name)
+
+    def parseGB(self):
+        '''
+        Load and parse a GenBank sequence flat file
+        :return:
+        '''
+        seq_flat_file_name = filedialog.askopenfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ),
+                                                        title='Parse the GenBank sequences in flat format')
+        self.parseGBfile(seq_flat_file_name)
+
     def parseGBfile(self, seq_flat_file_name):
         fasta_file_name = seq_flat_file_name.replace('.gb', '')+'.fasta'
         csv_file_name = seq_flat_file_name.replace('.gb', '')+'.csv'
@@ -125,10 +162,6 @@ class App(tkinter.Frame):
 
                         csv.write(el)
 
-    def parseGB(self):
-        seq_flat_file_name = filedialog.askopenfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ), title='Parse the GenBank sequences in flat format')
-        self.parseGBfile(seq_flat_file_name)
-
 class ID_list(tkinter.Frame):
     def __init__(self, root, load_titel, width=15, height=40):
         tkinter.Frame.__init__(self, root)
@@ -159,32 +192,18 @@ class ID_list(tkinter.Frame):
             #    self.add(ID)
 
     def save(self):
-        with filedialog.asksaveasfile(mode='w', filetypes=(("TXT", "*.txt"), ("All files", "*.*") ), defaultextension='txt', title='Save the ID list in txt format') as ID_file:
+        with filedialog.asksaveasfile(mode='w',
+                                      filetypes=(("TXT", "*.txt"), ("All files", "*.*") ),
+                                      defaultextension='txt',
+                                      title='Save the ID list in txt format') as ID_file:
             ID_file.write('\n'.join(self.lines()))
 
     def lines(self):
         return self.txt_list.get('1.0',tkinter.END).splitlines()
 
     def get(self):
-        '''
-        Horror !! Surprise ! Biopython don't support sequence GenBank xml files , only flat.
-        :return:
-        '''
-        IDs = ', '.join(self.lines())
+        self.master.get_seq_GB(', '.join(self.lines()))
 
-        print (IDs)
-        self.master.master.title('Toking to NCBI. Getting sequences. Be VERY patient ...')
-        seq_handle = Entrez.efetch(db="nuccore", id=IDs, rettype="gb", retmode="text" )# Entrez.efetch(db="nucleotide", id="57240072", rettype="gb", retmode="text")
-        self.master.master.title('Adding new sequences')
-        print('returned')
-
-        seq_flat_file_name = filedialog.asksaveasfilename(filetypes=(("Seq flat GB", "*.gb"), ("All files", "*.*") ), defaultextension='gb', title='Save the GenBank sequences in flat format')
-        with open(seq_flat_file_name, mode='w') as seq_file:
-            for line in seq_handle:
-                seq_file.write(line)
-        seq_handle.close()
-
-        self.master.parseGBfile(seq_flat_file_name)
 
 if __name__=='__main__':
     App().mainloop()
