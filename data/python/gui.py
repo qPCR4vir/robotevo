@@ -1,10 +1,15 @@
 __author__ = 'Ariel'
 
 import tkinter
+# http://biopython.org/DIST/docs/api/Bio-module.html
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 from Bio import Entrez
 Entrez.email = "ArielVina.Rodriguez@fli.bund.de"
+# http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html
+# http://biopython.org/wiki/SeqIO
+# http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html
+# http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html
 #from Bio import SeqIO
 from Bio import GenBank
 from tkinter import filedialog
@@ -119,6 +124,8 @@ class App(tkinter.Frame):
         self.parseGBfile(seq_flat_file_name)
 
     def parseGBfile(self, seq_flat_file_name):
+        # https://docs.python.org/3.4/library/pathlib.html#module-pathlib
+        # https://docs.python.org/3.4/library/os.path.html#module-os.path
         fasta_file_name = seq_flat_file_name.replace('.gb', '')+'.fasta'
         csv_file_name = seq_flat_file_name.replace('.gb', '')+'.csv'
         sep = '; '
@@ -126,7 +133,11 @@ class App(tkinter.Frame):
         with open(fasta_file_name, 'w') as fasta:
             with open(csv_file_name, 'w') as csv:
                 with open(seq_flat_file_name) as seq_flat_file:
+                    # http://biopython.org/DIST/docs/api/Bio.GenBank-module.html#parse
                     for record in GenBank.parse(seq_flat_file):     #, "genbank"
+                        #  http://biopython.org/DIST/docs/api/Bio.GenBank.Record-module.html
+                        #  http://biopython.org/DIST/docs/api/Bio.GenBank.Record.Record-class.html
+                        #  http://biopython.org/DIST/docs/api/Bio.GenBank.Scanner-pysrc.html#GenBankScanner._feed_header_lines
                         fasta.write('>' + record.locus + el + record.sequence +el)   # record.accession[0]  ??
                         csv.write(record.locus + sep)               # MEGA name:(A)
                         csv.write('no'         + sep)               # Tab-Pub:  (B)
@@ -139,9 +150,10 @@ class App(tkinter.Frame):
                         region  = ''
                         collection_date = ''
                         source  = ''
-
+                        #  http://biopython.org/DIST/docs/api/Bio.GenBank.Record-pysrc.html#Feature
                         for feature in record.features:
                             if feature.key == 'source':
+                                # http://biopython.org/DIST/docs/api/Bio.GenBank.Record.Qualifier-class.html
                                 for q in feature.qualifiers:
                                     if q.key == '/strain=':
                                         strain = q.value[1:-1]
