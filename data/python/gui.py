@@ -1,6 +1,7 @@
 __author__ = 'Ariel'
 
 import tkinter
+# http://biopython.org/DIST/docs/tutorial/Tutorial.html
 # http://biopython.org/DIST/docs/api/Bio-module.html
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
@@ -10,17 +11,21 @@ Entrez.email = "ArielVina.Rodriguez@fli.bund.de"
 # http://biopython.org/wiki/SeqIO
 # http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html
 # http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html
+# http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc16
 #from Bio import SeqIO
 from Bio import GenBank
+# http://tkinter.unpythonic.net/wiki/tkFileDialog
 from tkinter import filedialog
 from tkinter import scrolledtext
 
 class App(tkinter.Frame):
 
     def __init__(self):
-
         tkinter.Frame.__init__(self, tkinter.Tk(),  width=600, height=600)
         self.master.title('Adding new sequences')
+        # http://effbot.org/tkinterbook/pack.htm
+        # http://effbot.org/tkinterbook/grid.htm#Tkinter.Grid.grid-method
+        # http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/grid.html
         self.grid(sticky=tkinter.NS)
 
         self.winfo_toplevel().rowconfigure(0, weight=1)
@@ -66,6 +71,7 @@ class App(tkinter.Frame):
         result_handle = NCBIWWW.qblast("blastn", "nt", '\n'.join(IDs))#, hitlist_size=50, perc_ident=90, threshold=1, alignments=50, filter="HEV", format_type='XML', results_file=blast_file_name )
         self.master.title('Adding new sequences')
         print('returned')
+        # http://tkinter.unpythonic.net/wiki/tkFileDialog
         blast_file_name = filedialog.asksaveasfilename(filetypes=(("BLAST", "*.xml"), ("All files", "*.*") ), defaultextension='xml', title='Save the BLAST result in XML format')
         with open(blast_file_name, mode='w') as blast_file:
             blast_file.write(result_handle.read())
