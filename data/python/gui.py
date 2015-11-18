@@ -134,7 +134,7 @@ class App(tkinter.Frame):
         # https://docs.python.org/3.4/library/os.path.html#module-os.path
         fasta_file_name = seq_flat_file_name.replace('.gb', '')+'.fasta'
         csv_file_name = seq_flat_file_name.replace('.gb', '')+'.csv'
-        sep = '; '
+        sep = ';'
         el = '\n'
         with open(fasta_file_name, 'w') as fasta:
             with open(csv_file_name, 'w') as csv:
@@ -147,7 +147,6 @@ class App(tkinter.Frame):
                         fasta.write('>' + record.locus + el + record.sequence +el)   # record.accession[0]  ??
                         csv.write(record.locus + sep)               # MEGA name:(A)
                         csv.write('no'         + sep)               # Tab-Pub:  (B)
-                        csv.write(sep+sep+sep)                      #           ( C D E)
 
                         strain  = ''
                         isolate = ''
@@ -156,25 +155,58 @@ class App(tkinter.Frame):
                         region  = ''
                         collection_date = ''
                         source  = ''
+                        genotype = ''
                         #  http://biopython.org/DIST/docs/api/Bio.GenBank.Record-pysrc.html#Feature
                         for feature in record.features:
                             if feature.key == 'source':
                                 # http://biopython.org/DIST/docs/api/Bio.GenBank.Record.Qualifier-class.html
                                 for q in feature.qualifiers:
                                     if q.key == '/strain=':
-                                        strain = q.value[1:-1]
+                                        strain = q.value[1:-1].strip()
                                     elif q.key == '/isolate=':
-                                        isolate = q.value[1:-1]
+                                        isolate = q.value[1:-1].strip()
                                     elif q.key == '/country=':
                                         country = q.value[1:-1].split(':')
                                         if len(country) > 1:
                                             region = country[1].strip() # ok?
-                                        country = country[0]
+                                        country = country[0].strip()
                                     elif q.key == '/collection_date=':
-                                        collection_date = q.value[1:-1]
-                                    elif q.key == '/source=':
-                                        source = q.value[1:-1]
+                                        collection_date = q.value[1:-1].strip()
+                                    elif q.key == '/source=' or q.key == '/isolation_source=':
+                                        source = q.value[1:-1].strip()
+                                    elif q.key == '/note=':
+                                        val = q.value[1:-1]
+                                        if val.startswith('genotype: '):
+                                            genotype = val[9:].strip()
+                        des = record.definition
+                        if 'isolate' in des:
+                            iso = des.split('isolate')[1]
+                            if iso[0] == ':':
+                                iso = iso[1:].strip()
+                            iso = iso.split()[0].strip()
+                            if iso[-1] == '.':
+                                iso = iso[:-1].strip()
+                            if isolate == '':
+                                isolate = iso
+                            else:
+                                if isolate != iso:
+                                    isolate = isolate + ' or ' + iso
+                        if 'strain' in des:
+                            st = des.split('strain')[1]
+                            if st[0] == ':':
+                                st = st[1:].strip()
+                            st = st.split()[0].strip()
+                            if st[-1] == '.':
+                                st = st[:-1].strip()
+                            if strain == '':
+                                strain = st
+                            else:
+                                if strain != st:
+                                    strain = strain + ' or ' + st
 
+
+                        csv.write(genotype + sep)            #           ( C )
+                        csv.write(sep+sep)                   #           ( C D E)
                         csv.write(strain  +sep)              # Strain name: (F)
                         csv.write(isolate +sep)              # isolate:   (G )
                         csv.write(country +sep +sep +sep)    # country:   (H I J)
@@ -184,6 +216,8 @@ class App(tkinter.Frame):
                         csv.write(collection_date +sep +sep) # year !!! parse !! (OPQ)
                         csv.write(sep + sep)                 #            (RS)
                         csv.write(str(len(record.sequence)) + sep)# Length     (RS)
+                        csv.write(record.definition + sep)
+
 
                         csv.write(el)
 
