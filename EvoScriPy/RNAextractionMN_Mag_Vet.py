@@ -18,7 +18,7 @@ if __name__ == "__main__":
 from RobotInitRNAextraction import *
 import Labware as Lab
 import Reactive as Rtv
-from protocol import *
+from protocol_steps import *
 
 from Instructions_Te_MagS import *
 import Instructions as Itr
@@ -32,6 +32,8 @@ mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode
 mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoMode.Mode.encoding)
 # Rbt.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
+
+
 
 
 class RNAextr_MN_Vet_Kit(Protocol):

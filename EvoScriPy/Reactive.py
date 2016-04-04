@@ -108,7 +108,7 @@ class preMix(Reactive):
         if self.Replicas[0].vol is None:   # ????
             self.put_min_vol(NumSamples)
             assert False
-        from protocol import makePreMix
+        from protocol_steps import makePreMix
         makePreMix(self, NumSamples)
 
     def compVol(self,index, NumSamples=None):
