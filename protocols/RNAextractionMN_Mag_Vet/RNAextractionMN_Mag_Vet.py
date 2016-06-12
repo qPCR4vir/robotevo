@@ -1,9 +1,16 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'Ariel'
 
 
 if __name__ == "__main__":
     import EvoMode
-    from Instructions import Pipette
+    from EvoScriPy.Instructions import Pipette
     iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
     Script = EvoMode.Script(template='RNAext_MNVet.ewt', filename='AWL.esc')
     comments = EvoMode.Comments()
@@ -15,23 +22,23 @@ if __name__ == "__main__":
                                         EvoMode.StdOut(), comments
                                         ])
 
-from RobotInitRNAextraction import *
-import Labware as Lab
-import Reactive as Rtv
-from protocol_steps import *
+from protocols.RNAextractionMN_Mag_Vet.RobotInitRNAextraction import *
+import EvoScriPy.Labware as Lab
+import EvoScriPy.Reactive as Rtv
+from EvoScriPy.protocol_steps import *
 
-from Instructions_Te_MagS import *
-import Instructions as Itr
+from EvoScriPy.Instructions_Te_MagS import *
+import EvoScriPy.Instructions as Itr
 
 
 Reactives  = Lab.Labware(Lab.GreinRack16_2mL, Lab.Labware.Location(7, 1 ), "Reactives")
 Eluat      = Lab.Labware(Lab.EppRack3x16R,    Lab.Labware.Location(8, 1 ), "Eluat" )
 Samples    = Lab.Labware(Lab.EppRack3x16,     Lab.Labware.Location(11, 1), "Proben")
 
-mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoMode.Mode.encoding)
-mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoMode.Mode.encoding)
+mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
+mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
 # Rbt.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
-Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
+Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
 
 
 
@@ -45,8 +52,7 @@ class RNAextr_MN_Vet_Kit(Protocol):
         extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
 
 
-
-def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
+def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList = None):
 
     Rtv.NumOfSamples = NumOfSamples
 
@@ -109,7 +115,8 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList):
                                      ,defLiqClass=W_liquidClass, replicas=2)
     Waste           = Rtv.Reactive("Waste "  , WashWaste )
 
-    CheckList()
+    if CheckList is not None:
+        CheckList()
 
     for s in all_samples:
         Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,

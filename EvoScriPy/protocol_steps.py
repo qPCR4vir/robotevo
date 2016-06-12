@@ -1,11 +1,18 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'qPCR4vir'
 
 from contextlib import contextmanager
 
-import Robot as Rbt
-import Instructions as Itr
-import Reactive as Rtv
-import Labware as Lab
+import EvoScriPy.Robot as Rbt
+import EvoScriPy.Instructions as Itr
+import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Labware as Lab
 
 
 class Protocol:

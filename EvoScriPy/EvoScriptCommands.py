@@ -1,9 +1,16 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'qPCR4vir'
 
-import EvoMode
-import Labware
-from Instruction_Base import *
-from Instructions import *
+import EvoScriPy.EvoMode
+import EvoScriPy.Labware
+from EvoScriPy.Instruction_Base import *
+from EvoScriPy.Instructions import *
 
 
 def Aspirate( tipMask,
@@ -39,7 +46,7 @@ def Aspirate( tipMask,
     a.tipMask       = tipMask
     a.liquidClass   = liquidClass
     a.volume        = volume
-    a.labware.location = Labware.Labware.Location(grid,site)
+    a.labware.location = EvoScriPy.Labware.Labware.Location(grid,site)
 
     return a, a.exec()
 
@@ -58,7 +65,7 @@ def Dispense(tipMask,liquidClass,volume,grid, site, spacing, wellSelection,     
     a.tipMask       = tipMask
     a.liquidClass   = liquidClass
     a.volume        = volume
-    a.labware.location = Labware.Labware.Location(grid,site)
+    a.labware.location = EvoScriPy.Labware.Labware.Location(grid,site)
     a.loopOptions=LoopOptions
 
     return a, a.exec()

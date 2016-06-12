@@ -1,6 +1,13 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'Ariel'
 
-import Labware as Lab
+import EvoScriPy.Labware as Lab
 
 
 TeMg_Heat       = Lab.Labware(Lab.TeMag48,      Lab.Labware.Location(14, 1), "48 Pos Heat")

@@ -1,22 +1,32 @@
-import EvoMode
-from Instructions import Pipette
-import Reactive as Rtv
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# contributor Tobias Winterfeld (dondiablo)
+# 2014-2016
+
+import EvoScriPy.EvoMode as EvoMode
+from EvoScriPy.Instructions import Pipette
+import EvoScriPy.Reactive as Rtv
 
 iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
-Script = EvoMode.Script(template='RNAext_MNVet.ewt', filename='AWL.esc')
+# TODO set output 'AWL.esc' in GUI
+# TODO set template in custom protocol
+Script = EvoMode.Script(template='../protocols/RNAextractionMN_Mag_Vet/RNAext_MNVet.ewt', filename='AWL.esc')
 comments = EvoMode.Comments()
 
 EvoMode.current = EvoMode.multiple([iRobot,
                                     Script,
-                                    EvoMode.AdvancedWorkList('AWL.gwl'),
-                                    EvoMode.ScriptBody('AWL.esc.txt'),
+                                    EvoMode.AdvancedWorkList('AWL.gwl'),  # TODO set output in GUI
+                                    EvoMode.ScriptBody('AWL.esc.txt'),    # TODO set output in GUI
                                     EvoMode.StdOut(),
                                     comments
 ])
 
 from tkinter import *
 import tkinter
-from RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit  # extractRNA_with_MN_Vet_Kit
+from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit  # extractRNA_with_MN_Vet_Kit
 
 
 __author__ = 'tobias.winterfeld'

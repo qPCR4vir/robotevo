@@ -1,8 +1,15 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'qPCR4vir'
 # todo Revise def values: the binding take place at the moment of first import ???
-import EvoMode
-import Labware as Lab
-import Robot as Rbt
+import EvoScriPy.EvoMode
+import EvoScriPy.Labware as Lab
+import EvoScriPy.Robot as Rbt
 
 supportVirtualRobot = True  # OK explore this idea ! (problems with "asynchronous" and multiple mode)
 
@@ -87,7 +94,7 @@ class Instruction:
         pass
 
     def exec(self, mode=None):
-        if not mode: mode = EvoMode.current  # todo revise
+        if not mode: mode = EvoScriPy.EvoMode.current  # todo revise
         if not self.allowed(mode):
             return
         mode.exec(self)
@@ -100,7 +107,7 @@ class Instruction:
 
 class ScriptONLY(Instruction):
     def allowed(self, mode):
-        return not isinstance(mode, EvoMode.AdvancedWorkList)
+        return not isinstance(mode, EvoScriPy.EvoMode.AdvancedWorkList)
 
 
 class Device(Instruction):
