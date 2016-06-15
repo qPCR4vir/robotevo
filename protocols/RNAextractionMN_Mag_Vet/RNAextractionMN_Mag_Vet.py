@@ -44,9 +44,17 @@ Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoSc
 
 
 class RNAextr_MN_Vet_Kit(Protocol):
+    """Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL. """
+    name = "RNA extraction with the MN_Vet kit"
+    versions = {'Serum with Liquid detection + tracking': not_implemented,
+                'Serum without Liquid detection + tracking': not_implemented,
+                'Tissue without Liquid detection + tracking': not_implemented,
+                'Tissue with Liquid detection + tracking': not_implemented}
+
     def __init__(self,GUI, NumOfSamples):
-        self.NumOfSamples = NumOfSamples
         Protocol.__init__(self,GUI)
+        self.NumOfSamples = NumOfSamples
+
 
     def Run(self):
         extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
