@@ -15,14 +15,46 @@ import EvoScriPy.Reactive as Rtv
 import EvoScriPy.Labware as Lab
 
 
+def not_implemented(NumOfSamples):
+    print('This protocols have yet to be implemented.')
+
+
 class Protocol:
+    """Each custom protocol need to implement these functions.
+
+    """
+    name = "undefined"
+    versions = {"none": not_implemented}
+
     def __init__(self,GUI=None):
         #self.SetCheckList(GUI)
+        self.initialized = False
         self.GUI=GUI
         self.Reactives=[]
         Rtv.Reactive.SetReactiveList(self)
 
+    def set_defaults(self):
+        """Set initial values that will not be rest during secondary initializations.
+        The "primary initialization" maybe a light one, like defining the list of versions available.
+        Here, for example, initialize the list of reactive.
+        """
+        # TODO initialize the iRobot?? Select a table template?
+
+    def options(self):
+        """
+        :return: the list of different variants or version of the protocol implemented by this protocol
+        """
+        return self.options_list
+
+    def initialize(self):
+        """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
+        """
+        if not self.initialized:
+            self.set_defaults()
+
     def Run(self):
+        self.initialized()
+        self.CheckList()
         pass
 
     def SetCheckList(self, GUI):
