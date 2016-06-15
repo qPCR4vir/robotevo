@@ -224,7 +224,7 @@ class Robot:
         :param workingTips:
         :param tipsType:
         """
-        assert Robot.current is None
+        # assert Robot.current is None
         Robot.current = self
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Robot.Arm) else \

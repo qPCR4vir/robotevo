@@ -7,23 +7,6 @@
 """
 Implement a GUI that automatically detect available protocols.
 """
-import EvoScriPy.EvoMode as EvoMode
-from EvoScriPy.Instructions import Pipette
-import EvoScriPy.Reactive as Rtv
-
-iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
-# TODO set output 'AWL.esc' in GUI - ask the user?
-# TODO set template in custom protocol
-Script = EvoMode.Script(template='../protocols/RNAextractionMN_Mag_Vet/RNAext_MNVet.ewt', filename='AWL.esc')
-comments = EvoMode.Comments()
-
-EvoMode.current = EvoMode.multiple([iRobot,
-                                    Script,
-                                    EvoMode.AdvancedWorkList('AWL.gwl'),  # TODO set output in GUI
-                                    EvoMode.ScriptBody('AWL.esc.txt'),    # TODO set output in GUI
-                                    EvoMode.StdOut(),
-                                    comments
-])
 import tkinter
 from protocols import available
 
@@ -175,11 +158,17 @@ class App(tkinter.Frame):
         print(selected)
         NumOfSamples = int(self.sample_num.get())
 
-        self.protocols[selected](self, NumOfSamples).Run()
-        Script.done()
+        if selected in self.used_protocols:
+            protocol = self.used_protocols[selected]    # how to set the Num of Samples?
+        else:
+            # here we could inspect what protocol is about to run and select an specific GUI
+            protocol = self.protocols[selected](self, NumOfSamples)
+            self.used_protocols[selected] = protocol
+
+        protocol.Run()  # create and run the protocol
 
         self.comments.delete(0, self.size())
-        for line in comments.comments:
+        for line in protocol.comments():
             self.comments.insert(tkinter.END, line)
             # self.pack()
 

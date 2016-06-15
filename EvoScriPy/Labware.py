@@ -4,10 +4,10 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2016
+# import EvoScriPy.EvoMode
 
 __author__ = 'qPCR4vir'
 
-import EvoScriPy.EvoMode
 
 def_LabW        = None
 def_WashWaste   = None
@@ -442,7 +442,8 @@ class Labware:
                 bitMask = 0
         if bit != 6:
             sel.append(null + bitMask)
-        return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoScriPy.EvoMode.Mode.encoding)
+        from EvoScriPy.EvoMode import encoding
+        return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 class DITIrack (Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):

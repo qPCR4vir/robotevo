@@ -5,39 +5,78 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2016
 
-__author__ = 'qPCR4vir'
-
 from contextlib import contextmanager
-
 import EvoScriPy.Robot as Rbt
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Reactive as Rtv
 import EvoScriPy.Labware as Lab
+import EvoScriPy.EvoMode as EvoMode
+
+__author__ = 'qPCR4vir'
 
 
 def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
 
+worktable_template = '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
+output_filename = '../current/AWL'
+
+
 class Protocol:
-    """Each custom protocol need to implement these functions.
+    """ Each custom protocol need to implement these functions.
 
     """
     name = "undefined"
     versions = {"none": not_implemented}
+    worktable_template = worktable_template
+    output_filename = output_filename
 
-    def __init__(self,GUI=None):
+    def __init__(self, worktable_template = worktable_template,
+                       output_filename = output_filename,
+                       nTips=4,
+                       GUI = None):
         #self.SetCheckList(GUI)
         self.initialized = False
-        self.GUI=GUI
+        self.GUI = GUI
         self.Reactives=[]
+        self.worktable_template = worktable_template
+        self.output_filename = output_filename
+        self. nTips= nTips
+        self.EvoMode = None
+        self.set_EvoMode()
         Rtv.Reactive.SetReactiveList(self)
+
+    def init_EvoMode(self):
+        self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
+        # TODO set output 'AWL.esc' in GUI - ask the user?
+        # TODO set template in custom protocol
+        self.Script = EvoMode.Script(template=self.worktable_template, filename=self.output_filename + '.esc')
+        self.comments_ = EvoMode.Comments()
+        self.EvoMode = EvoMode.multiple([self.iRobot,
+                                         self.Script,
+                                         EvoMode.AdvancedWorkList(self.output_filename + '.gwl'),  # TODO set output in GUI
+                                         EvoMode.ScriptBody(self.output_filename + '.txt'),  # TODO set output in GUI
+                                         EvoMode.StdOut(),
+                                         self.comments_
+                                         ])
+        EvoMode.current = self.EvoMode
+
+    def set_EvoMode(self):
+        if not self.EvoMode:
+            self.init_EvoMode()
+        else:
+            EvoMode.current = self.EvoMode
+
+    def comments(self):
+        return self.comments_.comments
 
     def set_defaults(self):
         """Set initial values that will not be rest during secondary initializations.
         The "primary initialization" maybe a light one, like defining the list of versions available.
         Here, for example, initialize the list of reactive.
         """
+        print('set def in Protocol')
         # TODO initialize the iRobot?? Select a table template?
 
     def options(self):
@@ -55,7 +94,8 @@ class Protocol:
     def Run(self):
         self.initialized()
         self.CheckList()
-        pass
+        self.Script.done()
+
 
     def SetCheckList(self, GUI):
         self.GUI=GUI
@@ -283,6 +323,7 @@ def makePreMix( preMix, NumSamples=None):
                         multidispense_in_replicas(i, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
                         r -= dV
 
+
 def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
         """
 
@@ -343,6 +384,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
                         availableDisp -= 1
                         SampleCnt -= nt
+
 
 def transfer( from_labware_region, to_labware_region, volume, using_liquid_class=None,
                  optimizeFrom=True, optimizeTo=True, NumSamples=None):
@@ -435,6 +477,7 @@ def transfer( from_labware_region, to_labware_region, volume, using_liquid_class
         Asp.labware.selectOnly(oriSel)
         Dst.labware.selectOnly(dstSel)
         return oriSel, dstSel
+
 
 def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_waste_labware=None, optimize=True):
 
@@ -558,6 +601,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     Itr.wash_tips(wasteVol=4).exec()
     return oriSel
 
+
 def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True):
 
     """
@@ -628,11 +672,13 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     mx.labware.selectOnly(oriSel)
     return oriSel
 
+
 @contextmanager
 def group(titel, mode=None):
     Itr.group(titel).exec(mode)
     yield
     Itr.group_end().exec(mode)
+
 
 @contextmanager
 def tips(tipsMask=None, reuse=None,     drop=None,
@@ -679,7 +725,6 @@ def incubation(minutes, timer=1):
     Itr.startTimer(timer).exec()
     yield
     Itr.waitTimer(timer=timer, timeSpan= minutes*60).exec()
-
 
 
 @contextmanager
