@@ -59,9 +59,9 @@ class App(tkinter.Frame):
         self.protocol_selection.grid(row=1, column=0, rowspan=2, columnspan=4, sticky=tkinter.W + E)
         for name in self.protocols.keys():
             self.protocol_selection.insert(tkinter.END, name)
-        self.protocol_selection.activate(1)
+        self.protocol_selection.activate(0)
 
-        self.protocol_versions = self.protocols[self.protocol_selection.get(1)].versions
+        self.protocol_versions = self.protocols[self.protocol_selection.get(0)].versions
         self.version_selection = tkinter.Listbox(self, height=5, width=25, selectmode=tkinter.SINGLE)
         self.version_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + E)
         for name in self.protocol_versions.keys():
@@ -155,7 +155,6 @@ class App(tkinter.Frame):
                 App.ReplicaFrame(self, reply, rn)
                 #self.pack()
 
-
     def CheckList(self, protocol):
         RL=protocol.Reactives
         self.ReactFrames=[]
@@ -171,15 +170,10 @@ class App(tkinter.Frame):
         tkinter.Label (Header, text="Well ",          ).grid(row=0, column=6, sticky=tkinter.E)
         tkinter.Label (Header, text="µL/total",          ).grid(row=0, column=7, sticky=tkinter.E)
 
-
-
         for rn, react in enumerate(protocol.Reactives):
             assert isinstance(react,Rtv.Reactive)
             rf=App.ReactiveFrame(self.varoutput,react)
             self.ReactFrames.append(rf)
-
-        #self.varoutput.pack()
-
 
     def run_selected(self):
         selected = self.protocol_selection.curselection()
@@ -200,31 +194,4 @@ class App(tkinter.Frame):
 
 app = App()
 master.mainloop()
-"""
-
-"Reactive Name"
-
- self.sampletype = tkinter.Radiobutton(self, text='Serum', value=1)
-        self.sampletype.grid(row=1, column=2, sticky=tkinter.W)
-
-        self.sampletype = tkinter.Radiobutton(self, text='Gewebe', value=2)
-        self.sampletype.grid(row=2, column=2, sticky=tkinter.W)
-
-
-        for w in rtv:
-            line = rtv[w], ' µl'
-            self.stdVol = tk.Label(text=line)
-            self.stdVol.grid(row=r, column=1)
-            self.enterVol = tk.Entry(text=rtv[w])
-            self.enterVol.grid(row=r, column=2, sticky=tk.W)
-            r += 1
-
-            class Headers(tkinter.Frame):
-        def __init__(self, master):
-            tkinter.Frame.__init__(self, master)
-            self.header = ['Reagent', 'µl/Sample', 'Rack', 'Grid', 'Site', 'Well', 'µl/Total']
-
-            for i, header in enumerate(self.header):
-                tkinter.Label(self, text=header, ).grid(row=0, column=i)
-"""
 
