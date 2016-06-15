@@ -33,15 +33,10 @@ import tkinter
 
 from protocols import available
 
-def not_implemented(NumOfSamples):
-    print('This protocols have yet to be implemented.')
-
 master = Tk()
 logo = PhotoImage(file="../EvoScriPy/logo.png")
 w = Label(master, image=logo)
 w.grid(row=0, column=0, columnspan=15, sticky=tkinter.W + tkinter.E)
-
-
 
 
 class App(tkinter.Frame):
@@ -60,34 +55,18 @@ class App(tkinter.Frame):
         self.sample_num.grid(row=2, column=8, columnspan=4)
 
         self.protocols = {p.name: p for p in available}
-        print(self.protocols)
-
-        #self.protocol = tkinter.StringVar(self, self.protocols.keys()[0])
-
-        self.protocol_selection = tkinter.Listbox(self, height=5, width=25,
-                                                  selectmode=tkinter.SINGLE)
+        self.protocol_selection = tkinter.Listbox(self, height=5, width=25,  selectmode=tkinter.SINGLE)
         self.protocol_selection.grid(row=1, column=0, rowspan=2, columnspan=4, sticky=tkinter.W + E)
-
         for name in self.protocols.keys():
             self.protocol_selection.insert(tkinter.END, name)
-
         self.protocol_selection.activate(1)
 
-        self.sampletypes = {'Serum with Liquid detection + tracking': not_implemented,
-                            'Serum without Liquid detection + tracking': not_implemented,
-                            'Tissue without Liquid detection + tracking': not_implemented,
-                            'Tissue with Liquid detection + tracking': not_implemented}
-
-        self.sampletype = tkinter.StringVar(self, 'Serum with Liquid detection + tracking')
-
-        self.sampletype_selection = tkinter.Listbox(self, height=5, width=25,
-                                                    selectmode=tkinter.SINGLE)
-        self.sampletype_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + E)
-
-        for name in self.sampletypes.keys():
-            self.sampletype_selection.insert(tkinter.END, name)
-
-        self.sampletype_selection.activate(1)
+        self.protocol_versions = self.protocols[self.protocol_selection.get(1)].versions
+        self.version_selection = tkinter.Listbox(self, height=5, width=25, selectmode=tkinter.SINGLE)
+        self.version_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + E)
+        for name in self.protocol_versions.keys():
+            self.version_selection.insert(tkinter.END, name)
+        self.version_selection.activate(1)
 
         self.run = tkinter.Button(self, text="Synthetize a TECAN script\nfor the selected protocol",
                                   command=self.run_selected)
