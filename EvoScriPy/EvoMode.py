@@ -9,12 +9,14 @@ __author__ = 'qPCR4vir'
 
 import EvoScriPy.Robot as Rbt
 
+encoding = 'Latin-1'
+
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
     this script generator. Some options are: A worklist; a full Evoware script; only comments, etc.
     One import option is to create many of this outputs from a single run.
     """
-    encoding = 'Latin-1'
+    encoding = encoding
     # Tip_tNum = 4
     def exec(self, instr):
         pass
