@@ -7,9 +7,6 @@
 """
 Implement a GUI that automatically detect available protocols.
 """
-
-__author__ = 'qPCR4vir'
-
 import EvoScriPy.EvoMode as EvoMode
 from EvoScriPy.Instructions import Pipette
 import EvoScriPy.Reactive as Rtv
@@ -27,16 +24,10 @@ EvoMode.current = EvoMode.multiple([iRobot,
                                     EvoMode.StdOut(),
                                     comments
 ])
-
-from tkinter import *
 import tkinter
-
 from protocols import available
 
-master = Tk()
-logo = PhotoImage(file="../EvoScriPy/logo.png")
-w = Label(master, image=logo)
-w.grid(row=0, column=0, columnspan=15, sticky=tkinter.W + tkinter.E)
+__author__ = 'qPCR4vir'
 
 
 class App(tkinter.Frame):
@@ -44,6 +35,9 @@ class App(tkinter.Frame):
     """
 
     def __init__(self, master=None):
+        self.logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
+        self.w = tkinter.Label(master, image=self.logo)
+        self.w.grid(row=0, column=0, columnspan=15, sticky=tkinter.W + tkinter.E)
 
         tkinter.Frame.__init__(self, master)
         self.grid()
@@ -56,14 +50,16 @@ class App(tkinter.Frame):
 
         self.protocols = {p.name: p for p in available}
         self.protocol_selection = tkinter.Listbox(self, height=5, width=25,  selectmode=tkinter.SINGLE)
-        self.protocol_selection.grid(row=1, column=0, rowspan=2, columnspan=4, sticky=tkinter.W + E)
+        self.protocol_selection.grid(row=1, column=0, rowspan=2, columnspan=4, sticky=tkinter.W + tkinter.E)
         for name in self.protocols.keys():
             self.protocol_selection.insert(tkinter.END, name)
         self.protocol_selection.activate(0)
 
+        self.used_protocols = {}
+
         self.protocol_versions = self.protocols[self.protocol_selection.get(0)].versions
         self.version_selection = tkinter.Listbox(self, height=5, width=25, selectmode=tkinter.SINGLE)
-        self.version_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + E)
+        self.version_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + tkinter.E)
         for name in self.protocol_versions.keys():
             self.version_selection.insert(tkinter.END, name)
         self.version_selection.activate(1)
@@ -96,7 +92,7 @@ class App(tkinter.Frame):
     class ReplicaFrame(tkinter.Frame):
         def __init__(self, master, reply, num):
             tkinter.Frame.__init__(self, master)
-            self.grid(sticky=tkinter.N + S, row=num, column=6, columnspan=3)
+            self.grid(sticky=tkinter.N + tkinter.S, row=num, column=6, columnspan=3)
 
             self.reply = reply
             self.num = num
@@ -115,12 +111,10 @@ class App(tkinter.Frame):
                             to=100000,
                             width=7).grid(column=2, row=0)
 
-
     class ReactiveFrame(tkinter.Frame):
         def __init__(self, master, react):
-            assert isinstance(react, Rtv.Reactive)
             tkinter.Frame.__init__(self, master)
-            self.grid(sticky=tkinter.N + S and tkinter.E)
+            self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
             self.columnconfigure(0, minsize=140)
             self.react = react
             self.Vol = tkinter.DoubleVar()
@@ -132,9 +126,7 @@ class App(tkinter.Frame):
             self.RackSite = tkinter.IntVar()
             self.RackSite.set(react.labware.location.site)
 
-
-            # tkinter.Label  (self, text='',          ).grid(row=0, column=0)
-            tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0,sticky=tkinter.E)
+            tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
 
             tkinter.Spinbox(self,
                             textvariable=self.Vol,
@@ -151,9 +143,9 @@ class App(tkinter.Frame):
                                                                                          sticky=tkinter.W)
 
             for rn, reply in enumerate(react.Replicas):
-                #assert isinstance(react,Rtv.Reactive)
+                # assert isinstance(react,Rtv.Reactive)
                 App.ReplicaFrame(self, reply, rn)
-                #self.pack()
+                # self.pack()
 
     def CheckList(self, protocol):
         RL=protocol.Reactives
@@ -171,15 +163,15 @@ class App(tkinter.Frame):
         tkinter.Label (Header, text="µL/total",          ).grid(row=0, column=7, sticky=tkinter.E)
 
         for rn, react in enumerate(protocol.Reactives):
-            assert isinstance(react,Rtv.Reactive)
+            # assert isinstance(react,Rtv.Reactive)
             rf=App.ReactiveFrame(self.varoutput,react)
             self.ReactFrames.append(rf)
 
     def run_selected(self):
-        selected = self.protocol_selection.curselection()
+        selected = self.protocol_selection.curselection() # list of selected index
         print(selected)
         if not selected: return
-        selected = self.protocol_selection.get(selected[0])
+        selected = self.protocol_selection.get(selected[0]) # text of first selected protocol
         print(selected)
         NumOfSamples = int(self.sample_num.get())
 
@@ -192,6 +184,6 @@ class App(tkinter.Frame):
             # self.pack()
 
 
-app = App()
-master.mainloop()
-
+if __name__ == "__main__":
+    app = App(tkinter.Tk())
+    app.master.mainloop()
