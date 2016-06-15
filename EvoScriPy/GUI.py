@@ -2,16 +2,20 @@
 #  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
-# author Ariel Vina-Rodriguez (qPCR4vir)
-# contributor Tobias Winterfeld (dondiablo)
+# GUI.py : authors Ariel Vina-Rodriguez (qPCR4vir), Tobias Winterfeld (dondiablo)
 # 2014-2016
+"""
+Implement a GUI that automatically detect available protocols.
+"""
+
+__author__ = 'qPCR4vir'
 
 import EvoScriPy.EvoMode as EvoMode
 from EvoScriPy.Instructions import Pipette
 import EvoScriPy.Reactive as Rtv
 
 iRobot = EvoMode.iRobot(Pipette.LiHa1, nTips=4)
-# TODO set output 'AWL.esc' in GUI
+# TODO set output 'AWL.esc' in GUI - ask the user?
 # TODO set template in custom protocol
 Script = EvoMode.Script(template='../protocols/RNAextractionMN_Mag_Vet/RNAext_MNVet.ewt', filename='AWL.esc')
 comments = EvoMode.Comments()
@@ -26,10 +30,11 @@ EvoMode.current = EvoMode.multiple([iRobot,
 
 from tkinter import *
 import tkinter
-from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit  # extractRNA_with_MN_Vet_Kit
 
+from protocols import available
 
-__author__ = 'tobias.winterfeld'
+def not_implemented(NumOfSamples):
+    print('This protocols have yet to be implemented.')
 
 master = Tk()
 logo = PhotoImage(file="../EvoScriPy/logo.png")
@@ -37,8 +42,6 @@ w = Label(master, image=logo)
 w.grid(row=0, column=0, columnspan=15, sticky=tkinter.W + tkinter.E)
 
 
-def not_implemented(NumOfSamples):
-    print('This protocols have yet to be implemented.')
 
 
 class App(tkinter.Frame):
@@ -50,19 +53,16 @@ class App(tkinter.Frame):
         tkinter.Frame.__init__(self, master)
         self.grid()
 
-        # logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
-        # tkinter.Label(self, image=logo, justify=tkinter.CENTER).grid(row=0, column=0, rowspan=3, columnspan=3)
-
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=8, columnspan=4)
 
         self.NumOfSamples = tkinter.StringVar(master, '12')
         self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
         self.sample_num.grid(row=2, column=8, columnspan=4)
 
-        self.protocols = {'RNA extraction with the MN_Vet kit': RNAextr_MN_Vet_Kit,
-                          'Others': not_implemented}
+        self.protocols = {p.name: p for p in available}
+        print(self.protocols)
 
-        self.protocol = tkinter.StringVar(self, 'RNA extraction with the MN_Vet kit')
+        #self.protocol = tkinter.StringVar(self, self.protocols.keys()[0])
 
         self.protocol_selection = tkinter.Listbox(self, height=5, width=25,
                                                   selectmode=tkinter.SINGLE)
@@ -137,7 +137,6 @@ class App(tkinter.Frame):
                             width=7).grid(column=2, row=0)
 
 
-
     class ReactiveFrame(tkinter.Frame):
         def __init__(self, master, react):
             assert isinstance(react, Rtv.Reactive)
@@ -164,7 +163,7 @@ class App(tkinter.Frame):
 
             self.RackNameEntry = tkinter.Entry(self,
                                                textvariable=self.RackName, width=10).grid(row=0, column=2, padx=5,
-                                                                                          sticky=tkinter.W)
+                                                                                         sticky=tkinter.W)
             self.RackGridEntry = tkinter.Entry(self,
                                                textvariable=self.RackGrid, width=2).grid(row=0, column=3, padx=5,
                                                                                          sticky=tkinter.W)
@@ -201,7 +200,6 @@ class App(tkinter.Frame):
             self.ReactFrames.append(rf)
 
         #self.varoutput.pack()
-
 
 
     def run_selected(self):
