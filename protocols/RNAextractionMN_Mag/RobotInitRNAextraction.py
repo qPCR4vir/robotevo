@@ -46,6 +46,9 @@ def init_RNAextraction():
 
     print('Init init_RNAextraction()')
 
+    # https://docs.python.org/3.5/reference/simple_stmts.html#global
+    # https://www.python.org/dev/peps/pep-3104/   for nonlocal
+    # https://docs.python.org/3/faq/programming.html#id8
     global TeMg_Heat, TeMag, WashCleanerS, WashWaste, WashCleanerL, DiTiWaste, ElutBuf, LysBuf, BindBuf
     global BioWaste, Unused8, Unused9, DiTi1000_1, DiTi1000_2, DiTi1000_3, Reactives, Reactives, Eluat, Samples
 
