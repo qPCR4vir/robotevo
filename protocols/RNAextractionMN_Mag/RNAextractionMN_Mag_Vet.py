@@ -226,9 +226,5 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD:EvoScriPy/RNAextractionMN_Mag_Vet.py
     extractRNA_with_MN_Vet_Kit(29)
-=======
-    extractRNA_with_MN_Vet_Kit(48)
->>>>>>> origin/master:protocols/RNAextractionMN_Mag/RNAextractionMN_Mag_Vet.py
     pass
