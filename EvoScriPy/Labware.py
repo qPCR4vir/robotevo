@@ -1,6 +1,13 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+# import EvoScriPy.EvoMode
+
 __author__ = 'qPCR4vir'
 
-import EvoMode
 
 def_LabW        = None
 def_WashWaste   = None
@@ -435,7 +442,8 @@ class Labware:
                 bitMask = 0
         if bit != 6:
             sel.append(null + bitMask)
-        return "{:02X}{:02X}".format(X, Y) + sel.decode(EvoMode.Mode.encoding)
+        from EvoScriPy.EvoMode import encoding
+        return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 class DITIrack (Labware):
     def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):

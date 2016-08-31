@@ -1,8 +1,15 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'qPCR4vir'
 
 #from Instruction_Base import *
 #from Instructions import *
-import Labware as Lab
+import EvoScriPy.Labware as Lab
 rep_sub = None # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 
 tipMask = []  # mask for one tip of index ...
@@ -217,7 +224,7 @@ class Robot:
         :param workingTips:
         :param tipsType:
         """
-        assert Robot.current is None
+        # assert Robot.current is None
         Robot.current = self
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Robot.Arm) else \

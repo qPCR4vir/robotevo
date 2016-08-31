@@ -1,9 +1,16 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'qPCR4vir'
 
 # http://sydney.edu.au/medicine/bosch/facilities/molecular-biology/automation/Manual%20Freedom%20EVOware%202.3%20Research%20Use%20Only.pdf
 
-from Instruction_Base import *
-import Robot
+from EvoScriPy.Instruction_Base import *
+import EvoScriPy.Robot
 #todo organize the arg in each instruction according to the more common use
 #todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
 
@@ -48,7 +55,7 @@ class aspirate(Pipetting):
 
     @staticmethod
     def action():
-        return Robot.Robot.Arm.Aspire
+        return EvoScriPy.Robot.Robot.Arm.Aspire
 
 class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
@@ -77,7 +84,7 @@ class dispense(Pipetting):
 
     @staticmethod
     def action():
-        return Robot.Robot.Arm.Dispense
+        return EvoScriPy.Robot.Robot.Arm.Dispense
 
 class mix(Pipetting):
     """ A.15.4.3 Mix (Worklist: Mix)
@@ -288,11 +295,11 @@ class getDITI2(DITIs):
         ln = self.LabwareTypeName
         if   ln is None                 :   ln = Lab.def_DiTi       # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
         elif isinstance(ln, str)        :
-            curW = Robot.Robot.current.worktable
+            curW = EvoScriPy.Robot.Robot.current.worktable
             assert isinstance(curW, Lab.WorkTable)
-            ln = Robot.Robot.current.worktable.labTypes [ln][0].type
+            ln = EvoScriPy.Robot.Robot.current.worktable.labTypes [ln][0].type
         assert isinstance(ln, (Lab.DITIrack, Lab.Labware.DITIrackType))
-        self.tipMask, tips = Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
+        self.tipMask, tips = EvoScriPy.Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
         self.LabwareTypeName = ln
 
@@ -325,7 +332,7 @@ class dropDITI(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = Robot.Robot.current.dropTips(self.tipMask, self.labware)
+        self.tipMask = EvoScriPy.Robot.Robot.current.dropTips(self.tipMask, self.labware)
 
 class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter) pag. 15 - 15
@@ -456,7 +463,7 @@ class pickUp_DITIs(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask, tips = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = EvoScriPy.Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
         assert not tips
 
 class pickUp_DITIs2(Pipette):
@@ -491,7 +498,7 @@ class pickUp_DITIs2(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask, tips = Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = EvoScriPy.Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
         assert not tips
 
 class set_DITIs_Back(Pipette):
@@ -522,7 +529,7 @@ class set_DITIs_Back(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = Robot.Robot.current.set_tips_back(self.tipMask, self.labware)
+        self.tipMask = EvoScriPy.Robot.Robot.current.set_tips_back(self.tipMask, self.labware)
 
 class pickUp_ZipTip(Pipette): # todo implement !!!
     """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)

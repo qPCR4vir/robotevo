@@ -1,13 +1,22 @@
+# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
+#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
+#
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2016
+
 __author__ = 'qPCR4vir'
 
-import Robot as Rbt
+import EvoScriPy.Robot as Rbt
+
+encoding = 'Latin-1'
 
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
     this script generator. Some options are: A worklist; a full Evoware script; only comments, etc.
     One import option is to create many of this outputs from a single run.
     """
-    encoding = 'Latin-1'
+    encoding = encoding
     # Tip_tNum = 4
     def exec(self, instr):
         pass
@@ -36,7 +45,7 @@ class Comments(toString):
         self.comments = []
 
     def exec(self, instr):
-        from Instructions import comment, group
+        from EvoScriPy.Instructions import comment, group
 
         if isinstance(instr, comment) or isinstance(instr, group):
             self.comments.append("  " + instr.arg[0].data)
@@ -73,9 +82,8 @@ class inFile(toString):
     """ (Base class) For modes with uses a file for output
     """
 
-    def __init__(self, filename):
-        self.filename = filename
-        self.f = open(filename, 'w', encoding=Mode.encoding)
+    def __init__(self, filename = None):
+        self.set_file(filename)
 
     def exec(self, instr):
         s = toString.exec(self, instr) + "\n"  # \r
@@ -90,10 +98,14 @@ class inFile(toString):
 
     def open(self):
         if self.f is None:
-            self.f = open(self.filename, 'w', encoding=Mode.encoding)
+            self.set_file(self.filename)
 
     def __del__(self):
         self.done()
+
+    def set_file(self, filename=None):
+        self.filename = filename
+        self.f = open(filename, 'w', encoding=Mode.encoding) if filename is not None else None
 
 
 class AdvancedWorkList(inFile):
@@ -114,8 +126,11 @@ class Script(ScriptBody):
     """ Create a full and executable script for the evoware soft. Take an existing script or script-template as a base.
     """
 
-    def __init__(self, filename, template, arms=None):
+    def __init__(self, filename=None, template=None, arms=None):
         ScriptBody.__init__(self, filename)
+        self.set_template(arms, template)
+
+    def set_template(self, arms, template):
         if Rbt.Robot.current:
             Rbt.Robot.current.set_worktable(template)
         else:
