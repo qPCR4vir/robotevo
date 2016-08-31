@@ -1,0 +1,16 @@
+[ScriptInfo]
+StartLine=1
+EndLine=234
+RobotMoveDirty=0
+CurrentLine=104
+[UserQueries]
+Queries=0
+[LoopCounters]
+Counters=0
+[Variables]
+VarCount=5
+Variable1=detected_volume_1;50
+Variable2=detected_volume_2;46
+Variable3=detected_volume_3;66
+Variable4=detected_volume_4;62
+Variable5=LAST_ERROR_LINE;104
