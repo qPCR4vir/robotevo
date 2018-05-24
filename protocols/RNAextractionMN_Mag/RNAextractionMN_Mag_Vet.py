@@ -77,7 +77,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
     IC_MS2Volume        = 20.0
     ElutionBufferVolume = 100.0
 
-    SampleLiqClass      = TissueHomLiqClass # ="Serum Asp"   # SerumLiqClass="Serum Asp preMix3"
+    SampleLiqClass      ="Serum Asp" # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
     all_samples = range(Rtv.NumOfSamples)
     maxTips     = min(Rbt.nTips, Rtv.NumOfSamples)
@@ -152,9 +152,9 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
     with incubation(10): pass
 
     with tips(tipsMask=maxMask, reuse=True, drop=False):
-        for p in [40, 50, 60, 60, 60, 65]:
+        for p in [40, 50, 60, 65]:
             mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
-        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips, v_perc=90)
+#        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips, v_perc=90)
 
     with tips(reuse=True, drop=True):
         spread( reactive=B_Beads,      to_labware_region=RI.TeMag.selectOnly(all_samples))
@@ -226,5 +226,5 @@ def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
 
 
 if __name__ == "__main__":
-    extractRNA_with_MN_Vet_Kit(48)
+    extractRNA_with_MN_Vet_Kit(29)
     pass

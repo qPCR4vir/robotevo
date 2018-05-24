@@ -1,3 +1,4 @@
+Generates Freedom EVOware scripts for the Freedom EVO universal pipetting robot from TECAN. It provides new layers of abstraction to offer a higher level programing model that allows a more direct programing of the steps needed in a typical biochemical/biological pipetting protocol like RNA extraction. More in the [Wiki](https://github.com/qPCR4vir/robotevo/wiki)
 
 Programming a liquid-handling robot for laboratory automation, for example an RNA extraction protocol.
 
