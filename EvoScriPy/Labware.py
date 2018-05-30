@@ -210,10 +210,13 @@ class Labware:
             self.nRow = nRow
             self.nCol = nCol
             self.maxVol = maxVol
-            Labware.Types[name]=self.__getattribute__("__class__")
+            Labware.Types[name]=self     # .__getattribute__("__class__")
 
         def size(self)-> int:
             return self.nRow * self.nCol
+
+        def LabwareClass(self):
+            return type(Labware)
 
     class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
@@ -225,13 +228,22 @@ class Labware:
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
+        def LabwareClass(self):
+            return type(DITIrack)
+
     class DITIwasteType(Type):
         def __init__(self, name, capacity=5*96):
             Labware.Type.__init__(self, name, nRow=capacity)
 
+        def LabwareClass(self):
+            return type(DITIwaste)
+
     class CuvetteType(Type):
         def __init__(self, name, nPseudoWells, maxVol, nCol=1):
             Labware.Type.__init__(self, name, nRow=nPseudoWells, maxVol=maxVol)
+
+        def LabwareClass(self):
+            return type(Cuvette)
 
     class Te_Mag (Type):
         pass
