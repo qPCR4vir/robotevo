@@ -200,12 +200,17 @@ class conectedWell(Well):
 banned_well = object() # Well(None, 0)
 
 class Labware:
+    Types = {}  # typeName label-string from template worktable file: labwares class-name.
+                # Mountain a list of labwares types
+                # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+
     class Type:
         def __init__(self, name, nRow, nCol=1, maxVol=None):
             self.name = name
             self.nRow = nRow
             self.nCol = nCol
             self.maxVol = maxVol
+            Labware.Types[name]=self.__getattribute__("__class__")
 
         def size(self)-> int:
             return self.nRow * self.nCol
