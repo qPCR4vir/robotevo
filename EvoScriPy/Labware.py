@@ -63,7 +63,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
             self.rack = rack
             assert 1 <= grid <= len(self.worktable.grid)
-            site -= 1    # TODO revise
+            site -= 1    # TODO revise - it will be an error if site is None
             assert 0 <= site <= self.worktable.nSites
             self.grid = grid
             self.site = site
@@ -88,11 +88,34 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         if not templateFile: return []
         templList = []
         with open(templateFile, 'r', encoding='Latin-1') as tmpl:
+            # parsing_grid=False
+            grid_num=-1
+            labwware_types=[]
             for line in tmpl:  # todo do the real complete parse
                 templList += [line]
-                if line.startswith("--{ RPG }--"): break
+                line = line.split(';')
+                if line[0]=="--{ RPG }--": break     # TODO possible error msg ??
+                if line[0]!="998": continue          # TODO possible error msg ??
+
+                if labwware_types:             # we have read the types first, now we need to read the labels
+                    for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
+                        loc=WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
+                        self.addLabware(self.createLabware(labw_t,loc,label))
+                    labwware_types=[]
+
+                else:                           # we need to read the types first
+                    grid_num+=1
+                    labwware_types = line[2:-1]
+                    assert int(line[1]) == len(labwware_types)  # TODO error msg
+
+
         self.template = templList
         return templList
+
+    def createLabware(self, labw_t, loc, label):
+        labw_t = Labware.Types[labw_t]
+        labw = labw_t.LabwareClass()(labw_t, loc, label)
+        return labw
 
     def addLabware(self, labware):
         """
