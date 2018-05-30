@@ -45,13 +45,38 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
     curWorkTable = None
 
-    def __init__(self, templateFile=None):
-        assert WorkTable.curWorkTable is None
-        WorkTable.curWorkTable = self
+    class Location:
+        """ One location in a WorkTable """
+
+        def __init__(self, grid=None, site=None, rack=None, rack_site=None, worktable=None):
+            """
+            :param grid: int, 1-67.   worktable grid. Carrier grid position
+            :param site: int, 0 - 127. Site on carrier (on RAck?) = lab location - (site on carrier - 1) !!!!!
+            :param label:
+            :param rack:
+            :param rack_site:
+            """
+
+            # A Location have sense only in a WorkTable
+            self.worktable = worktable or WorkTable.curWorkTable
+            assert isinstance(self.worktable, WorkTable)
+
+            self.rack = rack
+            assert 1 <= grid <= len(self.worktable.grid)
+            site -= 1    # TODO revise
+            assert 0 <= site <= self.worktable.nSites
+            self.grid = grid
+            self.site = site
+            self.rack_site = rack_site
+
+
+    def __init__(self, templateFile=None, grids=67, sites=127):
+        assert WorkTable.curWorkTable is None      # TODO revise. Add def_WorkTable
+        WorkTable.curWorkTable = self              # TODO revise
         self.labTypes = {}  # typeName:labwares. The type mountain a list of labware (with locations)
         self.Racks = []
-        self.nGrid = 67  # max
-        self.grid = [None] * 67
+        self.nSites = sites
+        self.grid = [None] * grids
         if isinstance(templateFile, list):
             self.template = templateFile
         else:
@@ -206,7 +231,7 @@ class Labware:
     class Te_Mag (Type):
         pass
 
-    def __init__(self, type, location, label=None, worktable=None):
+    def __init__(self, type, location=None, label=None):
         self.type = type
         self.label = label
         self.location = location
@@ -221,26 +246,6 @@ class Labware:
     def init_wells(self):
         self.Wells = [Well(self, offset) for offset in range(self.type.size())]
 
-
-    class Location:
-        def __init__(self, grid=None, site=None, rack=None, rack_site=None):
-            """
-
-
-            :param grid: int, 1-67.   worktable grid. Carrier grid position
-            :param site: int, 0 - 127. Site on carrier (on RAck?)lab location - (site on carrier - 1) !!!!!
-            :param label:
-            :param rack:
-            :param rack_site:
-            """
-
-            self.rack = rack
-            assert 1 <= grid <= 67
-            site -= 1
-            assert 0 <= site <= 127
-            self.grid = grid
-            self.site = site
-            self.rack_site = rack_site
 
     class Position:
         def __init__(self, row, col=1):
