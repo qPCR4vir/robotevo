@@ -99,8 +99,20 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
                 if labwware_types:             # we have read the types first, now we need to read the labels
                     for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
+                        if not labw_t:
+                            if labw_t:
+                                print("Warning! The worktable template have a label '" +
+                                      label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                                      " but no labware type")
+                            continue
                         loc=WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
-                        self.addLabware(self.createLabware(labw_t,loc,label))
+                        labw = self.createLabware(labw_t,loc,label)
+                        if labw:
+                            self.addLabware(labw)
+                        else:
+                            print("Warning! The worktable template have a label '" +
+                                  label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                                  " but non registered labware type '" + labw_t + "'")
                     labwware_types=[]
 
                 else:                           # we need to read the types first
@@ -113,7 +125,8 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         return templList
 
     def createLabware(self, labw_t, loc, label):
-        labw_t = Labware.Types[labw_t]
+        labw_t = Labware.Types.get(labw_t)
+        if not labw_t: return None
         labw = labw_t.createLabware(loc, label)
         return labw
 
