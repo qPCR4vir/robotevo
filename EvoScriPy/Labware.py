@@ -114,17 +114,17 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
     def createLabware(self, labw_t, loc, label):
         labw_t = Labware.Types[labw_t]
-        labw = labw_t.LabwareClass()(labw_t, loc, label)
+        labw = labw_t.createLabware(loc, label)
         return labw
 
     def addLabware(self, labware):
         """
 
         :param labware:
-        :raise "This WT have only " + self.nGrid + " grid.":
+        :raise "This WT have only " + len(self.grid) + " grid.":
         """
-        if labware.location.grid >= self.nGrid:
-            raise "This WT have only " + str(self.nGrid) + " grid."
+        if labware.location.grid >= len(self.grid):
+            raise "This WT have only " + str(len(self.grid)) + " grid."
 
         if labware.type.name not in self.labTypes:
             self.labTypes[labware.type.name] = []
@@ -239,7 +239,11 @@ class Labware:
             return self.nRow * self.nCol
 
         def LabwareClass(self):
-            return type(Labware)
+            return (Labware.__class__)
+
+        def createLabware(self, loc, label):
+            labw = Labware(self, loc, label)
+            return labw
 
     class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
@@ -252,26 +256,38 @@ class Labware:
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
         def LabwareClass(self):
-            return type(DITIrack)
+            return type(DITIrack.__class__)
+
+        def createLabware(self, loc, label):
+            labw = DITIrack(self, loc, label)
+            return labw
 
     class DITIwasteType(Type):
         def __init__(self, name, capacity=5*96):
             Labware.Type.__init__(self, name, nRow=capacity)
 
         def LabwareClass(self):
-            return type(DITIwaste)
+            return (DITIwaste.__class__)
+
+        def createLabware(self, loc, label):
+            labw = DITIwaste(self, loc, label)
+            return labw
 
     class CuvetteType(Type):
         def __init__(self, name, nPseudoWells, maxVol, nCol=1):
             Labware.Type.__init__(self, name, nRow=nPseudoWells, maxVol=maxVol)
 
         def LabwareClass(self):
-            return type(Cuvette)
+            return (Cuvette.__class__)
+
+        def createLabware(self, loc, label):
+            labw = Cuvette(self, loc, label)
+            return labw
 
     class Te_Mag (Type):
         pass
 
-    def __init__(self, type, location=None, label=None):
+    def __init__(self, type, location=None, label=None, worktable=WorkTable.curWorkTable):
         self.type = type
         self.label = label
         self.location = location
