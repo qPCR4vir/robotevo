@@ -29,7 +29,9 @@ class RNAextr_MN_Vet_Kit(Protocol):
                 'Tissue without Liquid detection + tracking': not_implemented,
                 'Tissue with Liquid detection + tracking'   : not_implemented}
 
-    worktable_template = '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
+    worktable_template = '../EvoScripts/wt_templates/RNAext_MNVet.ewt'
+                   # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
+                   #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
     output_filename = '../current/AWL_RNAext_MNVet'
 
     def __init__(self, GUI, NumOfSamples):

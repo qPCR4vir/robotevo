@@ -54,10 +54,10 @@ def init_RNAextraction():
 
     TeMg_Heat       = Lab.getLabware(Lab.TeMag48,   "48 Pos Heat"                       )
     TeMag           = Lab.getLabware(Lab.TeMag48,   "48PosMagnet"                       )
-    WashCleanerS    = Lab.getLabware(Lab.CleanerSWS,"Washstation 2Grid Cleaner short"   )
-    WashWaste       = Lab.getLabware(Lab.WasteWS,   "Washstation 2Grid Waste"           )
-    WashCleanerL    = Lab.getLabware(Lab.CleanerLWS,"Washstation 2Grid Cleaner long"    )
-    DiTiWaste       = Lab.getLabware(Lab.DiTi_Waste,"Washstation 2Grid DiTi Waste"      )
+    WashCleanerS    = Lab.getLabware(Lab.CleanerSWS,""                                  )
+    WashWaste       = Lab.getLabware(Lab.WasteWS,   ""                                  )
+    WashCleanerL    = Lab.getLabware(Lab.CleanerLWS,""                                  )
+    DiTiWaste       = Lab.getLabware(Lab.DiTi_Waste,""                                  )
 
     Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
     Lab.def_WashWaste   = WashWaste
