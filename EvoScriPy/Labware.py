@@ -139,7 +139,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         """
         if loc:
             if loc.grid >= len(self.grid):
-            raise "This WT have only " + str(len(self.grid)) + " grid."
+                raise "This WT have only " + str(len(self.grid)) + " grid."
             labware.location = loc
         labware.location.worktable = self
 
@@ -266,9 +266,6 @@ class Labware:
         def size(self)-> int:
             return self.nRow * self.nCol
 
-        def LabwareClass(self):
-            return (Labware.__class__)
-
         def createLabware(self, loc, label):
             labw = Labware(self, loc, label)
             return labw
@@ -283,9 +280,6 @@ class Labware:
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
-        def LabwareClass(self):
-            return type(DITIrack.__class__)
-
         def createLabware(self, loc, label):
             labw = DITIrack(self, loc, label)
             return labw
@@ -294,9 +288,6 @@ class Labware:
         def __init__(self, name, capacity=5*96):
             Labware.Type.__init__(self, name, nRow=capacity)
 
-        def LabwareClass(self):
-            return (DITIwaste.__class__)
-
         def createLabware(self, loc, label):
             labw = DITIwaste(self, loc, label)
             return labw
@@ -304,9 +295,6 @@ class Labware:
     class CuvetteType(Type):
         def __init__(self, name, nPseudoWells, maxVol, nCol=1):
             Labware.Type.__init__(self, name, nRow=nPseudoWells, maxVol=maxVol)
-
-        def LabwareClass(self):
-            return (Cuvette.__class__)
 
         def createLabware(self, loc, label):
             labw = Cuvette(self, loc, label)
