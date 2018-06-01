@@ -161,6 +161,14 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
         self.labTypes[labware.type.name] += [labware]
 
+    def getLabware(self, labw_type , label):
+        assert isinstance(labw_type, Labware.Type )
+
+        for labw in self.labTypes[labw_type.name]:
+            if labw.label == label: return labw
+
+        raise Exception(labw_type.name , label)
+
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
 
@@ -770,3 +778,7 @@ def_DiTi        = DiTi_1000ul
 
 
 MP96well = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)
+
+def getLabware(labw_type, label, worktable=None):
+    worktable = worktable or WorkTable.curWorkTable
+    return worktable.getLabware(labw_type, label)
