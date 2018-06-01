@@ -94,13 +94,13 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
                                      pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
 
     VEW1            = Rtv.Reactive("VEW1 - Wash Buffer "              ,
-                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 4), "4-VEW1 Wash Buffer"),
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.WorkTable.Location(22, 4), "4-VEW1 Wash Buffer"),
                                      volpersample=VEW1Volume , defLiqClass=B_liquidClass)
     VEW2            = Rtv.Reactive("VEW2 - WashBuffer "               ,
-                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(22, 5), "5-VEW2-WashBuffer" ),
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.WorkTable.Location(22, 5), "5-VEW2-WashBuffer" ),
                                      volpersample=VEW2Volume , defLiqClass=B_liquidClass)
     EtOH80p         = Rtv.Reactive("Ethanol 80% "                     ,
-                                     Lab.Cuvette(Lab.Trough_100ml, Lab.Labware.Location(24, 1), "7-Ethanol 80%"   ),
+                                     Lab.Cuvette(Lab.Trough_100ml, Lab.WorkTable.Location(24, 1), "7-Ethanol 80%"   ),
                                      volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
     ElutionBuffer   = Rtv.Reactive("Elution Buffer "                  ,
                                    RI.ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass="Eluat")
