@@ -108,7 +108,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
                         loc=WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
                         labw = self.createLabware(labw_t,loc,label)
                         if labw:
-                            self.addLabware(labw)
+                            pass # self.addLabware(labw)
                         else:
                             print("Warning! The worktable template have a label '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
@@ -130,17 +130,31 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         labw = labw_t.createLabware(loc, label)
         return labw
 
-    def addLabware(self, labware):
+    def addLabware(self, labware, loc=None):
         """
 
         :param labware:
         :raise "This WT have only " + len(self.grid) + " grid.":
         """
-        if labware.location.grid >= len(self.grid):
+        if loc:
+            if loc.grid >= len(self.grid):
             raise "This WT have only " + str(len(self.grid)) + " grid."
+            labware.location = loc
+        labware.location.worktable = self
 
-        if labware.type.name not in self.labTypes:
+        for type_name, labw_list in self.labTypes.items():
+            for labw in labw_list:
+                if labw is labware:
+                    print("Warning! The worktable  template already have this labware. " +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site))
+                    return
+                if loc and loc.grid==labw.location.grid and loc.site == labw.location.site:
+                    print("Warning! The worktable  template already have a labware with label '" +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site))
+
+        if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
             self.labTypes[labware.type.name] = []
+
         self.labTypes[labware.type.name] += [labware]
 
 class Carrier:
