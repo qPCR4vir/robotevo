@@ -96,6 +96,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
                 line = line.split(';')
                 if line[0]=="--{ RPG }--": break     # TODO possible error msg ??
                 if line[0]!="998": continue          # TODO possible error msg ??
+                if grid_num >= len(self.grid): break # ignore lines between this and  "--{ RPG }--"
 
                 if labwware_types:             # we have read the types first, now we need to read the labels
                     for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
