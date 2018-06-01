@@ -146,12 +146,15 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         for type_name, labw_list in self.labTypes.items():
             for labw in labw_list:
                 if labw is labware:
-                    print("Warning! The worktable  template already have this labware. " +
-                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site))
+                    print("Warning! The worktable template already have this labware. " +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
                     return
-                if loc and loc.grid==labw.location.grid and loc.site == labw.location.site:
-                    print("Warning! The worktable  template already have a labware with label '" +
-                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site))
+                if labware.location and \
+                   labware.location.grid == labw.location.grid and \
+                   labware.location.site == labw.location.site:
+
+                    print("Warning! The worktable template already have a labware with label '" +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
 
         if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
             self.labTypes[labware.type.name] = []
@@ -310,7 +313,7 @@ class Labware:
         self.Wells = []
         worktable = worktable or WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
-        worktable.addLabware(self)
+        worktable.addLabware(self, location)
         if location.rack:
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
