@@ -18,6 +18,8 @@ class App(tkinter.Frame):
     """
 
     def __init__(self, master=None):
+
+        #  Logo            --------------------
         self.logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
         self.w = tkinter.Label(master, image=self.logo)
         self.w.grid(row=0, column=0, columnspan=15, sticky=tkinter.W + tkinter.E)
@@ -25,22 +27,28 @@ class App(tkinter.Frame):
         tkinter.Frame.__init__(self, master)
         self.grid()
 
+        # Number of Samples  ----------------
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=8, columnspan=4)
 
-        self.NumOfSamples = tkinter.StringVar(master, '12')
+        self.NumOfSamples = tkinter.StringVar(master, '48')
         self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
         self.sample_num.grid(row=2, column=8, columnspan=4)
 
+        # Protocol selection ------------------
         self.protocols = {p.name: p for p in available}
-        self.protocol_selection = tkinter.Listbox(self, height=5, width=25,  selectmode=tkinter.SINGLE)
+        self.selected_protocol = tkinter.StringVar(master)
+        self.selected_protocol.set(available[0].name)
+
+        # self.protocol_selection = tkinter.Listbox(self, height=5, width=25,  selectmode=tkinter.SINGLE)
+        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols)
         self.protocol_selection.grid(row=1, column=0, rowspan=2, columnspan=4, sticky=tkinter.W + tkinter.E)
-        for name in self.protocols.keys():
-            self.protocol_selection.insert(tkinter.END, name)
-        self.protocol_selection.activate(0)
+        #for name in self.protocols.keys():
+        #    self.protocol_selection.insert(tkinter.END, name)
+        #self.protocol_selection.activate(0)
 
         self.used_protocols = {}
 
-        self.protocol_versions = self.protocols[self.protocol_selection.get(0)].versions
+        self.protocol_versions = self.protocols[self.selected_protocol.get()].versions
         self.version_selection = tkinter.Listbox(self, height=5, width=25, selectmode=tkinter.SINGLE)
         self.version_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + tkinter.E)
         for name in self.protocol_versions.keys():
@@ -69,7 +77,7 @@ class App(tkinter.Frame):
         self.varoutput = tkinter.Frame(self)
         self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
 
-        explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
+        explanation = "Hier entsteht die Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=18, columnspan=16)
 
     class ReplicaFrame(tkinter.Frame):
@@ -151,11 +159,9 @@ class App(tkinter.Frame):
             self.ReactFrames.append(rf)
 
     def run_selected(self):
-        selected = self.protocol_selection.curselection() # list of selected index
+        selected = self.selected_protocol.get()
         print(selected)
         if not selected: return
-        selected = self.protocol_selection.get(selected[0]) # text of first selected protocol
-        print(selected)
         NumOfSamples = int(self.sample_num.get())
 
         if selected in self.used_protocols:
