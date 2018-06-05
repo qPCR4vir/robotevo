@@ -27,33 +27,30 @@ class App(tkinter.Frame):
         tkinter.Frame.__init__(self, master)
         self.grid()
 
+        # Protocol selection ------------------
+        self.protocols = {p.name: p for p in available}         # values
+        self.selected_protocol = tkinter.StringVar(master)      # variable
+
+        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols, command=self.setVariantsMenu)
+        self.protocol_selection.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+        self.selected_protocol.set(available[0].name)           # variable def value
+
+
+        self.protocol_versions = self.protocols[self.selected_protocol.get()].versions   # values
+        self.selected_version = tkinter.StringVar(master)                                # variable
+
+        self.version_selection = tkinter.OptionMenu(self, self.selected_version, *self.protocol_versions)
+        self.version_selection.grid(row=2, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+        self.selected_version.set(next(iter(self.protocol_versions)))  # variable def value
+
+        self.used_protocols = {}                  # ???
+
         # Number of Samples  ----------------
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=8, columnspan=4)
 
         self.NumOfSamples = tkinter.StringVar(master, '48')
         self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
         self.sample_num.grid(row=2, column=8, columnspan=4)
-
-        # Protocol selection ------------------
-        self.protocols = {p.name: p for p in available}
-        self.selected_protocol = tkinter.StringVar(master)
-        self.selected_protocol.set(available[0].name)
-
-        # self.protocol_selection = tkinter.Listbox(self, height=5, width=25,  selectmode=tkinter.SINGLE)
-        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols)
-        self.protocol_selection.grid(row=1, column=0, rowspan=2, columnspan=4, sticky=tkinter.W + tkinter.E)
-        #for name in self.protocols.keys():
-        #    self.protocol_selection.insert(tkinter.END, name)
-        #self.protocol_selection.activate(0)
-
-        self.used_protocols = {}
-
-        self.protocol_versions = self.protocols[self.selected_protocol.get()].versions
-        self.version_selection = tkinter.Listbox(self, height=5, width=25, selectmode=tkinter.SINGLE)
-        self.version_selection.grid(row=1, column=4, rowspan=2, columnspan=4, sticky=tkinter.W + tkinter.E)
-        for name in self.protocol_versions.keys():
-            self.version_selection.insert(tkinter.END, name)
-        self.version_selection.activate(1)
 
         self.run = tkinter.Button(self, text="Synthetize a TECAN script\nfor the selected protocol",
                                   command=self.run_selected)
@@ -79,6 +76,16 @@ class App(tkinter.Frame):
 
         explanation = "Hier entsteht die Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=18, columnspan=16)
+
+    def setVariantsMenu(self, value):
+        print ('Selected protocol: ' + self.selected_protocol.get())
+        self.protocol_versions = self.protocols[self.selected_protocol.get()].versions   # values
+        m=self.version_selection.children['menu']
+        m.delete(0,'end')
+        for val in self.protocol_versions:
+            m.add_command(label=val, command=lambda v=self.selected_version, l=val: v.set(l))
+        self.selected_version.set(next(iter(self.protocol_versions)))                             # variable def value
+
 
     class ReplicaFrame(tkinter.Frame):
         def __init__(self, master, reply, num):
