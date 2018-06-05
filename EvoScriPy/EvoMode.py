@@ -9,7 +9,7 @@ __author__ = 'qPCR4vir'
 
 import EvoScriPy.Robot as Rbt
 
-encoding = 'Latin-1'
+encoding = 'Latin-1'      # ISO/IEC 8859-1
 
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from

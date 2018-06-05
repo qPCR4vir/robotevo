@@ -45,13 +45,38 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
     curWorkTable = None
 
-    def __init__(self, templateFile=None):
-        assert WorkTable.curWorkTable is None
-        WorkTable.curWorkTable = self
+    class Location:
+        """ One location in a WorkTable """
+
+        def __init__(self, grid=None, site=None, rack=None, rack_site=None, worktable=None):
+            """
+            :param grid: int, 1-67.   worktable grid. Carrier grid position
+            :param site: int, 0 - 127. Site on carrier (on RAck?) = lab location - (site on carrier - 1) !!!!!
+            :param label:
+            :param rack:
+            :param rack_site:
+            """
+
+            # A Location have sense only in a WorkTable
+            self.worktable = worktable or WorkTable.curWorkTable
+            assert isinstance(self.worktable, WorkTable)
+
+            self.rack = rack
+            assert 1 <= grid <= len(self.worktable.grid)
+            site -= 1    # TODO revise - it will be an error if site is None
+            assert 0 <= site <= self.worktable.nSites
+            self.grid = grid
+            self.site = site
+            self.rack_site = rack_site
+
+
+    def __init__(self, templateFile=None, grids=67, sites=127):
+        assert WorkTable.curWorkTable is None      # TODO revise. Add def_WorkTable
+        WorkTable.curWorkTable = self              # TODO revise
         self.labTypes = {}  # typeName:labwares. The type mountain a list of labware (with locations)
         self.Racks = []
-        self.nGrid = 67  # max
-        self.grid = [None] * 67
+        self.nSites = sites
+        self.grid = [None] * grids
         if isinstance(templateFile, list):
             self.template = templateFile
         else:
@@ -63,24 +88,86 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         if not templateFile: return []
         templList = []
         with open(templateFile, 'r', encoding='Latin-1') as tmpl:
+            # parsing_grid=False
+            grid_num=-1
+            labwware_types=[]
             for line in tmpl:  # todo do the real complete parse
                 templList += [line]
-                if line.startswith("--{ RPG }--"): break
+                line = line.split(';')
+                if line[0]=="--{ RPG }--": break     # TODO possible error msg ??
+                if line[0]!="998": continue          # TODO possible error msg ??
+                if grid_num >= len(self.grid): break # ignore lines between this and  "--{ RPG }--"
+
+                if labwware_types:             # we have read the types first, now we need to read the labels
+                    for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
+                        if not labw_t:
+                            if labw_t:
+                                print("Warning! The worktable template have a label '" +
+                                      label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                                      " but no labware type")
+                            continue
+                        loc=WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
+                        labw = self.createLabware(labw_t,loc,label)
+                        if labw:
+                            pass # self.addLabware(labw)
+                        else:
+                            print("Warning! The worktable template have a label '" +
+                                  label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                                  " but non registered labware type '" + labw_t + "'")
+                    labwware_types=[]
+
+                else:                           # we need to read the types first
+                    grid_num+=1
+                    labwware_types = line[2:-1]
+                    assert int(line[1]) == len(labwware_types)  # TODO error msg
+
+
         self.template = templList
         return templList
 
-    def addLabware(self, labware):
+    def createLabware(self, labw_t, loc, label):
+        labw_t = Labware.Types.get(labw_t)
+        if not labw_t: return None
+        labw = labw_t.createLabware(loc, label)
+        return labw
+
+    def addLabware(self, labware, loc=None):
         """
 
         :param labware:
-        :raise "This WT have only " + self.nGrid + " grid.":
+        :raise "This WT have only " + len(self.grid) + " grid.":
         """
-        if labware.location.grid >= self.nGrid:
-            raise "This WT have only " + str(self.nGrid) + " grid."
+        if loc:
+            if loc.grid >= len(self.grid):
+                raise "This WT have only " + str(len(self.grid)) + " grid."
+            labware.location = loc
+        labware.location.worktable = self
 
-        if labware.type.name not in self.labTypes:
+        for type_name, labw_list in self.labTypes.items():
+            for labw in labw_list:
+                if labw is labware:
+                    print("Warning! The worktable template already have this labware. " +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+                    return
+                if labware.location and \
+                   labware.location.grid == labw.location.grid and \
+                   labware.location.site == labw.location.site:
+
+                    print("Warning! The worktable template already have a labware with label '" +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+
+        if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
             self.labTypes[labware.type.name] = []
+
         self.labTypes[labware.type.name] += [labware]
+
+    def getLabware(self, labw_type , label):
+        assert isinstance(labw_type, Labware.Type )
+
+        for labw in self.labTypes[labw_type.name]:
+            if labw.label == label: return labw
+
+        raise Exception(labw_type.name , label)
 
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
@@ -175,15 +262,24 @@ class conectedWell(Well):
 banned_well = object() # Well(None, 0)
 
 class Labware:
+    Types = {}  # typeName label-string from template worktable file: labwares class-name.
+                # Mountain a list of labwares types
+                # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+
     class Type:
         def __init__(self, name, nRow, nCol=1, maxVol=None):
             self.name = name
             self.nRow = nRow
             self.nCol = nCol
             self.maxVol = maxVol
+            Labware.Types[name]=self     # .__getattribute__("__class__")
 
         def size(self)-> int:
             return self.nRow * self.nCol
+
+        def createLabware(self, loc, label):
+            labw = Labware(self, loc, label)
+            return labw
 
     class DITIrackType(Type):
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
@@ -195,25 +291,37 @@ class Labware:
             self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None  # a tip Well in a DiTi rack
 
+        def createLabware(self, loc, label):
+            labw = DITIrack(self, loc, label)
+            return labw
+
     class DITIwasteType(Type):
         def __init__(self, name, capacity=5*96):
             Labware.Type.__init__(self, name, nRow=capacity)
+
+        def createLabware(self, loc, label):
+            labw = DITIwaste(self, loc, label)
+            return labw
 
     class CuvetteType(Type):
         def __init__(self, name, nPseudoWells, maxVol, nCol=1):
             Labware.Type.__init__(self, name, nRow=nPseudoWells, maxVol=maxVol)
 
+        def createLabware(self, loc, label):
+            labw = Cuvette(self, loc, label)
+            return labw
+
     class Te_Mag (Type):
         pass
 
-    def __init__(self, type, location, label=None, worktable=None):
+    def __init__(self, type, location=None, label=None, worktable=WorkTable.curWorkTable):
         self.type = type
         self.label = label
         self.location = location
         self.Wells = []
         worktable = worktable or WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
-        worktable.addLabware(self)
+        worktable.addLabware(self, location)
         if location.rack:
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
@@ -221,26 +329,6 @@ class Labware:
     def init_wells(self):
         self.Wells = [Well(self, offset) for offset in range(self.type.size())]
 
-
-    class Location:
-        def __init__(self, grid=None, site=None, rack=None, rack_site=None):
-            """
-
-
-            :param grid: int, 1-67.   worktable grid. Carrier grid position
-            :param site: int, 0 - 127. Site on carrier (on RAck?)lab location - (site on carrier - 1) !!!!!
-            :param label:
-            :param rack:
-            :param rack_site:
-            """
-
-            self.rack = rack
-            assert 1 <= grid <= 67
-            site -= 1
-            assert 0 <= site <= 127
-            self.grid = grid
-            self.site = site
-            self.rack_site = rack_site
 
     class Position:
         def __init__(self, row, col=1):
@@ -690,3 +778,7 @@ def_DiTi        = DiTi_1000ul
 
 
 MP96well = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)
+
+def getLabware(labw_type, label, worktable=None):
+    worktable = worktable or WorkTable.curWorkTable
+    return worktable.getLabware(labw_type, label)
