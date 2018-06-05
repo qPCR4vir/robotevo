@@ -22,7 +22,7 @@ class App(tkinter.Frame):
         #  Logo            --------------------
         self.logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
         self.w = tkinter.Label(master, image=self.logo)
-        self.w.grid(row=0, column=0, columnspan=15, sticky=tkinter.W + tkinter.E)
+        self.w.grid(row=0, column=0, columnspan=16, sticky=tkinter.W + tkinter.E)
 
         tkinter.Frame.__init__(self, master)
         self.grid()
@@ -45,13 +45,14 @@ class App(tkinter.Frame):
 
         self.used_protocols = {}                  # ???
 
-        # Number of Samples  ----------------
+        # Number of Samples  ---------------- todo: make this depend on protocol and also the template file
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=8, columnspan=4)
 
         self.NumOfSamples = tkinter.StringVar(master, '48')
         self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
-        self.sample_num.grid(row=2, column=8, columnspan=4)
+        self.sample_num.grid(row=2, column=8, columnspan=3)
 
+        # run / quit     ---------------------
         self.run = tkinter.Button(self, text="Synthetize a TECAN script\nfor the selected protocol",
                                   command=self.run_selected)
         self.run.grid(row=1, column=12, columnspan=4)
@@ -59,15 +60,16 @@ class App(tkinter.Frame):
         self.quit = tkinter.Button(self, text="Quit", command=self.quit)
         self.quit.grid(row=2, column=12, columnspan=4)
 
+        # comments: visualize the synthesized script -----------------------
         self.yScroll = tkinter.Scrollbar(self, orient=tkinter.VERTICAL)
-        self.yScroll.grid(row=3, column=15, columnspan=14, sticky=tkinter.N + tkinter.S)
+        self.yScroll.grid(row=3, column=16,  rowspan=20, sticky=tkinter.N + tkinter.S)
         self.xScroll = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL)
-        self.xScroll.grid(row=17, column=8, columnspan=7, sticky=tkinter.E + tkinter.W)
+        self.xScroll.grid(row=23, column=8, columnspan=8, sticky=tkinter.E + tkinter.W)
 
         self.comments = tkinter.Listbox(self, height=25, width=100,
                                         xscrollcommand=self.xScroll.set,
                                         yscrollcommand=self.yScroll.set)
-        self.comments.grid(row=3, column=8, columnspan=7)
+        self.comments.grid(row=3, column=8, rowspan=20, columnspan=8, sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
         self.xScroll['command'] = self.comments.xview
         self.yScroll['command'] = self.comments.yview
 
@@ -75,7 +77,7 @@ class App(tkinter.Frame):
         self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
 
         explanation = "Hier entsteht die Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
-        tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=18, columnspan=16)
+        tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=24, columnspan=16)
 
     def setVariantsMenu(self, value):
         print ('Selected protocol: ' + self.selected_protocol.get())
@@ -151,14 +153,14 @@ class App(tkinter.Frame):
         Header=tkinter.Frame(self.varoutput)
         Header.grid( sticky=tkinter.E)
         Header.columnconfigure(1, minsize=120)
-        tkinter.Label (Header, text='Reagent', justify=tkinter.RIGHT).grid(row=0, column=0,sticky=tkinter.E)
-        tkinter.Label (Header, text="     µL/sample      ", ).grid(row=0, column=1, ) # sticky=tkinter.CENTER
-        tkinter.Label (Header, text="Rack   ",     ).grid(row=0, column=2,sticky=tkinter.E)
-        tkinter.Label (Header, text="Grid",          ).grid(row=0, column=3,sticky=tkinter.E)
-        tkinter.Label (Header, text="Site        ",          ).grid(row=0, column=4,sticky=tkinter.E)
-        tkinter.Label (Header, text='          ',      ).grid(row=0, column=5, sticky=tkinter.E)
-        tkinter.Label (Header, text="Well ",          ).grid(row=0, column=6, sticky=tkinter.E)
-        tkinter.Label (Header, text="µL/total",          ).grid(row=0, column=7, sticky=tkinter.E)
+        tkinter.Label (Header, text='Reagent', justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
+        tkinter.Label (Header, text="     µL/sample      ",         ).grid(row=0, column=1, ) # sticky=tkinter.CENTER
+        tkinter.Label (Header, text="Rack   ",                      ).grid(row=0, column=2, sticky=tkinter.E)
+        tkinter.Label (Header, text="Grid",                         ).grid(row=0, column=3, sticky=tkinter.E)
+        tkinter.Label (Header, text="Site        ",                 ).grid(row=0, column=4, sticky=tkinter.E)
+        tkinter.Label (Header, text='          ',                   ).grid(row=0, column=5, sticky=tkinter.E)
+        tkinter.Label (Header, text="Well ",                        ).grid(row=0, column=6, sticky=tkinter.E)
+        tkinter.Label (Header, text="µL/total",                     ).grid(row=0, column=7, sticky=tkinter.E)
 
         for rn, react in enumerate(protocol.Reactives):
             # assert isinstance(react,Rtv.Reactive)
