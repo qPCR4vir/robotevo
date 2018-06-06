@@ -28,7 +28,7 @@ class Reactive:
         :param labware: Labware;
         :param volpersample: float; in uL
         :param pos: if not set (=None) we will try to assign consecutive wells for all the replicas
-        :param replicas: int; def 1
+        :param replicas: int; def 1, number of replicas
         :param defLiqClass: str;
         :param excess: float; in %
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
@@ -44,7 +44,7 @@ class Reactive:
         self.pos = self.Replicas[0].offset
         if initial_vol is not None:
             for w in  self.Replicas:
-                 w.vol += initial_vol
+                 w.vol += initial_vol   # ?? add initial_vol to each replica
         if single_use:
             assert not volpersample, str(name) + \
                             ": this is a single use-reactive. Please, don't set any volume per sample."
@@ -52,7 +52,7 @@ class Reactive:
             self.volpersample = single_use
             self.init_vol(NumSamples=1)
         else:
-            self.init_vol()
+            self.init_vol()        # put the initial volumen ?
 
     @staticmethod
     def SetReactiveList(protocol):

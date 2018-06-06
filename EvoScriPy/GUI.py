@@ -129,7 +129,7 @@ class App(tkinter.Frame):
             tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
 
             tkinter.Spinbox(self,
-                            textvariable=self.Vol,
+                            textvariable=self.Vol, command= self.setVol,
                             increment=1, from_=0.0, to=100000, width=5).grid(row=0, column=1, sticky=tkinter.W)
 
             self.RackNameEntry = tkinter.Entry(self,
@@ -142,10 +142,20 @@ class App(tkinter.Frame):
                                                textvariable=self.RackSite, width=2).grid(row=0, column=4, padx=5,
                                                                                          sticky=tkinter.W)
 
-            for rn, reply in enumerate(react.Replicas):
-                # assert isinstance(react,Rtv.Reactive)
-                App.ReplicaFrame(self, reply, rn)
-                # self.pack()
+            self.ReplicaFrames= [App.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(react.Replicas)]
+
+        def setVol(self):
+            print("changing volumen of '{0}' from {1} to {2}".format(
+                           self.react.name, self.react.volpersample, self.Vol.get()) )
+            self.react.volpersample = self.Vol.get()
+
+
+            self.react.put_min_vol()
+
+            for rf in self.ReplicaFrames:   # change replicas
+                rf.Vol.set(rf.reply.vol)
+
+            # todo:change posibles mix.
 
     def CheckList(self, protocol):
 

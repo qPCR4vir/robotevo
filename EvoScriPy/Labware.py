@@ -315,15 +315,15 @@ class Labware:
     class Te_Mag (Type):
         pass
 
-    def __init__(self, type, location=None, label=None, worktable=WorkTable.curWorkTable):
+    def __init__(self, type, location=None, label=None, worktable=None):
         self.type = type
         self.label = label
         self.location = location
         self.Wells = []
         worktable = worktable or WorkTable.curWorkTable
-        assert isinstance(worktable, WorkTable)
-        worktable.addLabware(self, location)
-        if location.rack:
+        if isinstance(worktable, WorkTable):             #   ??????????????
+            worktable.addLabware(self, location)
+        if location and location.rack:                   #   ??????????????
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
 
@@ -386,7 +386,7 @@ class Labware:
 
         :param reactive:
         :param pos:
-        :param replicas:
+        :param replicas: number of replicas
         :return:
         """
         if pos is None:  # find self where to put the replicas of this reactive
@@ -410,7 +410,7 @@ class Labware:
                 # pos = self.offset(pos) + 1
                 # pos = range(pos, pos + replicas)
 
-        Replicas = []
+        Replicas = []    # a list of labware-wells, where the replicas for this reactive are.
         for w in pos:
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
             assert not w.reactive, self.label + ": Can not put " + reactive.name + " in position " + str(
