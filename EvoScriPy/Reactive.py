@@ -40,6 +40,7 @@ class Reactive:
         self.name = name
         self.volpersample = volpersample
         self.labware = labware
+        self.components = []
         self.Replicas = labware.put(self, pos, replicas)
         self.pos = self.Replicas[0].offset
         if initial_vol is not None:
@@ -95,19 +96,23 @@ class preMix(Reactive):
     def __init__(self, name, labware, pos, components, replicas=1, initial_vol=None,
                  defLiqClass=None, excess=None):
         ex= def_mix_excess if excess is None else excess
-        vol=0.0
+        # vol=0.0
         for react in components:
-            vol += react.volpersample
+            #vol += react.volpersample
             react.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
             react.put_min_vol()
 
         if initial_vol is None: initial_vol = 0.0
-        Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
+        Reactive.__init__(self,name,labware,0,pos=pos,replicas=replicas,
                           defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
         self.components = components
 
     def init_vol(self, NumSamples=None):
-        pass # self.put_min_vol(NumSamples)
+        self.volpersample = 0
+        for react in self.components:
+            self.volpersample += react.volpersample
+        Reactive.init_vol(self, NumSamples)
+        #pass # self.put_min_vol(NumSamples)
 
 
     def make(self, NumSamples=None):

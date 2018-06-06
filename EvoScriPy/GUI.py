@@ -112,24 +112,28 @@ class App(tkinter.Frame):
 
     class ReactiveFrame(tkinter.Frame):
 
-        def __init__(self, master, react):
-            tkinter.Frame.__init__(self, master)
+        def __init__(self, check_list, react):
+            tkinter.Frame.__init__(self, check_list.varoutput)
             self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
             self.columnconfigure(0, minsize=140)
             self.react = react
             self.Vol = tkinter.DoubleVar()
             self.Vol.set(react.volpersample)
+            self.Vol.trace("w", self.setVol)
             self.RackName = tkinter.StringVar()
             self.RackName.set(react.labware.label)
             self.RackGrid = tkinter.IntVar()
             self.RackGrid.set(react.labware.location.grid)
             self.RackSite = tkinter.IntVar()
             self.RackSite.set(react.labware.location.site)
+            self.check_list = check_list
 
             tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
 
+            dis = tkinter.DISABLED if react.components else tkinter.NORMAL
+
             tkinter.Spinbox(self,
-                            textvariable=self.Vol, command= self.setVol,
+                            textvariable=self.Vol,  state=dis,     #command= self.setVol,
                             increment=1, from_=0.0, to=100000, width=5).grid(row=0, column=1, sticky=tkinter.W)
 
             self.RackNameEntry = tkinter.Entry(self, state=tkinter.DISABLED,
@@ -144,25 +148,29 @@ class App(tkinter.Frame):
 
             self.ReplicaFrames= [App.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(react.Replicas)]
 
-        def setVol(self):
+        def setVol(self, *args):
             print("changing volumen of '{0}' from {1} to {2}".format(
                            self.react.name, self.react.volpersample, self.Vol.get()) )
             self.react.volpersample = self.Vol.get()
 
 
-            self.react.put_min_vol()
+            self.react.init_vol()
 
             for rf in self.ReplicaFrames:   # change replicas
                 rf.Vol.set(rf.reply.vol)
+
+            for rf in self.check_list.ReactFrames:
+                for c in rf.react.components:
+                    if self.react is c:
+                        rf.react.init_vol()
+                        rf.Vol.set(rf.react.volpersample)
+
+
 
             # todo:change posibles mix.
 
     def CheckList(self, protocol):
 
-        # todo: check this protocol is currently used already, and only updated.
-
-        RL=protocol.Reactives
-        self.ReactFrames=[]
         Header=tkinter.Frame(self.varoutput)
         Header.grid( sticky=tkinter.E)
         Header.columnconfigure(1, minsize=120)
@@ -175,16 +183,13 @@ class App(tkinter.Frame):
         tkinter.Label (Header, text="Well ",                        ).grid(row=0, column=6, sticky=tkinter.E)
         tkinter.Label (Header, text="µL/total",                     ).grid(row=0, column=7, sticky=tkinter.E)
 
-        # todo: add "global variables" like number of samples or worktable template file
+        # todo: add "global protocol variables" like number of samples, worktable template and output files
 
-        for rn, react in enumerate(protocol.Reactives):
-            # assert isinstance(react,Rtv.Reactive)
-            rf=App.ReactiveFrame(self.varoutput,react)
-            self.ReactFrames.append(rf)
+        self.ReactFrames = [App.ReactiveFrame(self,react) for react in protocol.Reactives]
 
-        self.quit['state'] = 'normal'
-        self.run['state'] = 'disabled'
-        self.sample_num['state'] = 'disabled'
+        self.quit              ['state'] = 'normal'
+        self.run               ['state'] = 'disabled'
+        self.sample_num        ['state'] = 'disabled'
         self.protocol_selection['state'] = 'disabled'
 
         self.master.mainloop()

@@ -756,21 +756,21 @@ class Cuvette(Labware):
         return maxTips
 
 
-Trough_100ml    = Labware.CuvetteType("Trough 100ml",               8,      maxVol=100000)
-EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=2000)
-GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=2000)
-EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=1500)
-EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=1500)
+Trough_100ml    = Labware.CuvetteType("Trough 100ml",               8,      maxVol=  100000)
+EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
+GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
+EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=    1500)
+EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=    1500)
 EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, nSite=16)
-Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=2000)
-Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=2000)
-Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=1500)
+Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
+Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)
+Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=    1500)
 
 
-TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=1500)
-CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=100000)
-WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)
-CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=100000)
+TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
+CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
+WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000) # 10 L
+CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
 DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul", maxVol=940)
 Tip_1000maxVol  = DiTi_1000ul.maxVol
