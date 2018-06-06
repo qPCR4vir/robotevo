@@ -47,8 +47,8 @@ class App(tkinter.Frame):
         # Number of Samples  ---------------- todo: make this depend on protocol and also the template file
         tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=8, columnspan=4)
 
-        self.NumOfSamples = tkinter.StringVar(master, '48')
-        self.sample_num = tkinter.Spinbox(self, from_=1, to=48, increment=1)
+        self.NumOfSamples = tkinter.IntVar(master, '48')
+        self.sample_num = tkinter.Spinbox(self, textvariable=self.NumOfSamples, from_=1, to=48, increment=1)
         self.sample_num.grid(row=2, column=8, columnspan=3)
 
         # run / quit     ---------------------
@@ -100,11 +100,11 @@ class App(tkinter.Frame):
             self.Well = tkinter.IntVar()
             self.Well.set(reply.offset + 1)
 
-            self.CheckB = tkinter.Checkbutton(self, text="Reply" + str(num + 1), justify=tkinter.LEFT)  # width=15,
+            self.CheckB = tkinter.Checkbutton(self, text="Reply" + str(num + 1), justify=tkinter.LEFT, state=tkinter.DISABLED)  # width=15,
             self.CheckB.grid(column=0, row=0, )
-            tkinter.Entry(self, textvariable=self.Well, width=2).grid(row=0, column=1, )
+            tkinter.Entry(self, textvariable=self.Well, width=2).grid(row=0, column=1) #, state=tkinter.DISABLED
             tkinter.Spinbox(self,
-                            textvariable=self.Vol,
+                            textvariable=self.Vol, state=tkinter.DISABLED,
                             increment=1,
                             from_=0.0,
                             to=100000,
@@ -132,13 +132,13 @@ class App(tkinter.Frame):
                             textvariable=self.Vol, command= self.setVol,
                             increment=1, from_=0.0, to=100000, width=5).grid(row=0, column=1, sticky=tkinter.W)
 
-            self.RackNameEntry = tkinter.Entry(self,
+            self.RackNameEntry = tkinter.Entry(self, state=tkinter.DISABLED,
                                                textvariable=self.RackName, width=10).grid(row=0, column=2, padx=5,
                                                                                          sticky=tkinter.W)
-            self.RackGridEntry = tkinter.Entry(self,
+            self.RackGridEntry = tkinter.Entry(self, state=tkinter.DISABLED,
                                                textvariable=self.RackGrid, width=2).grid(row=0, column=3, padx=5,
                                                                                          sticky=tkinter.W)
-            self.RackSiteEntry = tkinter.Entry(self,
+            self.RackSiteEntry = tkinter.Entry(self, state=tkinter.DISABLED,
                                                textvariable=self.RackSite, width=2).grid(row=0, column=4, padx=5,
                                                                                          sticky=tkinter.W)
 
@@ -184,6 +184,7 @@ class App(tkinter.Frame):
 
         self.quit['state'] = 'normal'
         self.run['state'] = 'disabled'
+        self.sample_num['state'] = 'disabled'
         self.protocol_selection['state'] = 'disabled'
 
         self.master.mainloop()
