@@ -1,9 +1,8 @@
-# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
-#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2016
+# 2014-2018
 # import EvoScriPy.EvoMode
 
 __author__ = 'qPCR4vir'
@@ -187,16 +186,18 @@ class Carrier:
 
     def addLabware(self, labware, site):
         if labware.type.name not in self.allowedLabwaresTypes:
-            raise "Labware not allowed"
+            raise "The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in rack '" \
+                                  + self.type.name    + ":" + self.label
 
-        if site >= self.Type.nSite:
-            raise "This rack " + self.Type.name + ":" + self.label + " have only " + self.Type.nSite + " sites."
+        if site >= self.type.nSite:
+            raise "This rack " + self.type.name + ":" + self.label + " have only " + self.type.nSite + " sites."
 
         if self.labwares[site] is not None:
-            print("Warning: you replaced an existed labware")
+            print("Warning: you replaced the labware '" + self.labwares[site].type.name + ":"
+                                                        + self.labwares[site].label )
 
         self.labwares[site] = labware
-        if labware.location.grid != self.grid:
+        if labware.location.grid != self.grid:      # ?????????
             if labware.location.grid is not None:
                 print("Warning, original grid changed to that of the Rack.")
             labware.location.grid = self.grid
