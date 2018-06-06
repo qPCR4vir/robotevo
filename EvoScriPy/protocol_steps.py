@@ -1,9 +1,8 @@
-# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
-#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2016
+# 2014-2018
 
 from contextlib import contextmanager
 import EvoScriPy.Robot as Rbt
@@ -92,7 +91,7 @@ class Protocol:
             self.set_defaults()
 
     def Run(self):
-        self.initialized()
+        self.initialize()
         self.CheckList()
         self.Script.done()
 
@@ -101,7 +100,8 @@ class Protocol:
         self.GUI=GUI
 
     def CheckList(self):
-        if (self.GUI): self.GUI.CheckList(self)
+        if (self.GUI):
+            self.GUI.CheckList(self)
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 

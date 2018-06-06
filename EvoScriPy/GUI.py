@@ -1,9 +1,8 @@
-# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
-#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # GUI.py : authors Ariel Vina-Rodriguez (qPCR4vir), Tobias Winterfeld (dondiablo)
-# 2014-2016
+# 2014-2018
 """
 Implement a GUI that automatically detect available protocols.
 """
@@ -53,11 +52,11 @@ class App(tkinter.Frame):
         self.sample_num.grid(row=2, column=8, columnspan=3)
 
         # run / quit     ---------------------
-        self.run = tkinter.Button(self, text="Synthetize a TECAN script\nfor the selected protocol",
+        self.run = tkinter.Button(self, text="Initialize the selected protocol",
                                   command=self.run_selected)
         self.run.grid(row=1, column=12, columnspan=4)
 
-        self.quit = tkinter.Button(self, text="Quit", command=self.quit)
+        self.quit = tkinter.Button(self, text="Synthetize the TECAN script", command=self.quit, state=tkinter.DISABLED)
         self.quit.grid(row=2, column=12, columnspan=4)
 
         # comments: visualize the synthesized script -----------------------
@@ -112,6 +111,7 @@ class App(tkinter.Frame):
                             width=7).grid(column=2, row=0)
 
     class ReactiveFrame(tkinter.Frame):
+
         def __init__(self, master, react):
             tkinter.Frame.__init__(self, master)
             self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
@@ -148,13 +148,16 @@ class App(tkinter.Frame):
                 # self.pack()
 
     def CheckList(self, protocol):
+
+        # todo: check this protocol is currently used already, and only updated.
+
         RL=protocol.Reactives
         self.ReactFrames=[]
         Header=tkinter.Frame(self.varoutput)
         Header.grid( sticky=tkinter.E)
         Header.columnconfigure(1, minsize=120)
         tkinter.Label (Header, text='Reagent', justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
-        tkinter.Label (Header, text="     µL/sample      ",         ).grid(row=0, column=1, ) # sticky=tkinter.CENTER
+        tkinter.Label (Header, text="     µL/sample      ",         ).grid(row=0, column=1 ) # , sticky=tkinter.CENTER
         tkinter.Label (Header, text="Rack   ",                      ).grid(row=0, column=2, sticky=tkinter.E)
         tkinter.Label (Header, text="Grid",                         ).grid(row=0, column=3, sticky=tkinter.E)
         tkinter.Label (Header, text="Site        ",                 ).grid(row=0, column=4, sticky=tkinter.E)
@@ -162,10 +165,19 @@ class App(tkinter.Frame):
         tkinter.Label (Header, text="Well ",                        ).grid(row=0, column=6, sticky=tkinter.E)
         tkinter.Label (Header, text="µL/total",                     ).grid(row=0, column=7, sticky=tkinter.E)
 
+        # todo: add "global variables" like number of samples or worktable template file
+
         for rn, react in enumerate(protocol.Reactives):
             # assert isinstance(react,Rtv.Reactive)
             rf=App.ReactiveFrame(self.varoutput,react)
             self.ReactFrames.append(rf)
+
+        self.quit['state'] = 'normal'
+        self.run['state'] = 'disabled'
+        self.protocol_selection['state'] = 'disabled'
+
+        self.master.mainloop()
+        NumOfSamples = int(self.sample_num.get())
 
     def run_selected(self):
         selected = self.selected_protocol.get()
@@ -180,12 +192,14 @@ class App(tkinter.Frame):
             protocol = self.protocols[selected](self, NumOfSamples)
             self.used_protocols[selected] = protocol
 
+        self.comments.delete(0, self.size())
         protocol.Run()  # create and run the protocol
 
-        self.comments.delete(0, self.size())
         for line in protocol.comments():
             self.comments.insert(tkinter.END, line)
             # self.pack()
+
+        self.quit['text'] = 'Quit'
 
 
 if __name__ == "__main__":
