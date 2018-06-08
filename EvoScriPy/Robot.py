@@ -427,7 +427,9 @@ class Robot:
                     nv = wells[w].vol - dv
 
                     assert  nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \
-                         wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv)
+                         wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + \
+                         " in well " + str(wells[w].offset+1) + " of rack " + labware_selection.label + " but " \
+                         + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
 
                     if nv < 0 :
                         if nv < -self.allow_air:
