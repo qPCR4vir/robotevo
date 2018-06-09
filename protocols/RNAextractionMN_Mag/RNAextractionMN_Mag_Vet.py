@@ -27,19 +27,25 @@ class RNAextr_MN_Vet_Kit(Protocol):
                 'Serum without Liquid detection + tracking' : not_implemented,
                 'Tissue without Liquid detection + tracking': not_implemented,
                 'Tissue with Liquid detection + tracking'   : not_implemented}
-
-    worktable_template = '../EvoScripts/wt_templates/RNAext_MNVet.ewt'
-                   # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
-                   #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
     output_filename = '../current/AWL_RNAext_MNVet'
 
-    def __init__(self, GUI, NumOfSamples):
-        self.NumOfSamples = NumOfSamples
+    class Parameter (Protocol.Parameter):
+        def __init__(self):
+            Protocol.Parameter.__init__(self, '../EvoScripts/wt_templates/RNAext_MNVet.ewt')
+            #self.worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt'
+                   # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
+                   #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
+            self.NumOfSamples=48
+
+
+    def __init__(self, GUI, parameters =  Parameter()):
+
+        self.NumOfSamples = parameters.NumOfSamples
         Protocol.__init__(self,
-                          RNAextr_MN_Vet_Kit.worktable_template,
                           RNAextr_MN_Vet_Kit.output_filename,
                           4,
-                          GUI)
+                          GUI,
+                          parameters)
 
     def set_defaults(self):
         print('set def in RNAextr_MN_Vet_Kit')

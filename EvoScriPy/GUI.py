@@ -196,7 +196,7 @@ class App(tkinter.Frame):
             protocol = self.used_protocols[selected]    # how to set the Num of Samples?
         else:
             # here we could inspect what protocol is about to run and select an specific GUI
-            protocol = self.protocols[selected](self, NumOfSamples)
+            protocol = self.protocols[selected](self)  #, NumOfSamples
             self.used_protocols[selected] = protocol
 
         self.comments.delete(0, self.size())
