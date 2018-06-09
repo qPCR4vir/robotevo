@@ -18,11 +18,6 @@ class App(tkinter.Frame):
 
     def __init__(self, master=None):
 
-        #  Logo            --------------------
-        self.logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
-        self.w = tkinter.Label(master, image=self.logo)
-        self.w.grid(row=0, column=0, columnspan=16, sticky=tkinter.W + tkinter.E)
-
         tkinter.Frame.__init__(self, master)
         self.grid()
 
