@@ -27,14 +27,17 @@ class RNAextr_MN_Vet_Kit(Protocol):
                 'Serum without Liquid detection + tracking' : not_implemented,
                 'Tissue without Liquid detection + tracking': not_implemented,
                 'Tissue with Liquid detection + tracking'   : not_implemented}
-    output_filename = '../current/AWL_RNAext_MNVet'
 
     class Parameter (Protocol.Parameter):
         def __init__(self):
-            Protocol.Parameter.__init__(self, '../EvoScripts/wt_templates/RNAext_MNVet.ewt')
+            Protocol.Parameter.__init__(self,
+                                        worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt',
+                                        output_filename='../current/AWL_RNAext_MNVet'
+                                        )
             #self.worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt'
                    # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
                    #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
+
             self.NumOfSamples=48
 
 
@@ -42,7 +45,6 @@ class RNAextr_MN_Vet_Kit(Protocol):
 
         self.NumOfSamples = parameters.NumOfSamples
         Protocol.__init__(self,
-                          RNAextr_MN_Vet_Kit.output_filename,
                           4,
                           GUI,
                           parameters)

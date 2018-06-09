@@ -25,18 +25,24 @@ class Protocol:
     """ Each custom protocol need to implement these functions.
 
     """
+
+    # parameters to describe this program
     name = "undefined"
     versions = {"none": not_implemented}
-    output_filename = output_filename
+
 
     class Parameter:
-        def __init__(self, worktable_template_filename = ""):
+        # parameters to describe a run of this program
+
+        def __init__(self, worktable_template_filename = "",
+                           output_filename  = output_filename):
+
             self.worktable_template_filename = worktable_template_filename
+            self.output_filename  = output_filename
 
 
 
     def __init__(self,  # worktable_template_fn ,
-                 output_filename = output_filename,
                  nTips=4,
                  GUI = None,
                  parameters = Parameter()):
@@ -47,7 +53,6 @@ class Protocol:
         self.Reactives=[]
         self.parameters = parameters
         # self.worktable_template_filename = worktable_template_fn
-        self.output_filename = output_filename
         self. nTips= nTips
         self.EvoMode = None
         self.set_EvoMode()
@@ -59,12 +64,12 @@ class Protocol:
         # TODO set output 'AWL.esc' in GUI - ask the user?
         # TODO set template in custom protocol
         self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
-                                     filename=self.output_filename + '.esc')
+                                     filename=self.parameters.output_filename + '.esc')
         self.comments_ = EvoMode.Comments()
         self.EvoMode = EvoMode.multiple([self.iRobot,
                                          self.Script,
-                                         EvoMode.AdvancedWorkList(self.output_filename + '.gwl'),  # TODO set output in GUI
-                                         EvoMode.ScriptBody(self.output_filename + '.txt'),  # TODO set output in GUI
+                                         EvoMode.AdvancedWorkList(self.parameters.output_filename + '.gwl'),  # TODO set output in GUI
+                                         EvoMode.ScriptBody(self.parameters.output_filename + '.txt'),  # TODO set output in GUI
                                          EvoMode.StdOut(),
                                          self.comments_
                                          ])
