@@ -34,27 +34,29 @@ class Protocol:
     class Parameter:
         # parameters to describe a run of this program
 
-        def __init__(self, worktable_template_filename = "",
-                           output_filename  = output_filename):
+        def __init__(self, GUI                         = None,
+                           worktable_template_filename = "",
+                           output_filename             = output_filename):
 
             self.worktable_template_filename = worktable_template_filename
-            self.output_filename  = output_filename
+            self.output_filename             = output_filename
+            self.GUI                         = GUI
+
+        def initialize(self):
+            if (self.GUI):
+                self.GUI.initialize_parameters(self)
 
 
-
-    def __init__(self,  # worktable_template_fn ,
+    def __init__(self,       # worktable_template_fn ,
                  nTips=4,
-                 GUI = None,
                  parameters = Parameter()):
 
-        #self.SetCheckList(GUI)
+        self.parameters  = parameters
         self.initialized = False
-        self.GUI = GUI
-        self.Reactives=[]
-        self.parameters = parameters
-        # self.worktable_template_filename = worktable_template_fn
-        self. nTips= nTips
-        self.EvoMode = None
+        self.Reactives   = []
+        self. nTips      = nTips
+        self.EvoMode     = None
+
         self.set_EvoMode()
         Rtv.Reactive.SetReactiveList(self)
 
@@ -62,7 +64,6 @@ class Protocol:
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
         # TODO set output 'AWL.esc' in GUI - ask the user?
-        # TODO set template in custom protocol
         self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
                                      filename=self.parameters.output_filename + '.esc')
         self.comments_ = EvoMode.Comments()
@@ -109,13 +110,9 @@ class Protocol:
         self.CheckList()
         self.Script.done()
 
-
-    def SetCheckList(self, GUI):
-        self.GUI=GUI
-
     def CheckList(self):
-        if (self.GUI):
-            self.GUI.CheckList(self)
+        if (self.parameters.GUI):
+            self.parameters.GUI.CheckList(self)
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
@@ -756,7 +753,7 @@ def opening_example(filename):
 # OK  implement accumulated volume
 # OK  implement actualize vol in reactives in pipette
 # TODO  comentar las replicas, como 2x b-beads
-# TODO  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
+# OK  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
 # TODO  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
 # OK?  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait

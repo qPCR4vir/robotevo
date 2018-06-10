@@ -12,6 +12,8 @@ from protocols import available
 __author__ = 'qPCR4vir'
 
 
+
+
 class App(tkinter.Frame):
     """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
     """
@@ -26,7 +28,7 @@ class App(tkinter.Frame):
         self.selected_protocol = tkinter.StringVar(master)      # variable
 
         self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols, command=self.setVariantsMenu)
-        self.protocol_selection.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+        self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
         self.selected_protocol.set(available[0].name)           # variable def value
 
 
@@ -34,25 +36,23 @@ class App(tkinter.Frame):
         self.selected_version = tkinter.StringVar(master)                                # variable
 
         self.version_selection = tkinter.OptionMenu(self, self.selected_version, *self.protocol_versions)
-        self.version_selection.grid(row=2, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+        self.version_selection.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
         self.selected_version.set(next(iter(self.protocol_versions)))  # variable def value
 
         self.used_protocols = {}                  # ???
 
-        # Number of Samples  ---------------- todo: make this depend on protocol and also the template file
-        tkinter.Label(self, text='Number of Samples (1-48):').grid(row=1, column=8, columnspan=4)
-
-        self.NumOfSamples = tkinter.IntVar(master, '48')
-        self.sample_num = tkinter.Spinbox(self, textvariable=self.NumOfSamples, from_=1, to=48, increment=1)
-        self.sample_num.grid(row=2, column=8, columnspan=3)
+        # initialize parameters
+        self.GUI_parameters = tkinter.Frame(self)
+        self.GUI_parameters.grid(row=0, column=8, columnspan=4, rowspan=2)
+        self.protocol_selected(None)
 
         # run / quit     ---------------------
         self.run = tkinter.Button(self, text="Initialize the selected protocol",
                                   command=self.run_selected)
-        self.run.grid(row=1, column=12, columnspan=4)
+        self.run.grid(row=0, column=12, columnspan=4)
 
         self.quit = tkinter.Button(self, text="Synthetize the TECAN script", command=self.quit, state=tkinter.DISABLED)
-        self.quit.grid(row=2, column=12, columnspan=4)
+        self.quit.grid(row=1, column=12, columnspan=4)
 
         # comments: visualize the synthesized script -----------------------
         self.yScroll = tkinter.Scrollbar(self, orient=tkinter.VERTICAL)
@@ -70,17 +70,59 @@ class App(tkinter.Frame):
         self.varoutput = tkinter.Frame(self)
         self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
 
-        explanation = "Hier entsteht die Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
-        tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=24, columnspan=16)
+
+    class GUI_init_RNA_ext_MN(tkinter.Frame): # todo: make this work
+        def __init__(self):
+            NumOfSamples = int(self.sample_num.get())
+
+    def initialize_parameters_def(self):
+        assert self.parameters is parameters
+        print("Initialsing parameters in GUI")
+
+    def initialize_parameters_RNA_ext_MN(self):
+        # Number of Samples  ---------------- todo: make this depend on protocol and also the template file
+        tkinter.Label(self.GUI_parameters, text='Number of Samples (1-48):').grid(row=0, column=0, columnspan=4, sticky=tkinter.N + tkinter.W)
+
+        self.NumOfSamples = tkinter.IntVar(self.GUI_parameters, self.parameters.NumOfSamples)
+        self.sample_num = tkinter.Spinbox(self.GUI_parameters, textvariable=self.NumOfSamples, from_=1, to=48, increment=1, command=self.quit)
+        self.sample_num.grid(row=1, column=0, columnspan=3)
+        #self.protocol_selection['state'] = 'disabled'
+
+        #self.master.mainloop()
+
+
+
+    def read_NumOfSamples(self):
+        self.parameters.NumOfSamples = self.NumOfSamples
+        print(" --- NumOfSamples set to: ", self.parameters.NumOfSamples)
+
+    def protocol_selected(self, value):
+        selected = self.selected_protocol.get()
+        print('Selected protocol: ' + selected)
+
+        # create and initialize the Parameters
+        self.parameters = self.protocols[self.selected_protocol.get()].Parameter(self)
+        #self.parameters.initialize()
+
+        if selected == "RNA extraction with the MN_Vet kit":
+            self.initialize_parameters = self.initialize_parameters_RNA_ext_MN
+        else:
+            self.initialize_parameters = self.initialize_parameters_def
+
+        self.initialize_parameters()
+
+
 
     def setVariantsMenu(self, value):
-        print ('Selected protocol: ' + self.selected_protocol.get())
-        self.protocol_versions = self.protocols[self.selected_protocol.get()].versions   # values
+        selected = self.selected_protocol.get()
+        print ('Selected protocol: ' + selected)
+        self.protocol_versions = self.protocols[selected].versions   # values
         m=self.version_selection.children['menu']
         m.delete(0,'end')
         for val in self.protocol_versions:
             m.add_command(label=val, command=lambda v=self.selected_version, l=val: v.set(l))
         self.selected_version.set(next(iter(self.protocol_versions)))                             # variable def value
+
 
 
     class ReplicaFrame(tkinter.Frame):
@@ -178,35 +220,30 @@ class App(tkinter.Frame):
 
         self.ReactFrames = [App.ReactiveFrame(self,react) for react in protocol.Reactives]
 
+        #self.GUI_parameters.destroy() #    ['state'] = 'disabled'
+        for child in self.GUI_parameters.winfo_children():
+            child.configure(state='disable')
         self.quit              ['state'] = 'normal'
         self.run               ['state'] = 'disabled'
-        self.sample_num        ['state'] = 'disabled'
+        #self.sample_num        ['state'] = 'disabled'
         self.protocol_selection['state'] = 'disabled'
 
         self.master.mainloop()
-        NumOfSamples = int(self.sample_num.get())
+        self.quit['text'] = 'Quit'
+
 
     def run_selected(self):
         selected = self.selected_protocol.get()
         print(selected)
         if not selected: return
-        NumOfSamples = int(self.sample_num.get())
 
-        if selected in self.used_protocols:
-            protocol = self.used_protocols[selected]    # how to set the Num of Samples?
-        else:
-            # here we could inspect what protocol is about to run and select an specific GUI
-            protocol = self.protocols[selected](self)  #, NumOfSamples
-            self.used_protocols[selected] = protocol
-
-        self.comments.delete(0, self.size())
-        protocol.Run()  # create and run the protocol
+        # create and run the protocol
+        protocol = self.protocols[selected](self.parameters)
+        protocol.Run()
 
         for line in protocol.comments():
             self.comments.insert(tkinter.END, line)
-            # self.pack()
 
-        self.quit['text'] = 'Quit'
 
 
 if __name__ == "__main__":

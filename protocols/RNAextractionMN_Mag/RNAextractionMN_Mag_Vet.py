@@ -29,24 +29,25 @@ class RNAextr_MN_Vet_Kit(Protocol):
                 'Tissue with Liquid detection + tracking'   : not_implemented}
 
     class Parameter (Protocol.Parameter):
-        def __init__(self):
-            Protocol.Parameter.__init__(self,
+
+        def __init__(self, GUI = None):
+
+            self.NumOfSamples = 48
+            Protocol.Parameter.__init__(self, GUI=GUI,
                                         worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt',
                                         output_filename='../current/AWL_RNAext_MNVet'
                                         )
             #self.worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt'
-                   # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
-                   #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
-
-            self.NumOfSamples=48
+            # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
+            #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
 
 
-    def __init__(self, GUI, parameters =  Parameter()):
+
+    def __init__(self, parameters =  Parameter()):
 
         self.NumOfSamples = parameters.NumOfSamples
         Protocol.__init__(self,
                           4,
-                          GUI,
                           parameters)
 
     def set_defaults(self):
@@ -56,6 +57,7 @@ class RNAextr_MN_Vet_Kit(Protocol):
 
     def Run(self):
         self.initialize()
+        #self.parameters.GUI.initialize()
         # self.CheckList()
         extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
         self.Script.done()
