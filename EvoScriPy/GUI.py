@@ -140,6 +140,8 @@ class App(tkinter.Frame):
         # create and initialize the Parameters
         self.parameters = self.protocols[self.selected_protocol.get()].Parameter(self)
         #self.parameters.initialize()
+        for child in self.GUI_parameters.winfo_children():
+            child.destroy() # .configure(state='disable')
 
         if selected == "RNA extraction with the MN_Vet kit":
             App.GUI_init_RNA_ext_MN(self.parameters)
