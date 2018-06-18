@@ -8,8 +8,6 @@ Implement a GUI that automatically detect available protocols.
 """
 import tkinter
 from tkinter.filedialog import askopenfilename
-#from tkFileDialog import askopenfilename
-#import tkinter.tkFileDialog
 
 from protocols import available
 
@@ -49,22 +47,39 @@ class App(tkinter.Frame):
 
         def __init__(self, parameters):
             App.GUI_init_parameters.__init__(self, parameters)
-            # Number of Samples  ---------------- todo: make this depend on protocol and also the template file
-            tkinter.Label(self.parameters.GUI.GUI_parameters, text='Number of Samples (1-48):').grid(row=2, column=0, columnspan=3,
+
+            # Number of Samples
+            min_s, max_s = self.min_max_Number_of_Samples()
+            label = "Number of Samples: ({}-{}) ".format(min_s, max_s)
+            tkinter.Label(self.parameters.GUI.GUI_parameters, text=label).grid(row=2, column=0, columnspan=3,
                                                                        sticky=tkinter.N + tkinter.W)
 
             self.NumOfSamples = tkinter.IntVar()
             self.NumOfSamples.set(self.parameters.NumOfSamples)
-            self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters, textvariable=self.NumOfSamples, from_=1, to=48, increment=1,
+            self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters, textvariable=self.NumOfSamples,
+                                              from_=min_s, to=max_s, increment=1,
                                               command=self.read_NumOfSamples)
             self.sample_num.grid(row=2, column=3, columnspan=1)
-            # self.protocol_selection['state'] = 'disabled'
 
-            # self.master.mainloop()
+
+        def min_max_Number_of_Samples(self):
+            return 1 , 48
 
         def read_NumOfSamples(self):
             self.parameters.NumOfSamples = self.NumOfSamples
-            print(" --- NumOfSamples set to: ", self.parameters.NumOfSamples)
+            print(" --- NumOfSamples set to: ", str(self.parameters.NumOfSamples))
+
+
+    class GUI_init_RNA_ext_Fisher(GUI_init_RNA_ext_MN):
+
+        def __init__(self, parameters):
+            App.GUI_init_RNA_ext_MN.__init__(self, parameters)
+
+        def min_max_Number_of_Samples(self):
+            return 1 , 96
+
+
+
 
     def __init__(self, master=None):
 
@@ -130,6 +145,8 @@ class App(tkinter.Frame):
             App.GUI_init_RNA_ext_MN(self.parameters)
             # self.initialize_parameters = self.initialize_parameters_RNA_ext_MN
             # self.GUI_init = GUI_init_RNA_ext_MN (self.GUI_parameters_)
+        elif selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit":
+            App.GUI_init_RNA_ext_Fisher(self.parameters)
         else:
             App.GUI_init_parameters(self.parameters)
 
