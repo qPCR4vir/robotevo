@@ -4,17 +4,11 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2018-2018
 
-import EvoScriPy.Labware as Lab
-import EvoScriPy.Reactive as Rtv
 from EvoScriPy.protocol_steps import *
-from EvoScriPy.Instructions_Te_MagS import *
 import EvoScriPy.Instructions as Itr
 
 __author__ = 'Ariel'
 
-mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
-mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
-# Rbt.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
 
 
@@ -51,7 +45,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         self.initialize()
         #self.parameters.GUI.initialize()
         # self.CheckList()
-        PreKingFisher_RNAextNucleoMag(self.NumOfSamples, self.CheckList)
+        PreKingFisher_extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
         self.Script.done()
 
 
@@ -68,8 +62,8 @@ def PreKingFisher_extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
     Itr.set_DITI_Counter2(RI.DiTi1000_1, posInRack='A01').exec()
 
     SampleVolume        = 200.0
-    LysisBufferVolume   = 180.0
-    IC2Volume           = 4.0
+    LysisBufferVolume   = 180.0   # VL1
+    IC2Volume           = 5.0     # ? 4
     BindingBufferVolume = 600.0
     B_BeadsVolume       = 20.0
     VEW1Volume          = 600.0
@@ -133,8 +127,6 @@ def PreKingFisher_extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
 
 
     Itr.wash_tips(wasteVol=30, FastWash=True).exec()
-    Te_MagS_ActivateHeater(50).exec()
-    Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
 
     with tips(tipsMask=maxMask, reuse=True, drop=False):
         pK_cRNA_MS2.make()
@@ -200,32 +192,6 @@ def PreKingFisher_extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
                      volume=                ElutionBufferVolume,
                      optimizeTo=            False,
                      using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
-
-def wash_in_TeMag( reactive, wells=None, using_liquid_class=None, vol=None):
-        """
-
-        :param reactive:
-        :param wells:
-        :param using_liquid_class: dict
-        :param vol:
-        """
-        import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
-
-        wells = wells or reactive.labware.selected() or range(Rtv.NumOfSamples)
-        if not using_liquid_class:
-            using_liquid_class =  reactive.defLiqClass
-        with group("Wash in TeMag with " + reactive.name):
-
-            Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-            spread(reactive=reactive, to_labware_region=RI.TeMag.selectOnly(wells))
-
-            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
-                mix(RI.TeMag.selectOnly(wells), using_liquid_class, vol)
-
-            with incubation(minutes=0.5, timer=2):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
-            with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
-                waste(RI.TeMag.selectOnly(wells), using_liquid_class, vol)
 
 
 if __name__ == "__main__":
