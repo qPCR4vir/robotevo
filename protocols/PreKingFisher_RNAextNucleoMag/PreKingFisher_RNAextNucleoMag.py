@@ -59,25 +59,43 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-    Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
-    # DiTi1000_1.fill('C06')
-    # DiTi1000_2.fill('A11')
-    # DiTi1000_3.fill('A10')
-    Itr.set_DITI_Counter2(RI.DiTi1000_1, posInRack='A01').exec()
 
-    SampleVolume        = 200.0
-    LysisBufferVolume   = 180.0   # VL1
-    IC2Volume           = 5.0     # ? 4
-    BindingBufferVolume = 600.0
-    B_BeadsVolume       = 20.0
-    VEW1Volume          = 600.0
-    VEW2Volume          = 600.0
-    EtOH80pVolume       = 600.0
-    ProtKVolume         = 20.0
-    cRNAVolume          = 4.0
-    IC_MS2Volume        = 20.0
-    ElutionBufferVolume = 100.0
+        #  Get Labwares (Cuvette, eppys, etc.) from the work table
+
+        ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
+        LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
+        BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
+
+        DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
+        DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
+        DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
+
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
+        Eluat       = wt.getLabware(Lab.EppRack3x16R,   "Eluat"     )
+        Samples     = wt.getLabware(Lab.EppRack3x16,    "Proben"    )
+
+
+        #  Set the initial position of the tips    todo: set this in the Parameters
+
+        Itr.set_DITI_Counter2(DiTi1000_1, posInRack='A01').exec()
+
+
+        # Set volumen / sample
+
+        SampleVolume        = 200.0
+        LysisBufferVolume   = 180.0       # VL1
+        IC2Volume           =   5.0       # ? 4
+        BindingBufferVolume = 600.0
+        B_BeadsVolume       =  20.0
+        VEW1Volume          = 600.0
+        VEW2Volume          = 600.0
+        EtOH80pVolume       = 600.0
+        ProtKVolume         =  20.0
+        cRNAVolume          =   4.0
+        IC_MS2Volume        =  20.0
+        ElutionBufferVolume = 100.0
 
     SampleLiqClass      ="Serum Asp" # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
