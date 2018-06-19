@@ -73,8 +73,11 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
-        Eluat       = wt.getLabware(Lab.EppRack3x16R,   "Eluat"     )
-        Samples     = wt.getLabware(Lab.EppRack3x16,    "Proben"    )
+        Plate_VEW1  = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW1"    )  # Plate 12 x 8 ?
+        Plate_VEW2  = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW2"    )  # Plate 12 x 8 ?
+        Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate_EtOH"    )  # Plate 12 x 8 ?
+        Plate_Eluat = wt.getLabware(Lab.MP96deepwell,   "Plate_Eluat"   )  # Plate 12 x 8 ?
+        Samples     = wt.getLabware(Lab.EppRack6x16_2mL,"Proben"        )  # 6x16 = 12 x 8 ?
 
 
         #  Set the initial position of the tips    todo: set this in the Parameters
@@ -142,7 +145,31 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                                          ,defLiqClass=W_liquidClass, replicas=2)
         Waste           = Rtv.Reactive("Waste "  , self.WashWaste )
 
+
+        # Show the CheckList GUI to the user for posible small changes
+
         self.CheckList()
+
+        with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
+
+            Itr.userPrompt("Put the plates for VEW1, VEW2 and EtOH in that order")
+
+            with tips(reuse=True, drop=True):
+                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))
+
+            with tips(reuse=True, drop=True):
+                spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))
+
+            with tips(reuse=True, drop=True):
+                spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
+
+            Itr.userPrompt("Put the plates for the lysis in pos 1 and the for Eluat in pos 3")
+
+            with tips(reuse=True, drop=True):
+                spread(reactive=ElutBuf, to_labware_region=Plate_Eluat.selectOnly(all_samples))
+
+
+        # Define samples and the place for temporal reactions
 
         for s in all_samples:
             Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
@@ -185,42 +212,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
     with tips(reuse=True, drop=False, preserve=True, usePreserved=True):
         wash_in_TeMag(reactive=BindingBuffer, wells=all_samples)
 
-    with tips(reuse=True, drop=False, preserve=True):
-        wash_in_TeMag(reactive=VEW1, wells=all_samples)
-        wash_in_TeMag(reactive=VEW2, wells=all_samples)
-
-        with group("Wash in TeMag with " + EtOH80p.name), tips():
-            spread( reactive=EtOH80p,to_labware_region=RI.TeMag.selectOnly(all_samples))
-
-            with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
-                mix( RI.TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
-            with incubation(minutes=0.5):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
-            with tips(usePreserved=preserveingTips()):
-                waste( from_labware_region=    RI.TeMag.selectOnly(all_samples))
-
-            with incubation(minutes=4):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
-            with incubation(minutes=4):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
-
-        spread( reactive=ElutionBuffer, to_labware_region=RI.TeMag.selectOnly(all_samples))
-        with incubation(minutes=2):
-            Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
-
-        Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-        with parallel_execution_of(mix_mag_eluat, repeat=Rtv.NumOfSamples//Rbt.nTips+1):
-            mix(RI.TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
-
-        with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
-            with incubation(minutes=1.0, timer=2):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
-            transfer(from_labware_region=   RI.TeMag.selectOnly(all_samples),
-                     to_labware_region=     RI.Eluat.selectOnly(all_samples),
-                     volume=                ElutionBufferVolume,
-                     optimizeTo=            False,
-                     using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
 
 
-        self.Script.done()
+            self.Script.done()
 
