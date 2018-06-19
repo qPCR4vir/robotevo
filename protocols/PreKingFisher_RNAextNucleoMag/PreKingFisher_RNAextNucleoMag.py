@@ -6,6 +6,7 @@
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
+import EvoScriPy.Labware as Lab
 
 __author__ = 'Ariel'
 
@@ -37,22 +38,26 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                           parameters)
 
     def set_defaults(self):
-        print('set def in preFisher_RNAext')
-        from protocols.PreKingFisher_RNAextNucleoMag.RobotInitRNAextraction import init_RNAextraction
-        init_RNAextraction()
+        print('set_defaults in preFisher_RNAext')
+        print('Init init_RNAextraction preFisher ')
+
+        Rtv.NumOfSamples = self.NumOfSamples  # ??
+
+        self.worktable = self.iRobot.worktable
+        wt = self.worktable
+
+        self.WashCleanerS   = wt.getLabware(Lab.CleanerSWS,    "")
+        self.WashWaste      = wt.getLabware(Lab.WasteWS,       "")
+        self.WashCleanerL   = wt.getLabware(Lab.CleanerLWS,    "")
+        self.DiTiWaste      = wt.getLabware(Lab.DiTi_Waste,    "")
+
+        self.BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
+
 
     def Run(self):
-        self.initialize()
-        #self.parameters.GUI.initialize()
-        # self.CheckList()
-        PreKingFisher_extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
-        self.Script.done()
-
-
-def PreKingFisher_extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
-
-    Rtv.NumOfSamples = NumOfSamples
-    import protocols.PreKingFisher_RNAextNucleoMag.RobotInitRNAextraction as RI
+        self.initialize()                       #  set_defaults ??
+        NumOfSamples = self.NumOfSamples
+        wt           = self.worktable
 
     Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
@@ -194,6 +199,5 @@ def PreKingFisher_extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
                      using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
 
 
-if __name__ == "__main__":
-    PreKingFisher_extractRNA_with_MN_Vet_Kit(29)
-    pass
+        self.Script.done()
+
