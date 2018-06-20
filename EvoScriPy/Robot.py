@@ -348,6 +348,11 @@ class Robot:
 
 
     def set_dropTips(self, drop=True)->bool:
+        '''
+        Drops the tips at THE END of the whole action? like after spread of the reactive into various target?
+        :param drop:
+        :return: the previous value
+        '''
         self.droptips, drop = drop, self.droptips
         return drop
 

@@ -138,14 +138,27 @@ Te_Mag_Rest     = "Te-Mag Rest"
 Te_Mag_Force_Centre   = "Te-Mag Force Centre"
 Te_Mag_RestPlus = "Te-Mag RestPlus"
 
+
 def set_dropTips(drop=True)->bool:
+    """
+    Drops the tips at THE END of the whole action? like after spread of the reactive into various targets
+    :param drop:
+    :return:
+    """
     return Rbt.Robot.current.set_dropTips(drop)
+
 
 def set_allow_air(allow_air=0.0)->float:
     return Rbt.Robot.current.set_allow_air(allow_air)
 
+
 def reuseTips(reuse=True)->bool:
+    """     Reuse the tips or drop it and take new after each action?
+    :param reuse:
+    :return:
+    """
     return Rbt.Robot.current.reuseTips(reuse)
+
 
 def reuse_tips_and_drop(reuse=True, drop=True)->(bool, bool):
     return set_dropTips(drop), reuseTips(reuse)
@@ -246,7 +259,17 @@ def dispense( tip, reactive, vol=None): # OK coordinate with robot
     v[tip] = vol
     Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
+
 def mix_reactive(reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
+    """
+
+    :param reactive:
+    :param LiqClass:
+    :param cycles:
+    :param maxTips:
+    :param v_perc:
+    :return:
+    """
     assert isinstance(reactive, Rtv.Reactive)
     v_perc /= 100.0
     vol = []
@@ -621,7 +644,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
 def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True):
 
     """
-
+    Mix each of the reactive in the selected region of the labware
     :param in_labware_region:
     :param using_liquid_class:
     :param volume:
@@ -700,6 +723,17 @@ def group(titel, mode=None):
 def tips(tipsMask=None, reuse=None,     drop=None,
                         preserve=None,  usePreserved=None, selected_samples=None,
                         allow_air=None):
+    '''
+
+    :param tipsMask:
+    :param reuse: Reuse the tips or drop it and take new after each action?
+    :param drop: Drops the tips at THE END of the whole action? like after spread of the reactive into various target?
+    :param preserve:
+    :param usePreserved:
+    :param selected_samples:
+    :param allow_air:
+    :return:
+    '''
     if reuse        is not None: reuse        = reuseTips       (reuse       )
     if drop         is not None: drop         = set_dropTips    (drop        )
     if preserve     is not None: preserve     = preserveTips    (preserve    )

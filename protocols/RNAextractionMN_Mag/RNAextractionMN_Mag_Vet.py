@@ -157,7 +157,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
                    NumSamples=          Rtv.NumOfSamples)
     Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
-    with tips(reuse=False, drop=True):
+    with tips(reuse=False, drop=True):    # better reuse=True, drop=False ??
         spread  (  reactive=LysisBuffer,   to_labware_region= RI.TeMag.selectOnly(all_samples))
 
     with incubation(10): pass
