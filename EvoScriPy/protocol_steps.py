@@ -300,12 +300,14 @@ def multidispense_in_replicas(tip, reactive, vol):
                      # reactive.defLiqClass,
                      v, w.labware.selectOnly([w.offset])).exec()
 
-def aspiremultiTips( tips, reactive, vol=None):
+def aspiremultiTips( tips, reactive, vol=None, LiqClass=None):
         if not isinstance(vol, list):
             vol = [vol] * tips
+        LiqClass = LiqClass or reactive.defLiqClass
+
         mask = Rbt.tipsMask[tips]
         nTip = reactive.autoselect(tips)
-        asp = Itr.aspirate(mask, reactive.defLiqClass, vol, reactive.labware)
+        asp = Itr.aspirate(mask, LiqClass, vol, reactive.labware)
         curTip = 0
         while curTip < tips:
             nextTip = curTip + nTip
@@ -363,7 +365,7 @@ def makePreMix( preMix, NumSamples=None):
                         r -= dV
 
 
-def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None):
+def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None, using_liquid_class=None):
         """
 
 
@@ -390,6 +392,13 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
 
         volume = volume or reactive.volpersample
 
+        if isinstance(using_liquid_class, tuple):
+            Asp_liquidClass = using_liquid_class[0] or reactive.defLiqClass
+            Dst_liquidClass = using_liquid_class[1] or reactive.defLiqClass
+        else:
+            Asp_liquidClass = reactive.defLiqClass
+            Dst_liquidClass = reactive.defLiqClass
+
         if nt > SampleCnt: nt = SampleCnt
 
         lf = reactive.labware
@@ -414,13 +423,13 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
                         vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (nt - rst)
                         availableDisp = dsp + bool(rst)
 
-                    aspiremultiTips(nt, reactive, vol)
+                    aspiremultiTips(nt, reactive, vol, LiqClass=Asp_liquidClass)
 
                     while availableDisp:
                         if nt > SampleCnt: nt = SampleCnt
                         curSample = NumSamples - SampleCnt
                         sel = to[curSample: curSample + nt]  # todo what if volume > maxVol_tip ?
-                        dispensemultiwells(nt, reactive.defLiqClass, to_labware_region.selectOnly(sel), [volume] * nt)
+                        dispensemultiwells(nt, Dst_liquidClass, to_labware_region.selectOnly(sel), [volume] * nt)
                         availableDisp -= 1
                         SampleCnt -= nt
 
