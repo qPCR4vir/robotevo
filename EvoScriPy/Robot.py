@@ -248,6 +248,7 @@ class Robot:
         self.worktable = w
 
     def set_as_current(self):
+        Robot.current = self
         Lab.curWorkTable=self.worktable
 
     def setUsed(self, tipMask, labware_selection):

@@ -125,20 +125,21 @@ class Script(ScriptBody):
     """ Create a full and executable script for the evoware soft. Take an existing script or script-template as a base.
     """
 
-    def __init__(self, filename=None, template=None, arms=None):
+    def __init__(self, filename=None, template=None, arms=None, robot=None):
         ScriptBody.__init__(self, filename)
-        self.set_template(arms, template)
+        self.robot = robot            # ?? may be None?
+        self.robot.set_as_current()
+        self.set_template(arms, template)  # ??
 
     def set_template(self, arms, template):
-        if Rbt.Robot.current:
-            Rbt.Robot.current.set_worktable(template)
-        else:
-            Rbt.Robot.current = Rbt.Robot(templateFile=template, arms=arms)
+        self.robot.set_as_current()
+        self.robot.robot.set_worktable(template)       # ????
         self.templateNotAdded = True
 
     def exec(self, instr):
+        self.robot.set_as_current()
         if self.templateNotAdded:
-            for line in Rbt.Robot.current.worktable.template:
+            for line in self.robot.robot.worktable.template:
                 self.f.write((line[:-1] + "\n"))  # .encode('Latin-1')  \r
             self.templateNotAdded = False
         ScriptBody.exec(self, instr)
@@ -153,12 +154,15 @@ class iRobot(Mode):
     def __init__(self, index,  nTips=4 , arms=None):
         Mode.__init__(self )
         # import Robot as Rbt
-        Rbt.Robot.current = Rbt.Robot(index=index, arms=arms, nTips=nTips)
-        Rbt.Robot.current.set_as_current()
-        pass
+        self.robot = Rbt.Robot(index=index, arms=arms, nTips=nTips)
+        self.set_as_current()
 
     def exec(self, instr):
+        self.set_as_current()
         instr.actualize_robot_state()
+
+    def set_as_current(self):
+        self.robot.set_as_current()
 
 
 current = None

@@ -41,7 +41,6 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
 
         Rtv.NumOfSamples = self.NumOfSamples  # ??
 
-        self.worktable = self.iRobot.worktable
         wt = self.worktable
 
         self.WashCleanerS   = wt.getLabware(Lab.CleanerSWS,    "")

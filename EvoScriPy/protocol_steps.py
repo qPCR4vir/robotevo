@@ -67,7 +67,8 @@ class Protocol:
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
         # TODO set output 'AWL.esc' in GUI - ask the user?
         self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
-                                     filename=self.parameters.output_filename + '.esc')
+                                     filename=self.parameters.output_filename + '.esc',
+                                     robot=self.iRobot)
         self.comments_ = EvoMode.Comments()
         self.EvoMode = EvoMode.multiple([self.iRobot,
                                          self.Script,
@@ -77,6 +78,7 @@ class Protocol:
                                          self.comments_
                                          ])
         EvoMode.current = self.EvoMode
+        self.worktable = self.iRobot.robot.worktable
 
     def set_EvoMode(self):
         if not self.EvoMode:
