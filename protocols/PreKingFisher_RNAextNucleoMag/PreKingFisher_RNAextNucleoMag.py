@@ -71,14 +71,15 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
+        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW1"    )  # Plate 12 x 8 ?
         Plate_VEW1  = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW1"    )  # Plate 12 x 8 ?
         Plate_VEW2  = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW2"    )  # Plate 12 x 8 ?
         Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate_EtOH"    )  # Plate 12 x 8 ?
-        Plate_Eluat = wt.getLabware(Lab.MP96deepwell,   "Plate_Eluat"   )  # Plate 12 x 8 ?
+        Plate_Eluat = wt.getLabware(Lab.MP96deepwell,   "Plate_EtOH"    )  # Plate 12 x 8 ? MP96well !!
         Samples     = wt.getLabware(Lab.EppRack6x16_2mL,"Proben"        )  # 6x16 = 12 x 8 ?
 
 
-        #  Set the initial position of the tips    todo: set this in the Parameters
+        #  Set the initial position of the tips
 
         Itr.set_DITI_Counter2(DiTi1000_1, posInRack=self.parameters.firstTip).exec()
 
@@ -114,7 +115,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                                        LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
         IC2             = Rtv.Reactive("IC2 - synthetic RNA "              ,
                                        Reactives, pos=11, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
-        BindingBuffer   = Rtv.Reactive("VEB - Binding Buffer "           ,
+        VEB             = Rtv.Reactive("VEB - Binding Buffer "           ,
                                        BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
         B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200,
                                          pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
@@ -138,7 +139,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         IC_MS2          = Rtv.Reactive("IC MS2 phage culture ",
                                        Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
         pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
-                                       Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
+                                       Reactives, pos=12,   components=[ ProtK, cRNA, IC2 ]
                                          ,defLiqClass=W_liquidClass, replicas=2)
         Waste           = Rtv.Reactive("Waste "  , self.WashWaste )
 
@@ -146,6 +147,8 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         # Show the CheckList GUI to the user for posible small changes
 
         self.CheckList()
+
+        Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
         with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
 
@@ -163,7 +166,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
             Itr.userPrompt("Put the plates for the lysis in pos 1 and the for Eluat in pos 3")
 
             with tips(reuse=True, drop=True):
-                spread(reactive=ElutBuf, to_labware_region=Plate_Eluat.selectOnly(all_samples))
+                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples))
 
 
         # Define samples and the place for temporal reactions
@@ -171,45 +174,44 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         for s in all_samples:
             Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
                                                 pos=s+1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s+1), RI.TeMag, initial_vol= 0.0,
-                                                pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
-            Rtv.Reactive(  "RNA_{:02d}".format(s+1), RI.Eluat, initial_vol= 0.0,
-                                                pos=s+1, defLiqClass=def_liquidClass, excess=0)
+            Rtv.Reactive("lysis_{:02d}".format(s+1), Plate_lysis, initial_vol= 0.0, pos=s+1,  excess=0) # todo revise order !!!
 
+        with group("Sample Lysis"):
+            with tips(tipsMask=maxMask, reuse=True, drop=False):
+                pK_cRNA_MS2.make()
+                spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+                spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+            with tips(reuse=False, drop=True):
+                transfer(  from_labware_region= Samples,
+                           to_labware_region=   Plate_lysis,
+                           volume=              SampleVolume,
+                           using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
+                           optimizeFrom         =False,     optimizeTo= True,           # todo Really ??
+                           NumSamples=          NumOfSamples)
+            Itr.wash_tips(wasteVol=4, FastWash=True).exec()
+            # with tips(reuse=False, drop=True):        # better reuse=True, drop=False, with normal Liquid Class ??
+            #     spread  (  reactive=LysisBuffer,
+            #                to_labware_region= Plate_lysis.selectOnly(all_samples),
+            #                using_liquid_class=(None,"Serum Disp postMix3"))
 
+            with incubation(minutes=15):
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
 
-    Itr.wash_tips(wasteVol=30, FastWash=True).exec()
+        with group("Beads binding"):
+            with tips(tipsMask=maxMask, reuse=True, drop=False):
+                for p in [40, 50, 60, 65]:
+                   mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
 
-    with tips(tipsMask=maxMask, reuse=True, drop=False):
-        pK_cRNA_MS2.make()
-        spread  (  reactive=pK_cRNA_MS2,   to_labware_region= RI.TeMag.selectOnly(all_samples))
+            with tips(reuse=True, drop=True):
+                spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))
+                spread( reactive=VEB,          to_labware_region=Plate_lysis.selectOnly(all_samples))
 
-    with tips(reuse=True, drop=True, preserve=True):
-        transfer(  from_labware_region= RI.Samples,
-                   to_labware_region=   RI.TeMag,
-                   volume=              SampleVolume,
-                   using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
-                   optimizeFrom         =False,     optimizeTo= True,
-                   NumSamples=          Rtv.NumOfSamples)
-    Itr.wash_tips(wasteVol=4, FastWash=True).exec()
-
-    with tips(reuse=False, drop=True):
-        spread  (  reactive=LysisBuffer,   to_labware_region= RI.TeMag.selectOnly(all_samples))
-
-    with incubation(10): pass
-
-    with tips(tipsMask=maxMask, reuse=True, drop=False):
-        for p in [40, 50, 60, 65]:
-            mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
-#        mix_reactive(B_Beads, LiqClass=Beads_LC_2, cycles=3, maxTips=maxTips, v_perc=90)
-
-    with tips(reuse=True, drop=True):
-        spread( reactive=B_Beads,      to_labware_region=RI.TeMag.selectOnly(all_samples))
-
-    with tips(reuse=True, drop=False, preserve=True, usePreserved=True):
-        wash_in_TeMag(reactive=BindingBuffer, wells=all_samples)
-
-
+            # with tips(reuse=False, drop=True):   # better reuse=True, drop=False, with normal Liquid Class ??
+            #     spread  (  reactive=VEB,
+            #                to_labware_region= Plate_lysis.selectOnly(all_samples),
+            #                using_liquid_class=(None,"Serum Disp postMix3"))
+            with incubation(minutes=5):
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
 
             self.Script.done()
 
