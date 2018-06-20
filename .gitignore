@@ -1,3 +1,4 @@
+temp/
 .idea/*.*
 .idea/
 #ignore thumbnails created by windows
