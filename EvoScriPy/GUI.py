@@ -37,11 +37,31 @@ class App(tkinter.Frame):
             tkinter.Button(self.parameters.GUI.GUI_parameters, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
             self.worktable_filename_v.trace("w", self.set_WT_FN)
 
+            # output_filename
+            tkinter.Label(self.parameters.GUI.GUI_parameters, text='Output filename:').grid(row=1, column=0, columnspan=1,
+                                                                                      sticky=tkinter.N + tkinter.W)
+            self.output_filename_v = tkinter.StringVar()
+            self.output_filename_v.set(parameters.output_filename)
+            tkinter.Entry(self.parameters.GUI.GUI_parameters, textvariable=self.output_filename_v).grid(row=1,
+                                                                                                           column=1,
+                                                                                                           columnspan=9,
+                                                                                                           sticky=tkinter.N + tkinter.E + tkinter.W)
+
+            tkinter.Button(self.parameters.GUI.GUI_parameters, text='...', command=self.selet_O_FN).grid(row=1,
+                                                                                                          column=10)
+            self.output_filename_v.trace("w", self.set_O_FN)
+
         def set_WT_FN(self, *args):
             self.parameters.worktable_template_filename = self.worktable_filename_v.get()
 
         def selet_WT_FN(self):
             self.worktable_filename_v.set( tkinter.filedialog.askopenfilename(title='Select the WorkTable template') )
+
+        def set_O_FN(self, *args):
+            self.parameters.output_filename = self.output_filename_v.get()
+
+        def selet_O_FN(self):
+            self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
 
     class GUI_init_RNA_ext_MN(GUI_init_parameters):
 
