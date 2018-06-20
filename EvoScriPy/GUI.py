@@ -51,6 +51,18 @@ class App(tkinter.Frame):
                                                                                                           column=10)
             self.output_filename_v.trace("w", self.set_O_FN)
 
+            # First tip (in the first tip rack)
+            tkinter.Label(self.parameters.GUI.GUI_parameters, text='First tip:').grid(row=2, column=0, columnspan=1,
+                                                        sticky=tkinter.N + tkinter.W)
+            self.firstTip_v = tkinter.StringVar( )
+            self.firstTip_v.set(parameters.firstTip)
+            tkinter.Entry(self.parameters.GUI.GUI_parameters, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
+                                                                             sticky=tkinter.N + tkinter.E + tkinter.W)
+            self.firstTip_v.trace("w", self.set_firstTip)
+
+        def set_firstTip(self, *args):
+            self.parameters.firstTip = self.firstTip_v.get()
+
         def set_WT_FN(self, *args):
             self.parameters.worktable_template_filename = self.worktable_filename_v.get()
 
@@ -63,6 +75,8 @@ class App(tkinter.Frame):
         def selet_O_FN(self):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
 
+
+
     class GUI_init_RNA_ext_MN(GUI_init_parameters):
 
         def __init__(self, parameters):
@@ -71,7 +85,7 @@ class App(tkinter.Frame):
             # Number of Samples
             min_s, max_s = self.min_max_Number_of_Samples()
             label = "Number of Samples: ({}-{}) ".format(min_s, max_s)
-            tkinter.Label(self.parameters.GUI.GUI_parameters, text=label).grid(row=2, column=0, columnspan=3,
+            tkinter.Label(self.parameters.GUI.GUI_parameters, text=label).grid(row=2, column=3, columnspan=2,
                                                                        sticky=tkinter.N + tkinter.W)
 
             self.NumOfSamples = tkinter.IntVar()
@@ -79,7 +93,7 @@ class App(tkinter.Frame):
             self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters, textvariable=self.NumOfSamples,
                                               from_=min_s, to=max_s, increment=1,
                                               command=self.read_NumOfSamples)
-            self.sample_num.grid(row=2, column=3, columnspan=1)
+            self.sample_num.grid(row=2, column=5, columnspan=1)
 
 
         def min_max_Number_of_Samples(self):

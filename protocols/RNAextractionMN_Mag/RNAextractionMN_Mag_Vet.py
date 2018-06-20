@@ -59,11 +59,11 @@ class RNAextr_MN_Vet_Kit(Protocol):
         self.initialize()
         #self.parameters.GUI.initialize()
         # self.CheckList()
-        extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList)
+        extractRNA_with_MN_Vet_Kit(self.NumOfSamples, self.CheckList, self.parameters.firstTip)
         self.Script.done()
 
 
-def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
+def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None, firstTip=None):
 
     Rtv.NumOfSamples = NumOfSamples
     import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
@@ -73,7 +73,7 @@ def extractRNA_with_MN_Vet_Kit(NumOfSamples, CheckList=None):
     # DiTi1000_1.fill('C06')
     # DiTi1000_2.fill('A11')
     # DiTi1000_3.fill('A10')
-    Itr.set_DITI_Counter2(RI.DiTi1000_1, posInRack='A01').exec()
+    Itr.set_DITI_Counter2(RI.DiTi1000_1, posInRack=firstTip or 'A01').exec()
 
     SampleVolume        = 200.0
     LysisBufferVolume   = 180.0

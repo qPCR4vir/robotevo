@@ -10,8 +10,6 @@ import EvoScriPy.Labware as Lab
 
 __author__ = 'Ariel'
 
-Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
-
 
 class PreKingFisher_RNAextNucleoMag(Protocol):
     """Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL.
@@ -82,8 +80,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
 
         #  Set the initial position of the tips    todo: set this in the Parameters
 
-        Itr.set_DITI_Counter2(DiTi1000_1, posInRack='A01').exec()
-
+        Itr.set_DITI_Counter2(DiTi1000_1, posInRack=self.parameters.firstTip).exec()
 
         # Set volumen / sample
 

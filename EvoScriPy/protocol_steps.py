@@ -35,12 +35,14 @@ class Protocol:
         # parameters to describe a run of this program
 
         def __init__(self, GUI                         = None,
-                           worktable_template_filename = "",
-                           output_filename             = output_filename):
+                           worktable_template_filename = None,
+                           output_filename             = output_filename,
+                           firstTip                    = None):
 
-            self.worktable_template_filename = worktable_template_filename
+            self.worktable_template_filename = worktable_template_filename or ""
             self.output_filename             = output_filename
             self.GUI                         = GUI
+            self.firstTip                    = firstTip or 'A01'
 
         def initialize(self):
             if (self.GUI):

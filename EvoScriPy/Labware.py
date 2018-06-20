@@ -634,8 +634,8 @@ class DITIrack (Labware):
             assert rack.Wells[i].reactive.type is tp
             tips += [rack.Wells[i].reactive]
             rack.Wells[i].reactive = None
-            print ("Pick tip "+str(i+1)+" from site "+str(rack.location.site+1)
-                   + " of rack " + rack.label)
+            print ("Pick tip "+str(i+1)+" from rack site "+str(rack.location.site+1)
+                   + " named: " + rack.label)
             n -= 1
             rest -= 1
             if not rest:
