@@ -48,7 +48,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
         self.WashCleanerL   = wt.getLabware(Lab.CleanerLWS,    "")
         self.DiTiWaste      = wt.getLabware(Lab.DiTi_Waste,    "")
 
-        self.BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
+        # self.BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
 
 
     def Run(self):
