@@ -133,13 +133,13 @@ class Script(ScriptBody):
 
     def set_template(self, arms, template):
         self.robot.set_as_current()
-        self.robot.robot.set_worktable(template)       # ????
+        self.robot.set_worktable(template)       # ????
         self.templateNotAdded = True
 
     def exec(self, instr):
         self.robot.set_as_current()
         if self.templateNotAdded:
-            for line in self.robot.robot.worktable.template:
+            for line in self.robot.worktable.template:
                 self.f.write((line[:-1] + "\n"))  # .encode('Latin-1')  \r
             self.templateNotAdded = False
         ScriptBody.exec(self, instr)

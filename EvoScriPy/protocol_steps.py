@@ -68,7 +68,7 @@ class Protocol:
         # TODO set output 'AWL.esc' in GUI - ask the user?
         self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
                                      filename=self.parameters.output_filename + '.esc',
-                                     robot=self.iRobot)
+                                     robot=self.iRobot.robot)
         self.comments_ = EvoMode.Comments()
         self.EvoMode = EvoMode.multiple([self.iRobot,
                                          self.Script,
