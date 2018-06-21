@@ -28,12 +28,12 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                                         output_filename='../current/preFisher_RNAext'
                                         )
 
-    def __init__(self, parameters =  Parameter()):
+    def __init__(self, parameters =  None):
 
         self.NumOfSamples = parameters.NumOfSamples
         Protocol.__init__(self,
                           4,
-                          parameters)
+                          parameters or PreKingFisher_RNAextNucleoMag.Parameter())
 
     def set_defaults(self):
         print('set_defaults in preFisher_RNAext')

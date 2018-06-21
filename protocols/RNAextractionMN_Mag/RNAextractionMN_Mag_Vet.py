@@ -43,12 +43,12 @@ class RNAextr_MN_Vet_Kit(Protocol):
 
 
 
-    def __init__(self, parameters =  Parameter()):
+    def __init__(self, parameters =  None):
 
         self.NumOfSamples = parameters.NumOfSamples
         Protocol.__init__(self,
                           4,
-                          parameters)
+                          parameters or RNAextr_MN_Vet_Kit.Parameter())
 
     def set_defaults(self):
         print('set def in RNAextr_MN_Vet_Kit')

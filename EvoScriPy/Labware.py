@@ -172,7 +172,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         for labw in self.labTypes[labw_type.name]:
             if labw.label == label: return labw
 
-        raise Exception(labw_type.name , label)
+        raise Exception("Labware '" + labw_type.name + "' with label '" + label + "' was not found in worktable: " + self.templateFileName)
 
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
