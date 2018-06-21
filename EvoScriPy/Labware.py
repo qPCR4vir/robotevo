@@ -76,10 +76,12 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         self.Racks = []
         self.nSites = sites
         self.grid = [None] * grids
+        self.templateFileName = None
         if isinstance(templateFile, list):
             self.template = templateFile
         else:
             self.template = self.parseWorTableFile(templateFile)
+            self.templateFileName = templateFile
 
 
 
@@ -122,6 +124,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
 
         self.template = templList
+        self.templateFileName = templateFile
         return templList
 
     def createLabware(self, labw_t, loc, label):
@@ -162,6 +165,9 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
     def getLabware(self, labw_type , label):
         assert isinstance(labw_type, Labware.Type )
+
+        if labw_type.name not in self.labTypes:
+            raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
 
         for labw in self.labTypes[labw_type.name]:
             if labw.label == label: return labw
