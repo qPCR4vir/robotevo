@@ -154,6 +154,19 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
+        # Define samples and the place for temporal reactions
+        for s in all_samples:
+            Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+                         pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
+                         excess=0)  # todo revise order !!!
+
+            #Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1, initial_vol=0.0, pos=s + 1,
+            #             excess=0)  # todo revise order !!!
+            Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2, initial_vol=0.0, pos=s + 1,
+                         excess=0)  # todo revise order !!!
+
+
         with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
 
             Itr.userPrompt("Put the plates for VEW1, VEW2 and EtOH in that order")
