@@ -52,10 +52,14 @@ class RNAextr_MN_Vet_Kit(Protocol):
     def set_defaults(self):
         print('set def in RNAextr_MN_Vet_Kit')
 
-        WashCleanerS    = Lab.getLabware(Lab.CleanerSWS,""                                  )
-        WashWaste       = Lab.getLabware(Lab.WasteWS,   ""                                  )
-        WashCleanerL    = Lab.getLabware(Lab.CleanerLWS,""                                  )
-        DiTiWaste       = Lab.getLabware(Lab.DiTi_Waste,""                                  )
+        wt = self.worktable
+
+        # todo decide where to put the default labware: in robot or worktable object or the global Lab
+
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS,""                                  )
+        WashWaste       = wt.getLabware(Lab.WasteWS,   ""                                  )
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS,""                                  )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,""                                  )
 
         # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
         Lab.def_WashWaste   = WashWaste
@@ -63,29 +67,30 @@ class RNAextr_MN_Vet_Kit(Protocol):
         Lab.def_DiTiWaste   = DiTiWaste
         Lab.def_DiTi        = Lab.DiTi_1000ul   # todo revise
 
-        self.TeMg_Heat = Lab.getLabware(Lab.TeMag48, "48 Pos Heat")
-        self.TeMag     = Lab.getLabware(Lab.TeMag48, "48PosMagnet")
+        self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
+        self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
 
 
     def Run(self):
         self.initialize()
+        wt = self.worktable
 
         TeMag = self.TeMag
-        ElutBuf = Lab.getLabware(Lab.Trough_100ml, "1-VEL-ElutionBuffer")
-        LysBuf = Lab.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
-        BindBuf = Lab.getLabware(Lab.Trough_100ml, "3-VEB Binding Buffer")
+        ElutBuf = wt.getLabware(Lab.Trough_100ml, "1-VEL-ElutionBuffer")
+        LysBuf  = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+        BindBuf = wt.getLabware(Lab.Trough_100ml, "3-VEB Binding Buffer")
 
-        BioWaste = Lab.getLabware(Lab.Trough_100ml, "6-Waste")
-        # Unused8       = Lab.getLabware(Lab.Trough_100ml, "8-Unused"            )
-        # Unused9       = Lab.getLabware(Lab.Trough_100ml, "9-Unused"            )
+        BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
+        # Unused8       = wt.getLabware(Lab.Trough_100ml, "8-Unused"            )
+        # Unused9       = wt.getLabware(Lab.Trough_100ml, "9-Unused"            )
 
-        DiTi1000_1 = Lab.getLabware(Lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2 = Lab.getLabware(Lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3 = Lab.getLabware(Lab.DiTi_1000ul, "1000-3")
+        DiTi1000_1 = wt.getLabware(Lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2 = wt.getLabware(Lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3 = wt.getLabware(Lab.DiTi_1000ul, "1000-3")
 
-        Reactives = Lab.getLabware(Lab.GreinRack16_2mL, "Reactives")
-        Eluat = Lab.getLabware(Lab.EppRack3x16R, "Eluat")
-        Samples = Lab.getLabware(Lab.EppRack3x16, "Proben")
+        Reactives = wt.getLabware(Lab.GreinRack16_2mL, "Reactives")
+        Eluat     = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
+        Samples   = wt.getLabware(Lab.EppRack3x16,     "Proben")
 
         Rtv.NumOfSamples = self.NumOfSamples
 

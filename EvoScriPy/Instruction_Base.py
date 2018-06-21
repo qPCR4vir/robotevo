@@ -159,7 +159,7 @@ class Pipette(Instruction):
 
         :param name: str; Instruction name
         :param tipMask: int; selected tips, bit-coded (tip1 = 1, tip8 = 128)
-        :param labware: Labware; grid 1-67, site 0-127
+        :param labware: Labware; grid 1-67, site 0-127, the labware with the selected wells
         :param spacing: int; Tip Spacing
                                     The Tip Spacing parameter controls the distance between adjacent pipetting
                                     tips for this command. You can choose a different tip spacing for the source
@@ -181,7 +181,7 @@ class Pipette(Instruction):
         """
         Instruction.__init__(self, name)
         self.tipMask=tipMask
-        self.labware=labware or Lab.def_LabW  # the labware with the selected wells
+        self.labware=labware or Lab.def_LabW  # todo what def???
         self.spacing = spacing
         self.loopOptions = LoopOptions
         self.RackName = RackName
