@@ -158,18 +158,18 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
 
             Itr.userPrompt("Put the plates for VEW1, VEW2 and EtOH in that order")
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
 
             Itr.userPrompt("Put the plates for the lysis in pos 1 and the for Eluat in pos 3")
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples))
 
 
