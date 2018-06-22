@@ -12,10 +12,13 @@ __author__ = 'Ariel'
 
 
 class Prefill_plates_VEW1_ElutionBuffer_VEW2(Protocol):
-    """Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL.
+    """
+    Prefill plates with VEW1, Elution buffer and VEW2 for the
+    Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL
+    with watching in the Fischer Robot.
     """
 
-    name = "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit"
+    name = "Prefill plates with VEW1, Elution buffer and VEW2"
     versions = {'none'    : not_implemented}
 
     class Parameter (Protocol.Parameter):

@@ -110,6 +110,15 @@ class App(tkinter.Frame):
             return 1 , 96
 
 
+    class GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(GUI_init_RNA_ext_MN):
+
+        def __init__(self, parameters):
+            App.GUI_init_RNA_ext_MN.__init__(self, parameters)
+
+        def min_max_Number_of_Samples(self):
+            return 1 , 96
+
+
 
 
     def __init__(self, master=None):
@@ -176,8 +185,13 @@ class App(tkinter.Frame):
 
         if selected == "RNA extraction with the MN_Vet kit":
             App.GUI_init_RNA_ext_MN(self.parameters)
+
         elif selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit":
+            App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(self.parameters)
+
+        elif selected == "Prefill plates with VEW1, Elution buffer and VEW2":
             App.GUI_init_RNA_ext_Fisher(self.parameters)
+
         else:
             App.GUI_init_parameters(self.parameters)
 
