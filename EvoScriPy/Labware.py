@@ -39,7 +39,7 @@ class usedTip(Tip):
         return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
 
 
-class WorkTable:  # todo Implement parse WT from export file, template and scripts *.txt, *.ewt, *.est, *.esc
+class WorkTable:
     """ Collection of Racks.Types and Labware.Types and pos of instances """
 
     curWorkTable = None
@@ -92,7 +92,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
             # parsing_grid=False
             grid_num=-1
             labwware_types=[]
-            for line in tmpl:  # todo do the real complete parse
+            for line in tmpl:
                 templList += [line]
                 line = line.split(';')
                 if line[0]=="--{ RPG }--": break     # TODO possible error msg ??

@@ -65,15 +65,14 @@ class Protocol:
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
-        # TODO set output 'AWL.esc' in GUI - ask the user?
         self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
                                      filename=self.parameters.output_filename + '.esc',
                                      robot=self.iRobot.robot)
         self.comments_ = EvoMode.Comments()
         self.EvoMode = EvoMode.multiple([self.iRobot,
                                          self.Script,
-                                         EvoMode.AdvancedWorkList(self.parameters.output_filename + '.gwl'),  # TODO set output in GUI
-                                         EvoMode.ScriptBody(self.parameters.output_filename + '.txt'),  # TODO set output in GUI
+                                         EvoMode.AdvancedWorkList(self.parameters.output_filename + '.gwl'),
+                                         EvoMode.ScriptBody(self.parameters.output_filename + '.txt'),
                                          EvoMode.StdOut(),
                                          self.comments_
                                          ])
@@ -95,7 +94,7 @@ class Protocol:
         Here, for example, initialize the list of reactive.
         """
         print('set def in Protocol')
-        # TODO initialize the iRobot?? Select a table template?
+        # nitialize the iRobot. Select a table template
 
     def options(self):
         """
@@ -810,7 +809,7 @@ def opening_example(filename):
 # OK?  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait
 # OK  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
-# TODO  write the total vol to spread.                      - ok ?!
+# OK  write the total vol to spread.                      - ok ?!
 # TODO  actualize liquid classes                            - ok ?!
 # TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
 # OK  test no drop                                        - ok ?!
