@@ -28,7 +28,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Protocol):
             self.NumOfSamples = 96
             Protocol.Parameter.__init__(self, GUI=GUI,
                                         worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext.ewt',
-                                        output_filename='../current/preFisher_RNAext'
+                                        output_filename='../current/Prefill_plates_VEW1_ElutionBuffer_VEW2'
                                         )
 
     def __init__(self, parameters =  None):
