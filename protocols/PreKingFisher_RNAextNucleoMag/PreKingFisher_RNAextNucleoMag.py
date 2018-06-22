@@ -28,12 +28,12 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                                         output_filename='../current/preFisher_RNAext'
                                         )
 
-    def __init__(self, parameters =  Parameter()):
+    def __init__(self, parameters =  None):
 
         self.NumOfSamples = parameters.NumOfSamples
         Protocol.__init__(self,
                           4,
-                          parameters)
+                          parameters or PreKingFisher_RNAextNucleoMag.Parameter())
 
     def set_defaults(self):
         print('set_defaults in preFisher_RNAext')
@@ -43,12 +43,18 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
 
         wt = self.worktable
 
+        # todo decide where to put the default labware: in robot or worktable object or the global Lab
+
         self.WashCleanerS   = wt.getLabware(Lab.CleanerSWS,    "")
         self.WashWaste      = wt.getLabware(Lab.WasteWS,       "")
         self.WashCleanerL   = wt.getLabware(Lab.CleanerLWS,    "")
         self.DiTiWaste      = wt.getLabware(Lab.DiTi_Waste,    "")
 
-        self.BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
+        # self.BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
+        Lab.def_WashWaste   = self.WashWaste
+        Lab.def_WashCleaner = self.WashCleanerS
+        Lab.def_DiTiWaste   = self.DiTiWaste
+        Lab.def_DiTi        = Lab.DiTi_1000ul   # todo revise
 
 
     def Run(self):
@@ -142,41 +148,46 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                                          ,defLiqClass=W_liquidClass, replicas=2)
         Waste           = Rtv.Reactive("Waste "  , self.WashWaste )
 
-
         # Show the CheckList GUI to the user for posible small changes
 
         self.CheckList()
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
+        # Define samples and the place for temporal reactions
+        for s in all_samples:
+            Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+                         pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
+                         excess=0)  # todo revise order !!!
+
+            #Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1, initial_vol=0.0, pos=s + 1,
+            #             excess=0)  # todo revise order !!!
+            Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2, initial_vol=0.0, pos=s + 1,
+                         excess=0)  # todo revise order !!!
+
+
         with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
 
             Itr.userPrompt("Put the plates for VEW1, VEW2 and EtOH in that order")
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
 
             Itr.userPrompt("Put the plates for the lysis in pos 1 and the for Eluat in pos 3")
 
-            with tips(reuse=True, drop=True):
+            with tips(reuse=True, drop=False):
                 spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples))
 
 
-        # Define samples and the place for temporal reactions
-
-        for s in all_samples:
-            Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
-                                                pos=s+1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s+1), Plate_lysis, initial_vol= 0.0, pos=s+1,  excess=0) # todo revise order !!!
-
         with group("Sample Lysis"):
-            with tips(tipsMask=maxMask, reuse=True, drop=False):
+            with tips(tipsMask=maxMask, reuse=True, drop=True):
                 pK_cRNA_MS2.make()
                 spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
                 spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
@@ -185,7 +196,7 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
                            to_labware_region=   Plate_lysis,
                            volume=              SampleVolume,
                            using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
-                           optimizeFrom         =False,     optimizeTo= True,           # todo Really ??
+                           optimizeFrom         =False,     # optimizeTo= True,           # todo Really ??
                            NumSamples=          NumOfSamples)
             Itr.wash_tips(wasteVol=4, FastWash=True).exec()
             # with tips(reuse=False, drop=True):        # better reuse=True, drop=False, with normal Liquid Class ??
@@ -212,5 +223,5 @@ class PreKingFisher_RNAextNucleoMag(Protocol):
             with incubation(minutes=5):
                 Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
 
-            self.Script.done()
+        self.Script.done()
 

@@ -22,9 +22,6 @@ class App(tkinter.Frame):
 
         def __init__(self, parameters):
             self.parameters = parameters
-            #tkinter.Frame.__init__(self, parameters.GUI.GUI_parameters)
-
-            print("Initialsing parameters in GUI")
 
             # worktable_template_filename
             tkinter.Label(self.parameters.GUI.GUI_parameters, text='WorkTable:').grid(row=0, column=0, columnspan=1,
@@ -124,7 +121,7 @@ class App(tkinter.Frame):
         self.protocols = {p.name: p for p in available}         # values
         self.selected_protocol = tkinter.StringVar(master)      # variable
 
-        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols, command=self.setVariantsMenu)
+        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols, command=self.protocol_selected)
         self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
         self.selected_protocol.set(available[0].name)           # variable def value
 
@@ -173,14 +170,12 @@ class App(tkinter.Frame):
 
         # create and initialize the Parameters
         self.parameters = self.protocols[self.selected_protocol.get()].Parameter(self)
-        #self.parameters.initialize()
+        self.setVariantsMenu(None)
         for child in self.GUI_parameters.winfo_children():
             child.destroy() # .configure(state='disable')
 
         if selected == "RNA extraction with the MN_Vet kit":
             App.GUI_init_RNA_ext_MN(self.parameters)
-            # self.initialize_parameters = self.initialize_parameters_RNA_ext_MN
-            # self.GUI_init = GUI_init_RNA_ext_MN (self.GUI_parameters_)
         elif selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit":
             App.GUI_init_RNA_ext_Fisher(self.parameters)
         else:
@@ -188,7 +183,6 @@ class App(tkinter.Frame):
 
     def setVariantsMenu(self, value):
         selected = self.selected_protocol.get()
-        print ('Selected protocol: ' + selected)
         self.protocol_versions = self.protocols[selected].versions   # values
         m=self.version_selection.children['menu']
         m.delete(0,'end')

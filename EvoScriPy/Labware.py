@@ -76,10 +76,12 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
         self.Racks = []
         self.nSites = sites
         self.grid = [None] * grids
+        self.templateFileName = None
         if isinstance(templateFile, list):
             self.template = templateFile
         else:
             self.template = self.parseWorTableFile(templateFile)
+            self.templateFileName = templateFile
 
 
 
@@ -122,6 +124,7 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
 
 
         self.template = templList
+        self.templateFileName = templateFile
         return templList
 
     def createLabware(self, labw_t, loc, label):
@@ -163,10 +166,13 @@ class WorkTable:  # todo Implement parse WT from export file, template and scrip
     def getLabware(self, labw_type , label):
         assert isinstance(labw_type, Labware.Type )
 
+        if labw_type.name not in self.labTypes:
+            raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
+
         for labw in self.labTypes[labw_type.name]:
             if labw.label == label: return labw
 
-        raise Exception(labw_type.name , label)
+        raise Exception("Labware '" + labw_type.name + "' with label '" + label + "' was not found in worktable: " + self.templateFileName)
 
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
@@ -717,6 +723,8 @@ class DITIwaste(Labware):
         for tp in tips:
             self.Wells[self.wasted].reactive = tp
             self.wasted += 1
+
+            # todo make following assert a Warning or a UserPrompt
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
                 react_well = tp.origin.track
