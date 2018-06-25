@@ -7,11 +7,13 @@
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
+from protocols.Evo100_FLI import Evo100_FLI
+import EvoScriPy.Reactive as Rtv      # ??
 
 __author__ = 'Ariel'
 
 
-class Prefill_plates_VEW1_ElutionBuffer_VEW2(Protocol):
+class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     """
     Prefill plates with VEW1, Elution buffer and VEW2 for the
     Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL
@@ -21,43 +23,16 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Protocol):
     name = "Prefill plates with VEW1, Elution buffer and VEW2"
     versions = {'none'    : not_implemented}
 
-    class Parameter (Protocol.Parameter):
+    class Parameter (Evo100_FLI.Parameter):
 
         def __init__(self, GUI = None):
 
             self.NumOfSamples = 96
-            Protocol.Parameter.__init__(self, GUI=GUI,
-                                        worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext.ewt',
-                                        output_filename='../current/Prefill_plates_VEW1_ElutionBuffer_VEW2'
-                                        )
-
-    def __init__(self, parameters =  None):
-
-        self.NumOfSamples = parameters.NumOfSamples
-        Protocol.__init__(self,
-                          4,
-                          parameters or Prefill_plates_VEW1_ElutionBuffer_VEW2.Parameter())
-
-    def set_defaults(self):
-        print('set_defaults in preFisher_RNAext')
-        print('Init init_RNAextraction preFisher ')
-
-        Rtv.NumOfSamples = self.NumOfSamples  # ??
-
-        wt = self.worktable
-
-        # todo decide where to put the default labware: in robot or worktable object or the global Lab
-
-        self.WashCleanerS   = wt.getLabware(Lab.CleanerSWS,    "")
-        self.WashWaste      = wt.getLabware(Lab.WasteWS,       "")
-        self.WashCleanerL   = wt.getLabware(Lab.CleanerLWS,    "")
-        self.DiTiWaste      = wt.getLabware(Lab.DiTi_Waste,    "")
-
-        # self.BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
-        Lab.def_WashWaste   = self.WashWaste
-        Lab.def_WashCleaner = self.WashCleanerS
-        Lab.def_DiTiWaste   = self.DiTiWaste
-        Lab.def_DiTi        = Lab.DiTi_1000ul   # todo revise
+            Evo100_FLI.Parameter.__init__(self, GUI=GUI,
+                                          NumOfSamples=96,
+                                          worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext.ewt',
+                                          output_filename='../current/Prefill_plates_VEW1_ElutionBuffer_VEW2'
+                                         )
 
 
     def Run(self):
@@ -97,8 +72,8 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Protocol):
         # SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
 
-        all_samples = range(Rtv.NumOfSamples)
-        maxTips     = min  (Rbt.nTips, Rtv.NumOfSamples)
+        all_samples = range(NumOfSamples)
+        maxTips     = min  (Rbt.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
 
@@ -112,8 +87,6 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Protocol):
                                          volpersample=VEW2Volume    , defLiqClass=B_liquidClass)
         ElutionBuffer   = Rtv.Reactive("Elution Buffer "                  ,
                                        ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass="Eluat")
-
-        Waste           = Rtv.Reactive("Waste "  , self.WashWaste )
 
         # Show the CheckList GUI to the user for posible small changes
 
