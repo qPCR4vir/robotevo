@@ -41,7 +41,7 @@ class Reactive:
         self.volpersample = volpersample
         self.labware = labware
         self.components = []
-        self.Replicas = labware.put(self, pos, replicas)
+        self.Replicas = labware.put(self, pos, replicas)   # list of the wells used
         self.pos = self.Replicas[0].offset
         if initial_vol is not None:
             for w in  self.Replicas:

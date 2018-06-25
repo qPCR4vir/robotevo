@@ -72,7 +72,7 @@ class WorkTable:
     def __init__(self, templateFile=None, grids=67, sites=127):
         assert WorkTable.curWorkTable is None      # TODO revise. Add def_WorkTable
         WorkTable.curWorkTable = self              # TODO revise
-        self.labTypes = {}  # typeName:labwares. The type mountain a list of labware (with locations)
+        self.labTypes = {}  # typeName:labwares. For each type mountain a list of labwares (with have self locations)
         self.Racks = []
         self.nSites = sites
         self.grid = [None] * grids
@@ -173,6 +173,22 @@ class WorkTable:
             if labw.label == label: return labw
 
         raise Exception("Labware '" + labw_type.name + "' with label '" + label + "' was not found in worktable: " + self.templateFileName)
+
+    def retireLabware(self, labw):
+        assert isinstance(labw, Labware )
+        self.getLabware(labw.type.name, labw.label)
+        self.labTypes[labw.type.name].remove(labw)
+        labw.location = None
+        return labw
+
+    def replaceWithNew(self, labw, label):
+        assert isinstance(labw, Labware )
+        loc = labw.location
+        self.retireLabware(labw)
+        return self.createLabware(labw.type, loc, label)
+
+
+
 
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
