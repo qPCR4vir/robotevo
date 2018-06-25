@@ -13,7 +13,7 @@ from EvoScriPy.Instruction_Base import def_liquidClass
 
 def_react_excess =  4
 def_mix_excess   =  8
-NumOfSamples     = None
+NumOfSamples     = None    # TODO revise this !!! Eliminate this GLOBAL ??????
 
 class Reactive:
 

@@ -4,12 +4,13 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2018
 
-import EvoScriPy.Labware as Lab
-import EvoScriPy.Reactive as Rtv
 from EvoScriPy.protocol_steps import *
 from EvoScriPy.Instructions_Te_MagS import *
 import EvoScriPy.Instructions as Itr
+import EvoScriPy.Reactive as Rtv
+
 from protocols.Evo100_FLI import Evo100_FLI
+
 __author__ = 'Ariel'
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
@@ -40,7 +41,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     def Run(self):
         self.initialize()
         wt = self.worktable
-
+        NumOfSamples = self.NumOfSamples
 
         self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
         self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
@@ -62,7 +63,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         Eluat     = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
         Samples   = wt.getLabware(Lab.EppRack3x16,     "Proben")
 
-        Rtv.NumOfSamples = self.NumOfSamples
+        # Rtv.NumOfSamples = self.NumOfSamples
 
         Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(self.NumOfSamples))).exec()
 
@@ -86,8 +87,8 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         SampleLiqClass      ="Serum Asp" # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
-        all_samples = range(Rtv.NumOfSamples)
-        maxTips     = min(Rbt.nTips, Rtv.NumOfSamples)
+        all_samples = range(NumOfSamples)
+        maxTips     = min(Rbt.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
         par         = TeMag.parallelOrder(Rbt.nTips, all_samples)
 
@@ -148,7 +149,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                        volume=              SampleVolume,
                        using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
                        optimizeFrom         =False,     optimizeTo= True,
-                       NumSamples=          Rtv.NumOfSamples)
+                       NumSamples=          NumOfSamples)
         Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
         with tips(reuse=False, drop=True):    # better reuse=True, drop=False ??
@@ -174,7 +175,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with group("Wash in TeMag with " + EtOH80p.name), tips():
                 spread( reactive=EtOH80p,to_labware_region= TeMag.selectOnly(all_samples))
 
-                with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
+                with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//Rbt.nTips +1):
                     mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
                 with incubation(minutes=0.5):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
@@ -191,7 +192,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
 
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-            with parallel_execution_of(mix_mag_eluat, repeat=Rtv.NumOfSamples//Rbt.nTips+1):
+            with parallel_execution_of(mix_mag_eluat, repeat=NumOfSamples//Rbt.nTips+1):
                 mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
 
             with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
@@ -215,7 +216,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             """
             #import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
 
-            wells = wells or reactive.labware.selected() or range(Rtv.NumOfSamples)
+            wells = wells or reactive.labware.selected() or range(self.NumOfSamples)
             if not using_liquid_class:
                 using_liquid_class =  reactive.defLiqClass
             with group("Wash in TeMag with " + reactive.name):
@@ -223,7 +224,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
                 spread(reactive=reactive, to_labware_region=self.TeMag.selectOnly(wells))
 
-                with parallel_execution_of(mix_mag_sub, repeat=Rtv.NumOfSamples//Rbt.nTips +1):
+                with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//Rbt.nTips +1):
                     mix(self.TeMag.selectOnly(wells), using_liquid_class, vol)
 
                 with incubation(minutes=0.5, timer=2):

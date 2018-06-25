@@ -4,11 +4,9 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2018
 
-import EvoScriPy.Labware as Lab
-import EvoScriPy.Reactive as Rtv
 from EvoScriPy.protocol_steps import *
-from EvoScriPy.Instructions_Te_MagS import *
-import EvoScriPy.Instructions as Itr
+import EvoScriPy.Reactive as Rtv
+
 
 __author__ = 'Ariel'
 
@@ -27,6 +25,7 @@ class Evo100_FLI(Protocol):
                      output_filename                = None):
 
             self.NumOfSamples = NumOfSamples
+
             Protocol.Parameter.__init__(self, GUI=GUI,
                                         worktable_template_filename = worktable_template_filename,
                                         output_filename= output_filename
@@ -36,6 +35,8 @@ class Evo100_FLI(Protocol):
     def __init__(self, parameters ):
 
         self.NumOfSamples = parameters.NumOfSamples
+        Rtv.NumOfSamples = self.NumOfSamples
+
         Protocol.__init__(self,
                           4,
                           parameters)
