@@ -140,7 +140,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
 
         with tips(tipsMask=maxMask, reuse=True, drop=False):
-            pK_cRNA_MS2.make()
+            pK_cRNA_MS2.make(NumOfSamples)
             spread  (  reactive=pK_cRNA_MS2,   to_labware_region= TeMag.selectOnly(all_samples))
 
         with tips(reuse=True, drop=True, preserve=True):

@@ -161,7 +161,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
 
         with group("Sample Lysis"):
             with tips(tipsMask=maxMask, reuse=True, drop=True):
-                pK_cRNA_MS2.make()
+                pK_cRNA_MS2.make(NumOfSamples)
                 spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
                 spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
             with tips(reuse=False, drop=True):
