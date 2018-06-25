@@ -17,6 +17,3 @@ import protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2
 
 
 
-
-from EvoScriPy.protocol_steps import Protocol
-available.append(Protocol)

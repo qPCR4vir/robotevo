@@ -9,7 +9,7 @@ import EvoScriPy.Reactive as Rtv
 from EvoScriPy.protocol_steps import *
 from EvoScriPy.Instructions_Te_MagS import *
 import EvoScriPy.Instructions as Itr
-
+from protocols.Evo100_FLI import Evo100_FLI
 __author__ = 'Ariel'
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
@@ -18,7 +18,7 @@ mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoS
 Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
 
 
-class RNAextr_MN_Vet_Kit(Protocol):
+class RNAextr_MN_Vet_Kit(Evo100_FLI):
     """Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL.
     """
 
@@ -28,52 +28,22 @@ class RNAextr_MN_Vet_Kit(Protocol):
                 'Tissue without Liquid detection + tracking': not_implemented,
                 'Tissue with Liquid detection + tracking'   : not_implemented}
 
-    class Parameter (Protocol.Parameter):
+    class Parameter (Evo100_FLI.Parameter):
 
         def __init__(self, GUI = None):
-
-            self.NumOfSamples = 48
-            Protocol.Parameter.__init__(self, GUI=GUI,
-                                        worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt',
-                                        output_filename='../current/AWL_RNAext_MNVet'
+            Evo100_FLI.Parameter.__init__(self,
+                                          GUI=GUI,
+                                          worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt',
+                                          output_filename='../current/AWL_RNAext_MNVet'
                                         )
-            #self.worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt'
-            # '../protocols/RNAextractionMN_Mag/RNAext_MNVet.ewt'
-            #             C:\Prog\RobotEvo\EvoScripts\wt_templates\RNAext_MNVet.ewt
-
-
-    def __init__(self, parameters =  None):
-
-        self.NumOfSamples = parameters.NumOfSamples
-        Protocol.__init__(self,
-                          4,
-                          parameters or RNAextr_MN_Vet_Kit.Parameter())
-
-    def set_defaults(self):
-        print('set def in RNAextr_MN_Vet_Kit')
-
-        wt = self.worktable
-
-        # todo decide where to put the default labware: in robot or worktable object or the global Lab
-
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS,""                                  )
-        WashWaste       = wt.getLabware(Lab.WasteWS,   ""                                  )
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS,""                                  )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,""                                  )
-
-        # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
-        Lab.def_WashWaste   = WashWaste
-        Lab.def_WashCleaner = WashCleanerS
-        Lab.def_DiTiWaste   = DiTiWaste
-        Lab.def_DiTi        = Lab.DiTi_1000ul   # todo revise
-
-        self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
-        self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
-
 
     def Run(self):
         self.initialize()
         wt = self.worktable
+
+
+        self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
+        self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
 
         TeMag = self.TeMag
         ElutBuf = wt.getLabware(Lab.Trough_100ml, "1-VEL-ElutionBuffer")
@@ -260,5 +230,4 @@ class RNAextr_MN_Vet_Kit(Protocol):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
                 with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
                     waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)
-
 
