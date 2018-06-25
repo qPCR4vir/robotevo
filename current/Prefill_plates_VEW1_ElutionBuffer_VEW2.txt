@@ -1,4 +1,4 @@
-Comment("Extracting RNA from 96 samples with the MN-Vet kit");
+Comment("Prefill plates with VEW1, Elution buffer and VEW2 for 96 samples.");
 Set_DITI_Counter2("DiTi 1000ul","1","1","1",0);
 Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
 Group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer");

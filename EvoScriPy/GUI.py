@@ -186,7 +186,8 @@ class App(tkinter.Frame):
         if selected == "RNA extraction with the MN_Vet kit":
             App.GUI_init_RNA_ext_MN(self.parameters)
 
-        elif selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit":
+        elif   selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit"\
+            or selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill":
             App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(self.parameters)
 
         elif selected == "Prefill plates with VEW1, Elution buffer and VEW2":

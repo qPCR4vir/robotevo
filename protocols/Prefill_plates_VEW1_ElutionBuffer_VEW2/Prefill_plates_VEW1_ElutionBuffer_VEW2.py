@@ -40,7 +40,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+        Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'.format(str(NumOfSamples))).exec()
 
 
         #  Get Labwares (Cuvette, eppys, etc.) from the work table
