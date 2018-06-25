@@ -49,13 +49,6 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
-        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW1"    )  # Plate 12 x 8 ?
-        Plate_VEW1  = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW1"    )  # Plate 12 x 8 ?
-        Plate_VEW2  = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW2"    )  # Plate 12 x 8 ?
-        Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate_EtOH"    )  # Plate 12 x 8 ?
-        Plate_Eluat = wt.getLabware(Lab.MP96deepwell,   "Plate_EtOH"    )  # Plate 12 x 8 ? MP96well !!
-        Samples     = wt.getLabware(Lab.EppRack6x16_2mL,"Proben"        )  # 6x16 = 12 x 8 ?
-
 
         #  Set the initial position of the tips
 
@@ -127,22 +120,24 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
-        # Define samples and the place for temporal reactions
-        for s in all_samples:
-            Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
-                         pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
-                         excess=0)  # todo revise order !!!
-
-            #Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1, initial_vol=0.0, pos=s + 1,
-            #             excess=0)  # todo revise order !!!
-            Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2, initial_vol=0.0, pos=s + 1,
-                         excess=0)  # todo revise order !!!
-
 
         with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
 
-            Itr.userPrompt("Put the plates for VEW1, VEW2 and EtOH in that order")
+            Itr.userPrompt("Put the plates for VEW1, Elution Buffer and VEW2"
+                           " in the worktable defined order")
+
+            Plate_VEW1  = wt.getLabware(Lab.MP96deepwell, "Plate_VEW1" )  # Plate 12 x 8 ?
+            Plate_ElutB = wt.getLabware(Lab.MP96well,     "Plate_ElutB")  # Plate 12 x 8 ? MP96well !!
+            Plate_VEW2  = wt.getLabware(Lab.MP96deepwell, "Plate_VEW2" )  # Plate 12 x 8 ?
+
+            # Define samples and the place for temporal reactions
+            for s in all_samples:
+                Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1,   initial_vol=0.0, pos=s + 1,
+                             excess=0)  # todo revise order !!!
+                Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2,   initial_vol=0.0, pos=s + 1,
+                             excess=0)  # todo revise order !!!
+                Rtv.Reactive("ElutB_{:02d}".format(s + 1), Plate_ElutB, initial_vol=0.0, pos=s + 1,
+                             excess=0)  # todo revise order !!!
 
             with tips(reuse=True, drop=False):
                 spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))
@@ -151,15 +146,32 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
                 spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))
 
             with tips(reuse=True, drop=False):
+                spread(reactive=ElutionBuffer, to_labware_region=Plate_ElutB.selectOnly(all_samples))
+
+            Itr.userPrompt("Retire the plates for VEW1, VEW2 and Elution Buffer, and "
+                           "Put the plates for the lysis -in place of VEW1- and for EtOH80p -in place of VEW2-")
+
+            Plate_EtOH = wt.replaceWithNew(Plate_VEW2, "Plate_EtOH")  # Plate 12 x 8 ?
+            for s in all_samples:
+                Rtv.Reactive("EtOH_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=s + 1,
+                             excess=0)  # todo revise order !!!
+            with tips(reuse=True, drop=False):
                 spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
 
-            Itr.userPrompt("Put the plates for the lysis in pos 1 and the for Eluat in pos 3")
-
-            with tips(reuse=True, drop=False):
-                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples))
 
 
         with group("Sample Lysis"):
+            Samples     = wt.getLabware(Lab.EppRack6x16_2mL, "Proben")  # 6x16 = 12 x 8 ?
+            Plate_lysis = wt.replaceWithNew(Plate_VEW1, "Lysis_Plate")  # Plate 12 x 8 ?
+
+            # Define samples and the place for temporal reactions
+
+            for s in all_samples:
+                Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+                             pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+                Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
+                             excess=0)  # todo revise order !!!
+
             with tips(tipsMask=maxMask, reuse=True, drop=True):
                 pK_cRNA_MS2.make(NumOfSamples)
                 spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
