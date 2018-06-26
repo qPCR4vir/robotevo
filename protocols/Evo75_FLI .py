@@ -21,7 +21,7 @@ class Evo75_FLI(Protocol):
         def __init__(self,
                      GUI                            = None,
                      # NumOfSamples                   = 48,
-                     worktable_template_filename    = None,
+                     worktable_template_filename    = """C:\Prog\robotevo\EvoScripts\wt_templates\Freedom75_FLI_PCR.ewt""",
                      output_filename                = None):
 
             # self.NumOfSamples = NumOfSamples

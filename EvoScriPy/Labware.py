@@ -7,7 +7,7 @@
 
 __author__ = 'qPCR4vir'
 
-
+# TODO we need these GLOBALS ????????
 def_LabW        = None
 def_WashWaste   = None
 def_WashCleaner = None
@@ -789,6 +789,8 @@ EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, nSite=16)
 Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
 Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)
 Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=    1500)
+TubeRack13mmx16 = Labware.Type("Tube 13*100mm 16 Pos",              16,     maxVol=   15000)   # 15 mL ?
+EppRackx16      = Labware.Type("Tube Eppendorf 16 Pos",             16,     maxVol=    1500)
 
 EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVol=     2000)# todo define in Evoware !!!
 
@@ -800,11 +802,17 @@ Tip_200maxVol   = 190                   # TODO revise
 def_DiTi        = DiTi_1000ul
 
 
+#Evo100
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
 CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
 WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000) # 10 L
 CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
 DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
+#Evo75
+CleanerShallow  = Labware.CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
+WasteWash       = Labware.CuvetteType("Wash Station Waste",              8, maxVol=10000000) # 10 L
+CleanerDeep     = Labware.CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
+DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
 
 
 MP96well     = Labware.Type("MP 96 well 0,2 mL"   , 8, 12, maxVol= 200)
