@@ -794,8 +794,9 @@ EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVo
 
 
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
+DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
-Tip_200maxVol   = 190
+Tip_200maxVol   = 190                   # TODO revise
 def_DiTi        = DiTi_1000ul
 
 
@@ -806,8 +807,9 @@ CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxV
 DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
 
 
-MP96well     = Labware.Type("MP 96 well 0,2 mL", 8, 12, maxVol=200)
+MP96well     = Labware.Type("MP 96 well 0,2 mL"   , 8, 12, maxVol= 200)
 MP96deepwell = Labware.Type("MP 96 deep well 2 mL", 8, 12, maxVol=2000)    # todo define in Evoware !!!
+PCR96well    = Labware.Type("96 Well PCR Plate"   , 8, 12, maxVol= 100)
 
 
 def getLabware(labw_type, label, worktable=None):
