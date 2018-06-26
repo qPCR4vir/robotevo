@@ -176,7 +176,7 @@ class WorkTable:
 
     def retireLabware(self, labw):
         assert isinstance(labw, Labware )
-        self.getLabware(labw.type.name, labw.label)
+        self.getLabware(labw.type, labw.label)
         self.labTypes[labw.type.name].remove(labw)
         labw.location = None
         return labw
@@ -185,7 +185,7 @@ class WorkTable:
         assert isinstance(labw, Labware )
         loc = labw.location
         self.retireLabware(labw)
-        return self.createLabware(labw.type, loc, label)
+        return labw.type.createLabware(loc, label)
 
 
 
