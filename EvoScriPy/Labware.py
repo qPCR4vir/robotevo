@@ -785,6 +785,12 @@ EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxV
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
 EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=    1500)
 EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=    1500)
+EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  maxVol=    1500) # defined in Evoware !!!
+                    # by duplicating and then editing the labware 'Tube Eppendorf 3x 16 Pos' and also the carrier
+                    # to have 6 instead of 3 columns. It was needed to change the position X of the last well (96)
+                    # It was done by change the grig 6 positions to the right and coping the X pos of the first well,
+                    # then come back to the originaL GRID AND SET THE COPIED X FOR the last well. The new, duplicated
+                    # carrier was set to X width 150 mm
 EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, nSite=16)
 Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
 Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)

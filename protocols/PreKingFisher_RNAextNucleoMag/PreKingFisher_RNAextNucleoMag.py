@@ -161,7 +161,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
 
 
         with group("Sample Lysis"):
-            Samples     = wt.getLabware(Lab.EppRack6x16_2mL, "Proben")  # 6x16 = 12 x 8 ?
+            Samples     = wt.getLabware(Lab.EppRack6x16, "Proben")  # 6x16 = 12 x 8 ?
             Plate_lysis = wt.replaceWithNew(Plate_VEW1, "Lysis_Plate")  # Plate 12 x 8 ?
 
             # Define samples and the place for temporal reactions
