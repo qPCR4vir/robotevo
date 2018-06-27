@@ -815,9 +815,9 @@ CleanerDeep     = Labware.CuvetteType("Wash Station Cleaner deep",       8, maxV
 DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
 
 
-MP96well     = Labware.Type("MP 96 well 0,2 mL"   , 8, 12, maxVol= 200)
-MP96deepwell = Labware.Type("MP 96 deep well 2 mL", 8, 12, maxVol=2000)    # todo define in Evoware !!!
-PCR96well    = Labware.Type("96 Well PCR Plate"   , 8, 12, maxVol= 100)
+MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
+MP96deepwell = Labware.Type("96 Well DeepWell square", 8, 12, maxVol=2000)    # todo define in Evoware !!!
+PCR96well    = Labware.Type("96 Well PCR Plate"      , 8, 12, maxVol= 100)
 
 
 def getLabware(labw_type, label, worktable=None):

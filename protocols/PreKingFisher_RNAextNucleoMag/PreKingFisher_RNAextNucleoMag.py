@@ -126,9 +126,9 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
             Itr.userPrompt("Put the plates for VEW1, Elution Buffer and VEW2"
                            " in the worktable defined order")
 
-            Plate_VEW1  = wt.getLabware(Lab.MP96deepwell, "Plate_VEW1" )  # Plate 12 x 8 ?
-            Plate_ElutB = wt.getLabware(Lab.MP96well,     "Plate_ElutB")  # Plate 12 x 8 ? MP96well !!
-            Plate_VEW2  = wt.getLabware(Lab.MP96deepwell, "Plate_VEW2" )  # Plate 12 x 8 ?
+            Plate_VEW1  = wt.getLabware(Lab.MP96deepwell, "Plate VEW1" )  # Plate 12 x 8 ?
+            Plate_ElutB = wt.getLabware(Lab.MP96well,     "Plate ElutB")  # Plate 12 x 8 ? MP96well !!
+            Plate_VEW2  = wt.getLabware(Lab.MP96deepwell, "Plate VEW2" )  # Plate 12 x 8 ?
 
             # Define samples and the place for temporal reactions
             for s in all_samples:
