@@ -26,7 +26,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         def __init__(self, GUI = None):
             Evo100_FLI.Parameter.__init__(self, GUI=GUI,
                                           NumOfSamples=96,
-                                          worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext.ewt',
+                                          worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext_EtOH.ewt',
                                           output_filename='../current/PreKingFisher_RNAextNucleoMag_EtOH80p'
                                          )
 
@@ -48,10 +48,6 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
-        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate_VEW1"    )  # Plate 12 x 8 ?
-        Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate_EtOH"    )  # Plate 12 x 8 ? MP96well !!
-        Samples     = wt.getLabware(Lab.EppRack6x16_2mL,"Proben"        )  # 6x16 = 12 x 8 ?
-
 
         #  Set the initial position of the tips
 
@@ -109,6 +105,11 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         self.CheckList()
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
+
+        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate VEW1"    )  # Plate 12 x 8 ?
+        Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
+        Samples     = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
+
 
         # Define samples and the place for temporal reactions
         for s in all_samples:

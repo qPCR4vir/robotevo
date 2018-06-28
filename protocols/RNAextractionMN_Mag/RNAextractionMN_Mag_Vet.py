@@ -34,9 +34,12 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         def __init__(self, GUI = None):
             Evo100_FLI.Parameter.__init__(self,
                                           GUI=GUI,
-                                          worktable_template_filename = '../EvoScripts/wt_templates/RNAext_MNVet.ewt',
+                                          worktable_template_filename = '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
                                           output_filename='../current/AWL_RNAext_MNVet'
                                         )
+
+    # ''../EvoScripts/wt_templates/RNAext_MNVet.ewt',
+
 
     def Run(self):
         self.initialize()
