@@ -73,7 +73,6 @@ class App(tkinter.Frame):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
 
 
-
     class GUI_init_RNA_ext_MN(GUI_init_parameters):
 
         def __init__(self, parameters):
@@ -97,8 +96,8 @@ class App(tkinter.Frame):
             return 1 , 48
 
         def read_NumOfSamples(self):
-            self.parameters.NumOfSamples = self.NumOfSamples
-            print(" --- NumOfSamples set to: ", str(self.parameters.NumOfSamples))
+            self.parameters.NumOfSamples = self.NumOfSamples.get()
+            print(" --- NumOfSamples set to: %d" % (self.parameters.NumOfSamples))
 
 
     class GUI_init_RNA_ext_Fisher(GUI_init_RNA_ext_MN):
