@@ -155,7 +155,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                        NumSamples=          NumOfSamples)
         Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
-        with tips(reuse=False, drop=True):    # better reuse=True, drop=False ??
+        with tips(reuse=True, drop=False):    # better reuse=True, drop=False ??
             spread  (  reactive=LysisBuffer,   to_labware_region= TeMag.selectOnly(all_samples))
 
         with incubation(10): pass

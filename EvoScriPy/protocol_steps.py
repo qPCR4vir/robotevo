@@ -735,35 +735,38 @@ def group(titel, mode=None):
 @contextmanager
 def tips(tipsMask=None, reuse=None,     drop=None,
                         preserve=None,  usePreserved=None, selected_samples=None,
-                        allow_air=None):
+                        allow_air=None, drop_first=None,   drop_last=None):
     '''
 
     :param tipsMask:
-    :param reuse: Reuse the tips or drop it and take new after each action?
-    :param drop: Drops the tips at THE END of the whole action? like after spread of the reactive into various target?
+    :param reuse: Reuse the tips or drop it and take new BEFORE each individual action
+    :param drop: Drops the tips AFTER each individual action? like after one aspiration and spread of the reactive into various target
     :param preserve:
     :param usePreserved:
     :param selected_samples:
     :param allow_air:
+    :param drop_first: Reuse the tips or drop it and take new once BEFORE the whole action
+    :param drop_last: Drops the tips at THE END of the whole action
     :return:
     '''
-    if reuse        is not None: reuse        = reuseTips       (reuse       )
-    if drop         is not None: drop         = set_dropTips    (drop        )
-    if preserve     is not None: preserve     = preserveTips    (preserve    )
-    if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
-    if allow_air    is not None: allow_air    = set_allow_air   (allow_air  )
 
-    if tipsMask     is not None: tipsMask     = getTips         (tipsMask, selected_samples=selected_samples)
+    if reuse        is not None: reuse_old          = reuseTips       (reuse       )
+    if drop         is not None: drop_old           = set_dropTips    (drop        )
+    if preserve     is not None: preserve_old       = preserveTips    (preserve    )
+    if usePreserved is not None: usePreserved_old   = usePreservedTips(usePreserved)
+    if allow_air    is not None: allow_air_old      = set_allow_air   (allow_air  )
+
+    if tipsMask     is not None: tipsMask_old     = getTips         (tipsMask, selected_samples=selected_samples)
 
     yield
 
-    if tipsMask     is not None: tipsMask     = dropTips        (tipsMask)
+    if tipsMask     is not None: tipsMask     = dropTips        (tipsMask_old)
 
-    if reuse        is not None: reuse        = reuseTips       (reuse       )
-    if drop         is not None: drop         = set_dropTips    (drop        )
-    if preserve     is not None: preserve     = preserveTips    (preserve    )
-    if usePreserved is not None: usePreserved = usePreservedTips(usePreserved)
-    if allow_air    is not None: allow_air    = set_allow_air   (allow_air  )
+    if reuse        is not None: reuse        = reuseTips       (reuse_old       )
+    if drop         is not None: drop         = set_dropTips    (drop_old        )
+    if preserve     is not None: preserve     = preserveTips    (preserve_old    )
+    if usePreserved is not None: usePreserved = usePreservedTips(usePreserved_old)
+    if allow_air    is not None: allow_air    = set_allow_air   (allow_air_old   )
 
 @contextmanager
 def parallel_execution_of(subroutine, repeat=1):
