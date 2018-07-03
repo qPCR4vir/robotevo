@@ -53,7 +53,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         Plate_VEW1  = wt.getLabware(Lab.MP96deepwell,   "Plate VEW1"    )  # Plate 12 x 8 ?
         Plate_VEW2  = wt.getLabware(Lab.MP96deepwell,   "Plate VEW2"    )  # Plate 12 x 8 ?
-        Plate_Eluat = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
+        Plate_Eluat = wt.getLabware(Lab.MP96well,      "Plate ElutB"    )  # Plate 12 x 8 ? MP96well !!
 
 
         #  Set the initial position of the tips
