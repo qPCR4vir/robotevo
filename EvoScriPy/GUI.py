@@ -124,24 +124,22 @@ class App(tkinter.Frame):
         def __init__(self):
             self.protocols = {p.name: p for p in available}  # values
 
+            # temporal solution
+            self.GUI4parameters= { "RNA extraction with the MN_Vet kit" : App.GUI_init_RNA_ext_MN,
+                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit" : App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
+                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill": App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
+                                   "Prefill plates with VEW1, Elution buffer and VEW2" : App.GUI_init_RNA_ext_Fisher
+                                   }
+
         def versions(self, prot_name):
             return self.protocols[prot_name].versions
 
         def new_parameters(self, prot_name, GUI):
 
             self.parameters = self.protocols[prot_name].Parameter(GUI)
-            if prot_name == "RNA extraction with the MN_Vet kit":
-                App.GUI_init_RNA_ext_MN(self.parameters)
 
-            elif prot_name == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit" \
-                    or prot_name == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill":
-                App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(self.parameters)
+            self.GUI4parameters[prot_name](self.parameters)
 
-            elif prot_name == "Prefill plates with VEW1, Elution buffer and VEW2":
-                App.GUI_init_RNA_ext_Fisher(self.parameters)
-
-            else:
-                App.GUI_init_parameters(self.parameters)
             return self.parameters
 
     def __init__(self, master=None):
