@@ -14,6 +14,9 @@ from protocols import available
 __author__ = 'qPCR4vir'
 
 
+
+
+
 class App(tkinter.Frame):
     """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
     """
@@ -24,36 +27,36 @@ class App(tkinter.Frame):
             self.parameters = parameters
 
             # worktable_template_filename
-            tkinter.Label(self.parameters.GUI.GUI_parameters, text='WorkTable:').grid(row=0, column=0, columnspan=1,
+            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text='WorkTable:').grid(row=0, column=0, columnspan=1,
                                                         sticky=tkinter.N + tkinter.W)
             self.worktable_filename_v = tkinter.StringVar( )
             self.worktable_filename_v.set(parameters.worktable_template_filename)
-            tkinter.Entry(self.parameters.GUI.GUI_parameters, textvariable=self.worktable_filename_v).grid(row=0, column=1, columnspan=9,
+            tkinter.Entry(self.parameters.GUI.GUI_parameters_frame, textvariable=self.worktable_filename_v).grid(row=0, column=1, columnspan=9,
                                                                              sticky=tkinter.N + tkinter.E + tkinter.W)
 
-            tkinter.Button(self.parameters.GUI.GUI_parameters, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
+            tkinter.Button(self.parameters.GUI.GUI_parameters_frame, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
             self.worktable_filename_v.trace("w", self.set_WT_FN)
 
             # output_filename
-            tkinter.Label(self.parameters.GUI.GUI_parameters, text='Output filename:').grid(row=1, column=0, columnspan=1,
+            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text='Output filename:').grid(row=1, column=0, columnspan=1,
                                                                                       sticky=tkinter.N + tkinter.W)
             self.output_filename_v = tkinter.StringVar()
             self.output_filename_v.set(parameters.output_filename)
-            tkinter.Entry(self.parameters.GUI.GUI_parameters, textvariable=self.output_filename_v).grid(row=1,
+            tkinter.Entry(self.parameters.GUI.GUI_parameters_frame, textvariable=self.output_filename_v).grid(row=1,
                                                                                                            column=1,
                                                                                                            columnspan=9,
                                                                                                            sticky=tkinter.N + tkinter.E + tkinter.W)
 
-            tkinter.Button(self.parameters.GUI.GUI_parameters, text='...', command=self.selet_O_FN).grid(row=1,
+            tkinter.Button(self.parameters.GUI.GUI_parameters_frame, text='...', command=self.selet_O_FN).grid(row=1,
                                                                                                           column=10)
             self.output_filename_v.trace("w", self.set_O_FN)
 
             # First tip (in the first tip rack)
-            tkinter.Label(self.parameters.GUI.GUI_parameters, text='First tip:').grid(row=2, column=0, columnspan=1,
+            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text='First tip:').grid(row=2, column=0, columnspan=1,
                                                         sticky=tkinter.N + tkinter.W)
             self.firstTip_v = tkinter.StringVar( )
             self.firstTip_v.set(parameters.firstTip)
-            tkinter.Entry(self.parameters.GUI.GUI_parameters, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
+            tkinter.Entry(self.parameters.GUI.GUI_parameters_frame, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
                                                                              sticky=tkinter.N + tkinter.E + tkinter.W)
             self.firstTip_v.trace("w", self.set_firstTip)
 
@@ -81,12 +84,12 @@ class App(tkinter.Frame):
             # Number of Samples
             min_s, max_s = self.min_max_Number_of_Samples()
             label = "Number of Samples: ({}-{}) ".format(min_s, max_s)
-            tkinter.Label(self.parameters.GUI.GUI_parameters, text=label).grid(row=2, column=3, columnspan=2,
+            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text=label).grid(row=2, column=3, columnspan=2,
                                                                        sticky=tkinter.N + tkinter.W)
 
             self.NumOfSamples = tkinter.IntVar()
             self.NumOfSamples.set(self.parameters.NumOfSamples)
-            self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters, textvariable=self.NumOfSamples,
+            self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters_frame, textvariable=self.NumOfSamples,
                                               from_=min_s, to=max_s, increment=1,
                                               command=self.read_NumOfSamples)
             self.sample_num.grid(row=2, column=5, columnspan=1)
@@ -117,8 +120,29 @@ class App(tkinter.Frame):
         def min_max_Number_of_Samples(self):
             return 1 , 96
 
+    class GUI4Protocols:
+        def __init__(self):
+            self.protocols = {p.name: p for p in available}  # values
 
+        def versions(self, prot_name):
+            return self.protocols[prot_name].versions
 
+        def new_parameters(self, prot_name, GUI):
+
+            self.parameters = self.protocols[prot_name].Parameter(GUI)
+            if prot_name == "RNA extraction with the MN_Vet kit":
+                App.GUI_init_RNA_ext_MN(self.parameters)
+
+            elif prot_name == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit" \
+                    or prot_name == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill":
+                App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(self.parameters)
+
+            elif prot_name == "Prefill plates with VEW1, Elution buffer and VEW2":
+                App.GUI_init_RNA_ext_Fisher(self.parameters)
+
+            else:
+                App.GUI_init_parameters(self.parameters)
+            return self.parameters
 
     def __init__(self, master=None):
 
@@ -126,15 +150,16 @@ class App(tkinter.Frame):
         self.grid()
 
         # Protocol selection ------------------
-        self.protocols = {p.name: p for p in available}         # values
+        self.GUIprot = App.GUI4Protocols()        # values
+        g=self.GUIprot
         self.selected_protocol = tkinter.StringVar(master)      # variable
 
-        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.protocols, command=self.protocol_selected)
+        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *g.protocols, command=self.protocol_selected)
         self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
         self.selected_protocol.set(available[0].name)           # variable def value
 
 
-        self.protocol_versions = self.protocols[self.selected_protocol.get()].versions   # values
+        self.protocol_versions = g.versions(self.selected_protocol.get())
         self.selected_version = tkinter.StringVar(master)                                # variable
 
         self.version_selection = tkinter.OptionMenu(self, self.selected_version, *self.protocol_versions)
@@ -144,8 +169,8 @@ class App(tkinter.Frame):
         self.used_protocols = {}                  # ???
 
         # initialize parameters
-        self.GUI_parameters = tkinter.Frame(self)
-        self.GUI_parameters.grid(row=0, column=4, columnspan=11, rowspan=3)
+        self.GUI_parameters_frame = tkinter.Frame(self)
+        self.GUI_parameters_frame.grid(row=0, column=4, columnspan=11, rowspan=3)
         self.protocol_selected(None)
 
         # run / quit     ---------------------
@@ -175,29 +200,19 @@ class App(tkinter.Frame):
     def protocol_selected(self, value):
         selected = self.selected_protocol.get()
         print('Selected protocol: ' + selected)
-
-        # create and initialize the Parameters
-        self.parameters = self.protocols[self.selected_protocol.get()].Parameter(self)
         self.setVariantsMenu(None)
-        for child in self.GUI_parameters.winfo_children():
+        for child in self.GUI_parameters_frame.winfo_children():
             child.destroy() # .configure(state='disable')
 
-        if selected == "RNA extraction with the MN_Vet kit":
-            App.GUI_init_RNA_ext_MN(self.parameters)
 
-        elif   selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit"\
-            or selected == "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill":
-            App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(self.parameters)
+        # create and initialize the Parameters
+        self.parameters = self.GUIprot.new_parameters(selected, self)
 
-        elif selected == "Prefill plates with VEW1, Elution buffer and VEW2":
-            App.GUI_init_RNA_ext_Fisher(self.parameters)
 
-        else:
-            App.GUI_init_parameters(self.parameters)
 
     def setVariantsMenu(self, value):
         selected = self.selected_protocol.get()
-        self.protocol_versions = self.protocols[selected].versions   # values
+        self.protocol_versions = self.GUIprot.versions(selected)
         m=self.version_selection.children['menu']
         m.delete(0,'end')
         for val in self.protocol_versions:
@@ -299,8 +314,8 @@ class App(tkinter.Frame):
 
         self.ReactFrames = [App.ReactiveFrame(self,react) for react in protocol.Reactives]
 
-        #self.GUI_parameters.destroy() #    ['state'] = 'disabled'
-        for child in self.GUI_parameters.winfo_children():
+        #self.GUI_parameters_frame.destroy() #    ['state'] = 'disabled'
+        for child in self.GUI_parameters_frame.winfo_children():
             child.configure(state='disable')
         self.quit              ['state'] = 'normal'
         self.run               ['state'] = 'disabled'
@@ -316,7 +331,7 @@ class App(tkinter.Frame):
         if not selected: return
 
         # create and run the protocol
-        protocol = self.protocols[selected](self.parameters)
+        protocol = self.GUIprot.protocols[selected](self.parameters)
         protocol.Run()
 
         for line in protocol.comments():

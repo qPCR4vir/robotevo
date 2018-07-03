@@ -11,8 +11,9 @@ Maintain here a list of all available customer protocols
 available = []
 
 import protocols.RNAextractionMN_Mag
-import protocols.PreKingFisher_RNAextNucleoMag
+import protocols.KingFisher_RNAextNucleoMag_EtOH80p
 import protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2
+import protocols.PreKingFisher_RNAextNucleoMag
 import protocols.PreKingFisher_RNAextNucleoMag_EtOH80p
 
 
