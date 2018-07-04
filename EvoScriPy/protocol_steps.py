@@ -68,7 +68,7 @@ class Protocol:
         self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
                                      filename=self.parameters.output_filename + '.esc',
                                      robot=self.iRobot.robot)
-        self.comments_ = EvoMode.Comments()
+        self.comments_ = EvoMode.Comments(filename=self.parameters.output_filename + '.protocol.txt')
         self.EvoMode = EvoMode.multiple([self.iRobot,
                                          self.Script,
                                          EvoMode.AdvancedWorkList(self.parameters.output_filename + '.gwl'),
