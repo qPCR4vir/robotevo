@@ -13,13 +13,35 @@ from protocols import available
 
 __author__ = 'qPCR4vir'
 
-
-
+GUI4parameters = {}
 
 
 class App(tkinter.Frame):
     """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
     """
+
+    class GUI4Protocols:
+
+        def __init__(self):
+            self.protocols = {p.name: p for p in available}  # values
+
+            # temporal solution
+            self.GUI4parameters = {"RNA extraction with the MN_Vet kit": App.GUI_init_RNA_ext_MN,
+                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit": App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
+                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill": App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
+                                   "Prefill plates with VEW1, Elution buffer and VEW2": App.GUI_init_RNA_ext_Fisher
+                                   }
+            self.GUI4parameters = GUI4parameters
+
+        def versions(self, prot_name):
+            return self.protocols[prot_name].versions
+
+        def new_parameters(self, prot_name, GUI):
+            self.parameters = self.protocols[prot_name].Parameter(GUI)
+            # run the corresponding GUI
+            self.GUI4parameters[prot_name](self.parameters)
+
+            return self.parameters
 
     class GUI_init_parameters: # (tkinter.Frame)
 
@@ -74,9 +96,12 @@ class App(tkinter.Frame):
 
         def selet_O_FN(self):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
+    from EvoScriPy.protocol_steps import Protocol
+    GUI4parameters[Protocol.name]=GUI_init_parameters
 
 
     class GUI_init_RNA_ext_MN(GUI_init_parameters):
+
 
         def __init__(self, parameters):
             App.GUI_init_parameters.__init__(self, parameters)
@@ -101,7 +126,8 @@ class App(tkinter.Frame):
         def read_NumOfSamples(self):
             self.parameters.NumOfSamples = self.NumOfSamples.get()
             print(" --- NumOfSamples set to: %d" % (self.parameters.NumOfSamples))
-
+    from protocols.RNAextractionMN_Mag import RNAextr_MN_Vet_Kit
+    GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNA_ext_MN
 
     class GUI_init_RNA_ext_Fisher(GUI_init_RNA_ext_MN):
 
@@ -110,6 +136,12 @@ class App(tkinter.Frame):
 
         def min_max_Number_of_Samples(self):
             return 1 , 96
+    from protocols.KingFisher_RNAextNucleoMag_EtOH80p import KingFisher_RNAextNucleoMag_EtOH80p
+    GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNA_ext_Fisher
+    from protocols.PreKingFisher_RNAextNucleoMag import PreKingFisher_RNAextNucleoMag
+    GUI4parameters[PreKingFisher_RNAextNucleoMag.name]=GUI_init_RNA_ext_Fisher
+    from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p import PreKingFisher_RNAextNucleoMag_EtOH80p
+    GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNA_ext_Fisher
 
 
     class GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(GUI_init_RNA_ext_MN):
@@ -119,28 +151,9 @@ class App(tkinter.Frame):
 
         def min_max_Number_of_Samples(self):
             return 1 , 96
+    from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
+    GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2
 
-    class GUI4Protocols:
-        def __init__(self):
-            self.protocols = {p.name: p for p in available}  # values
-
-            # temporal solution
-            self.GUI4parameters= { "RNA extraction with the MN_Vet kit" : App.GUI_init_RNA_ext_MN,
-                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit" : App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
-                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill": App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
-                                   "Prefill plates with VEW1, Elution buffer and VEW2" : App.GUI_init_RNA_ext_Fisher
-                                   }
-
-        def versions(self, prot_name):
-            return self.protocols[prot_name].versions
-
-        def new_parameters(self, prot_name, GUI):
-
-            self.parameters = self.protocols[prot_name].Parameter(GUI)
-
-            self.GUI4parameters[prot_name](self.parameters)
-
-            return self.parameters
 
     def __init__(self, master=None):
 

@@ -18,7 +18,7 @@ class KingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     """Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL.
     """
 
-    name = "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill"
+    name = "RNAextr original NMag MN_Vet kit and EtOH80p preFill for KingFisher"
     versions = {'none'    : not_implemented}
 
     class Parameter (Evo100_FLI.Parameter):
@@ -35,7 +35,7 @@ class KingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+        Itr.comment('Extracting RNA from {:s} samples with the original MN-Vet kit protocol and EtOH prefill'.format(str(NumOfSamples))).exec()
 
 
         #  Get Labwares (Cuvette, eppys, etc.) from the work table

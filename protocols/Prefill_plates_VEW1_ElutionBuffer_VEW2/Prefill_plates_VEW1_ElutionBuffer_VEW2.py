@@ -20,7 +20,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     with watching in the Fischer Robot.
     """
 
-    name = "Prefill plates with VEW1, Elution buffer and VEW2"
+    name = "Prefill plates with VEW1, Elution buffer and VEW2 for KingFisher"
     versions = {'none'    : not_implemented}
 
     class Parameter (Evo100_FLI.Parameter):

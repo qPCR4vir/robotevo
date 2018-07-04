@@ -18,7 +18,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
     """Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL.
     """
 
-    name = "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit"
+    name = "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and preFill plates"
     versions = {'none'    : not_implemented}
 
     class Parameter (Evo100_FLI.Parameter):
