@@ -40,14 +40,21 @@ class Comments(toString):
     but also to the final user just before the actual physical run.
     """
 
-    def __init__(self):
+    def __init__(self, identation_char=None, identattion_length=None, current_identation=None):
+        self.current_identation = current_identation if current_identation is not None else 0
+        self.identattion_length = identattion_length or 4
+        self.identation_char = identation_char or ' '
         self.comments = []
 
     def exec(self, instr):
-        from EvoScriPy.Instructions import comment, group
+        from EvoScriPy.Instructions import comment, group, group_end
 
         if isinstance(instr, comment) or isinstance(instr, group):
-            self.comments.append("  " + instr.arg[0].data)
+            identation = self.identation_char * self.identattion_length * self.current_identation
+            self.comments.append(identation + instr.arg[0].data)
+            if isinstance(instr, group): self.current_identation += 1
+
+        if isinstance(instr, group_end): self.current_identation -= 1
 
 
 
