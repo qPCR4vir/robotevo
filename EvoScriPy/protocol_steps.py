@@ -117,6 +117,7 @@ class Protocol:
         self.initialize()
         self.CheckList()
         self.Script.done()
+        self.comments_.done()
         raise "Not implemented !"
 
     def CheckList(self):

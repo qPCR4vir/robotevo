@@ -207,6 +207,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                          optimizeTo=            False,
                          using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
         self.Script.done()
+        self.comments_.done()
 
 
     def wash_in_TeMag( self, reactive, wells=None, using_liquid_class=None, vol=None):
