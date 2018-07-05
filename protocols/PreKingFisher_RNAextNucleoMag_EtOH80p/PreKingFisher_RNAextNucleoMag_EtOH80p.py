@@ -71,7 +71,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (Rbt.nTips, NumOfSamples)
+        maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
 

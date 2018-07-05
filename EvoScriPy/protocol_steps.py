@@ -18,7 +18,7 @@ def not_implemented(NumOfSamples):
     print('This protocols have yet to be implemented.')
 
 
-output_filename = '../current/AWL'
+# output_filename = '../current/AWL'
 
 
 class Protocol:
@@ -36,11 +36,11 @@ class Protocol:
 
         def __init__(self, GUI                         = None,
                            worktable_template_filename = None,
-                           output_filename             = output_filename,
+                           output_filename             = None,
                            firstTip                    = None):
 
             self.worktable_template_filename = worktable_template_filename or ""
-            self.output_filename             = output_filename
+            self.output_filename             = output_filename or '../current/AWL'
             self.GUI                         = GUI
             self.firstTip                    = firstTip or 'A01'
 
@@ -56,7 +56,7 @@ class Protocol:
         self.parameters  = parameters or Protocol.Parameter()
         self.initialized = False
         self.Reactives   = []
-        self. nTips      = nTips
+        self.nTips      = nTips
         self.EvoMode     = None
 
         self.set_EvoMode()
@@ -77,7 +77,9 @@ class Protocol:
                                          self.comments_
                                          ])
         EvoMode.current = self.EvoMode
-        self.worktable = self.iRobot.robot.worktable
+        self.worktable = self.iRobot.robot.worktable  # shortcut !!
+        self.robot = self.iRobot.robot
+        assert (self.iRobot.robot.curArm().nTips == self.nTips )
 
     def set_EvoMode(self):
         if not self.EvoMode:
@@ -181,9 +183,9 @@ def moveTips(zMove, zTarget, offset, speed, TIP_MASK=-1):
     pass # Itr.moveLiha
 
 def getTips(TIP_MASK=-1, type=None, selected_samples=None):
-    robot = Rbt.Robot.current
-    mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[Rbt.nTips]
+    robot = Rbt.Robot.current                                                         # todo revice !!!
     assert isinstance(robot, Rbt.Robot)
+    mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[robot.curArm().nTips]
     #if not Rbt.Robot.reusetips: # and Rbt.Robot.droptips
 
     if robot.usePreservedtips:

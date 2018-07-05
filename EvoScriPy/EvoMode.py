@@ -169,7 +169,7 @@ class iRobot(Mode):
     and current volume in wells in labware, etc. One basic use of this, is to garante that the robot will be actualize
     once and only once even when multiple modes are used.
     """
-    def __init__(self, index,  nTips=4 , arms=None):
+    def __init__(self, index,  nTips , arms=None):
         Mode.__init__(self )
         # import Robot as Rbt
         self.robot = Rbt.Robot(index=index, arms=arms, nTips=nTips)
@@ -183,5 +183,5 @@ class iRobot(Mode):
         self.robot.set_as_current()
 
 
-current = None
+current = None   # Oppsss !!! Define
 

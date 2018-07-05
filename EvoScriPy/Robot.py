@@ -18,8 +18,8 @@ for tip in range(13):
     tipMask += [1 << tip]
     tipsMask += [2 ** tip - 1]
 
-def_nTips = 4
-nTips = def_nTips
+# def_nTips = 4
+# nTips = def_nTips
 
 
 class Robot:
@@ -29,7 +29,7 @@ class Robot:
     Most of the changes in state are made by the implementation of the low level instructions, while the protocols can
     "observe" the state to make all kind of optimizations and organizations previous to the actual instruction call
     """
-    current=None
+    current=None # use immediately, for a short time.
 
     class Arm:
         DiTi = 0
@@ -218,7 +218,7 @@ class Robot:
                         tipsType    = Arm.DiTi,
                         templateFile= None): # index=Pipette.LiHa1
         """
-
+        A Robot may have 1 or more Arms, indexes by key index in a dictionary of Arms.
         :param arms:
         :param nTips:
         :param workingTips:
@@ -228,7 +228,7 @@ class Robot:
         Robot.current = self
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Robot.Arm) else \
-                   {     index: Robot.Arm(nTips or def_nTips, index, workingTips, tipsType)}
+                   {     index: Robot.Arm(nTips, index, workingTips, tipsType)}
         self.set_worktable(templateFile)
         self.def_arm = index  # or Pipette.LiHa1
         self.droptips = True
@@ -270,7 +270,7 @@ class Robot:
         :param type:
         :return:  Return a list of racks with the tips-wells already selected.
         """
-        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[nTips]
+        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
         type = type if type else Lab.def_DiTi
         n = Lab.count_tips(TIP_MASK)
         assert n == len(selected_reactive)
@@ -293,7 +293,7 @@ class Robot:
         :return:
         """   # todo this in Labware??
 
-        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[nTips]
+        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
         types = []
         t_masks = []
         racks = []

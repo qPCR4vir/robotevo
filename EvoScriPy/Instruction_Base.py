@@ -94,7 +94,7 @@ class Instruction:
         pass
 
     def exec(self, mode=None):
-        if not mode: mode = EvoScriPy.EvoMode.current  # todo revise
+        if mode is None: mode = EvoScriPy.EvoMode.current  # todo revise
         if not self.allowed(mode):
             return
         mode.exec(self)
@@ -217,7 +217,7 @@ class Pipetting(Pipette):
     def __init__(self, name, tipMask     = curTipMask,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
-                             labware     = Lab.def_LabW,
+                             labware     = Lab.def_LabW,    # todo ??????
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
@@ -237,7 +237,7 @@ class Pipetting(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        nTips = Rbt.Robot.current.curArm().nTips
+        nTips = Rbt.Robot.current.curArm().nTips   # todo FIX arm is arg
         self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
             12 - nTips)  # arg 2, 3 - 14
         return True

@@ -17,7 +17,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     """
     Prefill plates with VEW1, Elution buffer and VEW2 for the
     Implementation of the protocol for RNA extraction using the NucleoMag® VET kit from MACHEREY-NAGEL
-    with watching in the Fischer Robot.
+    with washes in the Fischer Robot.
     """
 
     name = "Prefill plates with VEW1, Elution buffer and VEW2 for KingFisher"
@@ -73,7 +73,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (Rbt.nTips, NumOfSamples)
+        maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
 

@@ -76,7 +76,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
 
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (Rbt.nTips, NumOfSamples)
+        maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
 
