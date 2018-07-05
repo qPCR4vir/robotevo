@@ -176,6 +176,7 @@ class iRobot(Mode):
         self.set_as_current()
 
     def exec(self, instr):
+        assert (self.robot is instr.robot)
         self.set_as_current()
         instr.actualize_robot_state()
 

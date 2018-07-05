@@ -17,7 +17,7 @@ import EvoScriPy.Robot
 class aspirate(Pipetting):
     """ A.15.4.1 Aspirate command (Worklist: Aspirate)  A - 125
     """
-    def __init__(self,  tipMask     = curTipMask,
+    def __init__(self,  tipMask     = None,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
                         labware     = None,
@@ -26,7 +26,7 @@ class aspirate(Pipetting):
                         LoopOptions = def_LoopOp,
                         RackName    = None,
                         Well        = None,
-                        arm         = Pipette.LiHa1):
+                        arm         = None):
         """
 
 
@@ -60,7 +60,7 @@ class aspirate(Pipetting):
 class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
     """
-    def __init__(self,  tipMask     = curTipMask,
+    def __init__(self,  tipMask     = None,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
                         labware     = None,
@@ -69,7 +69,7 @@ class dispense(Pipetting):
                         LoopOptions = def_LoopOp,
                         RackName    = None,
                         Well        = None,
-                        arm         = Pipette.LiHa1):
+                        arm         = None):
         Pipetting.__init__(self, 'Dispense',
                             tipMask,
                             liquidClass,
@@ -89,7 +89,7 @@ class dispense(Pipetting):
 class mix(Pipetting):
     """ A.15.4.3 Mix (Worklist: Mix)
     """
-    def __init__(self,  tipMask     = curTipMask,
+    def __init__(self,  tipMask     = None,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
                         labware     = None,
@@ -99,7 +99,7 @@ class mix(Pipetting):
                         LoopOptions = def_LoopOp,
                         RackName    = None,
                         Well        = None,
-                        arm         = Pipette.LiHa1):
+                        arm         = None):
         Pipetting.__init__(self, 'Mix',
                             tipMask,
                             liquidClass,
@@ -132,7 +132,7 @@ before taking a new sample. DITI adapters should be flushed after replacing the
 DITIs several times to renew the system liquid column in the DITI adapters. This
 ensures maximum pipetting accuracy.
     """
-    def __init__(self,  tipMask     = curTipMask,
+    def __init__(self,  tipMask     = None,
                         WashWaste   = None,
                         WashCleaner = None,
                         wasteVol    = 100,
@@ -147,7 +147,7 @@ ensures maximum pipetting accuracy.
                         atFrequency = 0,
                         RackName    = None,
                         Well        = None,
-                        arm         = Pipette.LiHa1):
+                        arm         = None):
         """
 
         :param tipMask:
@@ -217,7 +217,7 @@ ensures maximum pipetting accuracy.
         return True
 
 class getDITI(DITIs):
-    def __init__(self,  tipMask, type, options=0, arm= Pipette.LiHa1):
+    def __init__(self,  tipMask, type, options=0, arm= None):
         """ A.15.4.5 Get DITIs (Worklist: GetDITI) ...
             The Get DITIs command is used to pick up DITIs (disposable tips) of the specified
             type from a DITI rack. Freedom EVOware keeps track of their position on the
@@ -256,10 +256,10 @@ class getDITI2(DITIs):
     including the rack and the site (that is - the labware). 
     It need a labware type and it know where to pick the next tip.
     """
-    def __init__(self,  tipMask         = curTipMask,
+    def __init__(self,  tipMask         = None,
                         LabwareTypeName = None,
                         options         = 0,
-                        arm             = Pipette.LiHa1,
+                        arm             = None,
                         AirgapVolume    = 0,
                         AirgapSpeed     = def_AirgapSpeed ):
         """
@@ -307,11 +307,11 @@ class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI). pag A - 130 and 15 - 14
      """
 
-    def __init__(self,  tipMask     = curTipMask,
+    def __init__(self,  tipMask     = None,
                         labware     = None,
                         AirgapVolume= 0,
                         AirgapSpeed = def_AirgapSpeed ,
-                        arm         = Pipette.LiHa1): #, conditional=True):
+                        arm         = None): #, conditional=True):
         """
         :param conditional: exec only if there are some tip to droop.
         :param tipMask:
@@ -437,12 +437,12 @@ class pickUp_DITIs(Pipette):
     used and put back into a DITI rack with the Set DITIs Back command. You must
     specify the DITIs you want to pick up.
     """
-    def __init__(self, tipMask     = curTipMask,
+    def __init__(self, tipMask     = None,
                              labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
                              type        = None,
-                             arm         = Pipette.LiHa1,
+                             arm         = None,
                              RackName    = None,
                              Well        = None):
         Pipette.__init__(self, 'PickUp_DITIs',
@@ -473,11 +473,11 @@ class pickUp_DITIs2(Pipette):
     used and put back into a DITI rack with the Set DITIs Back command. You must
     specify the DITIs you want to pick up.
     """
-    def __init__(self, tipMask     = curTipMask,
+    def __init__(self, tipMask     = None,
                              labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
-                             arm         = Pipette.LiHa1,   # last parameter
+                             arm         = None,   # last parameter
                              RackName    = None,
                              Well        = None):
         Pipette.__init__(self, 'PickUp_DITIs2',
@@ -506,11 +506,11 @@ class set_DITIs_Back(Pipette):
     return used DITIs to specified positions on a DITI rack for later use.
     This command requires the Lower DITI Eject option.
     """
-    def __init__(self , tipMask     , #= curTipMask,
+    def __init__(self , tipMask     , #= None,
                              labware     , #= None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
-                             arm         = Pipette.LiHa1,
+                             arm         = None,
                              RackName    = None,
                              Well        = None):
         assert isinstance(labware, Lab.DITIrack)
@@ -534,20 +534,20 @@ class set_DITIs_Back(Pipette):
 class pickUp_ZipTip(Pipette): # todo implement !!!
     """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)
     """
-    def __init__(self, tipMask = curTipMask ):
+    def __init__(self, tipMask = None ):
         Pipette.__init__(self, 'PickUp_ZipTip' )
         assert False, "PickUp_ZipTip not implemented"
 
 class detect_Liquid(Pipetting):    # todo get the results !!!
     """ A.15.4.11 Detect Liquid (Worklist: Detect_Liquid)
     """
-    def __init__(self ,      tipMask     = curTipMask,
+    def __init__(self ,      tipMask     = None,
                              liquidClass = def_liquidClass,
                              labware     = None,
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
-                             arm         = Pipette.LiHa1,
+                             arm         = None,
                              RackName    = None,
                              Well        = None,
                              read        = False):
@@ -576,9 +576,9 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
 class activate_PMP(Instruction):
     """ A.15.4.12 Activate PMP (Worklist: Activate_PMP)
     """
-    def __init__(self, tipMask = curTipMask ):
+    def __init__(self, tipMask = None ):
         Instruction.__init__(self, "Activate_PMP")
-        self.tipMask = tipMask
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
 
     def validateArg(self):
         Instruction.validateArg(self)
@@ -591,9 +591,9 @@ class activate_PMP(Instruction):
 class deactivate_PMP(Instruction):
     """ A.15.4.13 Deactivate PMP (Worklist: Deactivate_PMP)
     """
-    def __init__(self, tipMask = curTipMask ):
+    def __init__(self, tipMask = None ):
         Instruction.__init__(self, "Deactivate_PMP")
-        self.tipMask = tipMask
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
 
     def validateArg(self):
         Instruction.validateArg(self)
@@ -641,14 +641,14 @@ class moveLiha(Pipette ):
     global_z_travel = 4  # = global z-travel
 
     def __init__(self,  zMove, zTarget, offset, speed,   # arg 6,7,8,9
-                        tipMask     = curTipMask,
+                        tipMask     = None,
                         labware     = None,
                         spacing     = 1,
                         wellSelection= None,
                         LoopOptions = def_LoopOp,
                         RackName    = None,
                         Well        = None,
-                        arm         = Pipette.LiHa1):
+                        arm         = None):
         """
 
         :param zMove: int; type of movement:
@@ -718,9 +718,9 @@ class active_Wash(Instruction):
     """ A.15.4.16 Active WashStation (Worklist: Active_Wash)
     """
 
-    def __init__(self, wait = True, time=None, arm=Pipette.LiHa1   ):
+    def __init__(self, wait = True, time=None, arm=None   ):
         Instruction.__init__(self, "Active_Wash")
-        self.arm = arm
+        self.arm = arm if arm is not None else self.robot.curArm().index
         self.time = time
         self.wait = wait
 
@@ -743,14 +743,14 @@ class export(Instruction):
                        formats =  text_with_delimiters,
                        delete = False,
                        compress = False,
-                       Raks=[],
+                       Raks=None,     # ?????
                        significantStep = 1):
         Instruction.__init__(self, "Export")
         self.exportAll = exportAll
         self.formats = formats
         self.delete = delete
         self.compress = compress
-        self.Raks = Raks
+        self.Raks = Raks if Raks is not None else []
         self.significantStep = significantStep
 
 
