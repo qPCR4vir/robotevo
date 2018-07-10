@@ -82,6 +82,7 @@ class Instruction:
     def __init__(self, name):
         self.name = name
         self.arg = []
+        self.robot = Rbt.Robot.current
 
     def validateArg(self):
         self.arg = []
@@ -136,8 +137,6 @@ class T_Mag_Instr(Device):
         Device.__init__(self, "Te-MagS", commandname)
 
 
-def_TipMask     = 15          # todo revise. here? use Robot?
-curTipMask      = def_TipMask
 def_liquidClass = "Water free"  #"Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
 def_vol         = [0]*12
 def_LoopOp      = []
@@ -147,7 +146,7 @@ def_AirgapSpeed = 300
 class Pipette(Instruction):
     LiHa1 = 0
     LiHa2 = 1
-    def __init__(self, name, tipMask     = curTipMask,
+    def __init__(self, name, tipMask     = None,
                              labware     = None,
                              spacing     = 1,           # todo how to use???
                              wellSelection = None,      # todo how to use???
@@ -180,13 +179,14 @@ class Pipette(Instruction):
         :param arm:
         """
         Instruction.__init__(self, name)
-        self.tipMask=tipMask
+        self.robot.curArm(arm)
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
         self.labware=labware or Lab.def_LabW  # todo what def???
         self.spacing = spacing
         self.loopOptions = LoopOptions
         self.RackName = RackName
         self.Well = Well
-        self.arm = arm
+        self.arm = self.robot.curArm().index   # todo revise eliminate and use self.robot.curArm().index directly?
                             # noOfLoopOptions,
                             # loopName,
                             # action,
@@ -214,16 +214,16 @@ class Pipette(Instruction):
 
 
 class Pipetting(Pipette):
-    def __init__(self, name, tipMask     = curTipMask,
+    def __init__(self, name, tipMask     = None,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
-                             labware     = Lab.def_LabW,    # todo ??????
+                             labware     = None,    # todo ??????
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
                              RackName    = None,
                              Well        = None,
-                             arm         = Pipette.LiHa1):
+                             arm         = None):
         Pipette.__init__(self, name, tipMask    ,
                              labware     ,
                              spacing    ,
@@ -237,7 +237,7 @@ class Pipetting(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        nTips = Rbt.Robot.current.curArm().nTips   # todo FIX arm is arg
+        nTips = self.robot.curArm().nTips   # todo FIX arm is arg
         self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
             12 - nTips)  # arg 2, 3 - 14
         return True
@@ -247,12 +247,12 @@ class Pipetting(Pipette):
         pass
 
     def pipette_on_iRobot(self,action):
-        self.volume, self.tipMask = Rbt.Robot.current.pipette(action, self.volume,
+        self.volume, self.tipMask = self.robot.pipette(action, self.volume,
                                                               self.labware, self.tipMask )
 
 
 class DITIs(Instruction):
-    def __init__(self, name, tipMask=curTipMask, options=0, arm=Pipette.LiHa1):
+    def __init__(self, name, tipMask=None, options=0, arm=Pipette.LiHa1):
         """
 
         :param name: str, instruction
@@ -262,7 +262,7 @@ class DITIs(Instruction):
         """
         Instruction.__init__(self, name)
         self.options = options
-        self.tipMask = tipMask
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
         self.arm = arm
 
     def validateArg(self):
