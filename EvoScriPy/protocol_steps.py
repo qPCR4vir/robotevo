@@ -19,10 +19,8 @@ def not_implemented(NumOfSamples):
 
 
 # output_filename = '../current/AWL'
-
-
-class Protocol:
-    """ Each custom protocol need to implement these functions.
+class Executable:
+    """ Each executable need to implement these functions.
 
     """
 
@@ -34,6 +32,64 @@ class Protocol:
     class Parameter:
         # parameters to describe a run of this program
 
+        def __init__(self, GUI                         = None):
+            self.GUI                         = GUI
+
+
+        def initialize(self):
+            if (self.GUI):
+                self.GUI.initialize_parameters(self)
+
+
+    def __init__(self,   parameters = None):
+
+        self.parameters  = parameters or Protocol.Parameter()
+        self.initialized = False
+        self.Reactives   = []
+        Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!
+
+    def set_defaults(self):
+        """Set initial values that will not be rest during secondary initializations.
+        The "primary initialization" maybe a light one, like defining the list of versions available.
+        Here, for example, initialize the list of reactive.
+        """
+        print('set def in Protocol')
+
+    def options(self):
+        """
+        :return: the list of different variants or version of the protocol implemented by this protocol
+        """
+        return self.options_list    # todo revise    versions???
+
+    def initialize(self):
+        """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
+        """
+        if not self.initialized:
+            self.set_defaults()
+
+    def Run(self):
+        '''
+        Here we haccesscces to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
+        self.iRobot.worktable from where we can obtain labwares with getLabware()
+        :return:
+        '''
+        self.initialize()
+        self.CheckList()
+        raise "Not implemented !"
+
+    def CheckList(self):
+        if (self.parameters.GUI):
+            self.parameters.GUI.CheckList(self)
+
+
+class Protocol (Executable):
+    """ Each custom protocol need to implement these functions.
+
+    """
+
+    class Parameter (Executable.Parameter):
+        # parameters to describe a run of this program
+
         def __init__(self, GUI                         = None,
                            worktable_template_filename = None,
                            output_filename             = None,
@@ -41,26 +97,16 @@ class Protocol:
 
             self.worktable_template_filename = worktable_template_filename or ""
             self.output_filename             = output_filename or '../current/AWL'
-            self.GUI                         = GUI
             self.firstTip                    = firstTip or 'A01'
-
-        def initialize(self):
-            if (self.GUI):
-                self.GUI.initialize_parameters(self)
-
+            Executable.Parameter.__init__(self, GUI)
 
     def __init__(self,       # worktable_template_fn ,
                  nTips=4,
                  parameters = None):
-
-        self.parameters  = parameters or Protocol.Parameter()
-        self.initialized = False
-        self.Reactives   = []
-        self.nTips      = nTips
+        Executable.__init__(self, parameters)
+        self.nTips       = nTips
         self.EvoMode     = None
-
         self.set_EvoMode()
-        Rtv.Reactive.SetReactiveList(self)
 
 
     def init_EvoMode(self):
@@ -90,41 +136,17 @@ class Protocol:
     def comments(self):
         return self.comments_.comments
 
-    def set_defaults(self):
-        """Set initial values that will not be rest during secondary initializations.
-        The "primary initialization" maybe a light one, like defining the list of versions available.
-        Here, for example, initialize the list of reactive.
-        """
-        print('set def in Protocol')
-        # nitialize the iRobot. Select a table template
-
-    def options(self):
-        """
-        :return: the list of different variants or version of the protocol implemented by this protocol
-        """
-        return self.options_list
-
-    def initialize(self):
-        """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
-        """
-        if not self.initialized:
-            self.set_defaults()
-
     def Run(self):
         '''
         Here we haccesscces to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with getLabware()
         :return:
         '''
-        self.initialize()
-        self.CheckList()
+        Executable.Run(self)
         self.Script.done()
         self.comments_.done()
         raise "Not implemented !"
 
-    def CheckList(self):
-        if (self.parameters.GUI):
-            self.parameters.GUI.CheckList(self)
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
