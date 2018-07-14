@@ -323,7 +323,7 @@ class App(tkinter.Frame):
 
         # todo: add "global protocol variables" like number of samples, worktable template and output files
 
-        self.ReactFrames = [App.ReactiveFrame(self,react) for react in protocol.Reactives]
+        self.ReactFrames = [App.ReactiveFrame(self,react) for react in protocol.worktable.Reactives]
 
         #self.GUI_parameters_frame.destroy() #    ['state'] = 'disabled'
         for child in self.GUI_parameters_frame.winfo_children():
