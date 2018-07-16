@@ -415,7 +415,10 @@ class Labware:
         if pos is None:  # find self where to put the replicas of this reactive
             replicas = replicas or 1  # default one replica
             continuous, pos = self.find_free_wells(replicas)
-            assert replicas == len(pos)  # replicas = len(pos)  # todo What to do?
+            assert replicas == len(pos) , 'putting reactive - '+ str(reactive) + ' - into Labware: ' + \
+                                          str(self) + ' different replica number ' + str(replicas) + ' and number of positions ' + \
+                                          str(pos) # replicas = len(pos)  # todo What to do?
+
         elif isinstance(pos, list):
             if replicas is None:  # put one replica on each of the given position
                 replicas = len(pos)
