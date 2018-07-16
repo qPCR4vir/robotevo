@@ -347,6 +347,139 @@ class App(tkinter.Frame):
     def protocol_selected(self, value):
         selected = self.selected_protocol.get()
         print('Selected protocol: ' + selected)
+        self.setVariantsMenu(None)
+        for child in self.GUI_parameters_frame.winfo_children():
+            child.destroy() # .configure(state='disable')
+
+
+        # create and initialize the Parameters
+        self.parameters = self.GUIprot.new_parameters(selected, self)
+
+
+
+    def setVariantsMenu(self, value):
+        selected = self.selected_protocol.get()
+        self.protocol_versions = self.GUIprot.versions(selected)
+        m=self.version_selection.children['menu']
+        m.delete(0,'end')
+        for val in self.protocol_versions:
+            m.add_command(label=val, command=lambda v=self.selected_version, l=val: v.set(l))
+        self.selected_version.set(next(iter(self.protocol_versions)))  # variable def value
+
+    class ReplicaFrame(tkinter.Frame):
+        def __init__(self, master, reply, num):
+            tkinter.Frame.__init__(self, master)
+            self.grid(sticky=tkinter.N + tkinter.S, row=num, column=6, columnspan=3)
+
+            self.reply = reply
+            self.num = num
+            self.Vol = tkinter.DoubleVar()
+            self.Vol.set(reply.vol)
+            self.Well = tkinter.IntVar()
+            self.Well.set(reply.offset + 1)
+
+            self.CheckB = tkinter.Checkbutton(self, text="Reply" + str(num + 1), justify=tkinter.LEFT, state=tkinter.DISABLED)  # width=15,
+            self.CheckB.grid(column=0, row=0, )
+            tkinter.Entry(self, textvariable=self.Well, width=2).grid(row=0, column=1) #, state=tkinter.DISABLED
+            tkinter.Spinbox(self,
+                            textvariable=self.Vol, state=tkinter.DISABLED,
+                            increment=1,
+                            from_=0.0,
+                            to=100000,
+                            width=7).grid(column=2, row=0)
+
+    class ReactiveFrame(tkinter.Frame):
+
+        def __init__(self, check_list, react):
+            tkinter.Frame.__init__(self, check_list.varoutput)
+            self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
+            self.columnconfigure(0, minsize=140)
+            self.react = react
+            self.RackName = tkinter.StringVar()
+            self.RackName.set(react.labware.label)
+            self.RackGrid = tkinter.IntVar()
+            self.RackGrid.set(react.labware.location.grid)
+            self.RackSite = tkinter.IntVar()
+            self.RackSite.set(react.labware.location.site)
+            self.check_list = check_list
+
+            tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
+
+            dis = tkinter.DISABLED if react.components else tkinter.NORMAL
+
+            self.Vol = tkinter.DoubleVar()
+            self.Vol.set(react.volpersample)
+            tkinter.Spinbox(self,
+                            textvariable=self.Vol,  state=dis,     command= self.setVol,
+                            increment=1, from_=0.0, to=100000, width=5).grid(row=0, column=1, sticky=tkinter.W)
+
+            self.RackNameEntry = tkinter.Entry(self, state=tkinter.DISABLED,
+                                               textvariable=self.RackName, width=10).grid(row=0, column=2, padx=5,
+                                                                                         sticky=tkinter.W)
+            self.RackGridEntry = tkinter.Entry(self, state=tkinter.DISABLED,
+                                               textvariable=self.RackGrid, width=2).grid(row=0, column=3, padx=5,
+                                                                                         sticky=tkinter.W)
+            self.RackSiteEntry = tkinter.Entry(self, state=tkinter.DISABLED,
+                                               textvariable=self.RackSite, width=2).grid(row=0, column=4, padx=5,
+                                                                                         sticky=tkinter.W)
+
+            self.ReplicaFrames= [App.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(react.Replicas)]
+
+        def setVol(self, *args):
+
+            print("changing volumen of '{0}' from {1} to {2}".format(
+                           self.react.name, self.react.volpersample, self.Vol.get()) )
+
+            self.react.volpersample = self.Vol.get()
+
+            for rf in self.check_list.ReactFrames:             # change possibles mix.
+                for c in rf.react.components:
+                    if self.react is c:
+                        rf.react.init_vol()
+                        rf.Vol.set(rf.react.volpersample)
+
+            self.react.init_vol()
+            for rf in self.ReplicaFrames:   # change replicas
+                rf.Vol.set(rf.reply.vol)
+
+
+    def CheckList(self, protocol):
+
+        Header=tkinter.Frame(self.varoutput)
+        Header.grid( sticky=tkinter.E)
+        Header.columnconfigure(1, minsize=120)
+        tkinter.Label (Header, text='Reagent', justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
+        tkinter.Label (Header, text="     µL/sample      ",         ).grid(row=0, column=1 ) # , sticky=tkinter.CENTER
+        tkinter.Label (Header, text="Rack   ",                      ).grid(row=0, column=2, sticky=tkinter.E)
+        tkinter.Label (Header, text="Grid",                         ).grid(row=0, column=3, sticky=tkinter.E)
+        tkinter.Label (Header, text="Site        ",                 ).grid(row=0, column=4, sticky=tkinter.E)
+        tkinter.Label (Header, text='          ',                   ).grid(row=0, column=5, sticky=tkinter.E)
+        tkinter.Label (Header, text="Well ",                        ).grid(row=0, column=6, sticky=tkinter.E)
+        tkinter.Label (Header, text="µL/total",                     ).grid(row=0, column=7, sticky=tkinter.E)
+
+        # todo: add "global protocol variables" like number of samples, worktable template and output files
+
+        self.ReactFrames = [App.ReactiveFrame(self,react) for react in protocol.worktable.Reactives]
+
+        #self.GUI_parameters_frame.destroy() #    ['state'] = 'disabled'
+        for child in self.GUI_parameters_frame.winfo_children():
+            child.configure(state='disable')
+        self.quit              ['state'] = 'normal'
+        self.run               ['state'] = 'disabled'
+        #self.sample_num        ['state'] = 'disabled'
+        self.protocol_selection['state'] = 'disabled'
+
+        self.master.mainloop()
+        self.quit['text'] = 'Quit'
+
+    def run_selected(self):
+        selected = self.selected_protocol.get()
+        print(selected)
+        if not selected: return
+
+        # create and run the protocol
+        protocol = self.GUIprot.protocols[selected](self.parameters)
+        protocol.Run()
 
         App.GUI_protocol(selected, tkinter.Tk())
 

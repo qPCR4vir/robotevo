@@ -70,9 +70,10 @@ class WorkTable:
 
 
     def __init__(self, templateFile=None, grids=67, sites=127):
-        assert WorkTable.curWorkTable is None      # TODO revise. Add def_WorkTable
+        # assert WorkTable.curWorkTable is None      # TODO revise.
         WorkTable.curWorkTable = self              # TODO revise
         self.labTypes = {}  # typeName:labwares. For each type mountain a list of labwares (with have self locations)
+        self.Reactives = []
         self.Racks = []
         self.nSites = sites
         self.grid = [None] * grids

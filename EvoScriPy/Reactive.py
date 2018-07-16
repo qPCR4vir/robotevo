@@ -33,13 +33,21 @@ class Reactive:
         :param excess: float; in %
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
-        if (Reactive.Reactives): Reactive.Reactives.Reactives.append(self)
+        assert isinstance(labware, Lab.Labware)
+        self.labware = labware
+        assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
+        if (isinstance(labware, Lab.Labware) and
+            isinstance(labware.location, Lab.WorkTable.Location) and
+            isinstance(labware.location.worktable, Lab.WorkTable) ):
+          labware.location.worktable.Reactives.append(self)
+        else:
+          if (Reactive.Reactives): Reactive.Reactives.Reactives.append(self) # todo temporal
+
         ex= def_react_excess if excess is None else excess
         self.excess = 1.0 + ex/100.0
         self.defLiqClass = defLiqClass or def_liquidClass
         self.name = name
         self.volpersample = volpersample
-        self.labware = labware
         self.components = []
         self.Replicas = labware.put(self, pos, replicas)   # list of the wells used
         self.pos = self.Replicas[0].offset
