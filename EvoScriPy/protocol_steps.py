@@ -148,6 +148,19 @@ class Protocol (Executable):
         raise "Not implemented !"
 
 
+class Pipeline (Executable):
+
+
+
+    def __init__(self):
+        self.Protocols=[]
+
+    def Run(self):
+        for p in self.Protocols:
+            p.Run()
+
+
+
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
 SerumLiqClass      = "Serum Asp preMix3"

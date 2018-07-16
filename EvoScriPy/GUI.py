@@ -24,24 +24,18 @@ class App(tkinter.Frame):
 
         def __init__(self):
             self.protocols = {p.name: p for p in available}  # values
-
-            # temporal solution
-            self.GUI4parameters = {"RNA extraction with the MN_Vet kit": App.GUI_init_RNA_ext_MN,
-                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit": App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
-                                   "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and EtOH80p Plate preFill": App.GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2,
-                                   "Prefill plates with VEW1, Elution buffer and VEW2": App.GUI_init_RNA_ext_Fisher
-                                   }
             self.GUI4parameters = GUI4parameters
 
         def versions(self, prot_name):
             return self.protocols[prot_name].versions
 
         def new_parameters(self, prot_name, GUI):
-            self.parameters = self.protocols[prot_name].Parameter(GUI)
+            protocol_class = self.protocols[prot_name]
+            self.parameters = protocol_class.Parameter(GUI)
             # run the corresponding GUI
             self.GUI4parameters[prot_name](self.parameters)
 
-            return self.parameters
+            return protocol_class, self.parameters
 
     class GUI_init_parameters: # (tkinter.Frame)
 
@@ -136,11 +130,11 @@ class App(tkinter.Frame):
 
         def min_max_Number_of_Samples(self):
             return 1 , 96
-    from protocols.KingFisher_RNAextNucleoMag_EtOH80p import KingFisher_RNAextNucleoMag_EtOH80p
-    GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNA_ext_Fisher
-    from protocols.PreKingFisher_RNAextNucleoMag import PreKingFisher_RNAextNucleoMag
-    GUI4parameters[PreKingFisher_RNAextNucleoMag.name]=GUI_init_RNA_ext_Fisher
-    from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p import PreKingFisher_RNAextNucleoMag_EtOH80p
+    from protocols.KingFisher_RNAextNucleoMag_EtOH80p         import KingFisher_RNAextNucleoMag_EtOH80p
+    GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name   ]=GUI_init_RNA_ext_Fisher
+    from protocols.PreKingFisher_RNAextNucleoMag              import PreKingFisher_RNAextNucleoMag
+    GUI4parameters[PreKingFisher_RNAextNucleoMag.name        ]=GUI_init_RNA_ext_Fisher
+    from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p      import PreKingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNA_ext_Fisher
 
 
@@ -217,7 +211,7 @@ class App(tkinter.Frame):
 
 
         # create and initialize the Parameters
-        self.parameters = self.GUIprot.new_parameters(selected, self)
+        self.protocol_class, self.parameters = self.GUIprot.new_parameters(selected, self)
 
 
 
@@ -337,12 +331,8 @@ class App(tkinter.Frame):
         self.quit['text'] = 'Quit'
 
     def run_selected(self):
-        selected = self.selected_protocol.get()
-        print(selected)
-        if not selected: return
-
         # create and run the protocol
-        protocol = self.GUIprot.protocols[selected](self.parameters)
+        protocol = self.protocol_class(self.parameters)
         protocol.Run()
 
         for line in protocol.comments():
