@@ -408,7 +408,7 @@ class Labware:
         and return a list of the wells used
 
         :param reactive:
-        :param pos:
+        :param pos: [wells];
         :param replicas: number of replicas
         :return:
         """
@@ -420,10 +420,11 @@ class Labware:
                                           str(pos) # replicas = len(pos)  # todo What to do?
 
         elif isinstance(pos, list):
-            if replicas is None:  # put one replica on each of the given position
+            if replicas is None:  # put one replica on each of the given wells position
                 replicas = len(pos)
             else:
-                assert (replicas == len(pos))
+                assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " + str(
+                w.offset + 1) + " already occupied by " + w.reactive.name
         else:
             replicas = replicas or 1  # put one replica beginning from the given position
             if isinstance(pos, Well):

@@ -229,6 +229,7 @@ class Robot:
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Robot.Arm) else \
                    {     index: Robot.Arm(nTips, index, workingTips, tipsType)}
+        self.worktable = None
         self.set_worktable(templateFile)
         self.def_arm = index  # or Pipette.LiHa1
         self.droptips = True
@@ -236,20 +237,22 @@ class Robot:
         self.preservetips = False
         self.usePreservedtips = False
         self.allow_air = 0.0
+        self.set_as_current()
         # self.preservedtips = {} # order:well
         # self.last_preserved_tips = None # Lab.DITIrack, offset
 
     def set_worktable(self,templateFile):
-        w = Lab.WorkTable.curWorkTable
-        if not w:
-            w = Lab.WorkTable(templateFile)
+        # w = Lab.WorkTable.curWorkTable
+        if templateFile is None: return
+        if isinstance(self.worktable, Lab.WorkTable):  # todo temp? really to set
+            assert self.worktable.templateFileName == templateFile, 'Attemp to reset wortable from '\
+                   + self.worktable.templateFileName + ' into ' + templateFile
         else:
-            w.parseWorTableFile(templateFile)
-        self.worktable = w
+            self.worktable  = Lab.WorkTable(templateFile)
 
     def set_as_current(self):
         Robot.current = self
-        Lab.curWorkTable=self.worktable
+        Lab.curWorkTable=self.worktable # todo inconsistent duplication? allow for manuall actions?
 
     def setUsed(self, tipMask, labware_selection):
         # Deprecated ??????
