@@ -27,7 +27,7 @@ class Reactive:
         :param name: str; Reactive name. Ex: "Buffer 1", "forward primer", "IC MS2"
         :param labware: Labware;
         :param volpersample: float; in uL
-        :param pos: if not set (=None) we will try to assign consecutive wells for all the replicas
+        :param pos: [wells]; if not set (=None) we will try to assign consecutive wells for all the replicas
         :param replicas: int; def 1, number of replicas
         :param defLiqClass: str;
         :param excess: float; in %
