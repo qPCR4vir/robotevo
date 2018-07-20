@@ -168,15 +168,27 @@ class Protocol (Executable):
 
 
 class Pipeline (Executable):
+    """ Each custom Pipeline need to implement these functions.
 
+    """
 
+    class Parameter (Executable.Parameter):
+        # parameters to describe a run of this program
 
-    def __init__(self):
-        self.Protocols=[]
+        def __init__(self, GUI                         = None,
+                           protocols                   = None):
+            # assert isinstance(protocols, list)
+            self.Protocol_classes = protocols or [] #[(Executable, "don't run")]
+            Executable.Parameter.__init__(self, GUI)
+
+    def __init__(self,     parameters = None):
+        self.protocol_runs = {}
+        Executable.__init__(self, parameters)
+
 
     def Run(self):
-        for p in self.Protocols:
-            p.Run()
+        for protocol_class, run_name in self.Protocol_classes:
+            protocol_class
 
 
 
