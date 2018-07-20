@@ -156,6 +156,12 @@ class Protocol (Executable):
         '''
         Executable.Run(self)
 
+    def CheckList(self):
+        self.iRobot.set_as_current()
+        if (self.parameters.GUI):
+            self.parameters.GUI.CheckList(self)
+        self.iRobot.set_as_current()
+
     def done(self):
         self.EvoMode.done()
         Executable.done(self)
