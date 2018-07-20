@@ -74,13 +74,21 @@ class Executable:
         :return:
         '''
         self.initialize()
+        self.preCheck()
         self.CheckList()
-        raise "Not implemented !"
+        self.postCheck()
         self.done()
+
+
+    def preCheck(self):
+        pass
 
     def CheckList(self):
         if (self.parameters.GUI):
             self.parameters.GUI.CheckList(self)
+
+    def postCheck(self):
+        pass
 
     def done(self):
         pass
@@ -147,9 +155,6 @@ class Protocol (Executable):
         :return:
         '''
         Executable.Run(self)
-        self.Script.done()
-        self.comments_.done()
-        raise "Not implemented !"
 
     def done(self):
         self.EvoMode.done()
