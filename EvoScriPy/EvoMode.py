@@ -22,8 +22,11 @@ class Mode:
 
         # def allowed(self, instr):
         #       return True
+    def done(self):
+        pass
 
     def __del__(self):
+        self.done()
         pass
 
 class toString(Mode):
@@ -59,6 +62,10 @@ class multiple(Mode):
     def exec(self, instr):
         for m in self.EvoList:
             instr.exec(m)
+
+    def done(self):
+        for m in self.EvoList:
+            m.done()
 
 
 class inFile(toString):

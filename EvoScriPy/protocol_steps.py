@@ -76,10 +76,14 @@ class Executable:
         self.initialize()
         self.CheckList()
         raise "Not implemented !"
+        self.done()
 
     def CheckList(self):
         if (self.parameters.GUI):
             self.parameters.GUI.CheckList(self)
+
+    def done(self):
+        pass
 
 
 class Protocol (Executable):
@@ -146,6 +150,10 @@ class Protocol (Executable):
         self.Script.done()
         self.comments_.done()
         raise "Not implemented !"
+
+    def done(self):
+        self.EvoMode.done()
+        Executable.done(self)
 
 
 class Pipeline (Executable):

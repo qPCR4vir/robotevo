@@ -208,5 +208,4 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
             with incubation(minutes=5):
                 Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
 
-        self.Script.done()
-        self.comments_.done()
+        self.done()

@@ -115,5 +115,4 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
             with tips(reuse=True, drop=False):
                 spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))
 
-        self.Script.done()
-        self.comments_.done()
+        self.done()
