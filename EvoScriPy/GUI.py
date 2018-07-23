@@ -196,6 +196,7 @@ class App(tkinter.Frame):
             self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
             # create and initialize the Parameters
             self.protocol_class, self.parameters = self.GUIprot.new_parameters(protocol_name, self)
+            self.mainloop()
 
         def setVariantsMenu(self, value):
             selected = self.protocol_name
