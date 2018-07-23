@@ -144,6 +144,7 @@ class Protocol (Executable):
             self.init_EvoMode()
         else:
             EvoMode.current = self.EvoMode
+        self.iRobot.set_as_current()
 
     def comments(self):
         return self.comments_.comments
@@ -154,13 +155,27 @@ class Protocol (Executable):
         self.iRobot.worktable from where we can obtain labwares with getLabware()
         :return:
         '''
-        Executable.Run(self)
+        self.set_EvoModet()
+
+        self.initialize()
+        self.set_EvoMode()
+
+        self.preCheck()
+        self.set_EvoMode()
+
+        self.CheckList()
+        self.set_EvoMode()
+
+        self.postCheck()
+        self.set_EvoMode()
+
+        self.done()
 
     def CheckList(self):
-        self.iRobot.set_as_current()
+        self.set_EvoMode()
         if (self.parameters.GUI):
             self.parameters.GUI.CheckList(self)
-        self.iRobot.set_as_current()
+        self.set_EvoMode()
 
     def done(self):
         self.EvoMode.done()

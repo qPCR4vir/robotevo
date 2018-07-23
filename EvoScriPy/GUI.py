@@ -169,14 +169,14 @@ class App(tkinter.Frame):
             self.GUI_parameters_frame = tkinter.Frame(self)
             self.GUI_parameters_frame.grid(row=0, column=4, columnspan=11, rowspan=3)
 
-            # run / quit     ---------------------
+            # run / quit_bt     ---------------------
             self.run = tkinter.Button(self, text="Initialize the selected protocol",
                                       command=self.run_selected)
             self.run.grid(row=0, column=15, columnspan=2)
 
-            self.quit = tkinter.Button(self, text="Synthetize the TECAN script", command=self.quit,
-                                       state=tkinter.DISABLED)
-            self.quit.grid(row=1, column=15, columnspan=2)
+            self.quit_bt = tkinter.Button(self, text="Synthetize the TECAN script", command=self.quit,
+                                          state=tkinter.DISABLED)
+            self.quit_bt.grid(row=1, column=15, columnspan=2)
 
             # comments: visualize the synthesized script -----------------------
             self.yScroll = tkinter.Scrollbar(self, orient=tkinter.VERTICAL)
@@ -303,10 +303,10 @@ class App(tkinter.Frame):
             # self.GUI_parameters_frame.destroy() #    ['state'] = 'disabled'
             for child in self.GUI_parameters_frame.winfo_children():
                 child.configure(state='disable')
-            self.quit['state'] = 'normal'
+            self.quit_bt['state'] = 'normal'
             self.run['state'] = 'disabled'
             self.master.mainloop()
-            self.quit['text'] = 'Quit'
+            self.quit_bt['text'] = 'Quit'
 
         def run_selected(self):
             # create and run the protocol

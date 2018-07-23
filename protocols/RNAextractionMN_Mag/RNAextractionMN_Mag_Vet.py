@@ -42,6 +42,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
 
     def Run(self):
+        self.set_EvoMode()
         self.initialize()
         wt = self.worktable
         NumOfSamples = self.NumOfSamples
@@ -128,6 +129,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         Waste           = Rtv.Reactive("Waste "  , Lab.def_WashWaste )
 
         self.CheckList()
+        self.set_EvoMode()
 
         for s in all_samples:
             Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,

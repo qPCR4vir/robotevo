@@ -31,6 +31,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                          )
 
     def Run(self):
+        self.set_EvoMode()
         self.initialize()                       #  set_defaults ??
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
@@ -103,6 +104,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         # Show the CheckList GUI to the user for possible small changes
 
         self.CheckList()
+        self.set_EvoMode()
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 

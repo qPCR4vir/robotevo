@@ -36,6 +36,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
 
     def Run(self):
+        self.set_EvoMode()
         self.initialize()                       #  set_defaults ??
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
@@ -91,6 +92,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         # Show the CheckList GUI to the user for posible small changes
 
         self.CheckList()
+        self.set_EvoMode()
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
