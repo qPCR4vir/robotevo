@@ -34,8 +34,7 @@ class App(tkinter.Frame):
             parameters = protocol_class.Parameter(GUI)
             # run the corresponding GUI
             print ('run GUI_init for ' + prot_name)
-            self.GUI4parameters[prot_name](parameters)
-            return protocol_class, parameters
+            return protocol_class, parameters, self.GUI4parameters[prot_name](parameters)
 
         def isPipeline(self, prot_name):
             protocol_class = self.protocols[prot_name]
@@ -50,7 +49,7 @@ class App(tkinter.Frame):
 
             def __init__(self, GUI, prot):
                 self.protocol = prot
-                print (prot[0])
+                print ('protocol: ' + prot[0])
                 tkinter.Frame.__init__(self, GUI.varoutput)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
                 self.selected_protocol = tkinter.StringVar(self)  # variable
@@ -85,6 +84,7 @@ class App(tkinter.Frame):
 
             tkinter.Button(parameters.GUI.varoutput, text='add', command=self.add_prot).grid( row=0, column=2)
             self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(parameters.GUI, prot) for prot in parameters.Protocol_classes]
+
 
         def add_prot(self):
             self.parameters.Protocol_classes.append(['Add protocol or pipeline', 'run name'])
@@ -257,7 +257,7 @@ class App(tkinter.Frame):
             self.varoutput = tkinter.Frame(self)
             self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
             # create and initialize the Parameters
-            self.protocol_class, self.parameters = self.GUIprot.new_parameters(protocol_name, self)
+            self.protocol_class, self.parameters, self.GUI_init = self.GUIprot.new_parameters(protocol_name, self)
             self.mainloop()
 
         def setVariantsMenu(self, value):
@@ -373,15 +373,18 @@ class App(tkinter.Frame):
 
         def CheckPipeline(self, pipeline):
            #for prot, run_name in pipeline.
+           print ('checking pipeline ' + self.protocol_class.name)
            pass
 
         def run_selected(self):
             # create and run the protocol
             protocol = self.protocol_class(self.parameters)
             protocol.Run()
-
-            for line in protocol.comments():
-                self.comments.insert(tkinter.END, line)
+            if protocol.isPipeline:
+                pass
+            else:
+                for line in protocol.comments():
+                    self.comments.insert(tkinter.END, line)
 
     def __init__(self, master=None):
         tkinter.Frame.__init__(self, master)

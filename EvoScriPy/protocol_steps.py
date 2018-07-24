@@ -208,9 +208,10 @@ class Pipeline (Executable):
         if (self.parameters.GUI):
             self.parameters.GUI.CheckPipeline(self)
 
-    def Run(self):
-        for protocol_class, run_name in self.Protocol_classes:
-            protocol_class
+    def RunPi(self):
+
+        for protocol_class, run_name in self.parameters.Protocol_classes:
+            print(protocol_class + run_name)
 
 
 
