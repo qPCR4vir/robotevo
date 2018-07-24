@@ -82,9 +82,14 @@ class App(tkinter.Frame):
         def __init__(self, parameters):
             self.parameters = parameters
             print('run GUI_init_pipeline for: ')
+
+            tkinter.Button(parameters.GUI.varoutput, text='add', command=self.add_prot).grid( row=0, column=2)
             self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(parameters.GUI, prot) for prot in parameters.Protocol_classes]
 
-
+        def add_prot(self):
+            self.parameters.Protocol_classes.append(['Add protocol or pipeline', 'run name'])
+            self.ProtcolFrames.append(
+                App.GUI_init_pipeline.ProtocolFrame(self.parameters.GUI, self.parameters.Protocol_classes[-1]))
 
     from EvoScriPy.protocol_steps import Pipeline
     GUI4parameters[Pipeline.name]=GUI_init_pipeline
