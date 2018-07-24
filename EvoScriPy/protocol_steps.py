@@ -195,7 +195,7 @@ class Pipeline (Executable):
         def __init__(self, GUI                         = None,
                            protocols                   = None):
             # assert isinstance(protocols, list)
-            self.Protocol_classes = protocols or [] #[(Executable, "don't run")]
+            self.Protocol_classes = protocols or [] #[[Executable, "don't run"]]
 
             Executable.Parameter.__init__(self, GUI)
 

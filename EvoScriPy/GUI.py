@@ -49,14 +49,24 @@ class App(tkinter.Frame):
         class ProtocolFrame(tkinter.Frame):
 
             def __init__(self, GUI, prot):
+                self.protocol = prot
                 print (prot[0])
                 tkinter.Frame.__init__(self, GUI.varoutput)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
                 self.selected_protocol = tkinter.StringVar(self)  # variable
 
                 self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *GUI.GUIprot.protocols)
-                self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+                #self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+                self.protocol_selection.grid(column=0, sticky=tkinter.W + tkinter.E)
+
                 self.selected_protocol.set(prot[0])  # variable def value
+                self.selected_protocol.trace("w", self.prot_changed)
+
+            def prot_changed(self, *args):
+                print('Changing: ' + self.protocol[0])
+                self.protocol[0]= self.selected_protocol.get()
+                print('to: ' + self.protocol[0])
+
 
         def __init__(self, parameters):
             self.parameters = parameters

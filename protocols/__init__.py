@@ -33,8 +33,8 @@ class PipelineTest (Pipeline):
 
         def __init__(self, GUI=None):
             Pipeline.Parameter.__init__(self, GUI,
-                [(Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2.name, "Prefill"),
-                 (PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p.name,   "Lysis"  )]  )
+                [[Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2.name, "Prefill"],
+                 [PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p.name,   "Lysis"  ]]  )
 
 available.append(Pipeline)
 available.append(PipelineTest)
