@@ -48,6 +48,7 @@ class App(tkinter.Frame):
         class ProtocolFrame(tkinter.Frame):
 
             def __init__(self, GUI, prot):
+                self.GUI = GUI
                 self.protocol = prot
                 print ('protocol: ' + prot[0])
                 tkinter.Frame.__init__(self, GUI.varoutput)
@@ -66,6 +67,23 @@ class App(tkinter.Frame):
                 self.RackNameEntry = tkinter.Entry(self, textvariable=self.ProtName)
                 self.RackNameEntry.grid(row=0, column=1, sticky=tkinter.W)
                 #self.RackNameEntry.trace("w", self.name_changed)
+
+
+            def Run(self):
+                self.runb = tkinter.Button(self, state=tkinter.DISABLED,
+                                           text='Run', command=self.run_prot)
+                self.runb.grid( row=0, column=2)
+                self.runb.configure(state='normal')
+                self.runb.mainloop()
+
+
+
+            def run_prot(self):
+                self.runb.configure(state='disable')
+                self.protocol[1] = self.ProtName.get()
+                print('Fro pipeline Run GUI for protocol: '  + self.protocol[0] +' run-named '+ self.protocol[1])
+                App.GUI_protocol(self.protocol[0], tkinter.Tk())
+
 
 
             def prot_changed(self, *args):
@@ -374,7 +392,10 @@ class App(tkinter.Frame):
         def CheckPipeline(self, pipeline):
            #for prot, run_name in pipeline.
            print ('checking pipeline ' + self.protocol_class.name)
-           pass
+           for GUI_init_prot in self.GUI_init.ProtcolFrames:
+               GUI_init_prot.Run()
+
+
 
         def run_selected(self):
             # create and run the protocol
