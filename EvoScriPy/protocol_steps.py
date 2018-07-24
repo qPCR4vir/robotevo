@@ -27,6 +27,7 @@ class Executable:
     # parameters to describe this program
     name = "undefined"
     versions = {"none": not_implemented}
+    isPipeline = False     # todo revise !
 
 
     class Parameter:
@@ -84,8 +85,7 @@ class Executable:
         pass
 
     def CheckList(self):
-        if (self.parameters.GUI):
-            self.parameters.GUI.CheckList(self)
+        pass
 
     def postCheck(self):
         pass
@@ -186,6 +186,8 @@ class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
 
     """
+    name = "empty pipeline"
+    isPipeline = True
 
     class Parameter (Executable.Parameter):
         # parameters to describe a run of this program
@@ -194,12 +196,17 @@ class Pipeline (Executable):
                            protocols                   = None):
             # assert isinstance(protocols, list)
             self.Protocol_classes = protocols or [] #[(Executable, "don't run")]
+
             Executable.Parameter.__init__(self, GUI)
+
 
     def __init__(self,     parameters = None):
         self.protocol_runs = {}
         Executable.__init__(self, parameters)
 
+    def CheckList(self):
+        if (self.parameters.GUI):
+            self.parameters.GUI.CheckPipeline(self)
 
     def Run(self):
         for protocol_class, run_name in self.Protocol_classes:

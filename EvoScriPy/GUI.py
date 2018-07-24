@@ -33,8 +33,42 @@ class App(tkinter.Frame):
             protocol_class = self.protocols[prot_name]
             parameters = protocol_class.Parameter(GUI)
             # run the corresponding GUI
+            print ('run GUI_init for ' + prot_name)
             self.GUI4parameters[prot_name](parameters)
             return protocol_class, parameters
+
+        def isPipeline(self, prot_name):
+            protocol_class = self.protocols[prot_name]
+            return protocol_class.isPipeline
+
+    class GUI_init_pipeline:
+        """  Show the parameters of the pipeline for review: a list of the protocols to run with run names
+
+        """
+
+        class ProtocolFrame(tkinter.Frame):
+
+            def __init__(self, GUI, prot):
+                print (prot[0])
+                tkinter.Frame.__init__(self, GUI.varoutput)
+                self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
+                self.selected_protocol = tkinter.StringVar(self)  # variable
+
+                self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *GUI.GUIprot.protocols)
+                self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+                self.selected_protocol.set(prot[0])  # variable def value
+
+        def __init__(self, parameters):
+            self.parameters = parameters
+            print('run GUI_init_pipeline for: ')
+            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(parameters.GUI, prot) for prot in parameters.Protocol_classes]
+
+
+
+    from EvoScriPy.protocol_steps import Pipeline
+    GUI4parameters[Pipeline.name]=GUI_init_pipeline
+    from protocols import PipelineTest
+    GUI4parameters[PipelineTest.name]=GUI_init_pipeline
 
     class GUI_init_parameters: # (tkinter.Frame)
 
@@ -91,7 +125,6 @@ class App(tkinter.Frame):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
     from EvoScriPy.protocol_steps import Protocol
     GUI4parameters[Protocol.name]=GUI_init_parameters
-
 
     class GUI_init_RNA_ext_MN(GUI_init_parameters):
 
@@ -178,19 +211,22 @@ class App(tkinter.Frame):
                                           state=tkinter.DISABLED)
             self.quit_bt.grid(row=1, column=15, columnspan=2)
 
-            # comments: visualize the synthesized script -----------------------
-            self.yScroll = tkinter.Scrollbar(self, orient=tkinter.VERTICAL)
-            self.yScroll.grid(row=3, column=16,  rowspan=20, sticky=tkinter.N + tkinter.S)
-            self.xScroll = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL)
-            self.xScroll.grid(row=23, column=8, columnspan=8, sticky=tkinter.E + tkinter.W)
+            if g.isPipeline(protocol_name):
+                pass
+            else:
+                # comments: visualize the synthesized script -----------------------
+                self.yScroll = tkinter.Scrollbar(self, orient=tkinter.VERTICAL)
+                self.yScroll.grid(row=3, column=16,  rowspan=20, sticky=tkinter.N + tkinter.S)
+                self.xScroll = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL)
+                self.xScroll.grid(row=23, column=8, columnspan=8, sticky=tkinter.E + tkinter.W)
 
-            self.comments = tkinter.Listbox(self, height=25, width=100,
-                                            xscrollcommand=self.xScroll.set,
-                                            yscrollcommand=self.yScroll.set)
-            self.comments.grid(row=3, column=8, rowspan=20, columnspan=8,
-                               sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
-            self.xScroll['command'] = self.comments.xview
-            self.yScroll['command'] = self.comments.yview
+                self.comments = tkinter.Listbox(self, height=25, width=100,
+                                                xscrollcommand=self.xScroll.set,
+                                                yscrollcommand=self.yScroll.set)
+                self.comments.grid(row=3, column=8, rowspan=20, columnspan=8,
+                                   sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
+                self.xScroll['command'] = self.comments.xview
+                self.yScroll['command'] = self.comments.yview
 
             self.varoutput = tkinter.Frame(self)
             self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
@@ -308,6 +344,10 @@ class App(tkinter.Frame):
             self.run['state'] = 'disabled'
             self.master.mainloop()
             self.quit_bt['text'] = 'Quit'
+
+        def CheckPipeline(self, pipeline):
+           #for prot, run_name in pipeline.
+           pass
 
         def run_selected(self):
             # create and run the protocol
