@@ -40,3 +40,20 @@ available.append(Pipeline)
 available.append(PipelineTest)
 
 
+def registreExecutable(executable_class, parameters):
+    available.append((executable_class, parameters))
+
+
+pl_test = Pipeline.Parameter(protocols=
+                             [[Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2.name,
+                               "Prefill"],
+                              [PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p.name,
+                               "Lysis"]])
+pl_test.run_name = 'Test'
+
+registreExecutable(Pipeline, pl_test)
+
+
+
+
+

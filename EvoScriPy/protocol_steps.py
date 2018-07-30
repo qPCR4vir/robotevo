@@ -33,8 +33,10 @@ class Executable:
     class Parameter:
         # parameters to describe a run of this program
 
-        def __init__(self, GUI                         = None):
-            self.GUI                         = GUI
+        def __init__(self, GUI       = None,
+                           run_name  = None):
+            self.GUI      = GUI
+            self.run_name = run_name
 
 
         def initialize(self):
@@ -186,7 +188,7 @@ class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
 
     """
-    name = "empty pipeline"
+    name = "Pipeline"
     isPipeline = True
 
     class Parameter (Executable.Parameter):

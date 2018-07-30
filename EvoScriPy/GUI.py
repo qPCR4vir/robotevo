@@ -23,21 +23,37 @@ class App(tkinter.Frame):
     class GUI4Protocols:
 
         def __init__(self):
-            self.protocols = {p.name: p for p in available}  # values
+            self.protocols = {}
+            for av in available:
+                if isinstance(av, tuple):
+                    class_name, parameters = av
+                    self.protocols[class_name.name + ': ' + parameters.run_name] = av
+                else:
+                    self.protocols[av.name] = av
             self.GUI4parameters = GUI4parameters
 
         def versions(self, prot_name):
-            return self.protocols[prot_name].versions
+            class_name = self.protocols[prot_name]
+            if isinstance(class_name, tuple):
+                class_name, parameters = class_name
+            return class_name.versions
 
         def new_parameters(self, prot_name, GUI):
+
             protocol_class = self.protocols[prot_name]
-            parameters = protocol_class.Parameter(GUI)
+            if isinstance(protocol_class, tuple):
+                protocol_class, parameters = protocol_class
+                parameters.GUI = GUI
+            else:
+                parameters = protocol_class.Parameter(GUI)
             # run the corresponding GUI
             print ('run GUI_init for ' + prot_name)
-            return protocol_class, parameters, self.GUI4parameters[prot_name](parameters)
+            return protocol_class, parameters, self.GUI4parameters[protocol_class.name](parameters)
 
         def isPipeline(self, prot_name):
             protocol_class = self.protocols[prot_name]
+            if isinstance(protocol_class, tuple):
+                protocol_class, parameters = protocol_class
             return protocol_class.isPipeline
 
     class GUI_init_pipeline:
