@@ -127,8 +127,8 @@ class App(tkinter.Frame):
 
     from EvoScriPy.protocol_steps import Pipeline
     GUI4parameters[Pipeline.name]=GUI_init_pipeline
-    from protocols import PipelineTest
-    GUI4parameters[PipelineTest.name]=GUI_init_pipeline
+    #from protocols import PipelineTest
+    #GUI4parameters[PipelineTest.name]=GUI_init_pipeline
 
     class GUI_init_parameters: # (tkinter.Frame)
 

@@ -10,14 +10,38 @@ Maintain here a list of all available customer protocols
 
 available = []
 
-import protocols.RNAextractionMN_Mag
-import protocols.KingFisher_RNAextNucleoMag_EtOH80p
-import protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2
-import protocols.PreKingFisher_RNAextNucleoMag
-import protocols.PreKingFisher_RNAextNucleoMag_EtOH80p
 
-# todo replace this temporal test
+def registreExecutable(executable_class, parameters):
+    available.append((executable_class, parameters))
+
+
+import protocols.RNAextractionMN_Mag
+import protocols.PreKingFisher_RNAextNucleoMag
+
+
+
+
 from EvoScriPy.protocol_steps import Pipeline
+from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
+from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p
+
+pipeline_PreKingFisher = Pipeline.Parameter(protocols=
+                             [[Prefill_plates_VEW1_ElutionBuffer_VEW2.name,                   "Prefill"],
+                              [PreKingFisher_RNAextNucleoMag_EtOH80p.name,                      "Lysis"]] )
+pipeline_PreKingFisher.run_name = 'PreKingFisher'
+registreExecutable(Pipeline, pipeline_PreKingFisher)
+
+
+available.append(Pipeline)
+
+
+
+
+
+
+
+"""
+# todo replace this temporal test
 from EvoScriPy.protocol_steps import not_implemented
 
 
@@ -36,22 +60,11 @@ class PipelineTest (Pipeline):
                 [[Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2.name, "Prefill"],
                  [PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p.name,   "Lysis"  ]]  )
 
-available.append(Pipeline)
-available.append(PipelineTest)
+#available.append(PipelineTest)
 
 
-def registreExecutable(executable_class, parameters):
-    available.append((executable_class, parameters))
+"""
 
-
-pl_test = Pipeline.Parameter(protocols=
-                             [[Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2.name,
-                               "Prefill"],
-                              [PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p.name,
-                               "Lysis"]])
-pl_test.run_name = 'Test'
-
-registreExecutable(Pipeline, pl_test)
 
 
 
