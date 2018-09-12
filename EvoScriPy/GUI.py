@@ -86,10 +86,10 @@ class App(tkinter.Frame):
 
 
             def Run(self):
-                self.runb = tkinter.Button(self, state=tkinter.DISABLED,
+                self.runb = tkinter.Button(self, #state=tkinter.DISABLED,
                                            text='Run', command=self.run_prot)
                 self.runb.grid( row=0, column=2)
-                self.runb.configure(state='normal')
+                #self.runb.configure(state='normal')
                 self.runb.mainloop()
 
 
@@ -97,6 +97,7 @@ class App(tkinter.Frame):
             def run_prot(self):
                 self.runb.configure(state='disable')
                 self.protocol[1] = self.ProtName.get()
+                self.update_protocol()
                 print('Fro pipeline Run GUI for protocol: '  + self.protocol[0] +' run-named '+ self.protocol[1])
                 App.GUI_protocol(self.protocol[0], tkinter.Tk())
 
@@ -112,6 +113,10 @@ class App(tkinter.Frame):
                 self.protocol[1]= self.selected_protocol.get()
                 print('to: ' + self.protocol[1])
 
+            def update_protocol(self):
+                self.prot_changed()
+                self.name_changed()
+
         def __init__(self, parameters):
             self.parameters = parameters
             print('run GUI_init_pipeline for: ')
@@ -124,6 +129,11 @@ class App(tkinter.Frame):
             self.parameters.Protocol_classes.append(['Add protocol or pipeline', 'run name'])
             self.ProtcolFrames.append(
                 App.GUI_init_pipeline.ProtocolFrame(self.parameters.GUI, self.parameters.Protocol_classes[-1]))
+
+        def update_parameters(self):
+            pass    # ??
+
+
 
     from EvoScriPy.protocol_steps import Pipeline
     GUI4parameters[Pipeline.name]=GUI_init_pipeline
@@ -183,6 +193,13 @@ class App(tkinter.Frame):
 
         def selet_O_FN(self):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
+
+        def update_parameters(self):
+            self.set_firstTip()
+            self.set_WT_FN()
+            self.set_O_FN()
+
+
     from EvoScriPy.protocol_steps import Protocol
     GUI4parameters[Protocol.name]=GUI_init_parameters
 
@@ -212,6 +229,12 @@ class App(tkinter.Frame):
         def read_NumOfSamples(self, *args):
             self.parameters.NumOfSamples = self.NumOfSamples.get()
             print(" --- NumOfSamples set to: %d" % (self.parameters.NumOfSamples))
+
+        def update_parameters(self):
+            App.GUI_init_parameters.update_parameters(self)
+            self.read_NumOfSamples()
+
+
     from protocols.RNAextractionMN_Mag import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNA_ext_MN
 
@@ -303,6 +326,9 @@ class App(tkinter.Frame):
                 m.add_command(label=val, command=lambda v=self.selected_version, l=val: v.set(l))
             self.selected_version.set(next(iter(self.protocol_versions)))  # variable def value
 
+        def update_parameters(self):
+            self.GUI_init.update_parameters()
+
         class ReplicaFrame(tkinter.Frame):
             def __init__(self, master, reply, num):
                 tkinter.Frame.__init__(self, master)
@@ -382,6 +408,8 @@ class App(tkinter.Frame):
 
         def CheckList(self, protocol):
 
+            self.GUI_init.update_parameters()
+
             Header=tkinter.Frame(self.varoutput)
             Header.grid( sticky=tkinter.E)
             Header.columnconfigure(1, minsize=120)
@@ -415,6 +443,8 @@ class App(tkinter.Frame):
 
         def run_selected(self):
             # create and run the protocol
+            self.GUI_init.update_parameters()
+
             protocol = self.protocol_class(self.parameters)
             protocol.Run()
             if protocol.isPipeline:
