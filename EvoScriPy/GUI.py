@@ -364,7 +364,7 @@ class App(tkinter.Frame):
                 self.RackGrid = tkinter.IntVar(self)
                 self.RackGrid.set(react.labware.location.grid)
                 self.RackSite = tkinter.IntVar(self)
-                self.RackSite.set(react.labware.location.site)
+                self.RackSite.set(react.labware.location.site+1)
                 self.check_list = check_list
 
                 tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
