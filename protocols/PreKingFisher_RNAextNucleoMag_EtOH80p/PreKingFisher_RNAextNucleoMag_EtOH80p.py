@@ -52,7 +52,9 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         #  Set the initial position of the tips
 
-        Itr.set_DITI_Counter2(DiTi1000_1, posInRack=self.parameters.firstTip).exec()
+        if self.parameters.firstTip:
+            rack, firstTip= self.worktable.get_first_pos(posstr=self.parameters.firstTip)
+            Itr.set_DITI_Counter2( labware =rack, posInRack=firstTip).exec()
 
         # Set volumen / sample
 
