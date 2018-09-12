@@ -1,5 +1,5 @@
 B;Comment("Prefill plates with VEW1, Elution buffer and VEW2 for 8 samples.");
-B;Set_DITI_Counter2("DiTi 1000ul","1","1","57",0);
+B;Set_DITI_Counter2("DiTi 1000ul","1","1","1",0);
 B;Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
 B;Comment("Spread: 600.0 µL of VEW1 - Wash Buffer  4992.0 µL total from [grid:23 site:4 well:1] into Plate VEW1[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:");
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);

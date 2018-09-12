@@ -114,13 +114,14 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
 
         # Define samples and the place for temporal reactions
+        par = Plate_lysis.parallelOrder(self.nTips, all_samples)
         for s in all_samples:
             Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
                          pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
+            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=par[s] + 1,
                          excess=0)  # todo revise order !!!
 
-            Rtv.Reactive("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=s + 1,
+            Rtv.Reactive("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
                          excess=0)  # todo revise order !!!
 
 

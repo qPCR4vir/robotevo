@@ -96,25 +96,29 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
+        par = Plate_VEW1.parallelOrder(self.nTips, all_samples)
+
         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1, initial_vol=0.0, pos=s + 1,
+            Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1, initial_vol=0.0, pos=par[s]+1,
                          excess=0)  # todo revise order !!!
-            Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2, initial_vol=0.0, pos=s + 1,
+            Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2, initial_vol=0.0, pos=par[s] + 1,
+                         excess=0)  # todo revise order !!!
+            Rtv.Reactive("Eluat_{:02d}".format(s + 1), Plate_Eluat, initial_vol=0.0, pos=par[s] + 1,
                          excess=0)  # todo revise order !!!
 
 
-        with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
+        with group("Prefill plates with VEW1, Elution buffer and VEW2"):
 
-            Itr.userPrompt("Put the plates for VEW1, VEW2 and EtOH in that order")
-
-            with tips(reuse=True, drop=False):
-                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))
+            Itr.userPrompt("Put the plates for VEW1, Elution buffer and VEW2 in that order")
 
             with tips(reuse=True, drop=False):
-                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples))
+                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples)) #, optimize=False
 
             with tips(reuse=True, drop=False):
-                spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))
+                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples) ) #, optimize=False
+
+            with tips(reuse=True, drop=False):
+                spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples) ) #, optimize=False
 
         self.done()
