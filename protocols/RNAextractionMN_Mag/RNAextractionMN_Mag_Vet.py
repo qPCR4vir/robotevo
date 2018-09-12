@@ -74,7 +74,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         # DiTi1000_1.fill('C06')
         # DiTi1000_2.fill('A11')
         # DiTi1000_3.fill('A10')
-        Itr.set_DITI_Counter2(DiTi1000_1, posInRack=self.parameters.firstTip).exec()
+        self.go_first_pos()
 
         SampleVolume        = 200.0
         LysisBufferVolume   = 180.0

@@ -59,10 +59,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         #  Set the initial position of the tips
 
-        if self.parameters.firstTip:
-            rack, firstTip= self.worktable.get_first_pos(posstr=self.parameters.firstTip)
-            Itr.set_DITI_Counter2( labware =rack, posInRack=firstTip).exec()
-
+        self.go_first_pos()
 
         # Set volumen / sample
 

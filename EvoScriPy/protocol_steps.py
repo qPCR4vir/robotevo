@@ -183,6 +183,11 @@ class Protocol (Executable):
         self.EvoMode.done()
         Executable.done(self)
 
+    def go_first_pos(self):
+        if self.parameters.firstTip:
+            rack, firstTip = self.worktable.get_first_pos(posstr=self.parameters.firstTip)
+            Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+
 
 class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
