@@ -113,12 +113,14 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
             Itr.userPrompt("Put the plates for VEW1, Elution buffer and VEW2 in that order")
 
             with tips(reuse=True, drop=False):
-                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples)) #, optimize=False
-
-            with tips(reuse=True, drop=False):
                 spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples) ) #, optimize=False
 
             with tips(reuse=True, drop=False):
                 spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples) ) #, optimize=False
+
+            with tips(reuse=True, drop=False):
+                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples)) #, optimize=False
+
+        dropTips()
 
         self.done()
