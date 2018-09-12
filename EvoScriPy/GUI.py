@@ -198,7 +198,7 @@ class App(tkinter.Frame):
             tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text=label).grid(row=2, column=3, columnspan=2,
                                                                        sticky=tkinter.N + tkinter.W)
 
-            self.NumOfSamples = tkinter.IntVar()
+            self.NumOfSamples = tkinter.IntVar(self.parameters.GUI.GUI_parameters_frame)
             self.NumOfSamples.set(self.parameters.NumOfSamples)
             self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters_frame, textvariable=self.NumOfSamples,
                                               from_=min_s, to=max_s, increment=1,
@@ -209,7 +209,7 @@ class App(tkinter.Frame):
         def min_max_Number_of_Samples(self):
             return 1 , 48
 
-        def read_NumOfSamples(self):
+        def read_NumOfSamples(self, *args):
             self.parameters.NumOfSamples = self.NumOfSamples.get()
             print(" --- NumOfSamples set to: %d" % (self.parameters.NumOfSamples))
     from protocols.RNAextractionMN_Mag import RNAextr_MN_Vet_Kit

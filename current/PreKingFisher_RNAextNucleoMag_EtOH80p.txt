@@ -1,5 +1,5 @@
 Comment("Extracting RNA from 96 samples with the MN-Vet kit");
-Set_DITI_Counter2("DiTi 1000ul","1","1","1",0);
+Set_DITI_Counter2("DiTi 1000ul","1","1","2",0);
 Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
 Group("Prefill plate with EtOH80p");
 Group("Spread: 600.0 µL of Ethanol 80% ");
