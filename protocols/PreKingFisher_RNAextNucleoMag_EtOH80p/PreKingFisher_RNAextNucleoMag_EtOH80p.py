@@ -91,7 +91,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
                                        Reactives, pos=8,   components=[ ProtK, cRNA, IC_MS2 ]
-                                         ,defLiqClass=W_liquidClass, replicas=4)
+                                         ,defLiqClass=W_liquidClass, replicas=1, excess=20)
         LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
                                        LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
         B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200,
