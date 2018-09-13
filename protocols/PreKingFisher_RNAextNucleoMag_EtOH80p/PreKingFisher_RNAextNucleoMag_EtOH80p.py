@@ -110,7 +110,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
-        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate VEW1"    )  # Plate 12 x 8 ?
+        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"    )  # Plate 12 x 8 ?
         Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
         Samples     = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
 

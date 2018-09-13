@@ -87,7 +87,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                                          wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
                                          volpersample=VEW2Volume    , defLiqClass=B_liquidClass)
         ElutionBuffer   = Rtv.Reactive("Elution Buffer "                  ,
-                                       ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass="Eluat")
+                                       ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass=B_liquidClass)
 
         # Show the CheckList GUI to the user for posible small changes
 

@@ -1,5 +1,5 @@
-49C27C27
-20180628_105920 Admin           
+FBBEB334
+20180913_111701 Admin           
                                                                                                                                 
 Administrator                                                                                                                   
 --{ RES }--
@@ -38,8 +38,8 @@ V;200
 998;8;Washstation 2Grid Cleaner short;Washstation 2Grid Waste;Washstation 2Grid Cleaner long;Trough 100ml;Trough 100ml;Trough 100ml;Washstation 2Grid DiTi Waste;;
 998;;;;4-VEW1 Wash Buffe;5-VEW2-WashBuffer;7-EtOH80p;;;
 998;0;
-998;3;96 Well DeepWell square;96 Well Microplate;96 Well DeepWell square;
-998;Plate VEW1;Plate ElutB;Plate EtOH;
+998;3;96 Well DeepWell square;;96 Well DeepWell square;
+998;Plate lysis;;Plate EtOH;
 998;0;
 998;0;
 998;0;
