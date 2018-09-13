@@ -155,9 +155,11 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             with tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
                    mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
-
             with tips(reuse=True, drop=False):
                 spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))
+            dropTips()
+
+            with tips(reuse=True, drop=False):
                 spread( reactive=VEB,          to_labware_region=Plate_lysis.selectOnly(all_samples))
 
             with incubation(minutes=5):
