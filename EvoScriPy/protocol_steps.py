@@ -111,7 +111,7 @@ class Protocol (Executable):
 
             self.worktable_template_filename = worktable_template_filename or ""
             self.output_filename             = output_filename or '../current/AWL'
-            self.firstTip                    = firstTip or 'A01'
+            self.firstTip                    = firstTip if firstTip is not None else ''
             Executable.Parameter.__init__(self, GUI)
 
     def __init__(self,       # worktable_template_fn ,
@@ -187,6 +187,7 @@ class Protocol (Executable):
         if self.parameters.firstTip:
             rack, firstTip = self.worktable.get_first_pos(posstr=self.parameters.firstTip)
             Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+
 
 
 class Pipeline (Executable):
