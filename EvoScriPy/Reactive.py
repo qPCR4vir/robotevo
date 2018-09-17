@@ -111,6 +111,7 @@ class preMix(Reactive):
             react.put_min_vol()
 
         if initial_vol is None: initial_vol = 0.0
+
         Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
                           defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
         self.components = components

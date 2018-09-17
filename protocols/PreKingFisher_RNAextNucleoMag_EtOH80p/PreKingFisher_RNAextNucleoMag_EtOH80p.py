@@ -128,16 +128,17 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
 
         with group("Prefill plate with EtOH80p"):
-            with tips(reuse=True, drop=False):
+            with tips(reuse=True, drop=False, drop_last=True):
                 spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
-            dropTips()
-
 
         with group("Sample Lysis"):
-            with tips(tipsMask=maxMask, reuse=True, drop=True):
+            with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                 pK_cRNA_MS2.make(NumOfSamples)
                 spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+
+            with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                 spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+
             with tips(reuse=False, drop=True):
                 transfer(  from_labware_region= Samples,
                            to_labware_region=   Plate_lysis,

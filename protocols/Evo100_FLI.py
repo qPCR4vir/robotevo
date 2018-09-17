@@ -24,7 +24,7 @@ class Evo100_FLI(Protocol):
                      worktable_template_filename    = None,
                      output_filename                = None):
 
-            self.NumOfSamples = NumOfSamples
+            self.NumOfSamples = int(NumOfSamples)
 
             Protocol.Parameter.__init__(self, GUI=GUI,
                                         worktable_template_filename = worktable_template_filename,
@@ -59,3 +59,5 @@ class Evo100_FLI(Protocol):
 
 
 
+    def makePreMix( self, preMix, force_replies=False):
+        makePreMix(preMix, NumSamples=self.NumOfSamples, force_replies=force_replies)

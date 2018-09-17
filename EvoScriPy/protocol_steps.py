@@ -495,12 +495,9 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
 
         volume = volume or reactive.volpersample
 
-        if isinstance(using_liquid_class, tuple):
-            Asp_liquidClass = using_liquid_class[0] or reactive.defLiqClass
-            Dst_liquidClass = using_liquid_class[1] or reactive.defLiqClass
-        else:
-            Asp_liquidClass = reactive.defLiqClass
-            Dst_liquidClass = reactive.defLiqClass
+        Asp_liquidClass, Dst_liquidClass = (reactive.defLiqClass, reactive.defLiqClass) if using_liquid_class is None else \
+                                           (using_liquid_class[0] or reactive.defLiqClass, using_liquid_class[1] or reactive.defLiqClass)
+
 
         if nt > SampleCnt: nt = SampleCnt
 
@@ -508,7 +505,7 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         lt = to_labware_region
         msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
         with group(msg):
-            msg += " {v:.1f} µL total from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+            msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                 .format(v=reactive.minVol(), fg=lf.location.grid, fs=lf.location.site+1, fw=reactive.pos+1, do=str([i+1 for i in to]),
                         to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
             Itr.comment(msg).exec()
@@ -834,7 +831,7 @@ def group(titel, mode=None):
 @contextmanager
 def tips(tipsMask=None, reuse=None,     drop=None,
                         preserve=None,  usePreserved=None, selected_samples=None,
-                        allow_air=None, drop_first=None,   drop_last=None):
+                        allow_air=None, drop_first=False,   drop_last=False):
     '''
 
     :param tipsMask:
@@ -849,6 +846,7 @@ def tips(tipsMask=None, reuse=None,     drop=None,
     :return:
     '''
 
+    if drop_first:  dropTips()
     if reuse        is not None: reuse_old          = reuseTips       (reuse       )
     if drop         is not None: drop_old           = set_dropTips    (drop        )
     if preserve     is not None: preserve_old       = preserveTips    (preserve    )
@@ -866,6 +864,7 @@ def tips(tipsMask=None, reuse=None,     drop=None,
     if preserve     is not None: preserve     = preserveTips    (preserve_old    )
     if usePreserved is not None: usePreserved = usePreservedTips(usePreserved_old)
     if allow_air    is not None: allow_air    = set_allow_air   (allow_air_old   )
+    if drop_last:   dropTips()
 
 @contextmanager
 def parallel_execution_of(subroutine, repeat=1):
