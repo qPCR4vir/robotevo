@@ -457,28 +457,32 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
         msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
         with group(msg):
             msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-                l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
+                labw.label, labw.location.grid, labw.location.site + 1, preMix.pos + 1, ncomp)
             Itr.comment(msg).exec()
-            nc = len(preMix.components)
-            nr = len(preMix.Replicas)
-            nt = Rbt.Robot.current.curArm().nTips
-            assert nc <= nt, "Temporally the mix can not contain more than {:d} components.".format(nt)
-            dt = nt - nc
-            samples_per_replicas = [(NumSamples + nr - (i+1))//nr for i in range(nr)]
-            with tips(Rbt.tipsMask[nc]):   #  want to use preserved ?? selected=??
-                for i, react in enumerate(preMix.components):
-                    l = react.labware
-                    r = react.volpersample*NumSamples*preMix.excess
+            samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
+            with tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
+                tip = -1
+                ctips = nt
+                for ridx, react in enumerate(preMix.components):
+                    labw = react.labware
+                    rVol = react.volpersample*NumSamples*preMix.excess
                     msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                        i + 1, r, react.name, l.label, l.location.grid, l.location.site + 1,
+                        ridx + 1, rVol, react.name, labw.label, labw.location.grid, labw.location.site + 1,
                         react.pos + 1)
                     Itr.comment(msg).exec()
-                    mV = Rbt.Robot.current.curArm().Tips[i].type.maxVol # todo what if the tip are different?
-                    while r > 0:
-                        dV = r if r < mV else mV
-                        aspire(i, react, dV)
-                        multidispense_in_replicas(i, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
-                        r -= dV
+                    tip += 1  # use the next tip
+                    if tip >= nt:
+                        ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
+                        tipsType = Rbt.Robot.current.curArm().Tips[0].type    # only the 0 ??
+                        dropTips(Rbt.tipsMask[ctips])
+                        getTips(Rbt.tipsMask[ctips], tipsType)
+                        tip = 0
+                    mV = Rbt.Robot.current.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
+                    while rVol > 0:
+                        dV = rVol if rVol < mV else mV
+                        aspire(ridx, react, dV)
+                        multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
+                        rVol -= dV
 
 
 def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, NumSamples=None, using_liquid_class=None):
