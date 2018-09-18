@@ -146,7 +146,7 @@ class KingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
 
             with incubation(minutes=15):
-                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
         with group("Beads binding"):
             with tips(tipsMask=maxMask, reuse=True, drop=False):
@@ -158,7 +158,7 @@ class KingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                 spread( reactive=VEB,          to_labware_region=Plate_lysis.selectOnly(all_samples))
 
             with incubation(minutes=5):
-                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
         self.done()
 

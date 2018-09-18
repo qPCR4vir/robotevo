@@ -126,7 +126,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
         with group("Prefill plates with VEW1, VEW2, EtOH and Elution buffer"):
 
             Itr.userPrompt("Put the plates for VEW1, Elution Buffer and VEW2"
-                           " in the worktable defined order")
+                           " in the worktable defined order").exec()
 
             Plate_VEW1  = wt.getLabware(Lab.MP96deepwell, "Plate VEW1" )  # Plate 12 x 8 ?
             Plate_ElutB = wt.getLabware(Lab.MP96well,     "Plate ElutB")  # Plate 12 x 8 ? MP96well !!
@@ -151,7 +151,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
                 spread(reactive=ElutionBuffer, to_labware_region=Plate_ElutB.selectOnly(all_samples))
 
             Itr.userPrompt("Retire the plates for VEW1, VEW2 and Elution Buffer, and "
-                           "Put the plates for the lysis -in place of VEW1- and for EtOH80p -in place of VEW2-")
+                           "Put the plates for the lysis -in place of VEW1- and for EtOH80p -in place of VEW2-").exec()
 
             Plate_EtOH = wt.replaceWithNew(Plate_VEW2, "Plate_EtOH")  # Plate 12 x 8 ?
             for s in all_samples:
@@ -192,7 +192,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
             #                using_liquid_class=(None,"Serum Disp postMix3"))
 
             with incubation(minutes=15):
-                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
         with group("Beads binding"):
             with tips(tipsMask=maxMask, reuse=True, drop=False):
@@ -208,6 +208,6 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
             #                to_labware_region= Plate_lysis.selectOnly(all_samples),
             #                using_liquid_class=(None,"Serum Disp postMix3"))
             with incubation(minutes=5):
-                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
         self.done()

@@ -148,7 +148,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                            NumSamples=          NumOfSamples)
             Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
-            Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
+            Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
             with incubation(minutes=5): pass
 
 
@@ -163,7 +163,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             with tips(reuse=True, drop=False):
                 spread( reactive=VEB,          to_labware_region=Plate_lysis.selectOnly(all_samples))
 
-            Itr.userPrompt("Please Schutteln the plates for lysis in pos 1")
+            Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
         dropTips()
         self.done()
