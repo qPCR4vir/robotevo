@@ -398,8 +398,8 @@ def multidispense_in_replicas(tip, reactive, vol):
     """
     assert isinstance(vol, list)
     re = reactive.Replicas
-    assert len(vol) == len(re)
-    for v, w in zip(vol, re):
+    assert len(vol) <= len(re)
+    for v, w in zip(vol, re):  # zip continues until the shortest iterable is exhausted
         Itr.dispense(Rbt.tipMask[tip], Rbt.Robot.current.curArm().Tips[tip].origin.reactive.defLiqClass,
                      # reactive.defLiqClass,
                      v, w.labware.selectOnly([w.offset])).exec()
@@ -439,10 +439,22 @@ def dispensemultiwells( tips, liq_class, labware, vol):
 def make( what, NumSamples=None): # OK coordinate with protocol
         if isinstance(what, Rtv.preMix): makePreMix(what, NumSamples)
 
-def makePreMix( preMix, NumSamples=None):
-        NumSamples = NumSamples or Rtv.NumOfSamples
-        l = preMix.labware
-        msg = "preMix: {:.1f} µL of {:s}".format(preMix.minVol(NumSamples), preMix.name)
+def makePreMix( preMix, NumSamples=None, force_replies=False):
+        NumSamples  = NumSamples or Rtv.NumOfSamples
+        labw        = preMix.labware
+        ncomp       = len(preMix.components)
+        tVol        = preMix.minVol(NumSamples)
+        mxnrepl     = len(preMix.Replicas)  # max number of replies
+        mnnrepl     = int(tVol // labw.type.maxVol + 1 ) # min number of replies
+        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, preMix.name)
+        nrepl       = mxnrepl if force_replies else mnnrepl
+        if nrepl < mxnrepl:
+            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
+            preMix.Replicas = preMix.Replicas[:nrepl]
+        mxnTips     = Rbt.Robot.current.curArm().nTips  # max number of Tips
+        nt          = min(mxnTips, ncomp)
+
+        msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
         with group(msg):
             msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
                 l.label, l.location.grid, l.location.site + 1, preMix.pos + 1, len(preMix.components))
