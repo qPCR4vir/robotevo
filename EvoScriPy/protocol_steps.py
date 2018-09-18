@@ -225,14 +225,14 @@ class Pipeline (Executable):
 
 Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
-SerumLiqClass      = "Serum Asp preMix3"
+SerumLiqClass      = "Serum Asp preMix3"   # or "MN Virus Sample"
 TissueHomLiqClass  = "Serum Asp"
 
 
 B_liquidClass   = "Water free cuvette"
-W_liquidClass   = Water_free #    or "AVR-Water free DITi 1000"
-Std_liquidClass = Water_free #    or "Water free dispense DiTi 1000"
-Small_vol_disp  = "Water wet"
+W_liquidClass   = Water_free      #    or "AVR-Water free DITi 1000"
+Std_liquidClass = Water_free      #    or "Water free dispense DiTi 1000"
+Small_vol_disp  = "Water wet"     #    or "Water free Low Volume"  ??
 Beads_LC_1      = "MixBeads_1"
 Beads_LC_2      = "MixBeads_2"
 

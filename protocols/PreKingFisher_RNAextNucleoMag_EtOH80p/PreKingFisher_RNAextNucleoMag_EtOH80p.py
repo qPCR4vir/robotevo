@@ -90,7 +90,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         #                               Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
         pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
-                                       Reactives, pos=8,   components=[ ProtK, cRNA, IC_MS2 ]
+                                       Reactives, pos=8,   components=[  cRNA, ProtK, IC_MS2]
                                          ,defLiqClass=W_liquidClass, replicas=1, excess=20)
         LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
                                        LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
@@ -110,7 +110,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
-        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"    )  # Plate 12 x 8 ?
+        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"   )  # Plate 12 x 8 ?
         Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
         Samples     = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
 
