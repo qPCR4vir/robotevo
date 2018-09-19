@@ -1,0 +1,44 @@
+manuell Excel-PCR file for Aut. PCR setup with TECAN (comment)																		
+PCRmix:	USUTU+IC2	RackNum:		Position:		Def PCR Vol:	25,0	Sample Vol:	5,0									
+Reply:		RackNum:		Position:														
+Reply:		RackNum:		Position:														
+Reactive:	PrimerMIX.108 - USUTU	RackNum:		Position:		Vol:		React Conc:	12,5	PCR conc:	1,0	Vol:		(Vol:)	2			
+Reactive:	PrimerMIX.47 - IC mix4	RackNum:		Position:		Vol:		React Conc:	12,5	PCR conc:	1,0	Vol:		(Vol:)	2			
+Reactive:	kit MAstMix	RackNum:		Position:		Vol:		React Conc:	2,0	PCR conc:	1,0	Vol:		(Vol:)	12,5			
+Reactive:	RT mix	RackNum:		Position:		Vol:		React Conc:	100,0	PCR conc:	1,0	Vol:		(Vol:)	0,25			
+Diluent:	H2O	RackNum:		Position:										(Vol:)	8,3			
+Well:		RackNum:		Position:	1	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	2	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	3	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	4	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	5	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	6	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	7	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	8	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	9	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	10	PCRmix Vol:		Row:		Column:								
+Well:		RackNum:		Position:	11	PCRmix Vol:		Row:		Column:								
+PCRmix:	WNV.INNT	RackNum:		Position:		Def PCR Vol:	25,0	Sample Vol:	5,0									
+Reply		RackNum:		Position:														
+Reply		RackNum:		Position:														
+Reactive:	PrimerMIX.91 - WNV	RackNum:		Position:		Vol:		React Conc:	12,5	PCR conc:	1,0	(Vol:)	2					
+Reactive:	kit MAstMix	RackNum:		Position:		Vol:		React Conc:	2,0	PCR conc:	1,0	(Vol:)	12,5					
+Reactive:	RT mix	RackNum:		Position:		Vol:		React Conc:	100,0	PCR conc:	1,0	(Vol:)	0,25					
+Diluent:	H2O	RackNum:		Position:		Vol:							10,3					
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	A	Column:	6							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	B	Column:	6							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	C	Column:	6							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	D	Column:	6							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	A	Column:	7							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	B	Column:	7							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	C	Column:	7							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	D	Column:	7							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	A	Column:	8							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	B	Column:	8							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	C	Column:	8							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	D	Column:	8							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	A	Column:	9							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	B	Column:	9							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	C	Column:	9							
+Well:		RackNum:		Position:		PCRmix Vol:		Row:	D	Column:	9							
+End:																		
