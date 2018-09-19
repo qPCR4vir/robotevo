@@ -42,7 +42,7 @@ class Evo75_FLI(Protocol):
                           parameters)
 
     def set_defaults(self):
-        wt = self.worktable
+        wt: object = self.worktable
 
         # todo decide where to put the default labware: in robot or worktable object or the global Lab
 
@@ -52,10 +52,10 @@ class Evo75_FLI(Protocol):
         DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,""                                  )
 
         # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
-        Lab.def_WashWaste   = WashWaste
-        Lab.def_WashCleaner = WashCleanerS
-        Lab.def_DiTiWaste   = DiTiWaste
-        Lab.def_DiTi        = Lab.DiTi_1000ul   # todo revise
+        wt.def_WashWaste   = WashWaste
+        wt.def_WashCleaner = WashCleanerS
+        wt.def_DiTiWaste   = DiTiWaste
+        wt.def_DiTi        = Lab.DiTi_1000ul   # todo revise
 
 
 

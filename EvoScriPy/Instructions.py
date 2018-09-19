@@ -183,7 +183,7 @@ ensures maximum pipetting accuracy.
         """
         Pipette.__init__(self, 'Wash',
                             tipMask,
-                            labware=WashWaste or Lab.def_WashWaste,
+                            labware=WashWaste or Lab.WorkTable.curWorkTable.def_WashWaste,
                             RackName=RackName,
                             Well=Well,
                             arm=arm )

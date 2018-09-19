@@ -7,11 +7,6 @@
 
 __author__ = 'qPCR4vir'
 
-# TODO we need these GLOBALS ????????
-def_LabW        = None
-def_WashWaste   = None
-def_WashCleaner = None
-def_DiTiWaste   = None
 
 def count_tips(TIP_MASK)->int:
     n = 0
@@ -70,6 +65,10 @@ class WorkTable:
 
 
     def __init__(self, templateFile=None, grids=67, sites=127):
+        self.def_WashWaste   = None
+        self.def_WashCleaner = None
+        self.def_DiTiWaste   = None
+        self.def_DiTi        = None
         # assert WorkTable.curWorkTable is None      # TODO revise.
         WorkTable.curWorkTable = self              # TODO revise
         self.labTypes = {}  # typeName:labwares. For each type mountain a list of labwares (with have self locations)
@@ -223,7 +222,7 @@ class Carrier:
             self.allowedLabwaresTypes = []
             self.name = name
 
-    def __init__(self, RackType, grid, label="", worktable=WorkTable.curWorkTable):
+    def __init__(self, RackType, grid, label=""): # , worktable=WorkTable.curWorkTable or Rbt.Robot.current.worktable
         self.site = grid
         self.type = RackType
         self.labwares = [None] * self.nSite
@@ -365,7 +364,8 @@ class Labware:
         self.label = label
         self.location = location
         self.Wells = []
-        worktable = worktable or WorkTable.curWorkTable
+        worktable = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
+
         if isinstance(worktable, WorkTable):             #   ??????????????
             worktable.addLabware(self, location)
         if location and location.rack:                   #   ??????????????
@@ -584,7 +584,7 @@ class Labware:
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 class DITIrack (Labware):
-    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
+    def __init__(self, type, location, label=None, worktable=None):
         assert isinstance(type, Labware.DITIrackType)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
         self.fill()
@@ -652,7 +652,7 @@ class DITIrack (Labware):
 
     def remove_tips(self, TIP_MASK,
                           labware,
-                          worktable=WorkTable.curWorkTable,
+                          worktable=None,
                           lastPos=False):
         """
         A response to a getTips: the tips have to be removed from the rack
@@ -671,7 +671,7 @@ class DITIrack (Labware):
         tp = tp if isinstance(tp, Labware.Type) else tp.type
         return self._remove_tip(n, tp, worktable, lastPos)
 
-    def _remove_tip(self, n, tp, worktable=WorkTable.curWorkTable, lastPos=False):
+    def _remove_tip(self, n, tp, worktable=None, lastPos=False):
         #  return removed tips and set it in the arm
         assert isinstance(tp, Labware.DITIrackType)
         beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
@@ -688,15 +688,16 @@ class DITIrack (Labware):
             n -= 1
             rest -= 1
             if not rest:
-                self.set_next_to_next_rack(worktable)
+                self.set_next_to_next_rack(worktable)   # ??? WorkTable.curWorkTable
                 return tips + self._remove_tip(n, tp, worktable, lastPos)
             i+=d
             if lastPos:  tp.pick_next_back -= 1
             else:        tp.pick_next      += 1
         return tips
 
-    def next_rack(self, worktable=WorkTable.curWorkTable):
+    def next_rack(self, worktable=None):
         tp = self.type
+        if worktable is None: worktable=WorkTable.curWorkTable   # ??? WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
         racks = worktable.labTypes[tp.name]
         assert isinstance(racks,list)
@@ -708,7 +709,7 @@ class DITIrack (Labware):
         return racks[i]
 
 
-    def set_next_to_next_rack(self, worktable=WorkTable.curWorkTable):
+    def set_next_to_next_rack(self, worktable=None):
         rack = self.next_rack(worktable)
         assert isinstance(rack, DITIrack)
         print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)
@@ -757,7 +758,7 @@ class DITIrack (Labware):
         return tips
 
 class DITIwaste(Labware):
-    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
+    def __init__(self, type, location, label=None, worktable=None):
         assert isinstance(type, Labware.DITIwasteType)
         Labware.__init__(self, type, location, label=label, worktable=worktable)
         self.wasted = 0
@@ -781,7 +782,7 @@ class DITIwaste(Labware):
                         assert tp is not tip_well.reactive
 
 class Cuvette(Labware):
-    def __init__(self, type, location, label=None, worktable=WorkTable.curWorkTable):
+    def __init__(self, type, location, label=None, worktable=None):
         assert isinstance(type, Labware.CuvetteType)
         self.vol = 0.0
         self.reactive = None

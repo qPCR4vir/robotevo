@@ -126,7 +126,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
                                        Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
                                          ,defLiqClass=W_liquidClass, replicas=2)
-        Waste           = Rtv.Reactive("Waste "  , Lab.def_WashWaste )
+        Waste           = Rtv.Reactive("Waste "  , self.worktable.def_WashWaste )
 
         self.CheckList()
         self.set_EvoMode()

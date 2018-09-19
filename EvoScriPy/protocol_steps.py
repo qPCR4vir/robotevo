@@ -655,7 +655,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     :param optimize:
     :return:
     """
-    to_waste_labware = to_waste_labware or Lab.def_WashWaste
+    to_waste_labware = to_waste_labware or Lab.WorkTable.curWorkTable.def_WashWaste
     assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
     if not volume or volume< 0.0 : volume = 0.0
     assert isinstance(volume, (int, float))
