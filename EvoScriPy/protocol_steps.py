@@ -440,6 +440,7 @@ def make( what, NumSamples=None): # OK coordinate with protocol
         if isinstance(what, Rtv.preMix): makePreMix(what, NumSamples)
 
 def makePreMix( preMix, NumSamples=None, force_replies=False):
+        robot = Rbt.Robot.current  # todo revice !!!
         NumSamples  = NumSamples or Rtv.NumOfSamples
         labw        = preMix.labware
         ncomp       = len(preMix.components)
@@ -451,7 +452,7 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
         if nrepl < mxnrepl:
             print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
             preMix.Replicas = preMix.Replicas[:nrepl]
-        mxnTips     = Rbt.Robot.current.curArm().nTips  # max number of Tips
+        mxnTips     = robot.curArm().nTips  # max number of Tips
         nt          = min(mxnTips, ncomp)
 
         msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
@@ -473,11 +474,11 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
                     tip += 1  # use the next tip
                     if tip >= nt:
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
-                        tipsType = Rbt.Robot.current.curArm().Tips[0].type    # only the 0 ??
+                        tipsType = robot.curArm().Tips[0].type    # only the 0 ??
                         dropTips(Rbt.tipsMask[ctips])
                         getTips(Rbt.tipsMask[ctips], tipsType)
                         tip = 0
-                    mV = Rbt.Robot.current.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
+                    mV = robot.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
                     while rVol > 0:
                         dV = rVol if rVol < mV else mV
                         aspire(ridx, react, dV)

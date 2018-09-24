@@ -187,7 +187,8 @@ ensures maximum pipetting accuracy.
                             RackName=RackName,
                             Well=Well,
                             arm=arm )
-        self.labware = self.robot.worktable.def_WashWaste if WashWaste is None
+        if WashWaste is None:
+            self.labware = self.robot.worktable.def_WashWaste
         self.atFrequency = atFrequency
         self.lowVolume = lowVolume
         self.FastWash = FastWash
@@ -321,7 +322,9 @@ class dropDITI(Pipette):
         :param AirgapSpeed: int 1-1000. Speed for the airgap in μl/s
         :param arm:
         """
-        Pipette.__init__(self, "DropDITI",  tipMask, labware = labware or Lab.def_DiTiWaste, arm=arm)
+        Pipette.__init__(self, "DropDITI",  tipMask, labware = labware or Lab, arm=arm)
+        if self.labware is None:
+            self.labware = self.robot.worktable.def_DiTiWaste
 #        self.conditional = conditional
         self.AirgapSpeed = AirgapSpeed
         self.AirgapVolume = AirgapVolume
@@ -332,7 +335,7 @@ class dropDITI(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = EvoScriPy.Robot.Robot.current.dropTips(self.tipMask, self.labware)
+        self.tipMask = self.robot.dropTips(self.tipMask, self.labware)
 
 class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.def_LabW
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter) pag. 15 - 15
@@ -466,7 +469,7 @@ class pickUp_DITIs(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask, tips = EvoScriPy.Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = self.robot.pick_up_tips(self.tipMask, self.labware)
         assert not tips
 
 class pickUp_DITIs2(Pipette):
@@ -502,7 +505,7 @@ class pickUp_DITIs2(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask, tips = EvoScriPy.Robot.Robot.current.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = self.robot.pick_up_tips(self.tipMask, self.labware)
         assert not tips
 
 class set_DITIs_Back(Pipette):
@@ -534,7 +537,7 @@ class set_DITIs_Back(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = EvoScriPy.Robot.Robot.current.set_tips_back(self.tipMask, self.labware)
+        self.tipMask = self.robot.set_tips_back(self.tipMask, self.labware)
 
 class pickUp_ZipTip(Pipette): # todo implement !!!
     """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)
