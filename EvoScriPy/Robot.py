@@ -413,7 +413,7 @@ class Robot:
     def dropTips(self, TIP_MASK=-1, waste=None):
         if not self.droptips: return 0
 
-        waste = waste if waste else Lab.def_DiTiWaste
+        waste = waste if waste else self.worktable.def_DiTiWaste
         assert isinstance(waste, Lab.DITIwaste)
 
         TIP_MASK, tips = self.curArm().drop(TIP_MASK)

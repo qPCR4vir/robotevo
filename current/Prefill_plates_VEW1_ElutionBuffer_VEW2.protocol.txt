@@ -1,0 +1,12 @@
+Prefill plates with VEW1, Elution buffer and VEW2 for 8 samples.
+
+Prefill plates with VEW1, Elution buffer and VEW2
+
+    Spread: 100.0 킠 of Elution Buffer 
+        Spread: 100.0 킠 of Elution Buffer  (832.0 킠 total) from [grid:7 site:1 well:1] into Plate ElutB[grid:25 site:2] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+
+    Spread: 600.0 킠 of VEW2 - WashBuffer 
+        Spread: 600.0 킠 of VEW2 - WashBuffer  (4992.0 킠 total) from [grid:23 site:5 well:1] into Plate VEW2[grid:25 site:3] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+
+    Spread: 600.0 킠 of VEW1 - Wash Buffer 
+        Spread: 600.0 킠 of VEW1 - Wash Buffer  (4992.0 킠 total) from [grid:23 site:4 well:1] into Plate VEW1[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:

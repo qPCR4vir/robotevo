@@ -322,7 +322,7 @@ class dropDITI(Pipette):
         :param AirgapSpeed: int 1-1000. Speed for the airgap in μl/s
         :param arm:
         """
-        Pipette.__init__(self, "DropDITI",  tipMask, labware = labware or Lab, arm=arm)
+        Pipette.__init__(self, "DropDITI",  tipMask, labware = labware, arm=arm)
         if self.labware is None:
             self.labware = self.robot.worktable.def_DiTiWaste
 #        self.conditional = conditional
