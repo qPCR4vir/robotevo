@@ -46,16 +46,17 @@ class Evo75_FLI(Protocol):
 
         # todo decide where to put the default labware: in robot or worktable object or the global Lab
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS,""                                  )
-        WashWaste       = wt.getLabware(Lab.WasteWS,   ""                                  )
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS,""                                  )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,""                                  )
+        wt.def_DiTi     = Lab.DiTi_0200ul   # todo revise, this is a type, the others are labwares
+
+        WashCleanerS    = wt.getLabware(Lab.CleanerShallow,""                              )
+        WashWaste       = wt.getLabware(Lab.WasteWash,   ""                                )
+        WashCleanerL    = wt.getLabware(Lab.CleanerDeep,""                                 )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste_plate,"TipWaste"                    )
 
         # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste
-        wt.def_DiTi        = Lab.DiTi_1000ul   # todo revise
 
 
 
