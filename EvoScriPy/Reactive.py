@@ -97,6 +97,7 @@ class Primer (Reactive):
     SEQs={}
     Names={}
     KWs={}
+    Excess = def_mix_excess
 
 
     def __init__(self, name, seq, ID=None, modif = None,
@@ -105,7 +106,7 @@ class Primer (Reactive):
                  labware=None, pos=None,
                  initial_vol=None ):
 
-        Reactive.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol)
+        Reactive.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
 
         Primer.Names [name]=self   # check duplicate
         Primer.IDs   [ID  ]=self   # check duplicate
@@ -166,4 +167,53 @@ class preMix(Reactive):
         return self.components[index].minVol(NumSamples)
 
 
+class PrimerMix(preMix):
+    IDs={}
+    Names={}
+    KWs={}
+    Excess = def_mix_excess
 
+
+    def __init__(self, name, labware, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
+        preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
+        vol=0.0
+        for react in components:
+            vol += react.volpersample
+            react.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
+            react.put_min_vol()
+
+        if initial_vol is None: initial_vol = 0.0
+
+        Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
+                          defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
+        self.components = components
+        #self.init_vol()
+
+
+class PCRMasterMix(preMix):
+    IDs={}
+    Names={}
+    KWs={}
+    Excess = def_mix_excess
+
+
+    def __init__(self, name, labware, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
+        preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
+        vol=0.0
+        for react in components:
+            vol += react.volpersample
+            react.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
+            react.put_min_vol()
+
+        if initial_vol is None: initial_vol = 0.0
+
+        Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
+                          defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
+        self.components = components
+        #self.init_vol()
+
+class PCRMix (preMix):
+    pass
+
+class PCRReaction (Reaction):
+    pass
