@@ -103,7 +103,7 @@ class mix(Pipetting):
         Pipetting.__init__(self, 'Mix',
                             tipMask,
                             liquidClass,
-                            volume or Lab.def_LabW,
+                            volume,
                             labware,
                             spacing,
                             wellSelection,

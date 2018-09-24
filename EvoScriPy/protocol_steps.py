@@ -796,7 +796,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     if nt > SampleCnt:
         nt = SampleCnt
     # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-    mV = Lab.def_DiTi.maxVol * mix_p    # What tip tp use !
+    mV = robot.worktable.def_DiTi.maxVol * mix_p    # What tip tp use !
     if volume:
         v = volume
     else:
