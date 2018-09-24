@@ -174,7 +174,7 @@ class PrimerMix(preMix):
     Excess = def_mix_excess
 
 
-    def __init__(self, name, labware, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
+    def __init__(self, name, labware,  ID=None, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
         preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
         vol=0.0
         for react in components:
@@ -217,3 +217,31 @@ class PCRMix (preMix):
 
 class PCRReaction (Reaction):
     pass
+
+class PCRexperiment:
+    def __init__(self, ID, name):
+        self.reactions = []   # list of PCRReaction to create
+
+    def addReactions(self, PCRmix: PCRMix, samples, labware: object) -> list:  # of PCRReaction
+        pass
+    def pippete_mix(self):
+        pass
+    def pippete_samples(self):
+        pass
+
+
+PanFla_119 = PrimerMix("PanFLA", ID="119", components=[Primer.IDs[320], Primer.IDs[321]])
+WNV_INNT_37 = PrimerMix("WNV_5p", ID="37", components=[Primer.IDs[20], Primer.IDs[21], Primer.IDs[22]])
+
+Exp_300 = PCRexperiment(300, "PanFLA mosq Grecia")
+
+samples = [ "Pool-1",
+            "Pool-2",
+            "Pool-3",
+            "Pool-4"  ]
+
+Exp_300.addReactions(PanFla_119, samples )
+Exp_300.addReactions(WNV_INNT_37, samples)
+
+Exp_300.pippete_mix()       # Evo75
+Exp_300.pippete_samples()   # Evo100
