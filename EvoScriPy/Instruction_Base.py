@@ -181,7 +181,7 @@ class Pipette(Instruction):
         Instruction.__init__(self, name)
         self.robot.curArm(arm)
         self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
-        self.labware=labware or Lab.def_LabW  # todo what def???
+        self.labware=labware or self.robot.worktable.def_LabW  # todo what def???
         self.spacing = spacing
         self.loopOptions = LoopOptions
         self.RackName = RackName

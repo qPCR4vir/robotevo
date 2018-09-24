@@ -281,7 +281,7 @@ class getDITI2(DITIs):
         DITIs.validateArg(self)
 
         ln= self.LabwareTypeName
-        if   ln is None                     : ln = Lab.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        if   ln is None                     : ln = self.robot.worktable.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
         elif isinstance(ln, Lab.DITIrack)    : ln = ln.type.name
         elif isinstance(ln, Lab.Labware.DITIrackType): ln = ln.name
 
@@ -295,11 +295,11 @@ class getDITI2(DITIs):
         ln = self.LabwareTypeName
         if   ln is None                 :   ln = Lab.def_DiTi       # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
         elif isinstance(ln, str)        :
-            curW = EvoScriPy.Robot.Robot.current.worktable
+            curW = self.robot.worktable
             assert isinstance(curW, Lab.WorkTable)
-            ln = EvoScriPy.Robot.Robot.current.worktable.labTypes [ln][0].type
+            ln = self.robot.worktable.labTypes [ln][0].type
         assert isinstance(ln, (Lab.DITIrack, Lab.Labware.DITIrackType))
-        self.tipMask, tips = EvoScriPy.Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
+        self.tipMask, tips = self.robot.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
         self.LabwareTypeName = ln
 
