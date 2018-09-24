@@ -9,12 +9,12 @@ B;Dispense(15,"Water free cuvette","600.00","600.00","600.00","600.00",0,0,0,0,0
 B;DropDITI(15,23,6,0.00,300,0);
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
 B;Comment("preMix: 422.4 킠 of ProtK+cRNA+IC-MS2 mix  into Reactives[grid:8 site:1 well:8] from 3 components:");
-B;Comment("   1- 192.0 킠 of Proteinase K  from Reactives[grid:8 site:1 well:16]");
-B;Aspirate(1,"Water wet","192.00","0","0","0",0,0,0,0,0,0,0,0,8,0,1,"0110002",0,0);
-B;Dispense(1,"Water wet","192.00","192.00","192.00","192.00",0,0,0,0,0,0,0,0,8,0,1,"0110010",0,0);
-B;Comment("   2- 38.4 킠 of Carrier RNA  from Reactives[grid:8 site:1 well:15]");
-B;Aspirate(2,"Water wet","0","38.40","0","0",0,0,0,0,0,0,0,0,8,0,1,"0110001",0,0);
-B;Dispense(2,"Water wet","38.40","38.40","38.40","38.40",0,0,0,0,0,0,0,0,8,0,1,"0110010",0,0);
+B;Comment("   1- 38.4 킠 of Carrier RNA  from Reactives[grid:8 site:1 well:15]");
+B;Aspirate(1,"Water wet","38.40","0","0","0",0,0,0,0,0,0,0,0,8,0,1,"0110001",0,0);
+B;Dispense(1,"Water wet","38.40","38.40","38.40","38.40",0,0,0,0,0,0,0,0,8,0,1,"0110010",0,0);
+B;Comment("   2- 192.0 킠 of Proteinase K  from Reactives[grid:8 site:1 well:16]");
+B;Aspirate(2,"Water wet","0","192.00","0","0",0,0,0,0,0,0,0,0,8,0,1,"0110002",0,0);
+B;Dispense(2,"Water wet","192.00","192.00","192.00","192.00",0,0,0,0,0,0,0,0,8,0,1,"0110010",0,0);
 B;Comment("   3- 192.0 킠 of IC MS2 phage culture  from Reactives[grid:8 site:1 well:14]");
 B;Aspirate(4,"Water wet","0","0","192.00","0",0,0,0,0,0,0,0,0,8,0,1,"01100p0",0,0);
 B;Dispense(4,"Water wet","192.00","192.00","192.00","192.00",0,0,0,0,0,0,0,0,8,0,1,"0110010",0,0);

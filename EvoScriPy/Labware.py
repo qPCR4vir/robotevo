@@ -181,7 +181,7 @@ class WorkTable:
                 raise Exception("Labware '" + labw_type_name + "' was not found in worktable: " + self.templateFileName)
             labws= self.labTypes[labw_type_name]
         else:
-            labw_type= def_DiTi
+            labw_type= self.def_DiTi
             if labw_type.name not in self.labTypes:
                 raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
             labws = self.labTypes[labw_type.name]
@@ -210,7 +210,11 @@ class WorkTable:
         return labw.type.createLabware(loc, label)
 
 
+class Frezeer (WorkTable):
+    def __init__(self):
+        WorkTable.__init__(self)
 
+stock = Frezeer()
 
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
@@ -808,6 +812,8 @@ class Cuvette(Labware):
         return maxTips
 
 
+#  "predefining" common labwares types:
+
 Trough_100ml    = Labware.CuvetteType("Trough 100ml",               8,      maxVol=  100000)
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
@@ -833,7 +839,7 @@ DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxV
 DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
-def_DiTi        = DiTi_1000ul
+#def_DiTi        = DiTi_1000ul
 
 
 #Evo100
@@ -852,6 +858,9 @@ DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
 MP96deepwell = Labware.Type("96 Well DeepWell square", 8, 12, maxVol=2000)    # todo define in Evoware !!!
 PCR96well    = Labware.Type("96 Well PCR Plate"      , 8, 12, maxVol= 100)
+
+Box9x9       = Labware.Type("Box 9x9"                , 9,  9, maxVol= 2000)
+Box10x10     = Labware.Type("Box 10x10"              ,10, 10, maxVol= 2000)
 
 
 def getLabware(labw_type, label, worktable=None):

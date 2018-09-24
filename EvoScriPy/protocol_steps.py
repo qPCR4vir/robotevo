@@ -303,7 +303,7 @@ def getTips(TIP_MASK=-1, type=None, selected_samples=None):
             Itr.pickUp_DITIs2(tipsMask, tip_rack).exec()
         assert tips_in_rack == 0
     else:
-        type=type or Lab.def_DiTi
+        type=type or robot.worktable.def_DiTi
         I = Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm)
         I.exec()
     return mask # todo REVISE !!   I.tipMask
@@ -440,6 +440,7 @@ def make( what, NumSamples=None): # OK coordinate with protocol
         if isinstance(what, Rtv.preMix): makePreMix(what, NumSamples)
 
 def makePreMix( preMix, NumSamples=None, force_replies=False):
+        robot = Rbt.Robot.current  # todo revice !!!
         NumSamples  = NumSamples or Rtv.NumOfSamples
         labw        = preMix.labware
         ncomp       = len(preMix.components)
@@ -451,7 +452,7 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
         if nrepl < mxnrepl:
             print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
             preMix.Replicas = preMix.Replicas[:nrepl]
-        mxnTips     = Rbt.Robot.current.curArm().nTips  # max number of Tips
+        mxnTips     = robot.curArm().nTips  # max number of Tips
         nt          = min(mxnTips, ncomp)
 
         msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
@@ -473,11 +474,11 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
                     tip += 1  # use the next tip
                     if tip >= nt:
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
-                        tipsType = Rbt.Robot.current.curArm().Tips[0].type    # only the 0 ??
+                        tipsType = robot.curArm().Tips[0].type    # only the 0 ??
                         dropTips(Rbt.tipsMask[ctips])
                         getTips(Rbt.tipsMask[ctips], tipsType)
                         tip = 0
-                    mV = Rbt.Robot.current.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
+                    mV = robot.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
                     while rVol > 0:
                         dV = rVol if rVol < mV else mV
                         aspire(ridx, react, dV)
@@ -655,12 +656,13 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     :param optimize:
     :return:
     """
-    to_waste_labware = to_waste_labware or Lab.WorkTable.curWorkTable.def_WashWaste
+    robot = Rbt.Robot.current
+    to_waste_labware = to_waste_labware or robot.worktable.def_WashWaste
     assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
     if not volume or volume< 0.0 : volume = 0.0
     assert isinstance(volume, (int, float))
     oriSel = from_labware_region.selected()
-    nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+    nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
     if not oriSel:
         oriSel = range(Rtv.NumOfSamples)
     if optimize:
@@ -672,7 +674,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         nt = SampleCnt
     tm = Rbt.tipsMask[nt]
     nt = to_waste_labware.autoselect(maxTips=nt)
-    mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
+    mV = robot.worktable.def_DiTi.maxVol      # todo revise !! What tip tp use !
 
     Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
     RestPlus = 50
@@ -778,12 +780,13 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     :return:
     """
     mix_p = 0.9
-    in_labware_region = in_labware_region or Lab.WashWaste
+    robot = Rbt.Robot.current
+    in_labware_region = in_labware_region or robot.worktable.def_WashWaste
     assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
     if not volume or volume< 0.0 : volume = 0.0
     assert isinstance(volume, (int, float))
     oriSel = in_labware_region.selected()
-    nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+    nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
     if not oriSel:
         oriSel = range(Rtv.NumOfSamples)
     if optimize:
@@ -793,7 +796,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     if nt > SampleCnt:
         nt = SampleCnt
     # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-    mV = Lab.def_DiTi.maxVol * mix_p    # What tip tp use !
+    mV = robot.worktable.def_DiTi.maxVol * mix_p    # What tip tp use !
     if volume:
         v = volume
     else:
@@ -817,7 +820,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
             sel = oriSel[curSample:curSample + nt]
             spl = range(curSample, curSample + nt)
             with tips(Rbt.tipsMask[nt], selected_samples=spl):
-                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * mix_p
+                mV = robot.curArm().Tips[0].type.maxVol * mix_p
                 mx.labware.selectOnly(sel)
                 if not using_liquid_class:
                     if sel:

@@ -92,6 +92,32 @@ class Reactive:
     def autoselect(self, maxTips=1):
         return self.labware.autoselect(self.pos, maxTips, len(self.Replicas))
 
+class Primer (Reactive):
+    IDs={}
+    SEQs={}
+    Names={}
+    KWs={}
+
+
+    def __init__(self, name, seq, ID=None, modif = None,
+                 stk_conc=100, PCR_conc=0.8,
+                 KW=None,
+                 labware=None, pos=None,
+                 initial_vol=None ):
+
+        Reactive.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol)
+
+        Primer.Names [name]=self   # check duplicate
+        Primer.IDs   [ID  ]=self   # check duplicate
+        Primer.SEQs  [seq ]=self   # check duplicate  ??
+        self.seq = seq
+        self.ID = ID
+        Primer.SEQs.setdefault(seq, []).append(self)
+        for kw in KW:
+            Primer.KWs.setdefault(kw,[]).append(self)
+
+
+
 class Reaction(Reactive):
     def __init__(self, name, track_sample, labware,
                  pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
