@@ -183,10 +183,11 @@ ensures maximum pipetting accuracy.
         """
         Pipette.__init__(self, 'Wash',
                             tipMask,
-                            labware=WashWaste or Lab.WorkTable.curWorkTable.def_WashWaste,
+                            labware=WashWaste,
                             RackName=RackName,
                             Well=Well,
                             arm=arm )
+        self.labware = self.robot.worktable.def_WashWaste if WashWaste is None
         self.atFrequency = atFrequency
         self.lowVolume = lowVolume
         self.FastWash = FastWash
@@ -197,7 +198,7 @@ ensures maximum pipetting accuracy.
         self.cleanerVol = cleanerVol
         self.wasteDelay = wasteDelay
         self.wasteVol = wasteVol
-        self.WashCleaner = WashCleaner or Lab.def_WashCleaner
+        self.WashCleaner = WashCleaner or self.robot.worktable.def_WashCleaner
         #self.WashWaste = WashWaste
 
     def validateArg(self):
@@ -281,7 +282,7 @@ class getDITI2(DITIs):
         DITIs.validateArg(self)
 
         ln= self.LabwareTypeName
-        if   ln is None                     : ln = Lab.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
+        if   ln is None                     : ln = self.robot.worktable.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
         elif isinstance(ln, Lab.DITIrack)    : ln = ln.type.name
         elif isinstance(ln, Lab.Labware.DITIrackType): ln = ln.name
 
@@ -292,14 +293,13 @@ class getDITI2(DITIs):
 
     def actualize_robot_state(self):
         maxVol = None                   # todo Implement all this in the iRobot or in the Labware !!!
-        ln = self.LabwareTypeName
-        if   ln is None                 :   ln = Lab.def_DiTi       # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
-        elif isinstance(ln, str)        :
-            curW = EvoScriPy.Robot.Robot.current.worktable
+        ln = self.LabwareTypeName if self.LabwareTypeName else self.robot.worktable.def_DiTi
+        if isinstance(ln, str)        :
+            curW = self.robot.worktable
             assert isinstance(curW, Lab.WorkTable)
-            ln = EvoScriPy.Robot.Robot.current.worktable.labTypes [ln][0].type
+            ln = curW.labTypes [ln][0].type
         assert isinstance(ln, (Lab.DITIrack, Lab.Labware.DITIrackType))
-        self.tipMask, tips = EvoScriPy.Robot.Robot.current.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
+        self.tipMask, tips = self.robot.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
         self.LabwareTypeName = ln
 
@@ -363,8 +363,9 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.
     def __init__(self, type,
                        posInRack = 0,
                        labware   = None ):
-        Pipette.__init__(self, "Set_DITI_Counter" , labware = labware or Lab.def_DiTi, tipMask=True)
+        Pipette.__init__(self, "Set_DITI_Counter" , labware = labware, tipMask=True)
         self.type = type
+        self.labware = labware or self.robot.worktable.def_DiTi
         self.posInRack = posInRack
 
     def validateArg(self):
@@ -403,8 +404,9 @@ class set_DITI_Counter2(Pipette): # OK  set other Lab.def_LabW
     def __init__(self, labware   = None,
                        posInRack = 0,
                        lastPos   = False  ):
-        Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware or Lab.def_DiTi, tipMask=True)
+        Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware, tipMask=True)
         self.lastPos = lastPos #todo implement internally; how??
+        self.labware = labware or self.robot.worktable.def_DiTi
         self.posInRack = posInRack
 
     def validateArg(self):
@@ -447,12 +449,13 @@ class pickUp_DITIs(Pipette):
                              Well        = None):
         Pipette.__init__(self, 'PickUp_DITIs',
                              tipMask     = tipMask,
-                             labware     = labware or Lab.def_DiTi,
+                             labware     = labware,
                              wellSelection= wellSelection,
                              LoopOptions = LoopOptions,
                              RackName    = RackName,
                              Well        = Well,
                              arm         = arm)
+        self.labware = labware  or self.robot.worktable.def_DiTi
         self.type = type
 
     def validateArg(self):
@@ -482,13 +485,14 @@ class pickUp_DITIs2(Pipette):
                              Well        = None):
         Pipette.__init__(self, 'PickUp_DITIs2',
                              tipMask     = tipMask,
-                             labware     = labware or Lab.def_DiTi,
+                             labware     = labware,
                              wellSelection= wellSelection,
                              LoopOptions = LoopOptions,
                              RackName    = RackName,
                              Well        = Well,
                              arm         = arm)
         self.type = type
+        self.labware = labware or self.robot.worktable.def_DiTi
 
     def validateArg(self):
         Pipette.validateArg(self)
@@ -506,8 +510,8 @@ class set_DITIs_Back(Pipette):
     return used DITIs to specified positions on a DITI rack for later use.
     This command requires the Lower DITI Eject option.
     """
-    def __init__(self , tipMask     , #= None,
-                             labware     , #= None,
+    def __init__(self , tipMask     ,
+                             labware  : Lab.DITIrack   ,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
                              arm         = None,
@@ -516,12 +520,13 @@ class set_DITIs_Back(Pipette):
         assert isinstance(labware, Lab.DITIrack)
         Pipette.__init__(self, 'Set_DITIs_Back',
                              tipMask     = tipMask,
-                             labware     = labware or Lab.def_DiTi,
+                             labware     = labware,
                              wellSelection= wellSelection,
                              LoopOptions = LoopOptions,
                              RackName    = RackName,
                              Well        = Well,
                              arm         = arm)
+
 
     def validateArg(self):
         Pipette.validateArg(self)

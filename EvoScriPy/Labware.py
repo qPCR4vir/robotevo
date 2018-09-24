@@ -181,7 +181,7 @@ class WorkTable:
                 raise Exception("Labware '" + labw_type_name + "' was not found in worktable: " + self.templateFileName)
             labws= self.labTypes[labw_type_name]
         else:
-            labw_type= def_DiTi
+            labw_type= self.def_DiTi
             if labw_type.name not in self.labTypes:
                 raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
             labws = self.labTypes[labw_type.name]
@@ -833,7 +833,7 @@ DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxV
 DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
-def_DiTi        = DiTi_1000ul
+#def_DiTi        = DiTi_1000ul
 
 
 #Evo100

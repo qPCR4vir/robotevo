@@ -274,7 +274,7 @@ class Robot:
         :return:  Return a list of racks with the tips-wells already selected.
         """
         TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
-        type = type if type else Lab.def_DiTi
+        type = type if type else self.worktable.def_DiTi
         n = Lab.count_tips(TIP_MASK)
         assert n == len(selected_reactive)
         where = []

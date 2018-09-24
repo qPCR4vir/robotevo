@@ -303,7 +303,7 @@ def getTips(TIP_MASK=-1, type=None, selected_samples=None):
             Itr.pickUp_DITIs2(tipsMask, tip_rack).exec()
         assert tips_in_rack == 0
     else:
-        type=type or Lab.def_DiTi
+        type=type or robot.worktable.def_DiTi
         I = Itr.getDITI2(TIP_MASK, type, arm=robot.def_arm)
         I.exec()
     return mask # todo REVISE !!   I.tipMask
@@ -655,12 +655,13 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
     :param optimize:
     :return:
     """
-    to_waste_labware = to_waste_labware or Lab.WorkTable.curWorkTable.def_WashWaste
+    robot = Rbt.Robot.current
+    to_waste_labware = to_waste_labware or robot.worktable.def_WashWaste
     assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
     if not volume or volume< 0.0 : volume = 0.0
     assert isinstance(volume, (int, float))
     oriSel = from_labware_region.selected()
-    nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+    nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
     if not oriSel:
         oriSel = range(Rtv.NumOfSamples)
     if optimize:
@@ -672,7 +673,7 @@ def waste( from_labware_region=None, using_liquid_class=None, volume=None, to_wa
         nt = SampleCnt
     tm = Rbt.tipsMask[nt]
     nt = to_waste_labware.autoselect(maxTips=nt)
-    mV = Lab.def_DiTi.maxVol      # todo revise !! What tip tp use !
+    mV = robot.worktable.def_DiTi.maxVol      # todo revise !! What tip tp use !
 
     Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
     RestPlus = 50
@@ -778,12 +779,13 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     :return:
     """
     mix_p = 0.9
-    in_labware_region = in_labware_region or Lab.WashWaste
+    robot = Rbt.Robot.current
+    in_labware_region = in_labware_region or robot.worktable.def_WashWaste
     assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
     if not volume or volume< 0.0 : volume = 0.0
     assert isinstance(volume, (int, float))
     oriSel = in_labware_region.selected()
-    nt = Rbt.Robot.current.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+    nt = robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
     if not oriSel:
         oriSel = range(Rtv.NumOfSamples)
     if optimize:
@@ -817,7 +819,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
             sel = oriSel[curSample:curSample + nt]
             spl = range(curSample, curSample + nt)
             with tips(Rbt.tipsMask[nt], selected_samples=spl):
-                mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * mix_p
+                mV = robot.curArm().Tips[0].type.maxVol * mix_p
                 mx.labware.selectOnly(sel)
                 if not using_liquid_class:
                     if sel:
