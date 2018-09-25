@@ -37,6 +37,9 @@ class Executable:
                            run_name  = None):
             self.GUI      = GUI
             self.run_name = run_name
+            self.pipeline = None
+            self.protocol = None
+
 
 
         def initialize(self):
@@ -47,6 +50,7 @@ class Executable:
     def __init__(self,   parameters = None):
 
         self.parameters  = parameters or Protocol.Parameter()
+        self.parameters.protocol = self
         self.initialized = False
         self.Reactives   = []
         Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!

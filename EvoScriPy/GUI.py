@@ -63,7 +63,8 @@ class App(tkinter.Frame):
 
         class ProtocolFrame(tkinter.Frame):
 
-            def __init__(self, GUI, prot):
+            def __init__(self, GUI, prot, pipeline):
+                self.pipeline = pipeline
                 self.GUI = GUI
                 self.protocol = prot
                 print ('protocol: ' + prot[0])
@@ -99,7 +100,7 @@ class App(tkinter.Frame):
                 self.protocol[1] = self.ProtName.get()
                 self.update_protocol()
                 print('Fro pipeline Run GUI for protocol: '  + self.protocol[0] +' run-named '+ self.protocol[1])
-                App.GUI_protocol(self.protocol[0], tkinter.Tk())
+                App.GUI_protocol(self.protocol[0], tkinter.Tk(), self.pipeline)
 
 
 
@@ -122,7 +123,7 @@ class App(tkinter.Frame):
             print('run GUI_init_pipeline for: ')
 
             tkinter.Button(parameters.GUI.varoutput, text='add', command=self.add_prot).grid( row=0, column=2)
-            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(parameters.GUI, prot) for prot in parameters.Protocol_classes]
+            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(parameters.GUI, prot, parameters) for prot in parameters.Protocol_classes]
 
 
         def add_prot(self):
@@ -264,7 +265,8 @@ class App(tkinter.Frame):
     GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2
 
     class GUI_protocol(tkinter.Frame):
-        def __init__(self, protocol_name, master=None):
+        def __init__(self, protocol_name, master=None, pipeline = None):
+            self.pipeline = pipeline
             tkinter.Frame.__init__(self, master)
             self.master.title(protocol_name)
             self.grid()
@@ -445,7 +447,7 @@ class App(tkinter.Frame):
             # create and run the protocol
             self.GUI_init.update_parameters()
 
-            protocol = self.protocol_class(self.parameters)
+            protocol = self.protocol_class(self.parameters, self.pipeline)
             protocol.Run()
             if protocol.isPipeline:
                 pass
