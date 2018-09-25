@@ -27,26 +27,15 @@ class Executable:
     # parameters to describe this program
     name = "undefined"
     versions = {"none": not_implemented}
-    isPipeline = False     # todo revise !
+    #isPipeline = False     # todo revise !
 
 
-    class Parameter:
-        # parameters to describe a run of this program
+    def __init__(self,  GUI       = None,
+                        run_name  = None):
 
-        def __init__(self, GUI       = None,
-                           run_name  = None):
-            self.GUI      = GUI
-            self.run_name = run_name
+        self.GUI      = GUI
+        self.run_name = run_name
 
-
-        def initialize(self):
-            if (self.GUI):
-                self.GUI.initialize_parameters(self)
-
-
-    def __init__(self,   parameters = None):
-
-        self.parameters  = parameters or Protocol.Parameter()
         self.initialized = False
         self.Reactives   = []
         Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!
@@ -68,11 +57,14 @@ class Executable:
         """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
         """
         if not self.initialized:
+            if (self.GUI):
+                self.GUI.initialize_parameters(self)
+            self.initialized = True
             self.set_defaults()
 
     def Run(self):
         '''
-        Here we haccesscces to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
+        Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with getLabware()
         :return:
         '''
@@ -81,7 +73,6 @@ class Executable:
         self.CheckList()
         self.postCheck()
         self.done()
-
 
     def preCheck(self):
         pass
@@ -101,38 +92,45 @@ class Protocol (Executable):
 
     """
 
-    class Parameter (Executable.Parameter):
-        # parameters to describe a run of this program
+    def __init__(self,  nTips                       =4,
+                        parameters                  = None,
+                        GUI                         = None,
+                        worktable_template_filename = None,
+                        output_filename             = None,
+                        firstTip                    = None,
+                        run_name                    = None):
 
-        def __init__(self, GUI                         = None,
-                           worktable_template_filename = None,
-                           output_filename             = None,
-                           firstTip                    = None):
+        Executable.__init__(self, GUI=GUI, run_name  = run_name)
 
-            self.worktable_template_filename = worktable_template_filename or ""
-            self.output_filename             = output_filename or '../current/AWL'
-            self.firstTip                    = firstTip if firstTip is not None else ''
-            Executable.Parameter.__init__(self, GUI)
+        self.worktable_template_filename = worktable_template_filename or ""
+        self.output_filename             = output_filename or '../current/AWL'
+        self.firstTip                    = firstTip if firstTip is not None else ''
+        self.nTips                       = nTips
+        self.EvoMode                     = None
 
-    def __init__(self,       # worktable_template_fn ,
-                 nTips=4,
-                 parameters = None):
-        Executable.__init__(self, parameters)
-        self.nTips       = nTips
-        self.EvoMode     = None
-        self.set_EvoMode()
 
+    def initialize(self):
+        if not self.initialized:
+            Executable.initialize(self)
+            self.set_EvoMode()
+
+    def set_EvoMode(self):
+        if not self.EvoMode:
+            self.init_EvoMode()
+        else:
+            EvoMode.current = self.EvoMode
+        self.iRobot.set_as_current()
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
-        self.Script = EvoMode.Script(template=self.parameters.worktable_template_filename,
-                                     filename=self.parameters.output_filename + '.esc',
+        self.Script = EvoMode.Script(template=self.worktable_template_filename,
+                                     filename=self.output_filename + '.esc',
                                      robot=self.iRobot.robot)
-        self.comments_ = EvoMode.Comments(filename=self.parameters.output_filename + '.protocol.txt')
+        self.comments_ = EvoMode.Comments(filename=self.output_filename + '.protocol.txt')
         self.EvoMode = EvoMode.multiple([self.iRobot,
                                          self.Script,
-                                         EvoMode.AdvancedWorkList(self.parameters.output_filename + '.gwl'),
-                                         EvoMode.ScriptBody(self.parameters.output_filename + '.txt'),
+                                         EvoMode.AdvancedWorkList(self.output_filename + '.gwl'),
+                                         EvoMode.ScriptBody(self.output_filename + '.txt'),
                                          EvoMode.StdOut(),
                                          self.comments_
                                          ])
@@ -141,12 +139,6 @@ class Protocol (Executable):
         self.robot = self.iRobot.robot
         assert (self.iRobot.robot.curArm().nTips == self.nTips )
 
-    def set_EvoMode(self):
-        if not self.EvoMode:
-            self.init_EvoMode()
-        else:
-            EvoMode.current = self.EvoMode
-        self.iRobot.set_as_current()
 
     def comments(self):
         return self.comments_.comments
@@ -175,8 +167,8 @@ class Protocol (Executable):
 
     def CheckList(self):
         self.set_EvoMode()
-        if (self.parameters.GUI):
-            self.parameters.GUI.CheckList(self)
+        if (self.GUI):
+            self.GUI.CheckList(self)
         self.set_EvoMode()
 
     def done(self):
@@ -184,8 +176,8 @@ class Protocol (Executable):
         Executable.done(self)
 
     def go_first_pos(self):
-        if self.parameters.firstTip:
-            rack, firstTip = self.worktable.get_first_pos(posstr=self.parameters.firstTip)
+        if self.firstTip:
+            rack, firstTip = self.worktable.get_first_pos(posstr=self.firstTip)
             Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
 
 
@@ -195,31 +187,25 @@ class Pipeline (Executable):
 
     """
     name = "Pipeline"
-    isPipeline = True
 
-    class Parameter (Executable.Parameter):
-        # parameters to describe a run of this program
+    def __init__(self,  GUI        = None,
+                        protocols  = None,
+                        run_name   = None):
+        # assert isinstance(protocols, list)
+        Executable.__init__(self, GUI=GUI, run_name  = run_name)
 
-        def __init__(self, GUI                         = None,
-                           protocols                   = None):
-            # assert isinstance(protocols, list)
-            self.Protocol_classes = protocols or [] #[[Executable, "don't run"]]
-
-            Executable.Parameter.__init__(self, GUI)
-
-
-    def __init__(self,     parameters = None):
+        self.protocols = protocols or []
         self.protocol_runs = {}
-        Executable.__init__(self, parameters)
+
 
     def CheckList(self):
-        if (self.parameters.GUI):
-            self.parameters.GUI.CheckPipeline(self)
+        if (self.GUI):
+            self.GUI.CheckPipeline(self)
 
     def RunPi(self):
 
-        for protocol_class, run_name in self.parameters.Protocol_classes:
-            print(protocol_class + run_name)
+        for protocol in self.protocols:
+            print(protocol.name + protocol.run_name)
 
 
 
