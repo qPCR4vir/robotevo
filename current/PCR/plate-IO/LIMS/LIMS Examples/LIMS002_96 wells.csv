@@ -1,0 +1,110 @@
+Plate Header,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Filed,Data,,Instruction,,,,,,,,,,,,,,,,,,,,,,,,,,
+Version,1,,Do not modify this field.,,,,,,,,,,,,,,,,,,,,,,,,,,
+Plate Size,96,,Do not modify this field.,,,,,,,,,,,,,,,,,,,,,,,,,,
+Plate Type,BR Clear,,Allowed values (BR White,BR Clear),,,,,,,,,,,,,,,,,,,,,,,,,
+Scan Mode,All Channels,,"Allowed values (""SYBR/FAM Only"""," ""All Channels"""," ""FRET"")",,,,,,,,,,,,,,,,,,,,,,,,
+Units,copy number,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Run ID,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Run Notes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Run Protocol,InfluenzaProtocol.prcl,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Data File,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+TBD,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Plate Data,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Well,Ch1 Dye,Ch2 Dye,Ch3 Dye,Ch4 Dye,Ch5 Dye,FRET,Sample Type,Sample Name,Ch1 Target Name,Ch2 Target Name,Ch3 Target Name,Ch4 Target Name,Ch5 Target Name,FRET Target Name,Biological Set Name,Replicate,Ch1 Quantity,Ch2 Quantity,Ch3 Quantity,Ch4 Quantity,Ch5 Quantity,FRET Quantity,Well Note,Ch1 Well Color,Ch2 Well Color,Ch3 Well Color,Ch4 Well Color,Ch5 Well Color,FRET Well Color
+A01,FAM,,Texas Red,,,,Unknown,9485256,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448,,,
+A02,FAM,,Texas Red,,,,Unknown,9485257,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448,,,
+A03,FAM,,Texas Red,,,,Unknown,9485258,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A04,FAM,,Texas Red,,,,Unknown,9485259,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A05,FAM,,Texas Red,,,,Unknown,9485260,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A06,FAM,,Texas Red,,,,Unknown,9485261,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A07,FAM,,Texas Red,,,,Unknown,9485262,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A08,FAM,,Texas Red,,,,Unknown,9485263,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A09,FAM,,Texas Red,,,,Unknown,9485264,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+A10,FAM,,Texas Red,,,,Positive Control,"PC-H.influ,InfluU",H.influenza,,Influ-U,,,,,1,,,,,,,,-65536,,-65536
+A11,FAM,,Texas Red,,,,Positive Control,"PC-H.influ,InfluU",H.influenza,,Influ-U,,,,,1,,,,,,,,-65536,,-65536
+A12,FAM,,Texas Red,,,,Positive Control,"PC-H.influ,InfluU",H.influenza,,Influ-U,,,,,1,,,,,,,,-65536,,-65536
+B01,FAM,,Texas Red,,,,Unknown,9485265,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B02,FAM,,Texas Red,,,,Unknown,9485266,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B03,FAM,,Texas Red,,,,Unknown,9485267,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B04,FAM,,Texas Red,,,,Unknown,9485268,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B05,FAM,,Texas Red,,,,Unknown,9485269,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B06,FAM,,Texas Red,,,,Unknown,9485270,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B07,FAM,,Texas Red,,,,Unknown,9485271,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B08,FAM,,Texas Red,,,,Unknown,9485272,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B09,FAM,,Texas Red,,,,Unknown,9485273,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+B10,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,1,1000000,,1000000,,,,,-8388353,,-8388353
+B11,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,1,1000000,,1000000,,,,,-8388353,,-8388353
+B12,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,1,1000000,,1000000,,,,,-8388353,,-8388353
+C01,FAM,,Texas Red,,,,Unknown,9485274,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C02,FAM,,Texas Red,,,,Unknown,9485275,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C03,FAM,,Texas Red,,,,Unknown,9485276,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C04,FAM,,Texas Red,,,,Unknown,9485277,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C05,FAM,,Texas Red,,,,Unknown,9485278,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C06,FAM,,Texas Red,,,,Unknown,9485279,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C07,FAM,,Texas Red,,,,Unknown,9485280,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C08,FAM,,Texas Red,,,,Unknown,9485281,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C09,FAM,,Texas Red,,,,Unknown,9485282,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+C10,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,2,100000,,100000,,,,,-8388353,,-8388353
+C11,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,2,100000,,100000,,,,,-8388353,,-8388353
+C12,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,2,100000,,100000,,,,,-8388353,,-8388353
+D01,FAM,,Texas Red,,,,Unknown,9485283,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D02,FAM,,Texas Red,,,,Unknown,9485284,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D03,FAM,,Texas Red,,,,Unknown,9485285,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D04,FAM,,Texas Red,,,,Unknown,9485286,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D05,FAM,,Texas Red,,,,Unknown,9485287,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D06,FAM,,Texas Red,,,,Unknown,9485288,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D07,FAM,,Texas Red,,,,Unknown,9485289,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D08,FAM,,Texas Red,,,,Unknown,9485290,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D09,FAM,,Texas Red,,,,Unknown,9485291,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+D10,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,3,10000,,10000,,,,,-8388353,,-8388353
+D11,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,3,10000,,10000,,,,,-8388353,,-8388353
+D12,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,3,10000,,10000,,,,,-8388353,,-8388353
+E01,FAM,,Texas Red,,,,Unknown,9485292,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E02,FAM,,Texas Red,,,,Unknown,9485293,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E03,FAM,,Texas Red,,,,Unknown,9485294,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E04,FAM,,Texas Red,,,,Unknown,9485295,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E05,FAM,,Texas Red,,,,Unknown,9485296,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E06,FAM,,Texas Red,,,,Unknown,9485297,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E07,FAM,,Texas Red,,,,Unknown,9485298,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E08,FAM,,Texas Red,,,,Unknown,9485299,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E09,FAM,,Texas Red,,,,Unknown,9485300,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+E10,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,4,1000,,1000,,,,,-8388353,,-8388353
+E11,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,4,1000,,1000,,,,,-8388353,,-8388353
+E12,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,4,1000,,1000,,,,,-8388353,,-8388353
+F01,FAM,,Texas Red,,,,Unknown,9485301,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F02,FAM,,Texas Red,,,,Unknown,9485302,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F03,FAM,,Texas Red,,,,Unknown,9485303,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F04,FAM,,Texas Red,,,,Unknown,9485304,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F05,FAM,,Texas Red,,,,Unknown,9485305,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F06,FAM,,Texas Red,,,,Unknown,9485306,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F07,FAM,,Texas Red,,,,Unknown,9485307,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F08,FAM,,Texas Red,,,,Unknown,9485308,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F09,FAM,,Texas Red,,,,Unknown,9485309,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+F10,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,5,100,,100,,,,,-8388353,,-8388353
+F11,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,5,100,,100,,,,,-8388353,,-8388353
+F12,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,5,100,,100,,,,,-8388353,,-8388353
+G01,FAM,,Texas Red,,,,Unknown,9485310,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G02,FAM,,Texas Red,,,,Unknown,9485311,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G03,FAM,,Texas Red,,,,Unknown,9485312,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G04,FAM,,Texas Red,,,,Unknown,9485313,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G05,FAM,,Texas Red,,,,Unknown,9485314,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G06,FAM,,Texas Red,,,,Unknown,9485315,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G07,FAM,,Texas Red,,,,Unknown,9485316,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G08,FAM,,Texas Red,,,,Unknown,9485317,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G09,FAM,,Texas Red,,,,Unknown,9485318,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+G10,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,6,10,,10,,,,,-8388353,,-8388353
+G11,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,6,10,,10,,,,,-8388353,,-8388353
+G12,FAM,,Texas Red,,,,Standard,STD-Influ,H.influenza,,Influ-U,,,,,6,10,,10,,,,,-8388353,,-8388353
+H01,FAM,,Texas Red,,,,Unknown,9485319,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H02,FAM,,Texas Red,,,,Unknown,9485320,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H03,FAM,,Texas Red,,,,Unknown,9485321,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H04,FAM,,Texas Red,,,,Unknown,9485322,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H05,FAM,,Texas Red,,,,Unknown,9485323,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H06,FAM,,Texas Red,,,,Unknown,9485324,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H07,FAM,,Texas Red,,,,Unknown,9485325,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H08,FAM,,Texas Red,,,,Unknown,9485326,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H09,FAM,,Texas Red,,,,Unknown,9485327,H.influenza,,Influ-U,,,,,,,,,,,,,-16744448,,-16744448
+H10,FAM,,Texas Red,,,,NTC,water,H.influenza,,Influ-U,,,,,1,,,,,,,,-16777216,,-16777216
+H11,FAM,,Texas Red,,,,NTC,water,H.influenza,,Influ-U,,,,,1,,,,,,,,-16777216,,-16777216
+H12,FAM,,Texas Red,,,,NTC,water,H.influenza,,Influ-U,,,,,1,,,,,,,,-16777216,,-16777216

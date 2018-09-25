@@ -1,0 +1,37 @@
+Row	Column	Sample Type	Replicate #	*Target Name	*Sample Name	*Biological Set Name	*Well Note	Starting Quantity	Units
+H	7	Pos Ctrl		WN.INNT.sV.Cy5	NY-2			N/A	copy number
+H	8	Pos Ctrl		WN.INNT.sV.Cy5	NY-3			N/A	copy number
+H	9	Pos Ctrl		WN.INNT.sV.Cy5	NY-5			N/A	copy number
+H	10	Std		WN.INNT.sV.Cy5	sRNA 1000			1,00E+03	copy number
+H	11	Std		WN.INNT.sV.Cy5	sRNA 10+4			1,00E+04	copy number
+H	12	Std		WN.INNT.sV.Cy5	sRNA 10+5			1,00E+05	copy number
+G	7	Pos Ctrl		WN.INNT.sV.Cy5	NY-7			N/A	copy number
+G	8	Pos Ctrl		WN.INNT.sV.Cy5	NY-7			N/A	copy number
+G	9	Pos Ctrl		WN.INNT.sV.Cy5	NY-6/5			N/A	copy number
+G	10	Std		WN.INNT.sV.Cy5	sRNA   2,5			2,50E+00	copy number
+G	11	Std		WN.INNT.sV.Cy5	sRNA   10			1,00E+01	copy number
+G	12	Std		WN.INNT.sV.Cy5	sRNA  100			1,00E+02	copy number
+D	1	Unkn		WN.INNT.sV.Cy5	01'			N/A	copy number
+D	2	Unkn		WN.INNT.sV.Cy5	02'			N/A	copy number
+D	3	Unkn		WN.INNT.sV.Cy5	03'			N/A	copy number
+D	4	Unkn		WN.INNT.sV.Cy5	04'			N/A	copy number
+D	5	Unkn		WN.INNT.sV.Cy5	05'			N/A	copy number
+D	6	Unkn		WN.INNT.sV.Cy5	06'			N/A	copy number
+D	7	Unkn		WN.INNT.sV.Cy5	07'			N/A	copy number
+D	8	Unkn		WN.INNT.sV.Cy5	08'			N/A	copy number
+D	9	Unkn		WN.INNT.sV.Cy5	09'			N/A	copy number
+D	10	Unkn		WN.INNT.sV.Cy5	10'			N/A	copy number
+D	11	NTC		WN.INNT.sV.Cy5	RSB			N/A	copy number
+D	12	Pos Ctrl		WN.INNT.sV.Cy5	NY-6			N/A	copy number
+A	1	Unkn		WN.INNT.sV.Cy5	1			N/A	copy number
+A	2	Unkn		WN.INNT.sV.Cy5	2			N/A	copy number
+A	3	Unkn		WN.INNT.sV.Cy5	3			N/A	copy number
+A	4	Unkn		WN.INNT.sV.Cy5	4			N/A	copy number
+A	5	Unkn		WN.INNT.sV.Cy5	5			N/A	copy number
+A	6	Unkn		WN.INNT.sV.Cy5	6			N/A	copy number
+A	7	Unkn		WN.INNT.sV.Cy5	7			N/A	copy number
+A	8	Unkn		WN.INNT.sV.Cy5	8			N/A	copy number
+A	9	Unkn		WN.INNT.sV.Cy5	9			N/A	copy number
+A	10	Unkn		WN.INNT.sV.Cy5	10			N/A	copy number
+A	11	NTC		WN.INNT.sV.Cy5	RSB			N/A	copy number
+A	12	Pos Ctrl		WN.INNT.sV.Cy5	NY-4			N/A	copy number

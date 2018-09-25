@@ -27,15 +27,14 @@ class Executable:
     # parameters to describe this program
     name = "undefined"
     versions = {"none": not_implemented}
-    #isPipeline = False     # todo revise !
 
 
     def __init__(self,  GUI       = None,
                         run_name  = None):
 
-        self.GUI      = GUI
-        self.run_name = run_name
-
+        self.GUI         = GUI
+        self.run_name    = run_name
+        self.pipeline    = None
         self.initialized = False
         self.Reactives   = []
         Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!

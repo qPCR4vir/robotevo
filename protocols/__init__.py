@@ -31,13 +31,10 @@ pipeline_PreKingFisher = Pipeline.Parameter(protocols=
 pipeline_PreKingFisher.run_name = 'PreKingFisher'
 registreExecutable(Pipeline, pipeline_PreKingFisher)
 
+from protocols.PCRexperiment import PCRexperiment
+
 
 available.append(Pipeline)
-
-
-
-
-
 
 
 """
