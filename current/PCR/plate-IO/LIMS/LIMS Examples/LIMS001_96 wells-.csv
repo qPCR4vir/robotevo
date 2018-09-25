@@ -1,0 +1,110 @@
+Plate Header;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Filed;Data;;Instruction;;;;;;;;;;;;;;;;;;;;;;;;;;
+Version;1;;Do not modify this field.;;;;;;;;;;;;;;;;;;;;;;;;;;
+Plate Size;96;;Do not modify this field.;;;;;;;;;;;;;;;;;;;;;;;;;;
+Plate Type;BR Clear;;Allowed values (BR White;BR Clear);;;;;;;;;;;;;;;;;;;;;;;;;
+Scan Mode;All Channels;;"Allowed values (""SYBR/FAM Only""";" ""All Channels""";" ""FRET"")";;;;;;;;;;;;;;;;;;;;;;;;
+Units;copy number;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Run ID;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Run Notes;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Run Protocol;RespProtocol.prcl;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Data File;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+TBD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Plate Data;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Well;Ch1 Dye;Ch2 Dye;Ch3 Dye;Ch4 Dye;Ch5 Dye;FRET;Sample Type;Sample Name;Ch1 Target Name;Ch2 Target Name;Ch3 Target Name;Ch4 Target Name;Ch5 Target Name;FRET Target Name;Biological Set Name;Replicate;Ch1 Quantity;Ch2 Quantity;Ch3 Quantity;Ch4 Quantity;Ch5 Quantity;FRET Quantity;Well Note;Ch1 Well Color;Ch2 Well Color;Ch3 Well Color;Ch4 Well Color;Ch5 Well Color;FRET Well Color
+A01;FAM;;;;;;Unknown;B4895673;Adeno;;;;;;;;;;;;;;;-8372160;;;;;
+A02;FAM;;;;;;Unknown;B4895674;Adeno;;;;;;;;;;;;;;;-8372160;;;;;
+A03;FAM;;;;;;Unknown;B4895675;Adeno;;;;;;;;;;;;;;;-8372160
+A04;FAM;;;;;;Unknown;B4895676;Adeno;;;;;;;;;;;;;;;-8372160
+A05;FAM;;;;;;Unknown;B4895677;Adeno;;;;;;;;;;;;;;;-8372160
+A06;FAM;;;;;;Unknown;B4895678;Adeno;;;;;;;;;;;;;;;-8372160
+A07;FAM;;;;;;Unknown;B4895679;Adeno;;;;;;;;;;;;;;;-8372160
+A08;FAM;;;;;;Unknown;B4895680;Adeno;;;;;;;;;;;;;;;-8372160
+A09;FAM;;;;;;Unknown;B4895681;Adeno;;;;;;;;;;;;;;;-8372160
+A10;FAM;;;;;;Unknown;B4895682;Adeno;;;;;;;;;;;;;;;-8372160
+A11;FAM;;;;;;Unknown;B4895683;Adeno;;;;;;;;;;;;;;;-8372160
+A12;FAM;;;;;;Unknown;B4895684;Adeno;;;;;;;;;;;;;;;-8372160
+B01;FAM;;;;;;Unknown;B4895673;h18S;;;;;;;;;;;;;;;-8372160
+B02;FAM;;;;;;Unknown;B4895674;h18S;;;;;;;;;;;;;;;-8372160
+B03;FAM;;;;;;Unknown;B4895675;h18S;;;;;;;;;;;;;;;-8372160
+B04;FAM;;;;;;Unknown;B4895676;h18S;;;;;;;;;;;;;;;-8372160
+B05;FAM;;;;;;Unknown;B4895677;h18S;;;;;;;;;;;;;;;-8372160
+B06;FAM;;;;;;Unknown;B4895678;h18S;;;;;;;;;;;;;;;-8372160
+B07;FAM;;;;;;Unknown;B4895679;h18S;;;;;;;;;;;;;;;-8372160
+B08;FAM;;;;;;Unknown;B4895680;h18S;;;;;;;;;;;;;;;-8372160
+B09;FAM;;;;;;Unknown;B4895681;h18S;;;;;;;;;;;;;;;-8372160
+B10;FAM;;;;;;Unknown;B4895682;h18S;;;;;;;;;;;;;;;-8372160
+B11;FAM;;;;;;Unknown;B4895683;h18S;;;;;;;;;;;;;;;-8372160
+B12;FAM;;;;;;Unknown;B4895684;h18S;;;;;;;;;;;;;;;-8372160
+C01;FAM;;;;;;Unknown;B4895685;Bord;;;;;;;;;;;;;;;-16744193
+C02;FAM;;;;;;Unknown;B4895686;Bord;;;;;;;;;;;;;;;-16744193
+C03;FAM;;;;;;Unknown;B4895687;Bord;;;;;;;;;;;;;;;-16744193
+C04;FAM;;;;;;Unknown;B4895688;Bord;;;;;;;;;;;;;;;-16744193
+C05;FAM;;;;;;Unknown;B4895689;Bord;;;;;;;;;;;;;;;-16744193
+C06;FAM;;;;;;Unknown;B4895690;Bord;;;;;;;;;;;;;;;-16744193
+C07;FAM;;;;;;Unknown;B4895691;Bord;;;;;;;;;;;;;;;-16744193
+C08;FAM;;;;;;Unknown;B4895692;Bord;;;;;;;;;;;;;;;-16744193
+C09;FAM;;;;;;Unknown;B4895693;Bord;;;;;;;;;;;;;;;-16744193
+C10;FAM;;;;;;Unknown;B4895694;Bord;;;;;;;;;;;;;;;-16744193
+C11;FAM;;;;;;Unknown;B4895695;Bord;;;;;;;;;;;;;;;-16744193
+C12;FAM;;;;;;Unknown;B4895696;Bord;;;;;;;;;;;;;;;-16744193
+D01;FAM;;;;;;Unknown;B4895685;h18S;;;;;;;;;;;;;;;-16744193
+D02;FAM;;;;;;Unknown;B4895686;h18S;;;;;;;;;;;;;;;-16744193
+D03;FAM;;;;;;Unknown;B4895687;h18S;;;;;;;;;;;;;;;-16744193
+D04;FAM;;;;;;Unknown;B4895688;h18S;;;;;;;;;;;;;;;-16744193
+D05;FAM;;;;;;Unknown;B4895689;h18S;;;;;;;;;;;;;;;-16744193
+D06;FAM;;;;;;Unknown;B4895690;h18S;;;;;;;;;;;;;;;-16744193
+D07;FAM;;;;;;Unknown;B4895691;h18S;;;;;;;;;;;;;;;-16744193
+D08;FAM;;;;;;Unknown;B4895692;h18S;;;;;;;;;;;;;;;-16744193
+D09;FAM;;;;;;Unknown;B4895693;h18S;;;;;;;;;;;;;;;-16744193
+D10;FAM;;;;;;Unknown;B4895694;h18S;;;;;;;;;;;;;;;-16744193
+D11;FAM;;;;;;Unknown;B4895695;h18S;;;;;;;;;;;;;;;-16744193
+D12;FAM;;;;;;Unknown;B4895696;h18S;;;;;;;;;;;;;;;-16744193
+E01;FAM;;;;;;Unknown;B4895697;Chlam;;;;;;;;;;;;;;;-16711936
+E02;FAM;;;;;;Unknown;B4895698;Chlam;;;;;;;;;;;;;;;-16711936
+E03;FAM;;;;;;Unknown;B4895699;Chlam;;;;;;;;;;;;;;;-16711936
+E04;FAM;;;;;;Unknown;B4895700;Chlam;;;;;;;;;;;;;;;-16711936
+E05;FAM;;;;;;Unknown;B4895701;Chlam;;;;;;;;;;;;;;;-16711936
+E06;FAM;;;;;;Unknown;B4895702;Chlam;;;;;;;;;;;;;;;-16711936
+E07;FAM;;;;;;Unknown;B4895703;Chlam;;;;;;;;;;;;;;;-16711936
+E08;FAM;;;;;;Unknown;B4895704;Chlam;;;;;;;;;;;;;;;-16711936
+E09;FAM;;;;;;Unknown;B4895705;StrepA;;;;;;;;;;;;;;;-65281
+E10;FAM;;;;;;Unknown;B4895706;StrepA;;;;;;;;;;;;;;;-65281
+E11;FAM;;;;;;Unknown;B4895707;StrepA;;;;;;;;;;;;;;;-65281
+E12;FAM;;;;;;Unknown;B4895708;StrepA;;;;;;;;;;;;;;;-65281
+F01;FAM;;;;;;Unknown;B4895697;h18S;;;;;;;;;;;;;;;-16711936
+F02;FAM;;;;;;Unknown;B4895698;h18S;;;;;;;;;;;;;;;-16711936
+F03;FAM;;;;;;Unknown;B4895699;h18S;;;;;;;;;;;;;;;-16711936
+F04;FAM;;;;;;Unknown;B4895700;h18S;;;;;;;;;;;;;;;-16711936
+F05;FAM;;;;;;Unknown;B4895701;h18S;;;;;;;;;;;;;;;-16711936
+F06;FAM;;;;;;Unknown;B4895702;h18S;;;;;;;;;;;;;;;-16711936
+F07;FAM;;;;;;Unknown;B4895703;h18S;;;;;;;;;;;;;;;-16711936
+F08;FAM;;;;;;Unknown;B4895704;h18S;;;;;;;;;;;;;;;-16711936
+F09;FAM;;;;;;Unknown;B4895705;h18S;;;;;;;;;;;;;;;-65281
+F10;FAM;;;;;;Unknown;B4895706;h18S;;;;;;;;;;;;;;;-65281
+F11;FAM;;;;;;Unknown;B4895707;h18S;;;;;;;;;;;;;;;-65281
+F12;FAM;;;;;;Unknown;B4895708;h18S;;;;;;;;;;;;;;;-65281
+G01;FAM;;;;;;Positive Control;PC-Adeno;Adeno;;;;;;;1;;;;;;;;
+G02;FAM;;;;;;Positive Control;PC-Adeno;Adeno;;;;;;;1;;;;;;;;
+G03;FAM;;;;;;Positive Control;PC-Adeno;Adeno;;;;;;;1;;;;;;;;
+G04;FAM;;;;;;Positive Control;PC-Bord;Bord;;;;;;;2;;;;;;;;
+G05;FAM;;;;;;Positive Control;PC-Bord;Bord;;;;;;;2;;;;;;;;
+G06;FAM;;;;;;Positive Control;PC-Bord;Bord;;;;;;;2;;;;;;;;
+G07;FAM;;;;;;Positive Control;PC-Chlam;Chlam;;;;;;;3;;;;;;;;
+G08;FAM;;;;;;Positive Control;PC-Chlam;Chlam;;;;;;;3;;;;;;;;
+G09;FAM;;;;;;Positive Control;PC-Chlam;Chlam;;;;;;;3;;;;;;;;
+G10;FAM;;;;;;Positive Control;PC-StrepA;StrepA;;;;;;;4;;;;;;;;
+G11;FAM;;;;;;Positive Control;PC-StrepA;StrepA;;;;;;;4;;;;;;;;
+G12;FAM;;;;;;Positive Control;PC-StrepA;StrepA;;;;;;;4;;;;;;;;
+H01;FAM;;;;;;Negative Control;NC-1;Adeno;;;;;;;1;;;;;;;;
+H02;FAM;;;;;;Negative Control;NC-1;Adeno;;;;;;;1;;;;;;;;
+H03;FAM;;;;;;Negative Control;NC-2;Bord;;;;;;;2;;;;;;;;
+H04;FAM;;;;;;Negative Control;NC-2;Bord;;;;;;;2;;;;;;;;
+H05;FAM;;;;;;Negative Control;NC-3;Chlam;;;;;;;3;;;;;;;;
+H06;FAM;;;;;;Negative Control;NC-3;Chlam;;;;;;;3;;;;;;;;
+H07;FAM;;;;;;Negative Control;NC-4;StrepA;;;;;;;4;;;;;;;;
+H08;FAM;;;;;;Negative Control;NC-4;StrepA;;;;;;;4;;;;;;;;
+H09;FAM;;;;;;NTC;Water;h18S;;;;;;;1;;;;;;;;-16777216
+H10;FAM;;;;;;NTC;Water;h18S;;;;;;;1;;;;;;;;-16777216
+H11;FAM;;;;;;NTC;Water;h18S;;;;;;;1;;;;;;;;-16777216
+H12;FAM;;;;;;NTC;Water;h18S;;;;;;;1;;;;;;;;-16777216

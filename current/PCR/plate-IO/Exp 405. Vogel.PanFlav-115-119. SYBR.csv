@@ -1,0 +1,31 @@
+	Row	Column	Sample Type	Replicate #	*Target Name	*Sample Name	*Biological Set Name	*Well Note	Starting Quantity	Units
+	G	9	NTC		FlavSYBR.119	H2O			N/A	copy number
+	G	10	Pos Ctrl		FlavSYBR.119	NY99x10-5			N/A	copy number
+	G	11	Pos Ctrl		FlavSYBR.119	NY99x10-4			N/A	copy number
+	G	12	Pos Ctrl		FlavSYBR.119	NY99x10-3			N/A	copy number
+	F	9	NTC		FlavSYBR.115	H2O			N/A	copy number
+	F	10	Pos Ctrl		FlavSYBR.115	NY99x10-5			N/A	copy number
+	F	11	Pos Ctrl		FlavSYBR.115	NY99x10-4			N/A	copy number
+	F	12	Pos Ctrl		FlavSYBR.115	NY99x10-3			N/A	copy number
+	D	1	NTC		FlavSYBR.119	H2O			N/A	copy number
+	D	2	Unkn		FlavSYBR.119	ED-I-44/18Leber			N/A	copy number
+	D	3	Unkn		FlavSYBR.119	ED-I-44/18 Milz			N/A	copy number
+	D	4	Unkn		FlavSYBR.119	H2O			N/A	copy number
+	D	5	Unkn		FlavSYBR.119	ED-I-33/18 Herz			N/A	copy number
+	D	6	NTC		FlavSYBR.119	H2O			N/A	copy number
+	D	7	Unkn		FlavSYBR.119	ED-I-33/18Gehir			N/A	copy number
+	D	8	Unkn		FlavSYBR.119	ED-I-33/18Leber			N/A	copy number
+	D	9	Unkn		FlavSYBR.119	ED-I-33/18 Milz			N/A	copy number
+	D	10	Unkn		FlavSYBR.119	ED-I-33/18			N/A	copy number
+	D	11	NTC		FlavSYBR.119	H2O			N/A	copy number
+	B	1	NTC		FlavSYBR.115	H2O			N/A	copy number
+	B	2	Unkn		FlavSYBR.115	ED-I-44/18Leber			N/A	copy number
+	B	3	Unkn		FlavSYBR.115	ED-I-44/18 Milz			N/A	copy number
+	B	4	Unkn		FlavSYBR.115	H2O			N/A	copy number
+	B	5	Unkn		FlavSYBR.115	ED-I-33/18 Herz			N/A	copy number
+	B	6	NTC		FlavSYBR.115	H2O			N/A	copy number
+	B	7	Unkn		FlavSYBR.115	ED-I-33/18Gehir			N/A	copy number
+	B	8	Unkn		FlavSYBR.115	ED-I-33/18Leber			N/A	copy number
+	B	9	Unkn		FlavSYBR.115	ED-I-33/18 Milz			N/A	copy number
+	B	10	Unkn		FlavSYBR.115	ED-I-33/18			N/A	copy number
+	B	11	NTC		FlavSYBR.115	H2O			N/A	copy number
