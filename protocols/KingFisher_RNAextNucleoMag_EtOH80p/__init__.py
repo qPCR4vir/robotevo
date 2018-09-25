@@ -1,4 +1,4 @@
 from protocols import available
 from .KingFisher_RNAextNucleoMag_EtOH80p import KingFisher_RNAextNucleoMag_EtOH80p
 
-available.append(KingFisher_RNAextNucleoMag_EtOH80p)
+available.append(KingFisher_RNAextNucleoMag_EtOH80p())

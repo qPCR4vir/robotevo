@@ -180,7 +180,6 @@ class Protocol (Executable):
             Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
 
 
-
 class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
 
@@ -195,7 +194,8 @@ class Pipeline (Executable):
 
         self.protocols = protocols or []
         self.protocol_runs = {}
-
+        for protocol in self.protocols:
+            protocol.pipeline = self
 
     def CheckList(self):
         if (self.GUI):
