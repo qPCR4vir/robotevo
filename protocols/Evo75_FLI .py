@@ -16,33 +16,19 @@ class Evo75_FLI(Protocol):
     """ Using the Evo75_FLI_INNT
     """
 
-    class Parameter (Protocol.Parameter):
+    def __init__(self,  GUI                 = None,
+                        worktable_template_filename="""C:\Prog\robotevo\EvoScripts\wt_templates\Freedom75_FLI_PCR.ewt""",
+                        output_filename     = None):
 
-        def __init__(self,
-                     GUI                            = None,
-                     # NumOfSamples                   = 48,
-                     worktable_template_filename    = """C:\Prog\robotevo\EvoScripts\wt_templates\Freedom75_FLI_PCR.ewt""",
-                     output_filename                = None):
+        Protocol.__init__(self, GUI                         = GUI,
+                                nTips                       = 1,
+                                worktable_template_filename = worktable_template_filename,
+                                output_filename             = output_filename
+                        )
 
-            # self.NumOfSamples = NumOfSamples
-
-            Protocol.Parameter.__init__(self, GUI=GUI,
-                                        worktable_template_filename = worktable_template_filename,
-                                        output_filename= output_filename
-                                        )
-
-
-    def __init__(self, parameters ):
-
-        # self.NumOfSamples = parameters.NumOfSamples
-        # Rtv.NumOfSamples = self.NumOfSamples
-
-        Protocol.__init__(self,
-                          1,
-                          parameters)
 
     def set_defaults(self):
-        wt: object = self.worktable
+        wt: Lab.WorkTable = self.worktable
 
         # todo decide where to put the default labware: in robot or worktable object or the global Lab
 

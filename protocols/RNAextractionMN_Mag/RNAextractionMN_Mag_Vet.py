@@ -29,16 +29,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 'Tissue without Liquid detection + tracking': not_implemented,
                 'Tissue with Liquid detection + tracking'   : not_implemented}
 
-    class Parameter (Evo100_FLI.Parameter):
+    def __init__(self, GUI = None,  run_name = None):
 
-        def __init__(self, GUI = None):
-            Evo100_FLI.Parameter.__init__(self,
-                                          GUI=GUI,
-                                          worktable_template_filename = '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
-                                          output_filename='../current/AWL_RNAext_MNVet'
-                                        )
-
-    # ''../EvoScripts/wt_templates/RNAext_MNVet.ewt',
+        Evo100_FLI.__init__(self,
+                            GUI                         = GUI,
+                            NumOfSamples=96,
+                            worktable_template_filename = '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
+                            output_filename             ='../current/AWL_RNAext_MNVet',
+                            run_name                    = run_name)
 
 
     def Run(self):

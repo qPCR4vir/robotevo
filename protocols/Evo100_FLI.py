@@ -16,30 +16,24 @@ class Evo100_FLI(Protocol):
     """ Using the Evo100_FLI_INNT
     """
 
-    class Parameter (Protocol.Parameter):
-
-        def __init__(self,
+    def __init__(self,
                      GUI                            = None,
                      NumOfSamples                   = 48,
                      worktable_template_filename    = None,
-                     output_filename                = None):
-
-            self.NumOfSamples = int(NumOfSamples)
-
-            Protocol.Parameter.__init__(self, GUI=GUI,
-                                        worktable_template_filename = worktable_template_filename,
-                                        output_filename= output_filename
-                                        )
+                     output_filename                = None,
+                     run_name                       = None):
 
 
-    def __init__(self, parameters ):
+        Protocol.__init__(self, GUI                         = GUI,
+                                nTips                       = 4,
+                                worktable_template_filename = worktable_template_filename,
+                                output_filename             = output_filename,
+                                run_name                    = run_name)
 
-        self.NumOfSamples = parameters.NumOfSamples
+        self.NumOfSamples = int(NumOfSamples)
         Rtv.NumOfSamples = self.NumOfSamples
 
-        Protocol.__init__(self,
-                          4,
-                          parameters)
+
 
     def set_defaults(self):
         wt = self.worktable
