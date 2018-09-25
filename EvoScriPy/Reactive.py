@@ -230,18 +230,4 @@ class PCRexperiment:
         pass
 
 
-PanFla_119 = PrimerMix("PanFLA", ID="119", components=[Primer.IDs[320], Primer.IDs[321]])
-WNV_INNT_37 = PrimerMix("WNV_5p", ID="37", components=[Primer.IDs[20], Primer.IDs[21], Primer.IDs[22]])
 
-Exp_300 = PCRexperiment(300, "PanFLA mosq Grecia")
-
-samples = [ "Pool-1",
-            "Pool-2",
-            "Pool-3",
-            "Pool-4"  ]
-
-Exp_300.addReactions(PanFla_119, samples )
-Exp_300.addReactions(WNV_INNT_37, samples)
-
-Exp_300.pippete_mix()       # Evo75
-Exp_300.pippete_samples()   # Evo100
