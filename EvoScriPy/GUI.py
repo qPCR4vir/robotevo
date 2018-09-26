@@ -29,8 +29,7 @@ class App(tkinter.Frame):
 
         class ProtocolFrame(tkinter.Frame):
 
-            def __init__(self, GUI, prot, pipeline):
-                self.pipeline = pipeline
+            def __init__(self, GUI, prot):
                 self.GUI = GUI
                 self.protocol = prot
                 if prot.run_name is None: prot.run_name = ""
@@ -56,21 +55,19 @@ class App(tkinter.Frame):
             def run_prot(self):
                 self.runb.configure(state='disable')
                 self.protocol.run_name = self.ProtName.get()
-                print('Fro pipeline Run GUI for protocol: '  + self.protocol[0] +' run-named '+ self.protocol[1])
-                App.GUI_protocol(self.protocol[0], tkinter.Tk(), self.pipeline)
+                print('For pipeline Run GUI for protocol: '  + self.protocol.name +' run-named '+ self.protocol.run_name)
+                App.GUI_protocol(self.protocol, tkinter.Tk())
 
         def __init__(self, pipeline):
-            self.pipeline = pipeline
+            self.pipeline = pipeline   # todo ??
             print('run GUI_init_pipeline for: ')
-            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot, pipeline) for prot in pipeline.protocols]
+            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot) for prot in pipeline.protocols]
 
         def update_parameters(self):
             pass    # ??
 
     from EvoScriPy.protocol_steps import Pipeline
     GUI4parameters[Pipeline.name]=GUI_init_pipeline
-    #from protocols import PipelineTest
-    #GUI4parameters[PipelineTest.name]=GUI_init_pipeline
 
 
     class GUI_init_parameters: # (tkinter.Frame)
@@ -200,10 +197,16 @@ class App(tkinter.Frame):
 
 
     class GUI_protocol(tkinter.Frame):
-        """ Implements a CheckList for protocols """
+        """ Implements a GUI for the selected protocol.
+            Opens in a new window. Has:
+            - GUI_parameters_frame, to review creation parameters,
+            - a CheckList prior to actualiy runing the protocol,
+            - Comments that shows the run.
 
-        def __init__(self, protocol, master=None, pipeline = None):
-            self.pipeline = pipeline
+            Alternatively, for Pipelines shows the list of protocols for sequential running
+            """
+
+        def __init__(self, protocol, master=None):
             self.protocol = protocol
             protocol.GUI = self
 
@@ -239,7 +242,7 @@ class App(tkinter.Frame):
                 self.xScroll = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL)
                 self.xScroll.grid(row=23, column=8, columnspan=8, sticky=tkinter.E + tkinter.W)
 
-                self.comments = tkinter.Listbox(self, height=25, width=100,
+                self.comments = tkinter.Listbox(self, height=30, width=200,
                                                 xscrollcommand=self.xScroll.set,
                                                 yscrollcommand=self.yScroll.set)
                 self.comments.grid(row=3, column=8, rowspan=20, columnspan=8,
@@ -255,16 +258,14 @@ class App(tkinter.Frame):
             self.mainloop()
 
         def setVariantsMenu(self, value):
-            selected = self.protocol_name
-            self.protocol_versions = self.GUIprot.versions(selected)
             m = self.version_selection.children['menu']
             m.delete(0, 'end')
-            for val in self.protocol_versions:
+            for val in self.protocol.versions:
                 m.add_command(label=val, command=lambda v=self.selected_version, l=val: v.set(l))
-            self.selected_version.set(next(iter(self.protocol_versions)))  # variable def value
+            self.selected_version.set(next(iter(self.protocol.versions)))  # variable def value
 
         def update_parameters(self):
-            self.GUI_init.update_parameters()
+            self.GUI_init.update_parameters()  # ??
 
         class ReplicaFrame(tkinter.Frame):
             def __init__(self, master, reply, num):
@@ -343,7 +344,7 @@ class App(tkinter.Frame):
                 for rf in self.ReplicaFrames:  # change replicas
                     rf.Vol.set(rf.reply.vol)
 
-        def CheckList(self, protocol):
+        def CheckList(self):
 
             self.GUI_init.update_parameters()
 
@@ -360,7 +361,7 @@ class App(tkinter.Frame):
             tkinter.Label (Header, text="µL/total",                     ).grid(row=0, column=7, sticky=tkinter.E)
             # todo: add "global protocol variables" like number of samples, worktable template and output files
 
-            self.ReactFrames = [App.GUI_protocol.ReactiveFrame(self, react) for react in protocol.worktable.Reactives]
+            self.ReactFrames = [App.GUI_protocol.ReactiveFrame(self, react) for react in self.protocol.worktable.Reactives]
 
             # self.GUI_parameters_frame.destroy() #    ['state'] = 'disabled'
             for child in self.GUI_parameters_frame.winfo_children():
@@ -372,7 +373,7 @@ class App(tkinter.Frame):
 
         def CheckPipeline(self, pipeline):
            #for prot, run_name in pipeline.
-           print ('checking pipeline ' + self.protocol_class.name)
+           print ('checking pipeline ' + self.protocol.name)
            for GUI_init_prot in self.GUI_init.ProtcolFrames:
                GUI_init_prot.Run()
 
@@ -380,12 +381,11 @@ class App(tkinter.Frame):
             # create and run the protocol
             self.GUI_init.update_parameters()
 
-            protocol = self.protocol_class(self.parameters, self.pipeline)
-            protocol.Run()
-            if protocol.isPipeline:
+            self.protocol.Run()
+            if isinstance(self.protocol, App.Pipeline):
                 pass
             else:
-                for line in protocol.comments():
+                for line in self.protocol.comments():
                     self.comments.insert(tkinter.END, line)
 
     def __init__(self, master=None):

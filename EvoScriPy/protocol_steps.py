@@ -167,7 +167,7 @@ class Protocol (Executable):
     def CheckList(self):
         self.set_EvoMode()
         if (self.GUI):
-            self.GUI.CheckList(self)
+            self.GUI.CheckList()
         self.set_EvoMode()
 
     def done(self):
