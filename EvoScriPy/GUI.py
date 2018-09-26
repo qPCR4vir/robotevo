@@ -13,49 +13,14 @@ from protocols import available
 
 __author__ = 'qPCR4vir'
 
-GUI4parameters = {}
+GUI4parameters = {}  # map { 'protocol class name' : GUI_init_parameters class to use }
 
 
 class App(tkinter.Frame):
     """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
     """
 
-    class GUI4Protocols:
-
-        def __init__(self):
-            self.protocols = {}
-            for av in available:
-                if isinstance(av, tuple):
-                    class_name, parameters = av
-                    self.protocols[class_name.name + ': ' + parameters.run_name] = av
-                else:
-                    self.protocols[av.name] = av
-            self.GUI4parameters = GUI4parameters
-
-        def versions(self, prot_name):
-            class_name = self.protocols[prot_name]
-            if isinstance(class_name, tuple):
-                class_name, parameters = class_name
-            return class_name.versions
-
-        def new_parameters(self, prot_name, GUI):
-
-            protocol_class = self.protocols[prot_name]
-            if isinstance(protocol_class, tuple):
-                protocol_class, parameters = protocol_class
-                parameters.GUI = GUI
-            else:
-                parameters = protocol_class.Parameter(GUI)
-            # run the corresponding GUI
-            print ('run GUI_init for ' + prot_name)
-            return protocol_class, parameters, self.GUI4parameters[protocol_class.name](parameters)
-
-        def isPipeline(self, prot_name):
-            protocol_class = self.protocols[prot_name]
-            if isinstance(protocol_class, tuple):
-                protocol_class, parameters = protocol_class
-            return protocol_class.isPipeline
-
+    # GUI classes to handle initialization parameters of protocol objects
     class GUI_init_pipeline:
         """  Show the parameters of the pipeline for review: a list of the protocols to run with run names
 
@@ -118,12 +83,12 @@ class App(tkinter.Frame):
                 self.prot_changed()
                 self.name_changed()
 
-        def __init__(self, parameters):
-            self.parameters = parameters
+        def __init__(self, pipeline):
+            self.parameters = pipeline
             print('run GUI_init_pipeline for: ')
 
-            tkinter.Button(parameters.GUI.varoutput, text='add', command=self.add_prot).grid( row=0, column=2)
-            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(parameters.GUI, prot, parameters) for prot in parameters.Protocol_classes]
+            tkinter.Button(pipeline.GUI.varoutput, text='add', command=self.add_prot).grid(row=0, column=2)
+            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot, pipeline) for prot in pipeline.Protocol_classes]
 
 
         def add_prot(self):
@@ -134,63 +99,62 @@ class App(tkinter.Frame):
         def update_parameters(self):
             pass    # ??
 
-
-
     from EvoScriPy.protocol_steps import Pipeline
     GUI4parameters[Pipeline.name]=GUI_init_pipeline
     #from protocols import PipelineTest
     #GUI4parameters[PipelineTest.name]=GUI_init_pipeline
 
+
     class GUI_init_parameters: # (tkinter.Frame)
 
-        def __init__(self, parameters):
-            self.parameters = parameters
+        def __init__(self, protocol):
+            self.protocol = protocol
 
             # worktable_template_filename
-            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text='WorkTable:').grid(row=0, column=0, columnspan=1,
-                                                        sticky=tkinter.N + tkinter.W)
-            self.worktable_filename_v = tkinter.StringVar( self.parameters.GUI.GUI_parameters_frame)
-            self.worktable_filename_v.set(parameters.worktable_template_filename)
-            tkinter.Entry(self.parameters.GUI.GUI_parameters_frame, textvariable=self.worktable_filename_v).grid(row=0, column=1, columnspan=9,
-                                                                             sticky=tkinter.N + tkinter.E + tkinter.W)
+            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text='WorkTable:').grid(row=0, column=0, columnspan=1,
+                                                                                          sticky=tkinter.N + tkinter.W)
+            self.worktable_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters_frame)
+            self.worktable_filename_v.set(protocol.worktable_template_filename)
+            tkinter.Entry(self.protocol.GUI.GUI_parameters_frame, textvariable=self.worktable_filename_v).grid(row=0, column=1, columnspan=9,
+                                                                                                               sticky=tkinter.N + tkinter.E + tkinter.W)
 
-            tkinter.Button(self.parameters.GUI.GUI_parameters_frame, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
+            tkinter.Button(self.protocol.GUI.GUI_parameters_frame, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
             self.worktable_filename_v.trace("w", self.set_WT_FN)
 
             # output_filename
-            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text='Output filename:').grid(row=1, column=0, columnspan=1,
-                                                                                      sticky=tkinter.N + tkinter.W)
-            self.output_filename_v = tkinter.StringVar(self.parameters.GUI.GUI_parameters_frame)
-            self.output_filename_v.set(parameters.output_filename)
-            tkinter.Entry(self.parameters.GUI.GUI_parameters_frame, textvariable=self.output_filename_v).grid(row=1,
-                                                                                                           column=1,
-                                                                                                           columnspan=9,
-                                                                                                           sticky=tkinter.N + tkinter.E + tkinter.W)
+            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text='Output filename:').grid(row=1, column=0, columnspan=1,
+                                                                                                sticky=tkinter.N + tkinter.W)
+            self.output_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters_frame)
+            self.output_filename_v.set(protocol.output_filename)
+            tkinter.Entry(self.protocol.GUI.GUI_parameters_frame, textvariable=self.output_filename_v).grid(row=1,
+                                                                                                            column=1,
+                                                                                                            columnspan=9,
+                                                                                                            sticky=tkinter.N + tkinter.E + tkinter.W)
 
-            tkinter.Button(self.parameters.GUI.GUI_parameters_frame, text='...', command=self.selet_O_FN).grid(row=1,
-                                                                                                          column=10)
+            tkinter.Button(self.protocol.GUI.GUI_parameters_frame, text='...', command=self.selet_O_FN).grid(row=1,
+                                                                                                             column=10)
             self.output_filename_v.trace("w", self.set_O_FN)
 
             # First tip (in the first tip rack)
-            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text='First tip:').grid(row=2, column=0, columnspan=1,
-                                                        sticky=tkinter.N + tkinter.W)
-            self.firstTip_v = tkinter.StringVar(self.parameters.GUI.GUI_parameters_frame )
-            self.firstTip_v.set(parameters.firstTip)
-            tkinter.Entry(self.parameters.GUI.GUI_parameters_frame, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
-                                                                             sticky=tkinter.N + tkinter.E + tkinter.W)
+            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text='First tip:').grid(row=2, column=0, columnspan=1,
+                                                                                          sticky=tkinter.N + tkinter.W)
+            self.firstTip_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters_frame)
+            self.firstTip_v.set(protocol.firstTip)
+            tkinter.Entry(self.protocol.GUI.GUI_parameters_frame, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
+                                                                                                     sticky=tkinter.N + tkinter.E + tkinter.W)
             self.firstTip_v.trace("w", self.set_firstTip)
 
         def set_firstTip(self, *args):
-            self.parameters.firstTip = self.firstTip_v.get()
+            self.protocol.firstTip = self.firstTip_v.get()
 
         def set_WT_FN(self, *args):
-            self.parameters.worktable_template_filename = self.worktable_filename_v.get()
+            self.protocol.worktable_template_filename = self.worktable_filename_v.get()
 
         def selet_WT_FN(self):
             self.worktable_filename_v.set( tkinter.filedialog.askopenfilename(title='Select the WorkTable template') )
 
         def set_O_FN(self, *args):
-            self.parameters.output_filename = self.output_filename_v.get()
+            self.protocol.output_filename = self.output_filename_v.get()
 
         def selet_O_FN(self):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
@@ -200,25 +164,25 @@ class App(tkinter.Frame):
             self.set_WT_FN()
             self.set_O_FN()
 
-
     from EvoScriPy.protocol_steps import Protocol
     GUI4parameters[Protocol.name]=GUI_init_parameters
+
 
     class GUI_init_RNA_ext_MN(GUI_init_parameters):
 
 
-        def __init__(self, parameters):
-            App.GUI_init_parameters.__init__(self, parameters)
+        def __init__(self, protocol):
+            App.GUI_init_parameters.__init__(self, protocol)
 
             # Number of Samples
             min_s, max_s = self.min_max_Number_of_Samples()
             label = "Number of Samples: ({}-{}) ".format(min_s, max_s)
-            tkinter.Label(self.parameters.GUI.GUI_parameters_frame, text=label).grid(row=2, column=3, columnspan=2,
-                                                                       sticky=tkinter.N + tkinter.W)
+            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text=label).grid(row=2, column=3, columnspan=2,
+                                                                                   sticky=tkinter.N + tkinter.W)
 
-            self.NumOfSamples = tkinter.IntVar(self.parameters.GUI.GUI_parameters_frame)
-            self.NumOfSamples.set(self.parameters.NumOfSamples)
-            self.sample_num = tkinter.Spinbox(self.parameters.GUI.GUI_parameters_frame, textvariable=self.NumOfSamples,
+            self.NumOfSamples = tkinter.IntVar(self.protocol.GUI.GUI_parameters_frame)
+            self.NumOfSamples.set(self.protocol.NumOfSamples)
+            self.sample_num = tkinter.Spinbox(self.protocol.GUI.GUI_parameters_frame, textvariable=self.NumOfSamples,
                                               from_=min_s, to=max_s, increment=1,
                                               command=self.read_NumOfSamples)
             self.sample_num.grid(row=2, column=5, columnspan=1)
@@ -228,24 +192,25 @@ class App(tkinter.Frame):
             return 1 , 48
 
         def read_NumOfSamples(self, *args):
-            self.parameters.NumOfSamples = self.NumOfSamples.get()
-            print(" --- NumOfSamples set to: %d" % (self.parameters.NumOfSamples))
+            self.protocol.NumOfSamples = self.NumOfSamples.get()
+            print(" --- NumOfSamples set to: %d" % (self.protocol.NumOfSamples))
 
         def update_parameters(self):
             App.GUI_init_parameters.update_parameters(self)
             self.read_NumOfSamples()
 
-
     from protocols.RNAextractionMN_Mag import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNA_ext_MN
 
+
     class GUI_init_RNA_ext_Fisher(GUI_init_RNA_ext_MN):
 
-        def __init__(self, parameters):
-            App.GUI_init_RNA_ext_MN.__init__(self, parameters)
+        def __init__(self, protocol):
+            App.GUI_init_RNA_ext_MN.__init__(self, protocol)
 
         def min_max_Number_of_Samples(self):
             return 1 , 96
+
     from protocols.KingFisher_RNAextNucleoMag_EtOH80p         import KingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name   ]=GUI_init_RNA_ext_Fisher
     from protocols.PreKingFisher_RNAextNucleoMag              import PreKingFisher_RNAextNucleoMag
@@ -256,32 +221,33 @@ class App(tkinter.Frame):
 
     class GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(GUI_init_RNA_ext_MN):
 
-        def __init__(self, parameters):
-            App.GUI_init_RNA_ext_MN.__init__(self, parameters)
+        def __init__(self, protocol):
+            App.GUI_init_RNA_ext_MN.__init__(self, protocol)
 
         def min_max_Number_of_Samples(self):
             return 1 , 96
+
     from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
     GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2
 
+
     class GUI_protocol(tkinter.Frame):
-        def __init__(self, protocol_name, master=None, pipeline = None):
+        """ Implements a CheckList for protocols """
+
+        def __init__(self, protocol, master=None, pipeline = None):
             self.pipeline = pipeline
+            self.protocol = protocol
+            protocol.GUI = self
+
             tkinter.Frame.__init__(self, master)
-            self.master.title(protocol_name)
+            self.master.title(protocol.name)
             self.grid()
 
-            self.protocol_name = protocol_name
-            self.GUIprot = App.GUI4Protocols()  # values
-            g = self.GUIprot
+            self.selected_version = tkinter.StringVar(self)                # variable
+            self.selected_version.set(next(iter(self.protocol.versions)))  # variable def value
 
-            self.protocol_versions = g.versions(protocol_name)
-            self.selected_version = tkinter.StringVar(self)  # variable
-
-            self.version_selection = tkinter.OptionMenu(self, self.selected_version, *self.protocol_versions)
+            self.version_selection = tkinter.OptionMenu(self, self.selected_version, *self.protocol.versions)
             self.version_selection.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
-            self.selected_version.set(next(iter(self.protocol_versions)))  # variable def value
-            #self.setVariantsMenu(protocol_name)
 
             # initialize parameters
             self.GUI_parameters_frame = tkinter.Frame(self)
@@ -296,7 +262,7 @@ class App(tkinter.Frame):
                                           state=tkinter.DISABLED)
             self.quit_bt.grid(row=1, column=15, columnspan=2)
 
-            if g.isPipeline(protocol_name):
+            if g.isPipeline(protocol):
                 pass
             else:
                 # comments: visualize the synthesized script -----------------------
@@ -315,8 +281,9 @@ class App(tkinter.Frame):
 
             self.varoutput = tkinter.Frame(self)
             self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
-            # create and initialize the Parameters
-            self.protocol_class, self.parameters, self.GUI_init = self.GUIprot.new_parameters(protocol_name, self)
+
+            # show the Parameters with the corresponding GUI_init_parameter
+            self.GUI_init = GUI4parameters[protocol.name](protocol)
             self.mainloop()
 
         def setVariantsMenu(self, value):
@@ -441,8 +408,6 @@ class App(tkinter.Frame):
            for GUI_init_prot in self.GUI_init.ProtcolFrames:
                GUI_init_prot.Run()
 
-
-
         def run_selected(self):
             # create and run the protocol
             self.GUI_init.update_parameters()
@@ -465,13 +430,14 @@ class App(tkinter.Frame):
         tkinter.Label(self,  padx=10, text='Please, select the protocol for which you want to generate an Evoware script:').grid(row=1, columnspan=3)
 
         # Protocol selection ------------------
-        self.GUIprot = App.GUI4Protocols()        # values
-        g=self.GUIprot
+        #self.GUIprot = App.GUI4Protocols()        # values
+        #g=self.GUIprot
+        self.exp_names = [prot.name + (': ' + prot.run_name if prot.run_name else '') for prot in available]
         self.selected_protocol = tkinter.StringVar(master)      # variable
+        self.selected_protocol.set(self.exp_names[0])                # variable initial value
 
-        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *g.protocols, command=self.protocol_selected)
+        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.exp_names, command=self.protocol_selected)
         self.protocol_selection.grid(row=2, column=1, rowspan=1, columnspan=3, sticky=tkinter.W + tkinter.E)
-        self.selected_protocol.set(available[0].name)           # variable def value
 
         explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
         tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=3, columnspan=4)
@@ -481,8 +447,8 @@ class App(tkinter.Frame):
 
     def protocol_selected(self, value):
         selected = self.selected_protocol.get()
-        print('Selected protocol: ' + selected)
-        App.GUI_protocol(selected, tkinter.Tk())
+        print('Selected protocol: ' + value)
+        App.GUI_protocol( available[ self.exp_names.index(value) ], tkinter.Tk())
 
 
 if __name__ == "__main__":

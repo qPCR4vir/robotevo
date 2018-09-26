@@ -8,8 +8,8 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 import EvoScriPy.Reactive as Rtv      # ??
+#from protocols.Evo75_FLI import Evo75_FLI
 from protocols.Evo100_FLI import Evo100_FLI
-from protocols.Evo75_FLI import Evo75_FLI
 
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p
@@ -17,7 +17,7 @@ from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAex
 __author__ = 'Ariel'
 
 
-class PCRexp(Pipeline):
+class PCRexperiment(Pipeline):
     """ - Sample names import
         - RNA extraction (optional): Evo100, posible pipeline
         - PCR mix:  Evo75, posible primerMix and even Primer preparation
@@ -25,20 +25,47 @@ class PCRexp(Pipeline):
         - Export to BioRad software of plate info.
         """
     name = "PCR experiment"
-    isPipeline = True
 
-    class Parameter(Pipeline.Parameter):
-        # parameters to describe a run of this program
-        def __init__(self, GUI=None):
-            protocols = [[Pipeline, "Sample names import"],
-                         [Prefill_plates_VEW1_ElutionBuffer_VEW2.name,           "Prefill"],
-                         [PreKingFisher_RNAextNucleoMag_EtOH80p.name,              "Lysis"],
-                         ]
-            Pipeline.Parameter.__init__(self, GUI, protocols)
+    def __init__(self, GUI=None, run_name=None):
+        protocols = [Pipeline                              (run_name="Sample names import"),
+                     Prefill_plates_VEW1_ElutionBuffer_VEW2(run_name="Prefill"),
+                     PreKingFisher_RNAextNucleoMag_EtOH80p (run_name="Lysis"  )    ]
+
+        Pipeline.__init__(self, GUI, protocols, run_name)
 
 
 
 
+class Evo75_FLI(Protocol):
+    """ Using the Evo75_FLI_INNT
+    """
+
+    def __init__(self,  GUI                 = None,
+                        worktable_template_filename='../EvoScripts/Freedom75_FLI_PCR.ewt',
+                        output_filename     = None,
+                        run_name            = None):
+
+        Protocol.__init__(self, GUI                         = GUI,
+                                nTips                       = 1,
+                                worktable_template_filename = worktable_template_filename,
+                                output_filename             = output_filename,
+                                run_name                    = run_name)
+
+
+    def set_defaults(self):
+        wt = self.worktable
+
+        wt.def_DiTi     = Lab.DiTi_0200ul   # todo revise, this is a type, the others are labwares
+
+        WashCleanerS    = wt.getLabware(Lab.CleanerShallow, ""                             )
+        WashWaste       = wt.getLabware(Lab.WasteWash,   ""                                )
+        WashCleanerL    = wt.getLabware(Lab.CleanerDeep, ""                                )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste_plate, "TipWaste"                   )
+
+        # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
+        wt.def_WashWaste   = WashWaste
+        wt.def_WashCleaner = WashCleanerS
+        wt.def_DiTiWaste   = DiTiWaste
 
 
 class MixPCR(Evo75_FLI):
@@ -49,18 +76,14 @@ class MixPCR(Evo75_FLI):
     versions = {'none'    : not_implemented}
 
     def __init__(self, GUI=None, run_name=None):
-
-        Evo100_FLI.__init__(self,
+        Evo75_FLI.__init__(self,
                             GUI=GUI,
-                            NumOfSamples=96,
-                            worktable_template_filename='../EvoScripts/wt_templates/Freedom75_FLI_PCR.ewt',
                             output_filename='../current/' + run_name,
                             run_name=run_name)
 
     def Run(self):
         self.set_EvoMode()
         self.initialize()                       #  set_defaults ??
-        NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
         Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()

@@ -38,14 +38,12 @@ class Evo100_FLI(Protocol):
     def set_defaults(self):
         wt = self.worktable
 
-        # todo decide where to put the default labware: in robot or worktable object or the global Lab
-
         wt.def_DiTi       = Lab.DiTi_1000ul   # todo revise, this is a type, the others are labwares
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS,""                                  )
-        WashWaste       = wt.getLabware(Lab.WasteWS,   ""                                  )
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS,""                                  )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,""                                  )
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""                                  )
+        WashWaste       = wt.getLabware(Lab.WasteWS,    ""                                  )
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""                                  )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""                                  )
 
         # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
         wt.def_WashWaste   = WashWaste
