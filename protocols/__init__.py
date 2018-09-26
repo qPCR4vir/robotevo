@@ -25,17 +25,17 @@ from EvoScriPy.protocol_steps                         import Pipeline
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p
 
-pipeline_PreKingFisher = Pipeline (protocols=
-                                  [Prefill_plates_VEW1_ElutionBuffer_VEW2 (run_name = "Prefill"),
-                                   PreKingFisher_RNAextNucleoMag_EtOH80p  (run_name = "Lysis"    ] ,
-                                   run_name='PreKingFisher')
+
+pipeline_PreKingFisher = Pipeline ( protocols=  [Prefill_plates_VEW1_ElutionBuffer_VEW2 (run_name = "Prefill"),
+                                                 PreKingFisher_RNAextNucleoMag_EtOH80p  (run_name = "Lysis"   ) ],
+                                    run_name='PreKingFisher')
 
 registreExecutable(pipeline_PreKingFisher)
 
 from protocols.PCRexperiment import PCRexperiment
 
 
-available.append(Pipeline)
+available.append(Pipeline())
 
 
 

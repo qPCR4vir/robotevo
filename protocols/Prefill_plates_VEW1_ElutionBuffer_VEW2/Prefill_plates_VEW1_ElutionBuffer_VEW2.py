@@ -23,28 +23,25 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     name = "Prefill plates with VEW1, Elution buffer and VEW2 for KingFisher"
     versions = {'none'    : not_implemented}
 
-    class Parameter (Evo100_FLI.Parameter):
+    def __init__(self, GUI=None, run_name=None):
 
-        def __init__(self, GUI = None):
-
-            self.NumOfSamples = 96
-            Evo100_FLI.Parameter.__init__(self, GUI=GUI,
-                                          NumOfSamples=96,
-                                          worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext.ewt',
-                                          output_filename='../current/Prefill_plates_VEW1_ElutionBuffer_VEW2'
-                                         )
-
+        Evo100_FLI.__init__(self,
+                            GUI=GUI,
+                            NumOfSamples=96,
+                            worktable_template_filename='../EvoScripts/wt_templates/preFisher_RNAext.ewt',
+                            output_filename='../current/' + run_name,
+                            run_name=run_name)
 
     def Run(self):
         self.set_EvoMode()
-        self.initialize()                       #  set_defaults ??
+        self.initialize()                       # set_defaults ??
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
         Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'.format(str(NumOfSamples))).exec()
 
 
-        #  Get Labwares (Cuvette, eppys, etc.) from the work table
+        # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
 
@@ -113,13 +110,13 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
             Itr.userPrompt("Put the plates for VEW1, Elution buffer and VEW2 in that order").exec()
 
             with tips(reuse=True, drop=False):
-                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples) ) #, optimize=False
+                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples) )  # ,optimize=False
 
             with tips(reuse=True, drop=False):
-                spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples) ) #, optimize=False
+                spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples) )  # , optimize=False
 
             with tips(reuse=True, drop=False):
-                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples)) #, optimize=False
+                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))  # , optimize=False
 
         dropTips()
 

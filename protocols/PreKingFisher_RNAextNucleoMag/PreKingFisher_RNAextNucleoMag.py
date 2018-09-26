@@ -21,18 +21,18 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
     name = "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and preFill plates"
     versions = {'none'    : not_implemented}
 
-    class Parameter (Evo100_FLI.Parameter):
+    def __init__(self, GUI=None, run_name=None):
 
-        def __init__(self, GUI = None):
-            Evo100_FLI.Parameter.__init__(self, GUI=GUI,
-                                          NumOfSamples=96,
-                                          worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext.ewt',
-                                          output_filename='../current/preFisher_RNAext'
-                                         )
+        Evo100_FLI.__init__(self,
+                            GUI=GUI,
+                            NumOfSamples=96,
+                            worktable_template_filename='../EvoScripts/wt_templates/preFisher_RNAext.ewt',
+                            output_filename='../current/preFisher_RNAext',
+                            run_name=run_name)
 
     def Run(self):
         self.set_EvoMode()
-        self.initialize()                       #  set_defaults ??
+        self.initialize()                       # set_defaults ??
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
@@ -49,11 +49,11 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
         #  Set the initial position of the tips
 
-        Itr.set_DITI_Counter2(DiTi1000_1, posInRack=self.parameters.firstTip).exec()
+        self.go_first_pos()
 
         # Set volumen / sample
 
@@ -84,11 +84,11 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
-                                       LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
+                                       LysBuf,    volpersample=LysisBufferVolume , defLiqClass=B_liquidClass)
         IC2             = Rtv.Reactive("IC2 - synthetic RNA "              ,
-                                       Reactives, pos=11, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+                                       Reactives, pos=11, volpersample=  IC2Volume , defLiqClass=W_liquidClass)
         VEB             = Rtv.Reactive("VEB - Binding Buffer "           ,
-                                       BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
+                                       BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
         B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200,
                                          pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
 
@@ -112,7 +112,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
                                        Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
         pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
                                        Reactives, pos=12,   components=[ ProtK, cRNA, IC2 ]
-                                         ,defLiqClass=W_liquidClass, replicas=2)
+                                         , defLiqClass=W_liquidClass, replicas=2)
 #        Waste           = Rtv.Reactive("Waste "  , self.WashWaste )
 
         # Show the CheckList GUI to the user for posible small changes
@@ -182,7 +182,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
                 transfer(  from_labware_region= Samples,
                            to_labware_region=   Plate_lysis,
                            volume=              SampleVolume,
-                           using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
+                           using_liquid_class=  (SampleLiqClass, "Serum Disp postMix3"),
                            optimizeFrom         =False,     # optimizeTo= True,           # todo Really ??
                            NumSamples=          NumOfSamples)
             Itr.wash_tips(wasteVol=4, FastWash=True).exec()
@@ -197,7 +197,7 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
         with group("Beads binding"):
             with tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
-                   mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+                    mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
 
             with tips(reuse=True, drop=True):
                 spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))

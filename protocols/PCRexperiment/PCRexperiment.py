@@ -48,14 +48,14 @@ class MixPCR(Evo75_FLI):
     name = "PreKingFisher for RNA extraction modified NucleoMag MN_Vet kit and EtOH80p Plate preFill"
     versions = {'none'    : not_implemented}
 
-    class Parameter (Evo100_FLI.Parameter):
+    def __init__(self, GUI=None, run_name=None):
 
-        def __init__(self, GUI = None):
-            Evo100_FLI.Parameter.__init__(self, GUI=GUI,
-                                          NumOfSamples=96,
-                                          worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext_EtOH.ewt',
-                                          output_filename='../current/PreKingFisher_RNAextNucleoMag_EtOH80p'
-                                         )
+        Evo100_FLI.__init__(self,
+                            GUI=GUI,
+                            NumOfSamples=96,
+                            worktable_template_filename='../EvoScripts/wt_templates/Freedom75_FLI_PCR.ewt',
+                            output_filename='../current/' + run_name,
+                            run_name=run_name)
 
     def Run(self):
         self.set_EvoMode()

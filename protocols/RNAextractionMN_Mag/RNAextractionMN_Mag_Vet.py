@@ -38,7 +38,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             output_filename             ='../current/AWL_RNAext_MNVet',
                             run_name                    = run_name)
 
-
     def Run(self):
         self.set_EvoMode()
         self.initialize()
@@ -87,7 +86,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         IC_MS2Volume        = 20.0
         ElutionBufferVolume = 100.0
 
-        SampleLiqClass      ="Serum Asp" # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
+        SampleLiqClass      = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
         all_samples = range(NumOfSamples)
         maxTips     = min(self.nTips, NumOfSamples)
@@ -95,12 +94,12 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         par         = TeMag.parallelOrder(self.nTips, all_samples)
 
         LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
-                                       LysBuf,    volpersample=LysisBufferVolume ,defLiqClass=B_liquidClass)
+                                       LysBuf,    volpersample=LysisBufferVolume , defLiqClass=B_liquidClass)
         IC2             = Rtv.Reactive("IC2 - synthetic RNA "              ,
-                                       Reactives, pos=11, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+                                       Reactives, pos=11, volpersample=  IC2Volume , defLiqClass=W_liquidClass)
         BindingBuffer   = Rtv.Reactive("VEB - Binding Buffer "           ,
-                                       BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
-        B_Beads         = Rtv.Reactive("B - Beads " ,Reactives, initial_vol=1200,
+                                       BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
+        B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200,
                                          pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
 
         VEW1            = Rtv.Reactive("VEW1 - Wash Buffer "              ,
@@ -123,7 +122,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                        Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
         pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
                                        Reactives, pos=12,   components=[ ProtK, cRNA, IC_MS2 ]
-                                         ,defLiqClass=W_liquidClass, replicas=2)
+                                         , defLiqClass=W_liquidClass, replicas=2)
         Waste           = Rtv.Reactive("Waste "  , self.robot.worktable.def_WashWaste )
 
         self.CheckList()
@@ -137,7 +136,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             Rtv.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
                                                 pos=s+1, defLiqClass=def_liquidClass, excess=0)
 
-
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
         Te_MagS_ActivateHeater(50).exec()
         Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
@@ -150,7 +148,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             transfer(  from_labware_region= Samples,
                        to_labware_region=   TeMag,
                        volume=              SampleVolume,
-                       using_liquid_class=  (SampleLiqClass,"Serum Disp postMix3"),
+                       using_liquid_class=  (SampleLiqClass, "Serum Disp postMix3"),
                        optimizeFrom         =False,     optimizeTo= True,
                        NumSamples=          NumOfSamples)
         Itr.wash_tips(wasteVol=4, FastWash=True).exec()
@@ -176,9 +174,9 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             self.wash_in_TeMag(reactive=VEW2, wells=all_samples)
 
             with group("Wash in TeMag with " + EtOH80p.name), tips():
-                spread( reactive=EtOH80p,to_labware_region= TeMag.selectOnly(all_samples))
+                spread( reactive=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
 
-                with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//self.nTips +1):
+                with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//self.nTips + 1):
                     mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
                 with incubation(minutes=0.5):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
@@ -216,7 +214,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             :param using_liquid_class: dict
             :param vol:
             """
-            #import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
+            # import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
 
             wells = wells or reactive.labware.selected() or range(self.NumOfSamples)
             if not using_liquid_class:
@@ -226,11 +224,10 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
                 spread(reactive=reactive, to_labware_region=self.TeMag.selectOnly(wells))
 
-                with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//self.nTips +1):
+                with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//self.nTips + 1):
                     mix(self.TeMag.selectOnly(wells), using_liquid_class, vol)
 
                 with incubation(minutes=0.5, timer=2):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
                 with tips(usePreserved=preserveingTips(), preserve=False, drop=True):
                     waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)
-
