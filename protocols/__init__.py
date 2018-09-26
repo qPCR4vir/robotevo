@@ -9,10 +9,12 @@ Maintain here a list of all available customer protocols
 """
 
 available = []
+available_classes = {}
 
 
 def registreExecutable(executable):
     available.append(executable)
+    available_classes[executable.name] = executable.__class__
 
 
 import protocols.RNAextractionMN_Mag

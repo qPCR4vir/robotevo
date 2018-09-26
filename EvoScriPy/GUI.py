@@ -32,20 +32,20 @@ class App(tkinter.Frame):
                 self.pipeline = pipeline
                 self.GUI = GUI
                 self.protocol = prot
-                print ('protocol: ' + prot[0])
+                print ('protocol: ' + prot.name)
                 tkinter.Frame.__init__(self, GUI.varoutput)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
                 self.selected_protocol = tkinter.StringVar(self)  # variable
 
-                self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *GUI.GUIprot.protocols)
+                self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *GUI.exp_names)
                 #self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
                 self.protocol_selection.grid(row=0, column=0, sticky=tkinter.W + tkinter.E)
 
-                self.selected_protocol.set(prot[0])  # variable def value
+                self.selected_protocol.set(prot.name)  # variable def value
                 self.selected_protocol.trace("w", self.prot_changed)
 
                 self.ProtName = tkinter.StringVar(self)
-                self.ProtName.set(prot[1])
+                self.ProtName.set(prot.run_name)
                 self.RackNameEntry = tkinter.Entry(self, textvariable=self.ProtName)
                 self.RackNameEntry.grid(row=0, column=1, sticky=tkinter.W)
                 #self.RackNameEntry.trace("w", self.name_changed)
@@ -84,17 +84,17 @@ class App(tkinter.Frame):
                 self.name_changed()
 
         def __init__(self, pipeline):
-            self.parameters = pipeline
+            self.pipeline = pipeline
             print('run GUI_init_pipeline for: ')
 
             tkinter.Button(pipeline.GUI.varoutput, text='add', command=self.add_prot).grid(row=0, column=2)
-            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot, pipeline) for prot in pipeline.Protocol_classes]
+            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot, pipeline) for prot in pipeline.protocols]
 
 
         def add_prot(self):
-            self.parameters.Protocol_classes.append(['Add protocol or pipeline', 'run name'])
+            self.pipeline.protocols.append(App.Pipeline(run_name= 'run name') )
             self.ProtcolFrames.append(
-                App.GUI_init_pipeline.ProtocolFrame(self.parameters.GUI, self.parameters.Protocol_classes[-1]))
+                App.GUI_init_pipeline.ProtocolFrame(self.pipeline.GUI, self.pipeline.protocols[-1]))
 
         def update_parameters(self):
             pass    # ??
@@ -262,7 +262,7 @@ class App(tkinter.Frame):
                                           state=tkinter.DISABLED)
             self.quit_bt.grid(row=1, column=15, columnspan=2)
 
-            if g.isPipeline(protocol):
+            if isinstance(protocol, App.Pipeline):
                 pass
             else:
                 # comments: visualize the synthesized script -----------------------
@@ -430,8 +430,6 @@ class App(tkinter.Frame):
         tkinter.Label(self,  padx=10, text='Please, select the protocol for which you want to generate an Evoware script:').grid(row=1, columnspan=3)
 
         # Protocol selection ------------------
-        #self.GUIprot = App.GUI4Protocols()        # values
-        #g=self.GUIprot
         self.exp_names = [prot.name + (': ' + prot.run_name if prot.run_name else '') for prot in available]
         self.selected_protocol = tkinter.StringVar(master)      # variable
         self.selected_protocol.set(self.exp_names[0])                # variable initial value
