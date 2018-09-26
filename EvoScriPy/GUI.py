@@ -14,6 +14,7 @@ from protocols import available
 __author__ = 'qPCR4vir'
 
 GUI4parameters = {}  # map { 'protocol class name' : GUI_init_parameters class to use }
+av_prot_names = []   # list of "protocol names+: + run names" with the same index as available executables
 
 
 class App(tkinter.Frame):
@@ -32,24 +33,18 @@ class App(tkinter.Frame):
                 self.pipeline = pipeline
                 self.GUI = GUI
                 self.protocol = prot
+                if prot.run_name is None: prot.run_name = ""
                 print ('protocol: ' + prot.name)
                 tkinter.Frame.__init__(self, GUI.varoutput)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
-                self.selected_protocol = tkinter.StringVar(self)  # variable
 
-                self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *GUI.exp_names)
-                #self.protocol_selection.grid(row=0, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
-                self.protocol_selection.grid(row=0, column=0, sticky=tkinter.W + tkinter.E)
-
-                self.selected_protocol.set(prot.name)  # variable def value
-                self.selected_protocol.trace("w", self.prot_changed)
+                self.protocol_label = tkinter.Label(self, text=self.protocol.name)
+                self.protocol_label.grid(row=0, column=0, sticky=tkinter.W + tkinter.E)
 
                 self.ProtName = tkinter.StringVar(self)
                 self.ProtName.set(prot.run_name)
                 self.RackNameEntry = tkinter.Entry(self, textvariable=self.ProtName)
                 self.RackNameEntry.grid(row=0, column=1, sticky=tkinter.W)
-                #self.RackNameEntry.trace("w", self.name_changed)
-
 
             def Run(self):
                 self.runb = tkinter.Button(self, #state=tkinter.DISABLED,
@@ -58,43 +53,16 @@ class App(tkinter.Frame):
                 #self.runb.configure(state='normal')
                 self.runb.mainloop()
 
-
-
             def run_prot(self):
                 self.runb.configure(state='disable')
-                self.protocol[1] = self.ProtName.get()
-                self.update_protocol()
+                self.protocol.run_name = self.ProtName.get()
                 print('Fro pipeline Run GUI for protocol: '  + self.protocol[0] +' run-named '+ self.protocol[1])
                 App.GUI_protocol(self.protocol[0], tkinter.Tk(), self.pipeline)
-
-
-
-            def prot_changed(self, *args):
-                print('Changing: ' + self.protocol[0])
-                self.protocol[0]= self.selected_protocol.get()
-                print('to: ' + self.protocol[0])
-
-            def name_changed(self, *args):
-                print('Changing: ' + self.protocol[1])
-                self.protocol[1]= self.selected_protocol.get()
-                print('to: ' + self.protocol[1])
-
-            def update_protocol(self):
-                self.prot_changed()
-                self.name_changed()
 
         def __init__(self, pipeline):
             self.pipeline = pipeline
             print('run GUI_init_pipeline for: ')
-
-            tkinter.Button(pipeline.GUI.varoutput, text='add', command=self.add_prot).grid(row=0, column=2)
             self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot, pipeline) for prot in pipeline.protocols]
-
-
-        def add_prot(self):
-            self.pipeline.protocols.append(App.Pipeline(run_name= 'run name') )
-            self.ProtcolFrames.append(
-                App.GUI_init_pipeline.ProtocolFrame(self.pipeline.GUI, self.pipeline.protocols[-1]))
 
         def update_parameters(self):
             pass    # ??
@@ -430,11 +398,12 @@ class App(tkinter.Frame):
         tkinter.Label(self,  padx=10, text='Please, select the protocol for which you want to generate an Evoware script:').grid(row=1, columnspan=3)
 
         # Protocol selection ------------------
-        self.exp_names = [prot.name + (': ' + prot.run_name if prot.run_name else '') for prot in available]
+        global av_prot_names
+        av_prot_names = [prot.name + (': ' + prot.run_name if prot.run_name else '') for prot in available]
         self.selected_protocol = tkinter.StringVar(master)      # variable
-        self.selected_protocol.set(self.exp_names[0])                # variable initial value
+        self.selected_protocol.set(av_prot_names[0])                # variable initial value
 
-        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *self.exp_names, command=self.protocol_selected)
+        self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *av_prot_names, command=self.protocol_selected)
         self.protocol_selection.grid(row=2, column=1, rowspan=1, columnspan=3, sticky=tkinter.W + tkinter.E)
 
         explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
@@ -446,7 +415,7 @@ class App(tkinter.Frame):
     def protocol_selected(self, value):
         selected = self.selected_protocol.get()
         print('Selected protocol: ' + value)
-        App.GUI_protocol( available[ self.exp_names.index(value) ], tkinter.Tk())
+        App.GUI_protocol(available[ av_prot_names.index(value)], tkinter.Tk())
 
 
 if __name__ == "__main__":
