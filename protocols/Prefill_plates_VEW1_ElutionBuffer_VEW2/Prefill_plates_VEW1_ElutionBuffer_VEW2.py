@@ -22,15 +22,16 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
     name = "Prefill plates with VEW1, Elution buffer and VEW2 for KingFisher"
     versions = {'none'    : not_implemented}
+    min_s, max_s = 1, 96
 
     def __init__(self, GUI=None, run_name="Prefill VEW1 ElutB and VEW2"):
 
         Evo100_FLI.__init__(self,
-                            GUI=GUI,
-                            NumOfSamples=96,
+                            GUI                     = GUI,
+                            NumOfSamples            = Prefill_plates_VEW1_ElutionBuffer_VEW2.max_s,
                             worktable_template_filename='../EvoScripts/wt_templates/preFisher_RNAext.ewt',
-                            output_filename='../current/' + run_name,
-                            run_name=run_name)
+                            output_filename         ='../current/' + run_name,
+                            run_name                = run_name)
 
     def Run(self):
         self.set_EvoMode()

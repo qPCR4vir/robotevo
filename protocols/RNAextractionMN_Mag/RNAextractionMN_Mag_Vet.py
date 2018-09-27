@@ -28,12 +28,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 'Serum without Liquid detection + tracking' : not_implemented,
                 'Tissue without Liquid detection + tracking': not_implemented,
                 'Tissue with Liquid detection + tracking'   : not_implemented}
+    min_s, max_s = 1, 48
+
 
     def __init__(self, GUI = None,  run_name = None):
 
         Evo100_FLI.__init__(self,
                             GUI                         = GUI,
-                            NumOfSamples=96,
+                            NumOfSamples                = RNAextr_MN_Vet_Kit.max_s,
                             worktable_template_filename = '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
                             output_filename             ='../current/AWL_RNAext_MNVet',
                             run_name                    = run_name)

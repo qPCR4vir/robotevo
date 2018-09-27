@@ -15,10 +15,11 @@ __author__ = 'Ariel'
 class Evo100_FLI(Protocol):
     """ Using the Evo100_FLI_INNT
     """
+    min_s, max_s = 1, 48
 
     def __init__(self,
                      GUI                            = None,
-                     NumOfSamples                   = 48,
+                     NumOfSamples                   = max_s,
                      worktable_template_filename    = None,
                      output_filename                = None,
                      run_name                       = None):

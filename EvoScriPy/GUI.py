@@ -140,21 +140,17 @@ class App(tkinter.Frame):
             App.GUI_init_parameters.__init__(self, protocol)
 
             # Number of Samples
-            min_s, max_s = self.min_max_Number_of_Samples()
-            label = "Number of Samples: ({}-{}) ".format(min_s, max_s)
-            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text=label).grid(row=2, column=3, columnspan=2,
+            label = "Number of Samples: ({}-{}) ".format(protocol.min_s, protocol.max_s)
+            tkinter.Label(self.protocol.GUI.GUI_parameters, text=label).grid(row=2, column=3, columnspan=2,
                                                                                    sticky=tkinter.N + tkinter.W)
 
-            self.NumOfSamples = tkinter.IntVar(self.protocol.GUI.GUI_parameters_frame)
+            self.NumOfSamples = tkinter.IntVar(self.protocol.GUI.GUI_parameters)
             self.NumOfSamples.set(self.protocol.NumOfSamples)
-            self.sample_num = tkinter.Spinbox(self.protocol.GUI.GUI_parameters_frame, textvariable=self.NumOfSamples,
-                                              from_=min_s, to=max_s, increment=1,
+            self.sample_num = tkinter.Spinbox(self.protocol.GUI.GUI_parameters, textvariable=self.NumOfSamples,
+                                              from_=protocol.min_s, to=protocol.max_s, increment=1,
                                               command=self.read_NumOfSamples)
             self.sample_num.grid(row=2, column=5, columnspan=1)
 
-
-        def min_max_Number_of_Samples(self):
-            return 1 , 48
 
         def read_NumOfSamples(self, *args):
             self.protocol.NumOfSamples = self.NumOfSamples.get()
@@ -165,35 +161,15 @@ class App(tkinter.Frame):
             self.read_NumOfSamples()
 
     from protocols.RNAextractionMN_Mag import RNAextr_MN_Vet_Kit
-    GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNA_ext_MN
-
-
-    class GUI_init_RNA_ext_Fisher(GUI_init_RNA_ext_MN):
-
-        def __init__(self, protocol):
-            App.GUI_init_RNA_ext_MN.__init__(self, protocol)
-
-        def min_max_Number_of_Samples(self):
-            return 1 , 96
-
+    GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters
     from protocols.KingFisher_RNAextNucleoMag_EtOH80p         import KingFisher_RNAextNucleoMag_EtOH80p
-    GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name   ]=GUI_init_RNA_ext_Fisher
+    GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name   ]=GUI_init_RNAext_parameters
     from protocols.PreKingFisher_RNAextNucleoMag              import PreKingFisher_RNAextNucleoMag
-    GUI4parameters[PreKingFisher_RNAextNucleoMag.name        ]=GUI_init_RNA_ext_Fisher
+    GUI4parameters[PreKingFisher_RNAextNucleoMag.name        ]=GUI_init_RNAext_parameters
     from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p      import PreKingFisher_RNAextNucleoMag_EtOH80p
-    GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNA_ext_Fisher
-
-
-    class GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2(GUI_init_RNA_ext_MN):
-
-        def __init__(self, protocol):
-            App.GUI_init_RNA_ext_MN.__init__(self, protocol)
-
-        def min_max_Number_of_Samples(self):
-            return 1 , 96
-
+    GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNAext_parameters
     from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
-    GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_Prefill_plates_VEW1_ElutionBuffer_VEW2
+    GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_RNAext_parameters
 
 
     class GUI_protocol(tkinter.Frame):

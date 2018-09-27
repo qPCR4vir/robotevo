@@ -20,15 +20,16 @@ class PreKingFisher_RNAextNucleoMag(Evo100_FLI):
 
     name = "PreKingFisher for RNA extraction with the NucleoMag MN_Vet kit and preFill plates"
     versions = {'none'    : not_implemented}
+    min_s, max_s = 1, 96
 
     def __init__(self, GUI=None, run_name=None):
 
         Evo100_FLI.__init__(self,
-                            GUI=GUI,
-                            NumOfSamples=96,
+                            GUI                 =GUI,
+                            NumOfSamples        =PreKingFisher_RNAextNucleoMag.max_s,
                             worktable_template_filename='../EvoScripts/wt_templates/preFisher_RNAext.ewt',
-                            output_filename='../current/preFisher_RNAext',
-                            run_name=run_name)
+                            output_filename     ='../current/preFisher_RNAext',
+                            run_name            =run_name)
 
     def Run(self):
         self.set_EvoMode()
