@@ -197,20 +197,20 @@ class App(tkinter.Frame):
 
 
     class GUI_protocol(tkinter.Frame):
-        """ Implements a GUI for the selected protocol.
+        """ Implements a GUI for the selected protocol. Each protocol receive a reference to it in .GUI
             Opens in a new window. Has:
-            - GUI_parameters_frame, to review creation parameters,
-            - a CheckList prior to actualiy runing the protocol,
+            - GUI_init, to review creation parameters,
+            - GUI_parameters for CheckList prior to actually running the protocol,
             - Comments that shows the run.
 
             Alternatively, for Pipelines shows the list of protocols for sequential running
             """
 
-        def __init__(self, protocol, master=None):
+        def __init__(self, protocol):
             self.protocol = protocol
             protocol.GUI = self
 
-            tkinter.Frame.__init__(self, master)
+            tkinter.Frame.__init__(self, tkinter.Tk())
             self.master.title(protocol.name)
             self.grid()
 
@@ -221,8 +221,8 @@ class App(tkinter.Frame):
             self.version_selection.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
 
             # initialize parameters
-            self.GUI_parameters_frame = tkinter.Frame(self)
-            self.GUI_parameters_frame.grid(row=0, column=4, columnspan=11, rowspan=3)
+            self.GUI_parameters = tkinter.Frame(self)
+            self.GUI_parameters.grid(row=0, column=4, columnspan=11, rowspan=3)
 
             # run / quit_bt     ---------------------
             self.run = tkinter.Button(self, text="Initialize the selected protocol",
@@ -363,8 +363,8 @@ class App(tkinter.Frame):
 
             self.ReactFrames = [App.GUI_protocol.ReactiveFrame(self, react) for react in self.protocol.worktable.Reactives]
 
-            # self.GUI_parameters_frame.destroy() #    ['state'] = 'disabled'
-            for child in self.GUI_parameters_frame.winfo_children():
+            # self.GUI_parameters.destroy() #    ['state'] = 'disabled'
+            for child in self.GUI_parameters.winfo_children():
                 child.configure(state='disable')
             self.quit_bt['state'] = 'normal'
             self.run['state'] = 'disabled'
@@ -415,7 +415,7 @@ class App(tkinter.Frame):
     def protocol_selected(self, value):
         selected = self.selected_protocol.get()
         print('Selected protocol: ' + value)
-        App.GUI_protocol(available[ av_prot_names.index(value)], tkinter.Tk())
+        App.GUI_protocol(available[ av_prot_names.index(value)])
 
 
 if __name__ == "__main__":
