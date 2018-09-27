@@ -44,6 +44,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         self.set_EvoMode()
         self.initialize()
         wt = self.worktable
+        Rtv.NumOfSamples = self.NumOfSamples
         NumOfSamples = self.NumOfSamples
 
         self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")

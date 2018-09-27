@@ -31,7 +31,7 @@ class Evo100_FLI(Protocol):
                                 output_filename             = output_filename,
                                 run_name                    = run_name)
 
-        self.NumOfSamples = int(NumOfSamples)
+        self.NumOfSamples = int(NumOfSamples)# if NumOfSamples is not None else  Evo100_FLI.max_s)
         Rtv.NumOfSamples = self.NumOfSamples
 
 

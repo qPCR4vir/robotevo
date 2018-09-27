@@ -35,6 +35,7 @@ class KingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         self.set_EvoMode()
 
         self.initialize()                       # set_defaults ??
+        Rtv.NumOfSamples = self.NumOfSamples
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 

@@ -766,7 +766,7 @@ def mix( in_labware_region, using_liquid_class=None, volume=None, optimize=True)
     """
     mix_p = 0.9
     robot = Rbt.Robot.current
-    in_labware_region = in_labware_region or robot.worktable.def_WashWaste
+    in_labware_region = in_labware_region or robot.worktable.def_WashWaste    # todo ???????????
     assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
     if not volume or volume< 0.0 : volume = 0.0
     assert isinstance(volume, (int, float))
