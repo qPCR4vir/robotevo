@@ -18,8 +18,33 @@ av_prot_names = []   # list of "protocol names+: + run names" with the same inde
 
 
 class App(tkinter.Frame):
-    """  See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
+    """ GUI orgaization:
+
+     app = App(master = tkinter.Tk()), - tkinter.Frame.__init__(self, master). :  new window
+         - Logo,
+         - DropBox (OptionMenu) protocol_selection -> protocol_selected(self, value): for the selected create:
+
+     GUI_protocol(protocol), - tkinter.Frame.__init__(self, tkinter.Tk()) :  new window
+         - protocol.GUI = self: this is the GUI protocols refer.
+         - OptionMenu Versions ->
+         - Buttons: run: "Initialize protocol" -> command=self.run_selected,
+                    quit:"Synthetize script"   -> command=self.quit
+         - Listbox Comments
+         - self.GUI_init       = GUI4parameters[protocol.name](protocol):
+                                 populate and update GUI_parameters to check protocol initialization parameters
+         - self.GUI_parameters = tkinter.Frame(self): (between Versions and buttons), for file IO, #samples, first tip, ect.
+         - self.GUI_CheckList  = tkinter.Frame(self): Headers, ReactFrames, ReplicaFrame   . self.master.mainloop()
+         - self.mainloop()
+
+     GUI_init (and derived GUI_init_parameters, GUI_init_pipeline):
+         populate and update GUI_parameters to check protocol initialization parameters
+
+         GUI_init_parameters:
+         - WorkTable file, Output file, First tip
+         GUI_init_RNAext_parameters: add NumOfSamples
     """
+    # See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
+
 
     # GUI classes to handle initialization parameters of protocol objects
     class GUI_init_pipeline:
@@ -70,42 +95,42 @@ class App(tkinter.Frame):
     GUI4parameters[Pipeline.name]=GUI_init_pipeline
 
 
-    class GUI_init_parameters: # (tkinter.Frame)
+    class GUI_init_parameters: # (uses the tkinter.Frame protocol.GUI.GUI_parameters)
 
         def __init__(self, protocol):
             self.protocol = protocol
 
             # worktable_template_filename
-            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text='WorkTable:').grid(row=0, column=0, columnspan=1,
+            tkinter.Label(self.protocol.GUI.GUI_parameters, text='WorkTable:').grid(row=0, column=0, columnspan=1,
                                                                                           sticky=tkinter.N + tkinter.W)
-            self.worktable_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters_frame)
+            self.worktable_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters)
             self.worktable_filename_v.set(protocol.worktable_template_filename)
-            tkinter.Entry(self.protocol.GUI.GUI_parameters_frame, textvariable=self.worktable_filename_v).grid(row=0, column=1, columnspan=9,
+            tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.worktable_filename_v).grid(row=0, column=1, columnspan=9,
                                                                                                                sticky=tkinter.N + tkinter.E + tkinter.W)
 
-            tkinter.Button(self.protocol.GUI.GUI_parameters_frame, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
+            tkinter.Button(self.protocol.GUI.GUI_parameters, text='...', command=self.selet_WT_FN).grid(row=0, column=10)
             self.worktable_filename_v.trace("w", self.set_WT_FN)
 
             # output_filename
-            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text='Output filename:').grid(row=1, column=0, columnspan=1,
+            tkinter.Label(self.protocol.GUI.GUI_parameters, text='Output filename:').grid(row=1, column=0, columnspan=1,
                                                                                                 sticky=tkinter.N + tkinter.W)
-            self.output_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters_frame)
+            self.output_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters)
             self.output_filename_v.set(protocol.output_filename)
-            tkinter.Entry(self.protocol.GUI.GUI_parameters_frame, textvariable=self.output_filename_v).grid(row=1,
+            tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.output_filename_v).grid(row=1,
                                                                                                             column=1,
                                                                                                             columnspan=9,
                                                                                                             sticky=tkinter.N + tkinter.E + tkinter.W)
 
-            tkinter.Button(self.protocol.GUI.GUI_parameters_frame, text='...', command=self.selet_O_FN).grid(row=1,
+            tkinter.Button(self.protocol.GUI.GUI_parameters, text='...', command=self.selet_O_FN).grid(row=1,
                                                                                                              column=10)
             self.output_filename_v.trace("w", self.set_O_FN)
 
             # First tip (in the first tip rack)
-            tkinter.Label(self.protocol.GUI.GUI_parameters_frame, text='First tip:').grid(row=2, column=0, columnspan=1,
+            tkinter.Label(self.protocol.GUI.GUI_parameters, text='First tip:').grid(row=2, column=0, columnspan=1,
                                                                                           sticky=tkinter.N + tkinter.W)
-            self.firstTip_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters_frame)
+            self.firstTip_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters)
             self.firstTip_v.set(protocol.firstTip)
-            tkinter.Entry(self.protocol.GUI.GUI_parameters_frame, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
+            tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
                                                                                                      sticky=tkinter.N + tkinter.E + tkinter.W)
             self.firstTip_v.trace("w", self.set_firstTip)
 
@@ -133,7 +158,7 @@ class App(tkinter.Frame):
     GUI4parameters[Protocol.name]=GUI_init_parameters
 
 
-    class GUI_init_RNA_ext_MN(GUI_init_parameters):
+    class GUI_init_RNAext_parameters(GUI_init_parameters):
 
 
         def __init__(self, protocol):
@@ -226,8 +251,8 @@ class App(tkinter.Frame):
                 self.xScroll['command'] = self.comments.xview
                 self.yScroll['command'] = self.comments.yview
 
-            self.varoutput = tkinter.Frame(self)
-            self.varoutput.grid(row=3, column=0, columnspan=8, rowspan=15)
+            self.GUI_CheckList = tkinter.Frame(self)
+            self.GUI_CheckList.grid(row=3, column=0, columnspan=8, rowspan=15)
 
             # show the Parameters with the corresponding GUI_init_parameter
             self.GUI_init = GUI4parameters[protocol.name](protocol)
@@ -324,7 +349,7 @@ class App(tkinter.Frame):
 
             self.GUI_init.update_parameters()
 
-            Header=tkinter.Frame(self.varoutput)
+            Header=tkinter.Frame(self.GUI_CheckList)
             Header.grid( sticky=tkinter.E)
             Header.columnconfigure(1, minsize=120)
             tkinter.Label (Header, text='Reagent', justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
@@ -397,3 +422,6 @@ class App(tkinter.Frame):
 if __name__ == "__main__":
     app = App(tkinter.Tk())
     app.master.mainloop()
+
+
+
