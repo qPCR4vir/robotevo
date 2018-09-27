@@ -57,7 +57,7 @@ class Executable:
         """
         if not self.initialized:
             if (self.GUI):
-                self.GUI.initialize_parameters(self)
+                self.GUI.update_parameters()
             self.initialized = True
             self.set_defaults()
 

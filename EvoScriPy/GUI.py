@@ -40,8 +40,15 @@ class App(tkinter.Frame):
          populate and update GUI_parameters to check protocol initialization parameters
 
          GUI_init_parameters:
-         - WorkTable file, Output file, First tip
+         - WorkTable and Output file, First tip
          GUI_init_RNAext_parameters: add NumOfSamples
+
+         GUI_init_pipeline:
+         - self.ProtcolFrames = list of ProtocolFrame(prot)
+         - ProtocolFrame(tkinter.Frame) - tkinter.Frame.__init__(self, prot.pipeline.GUI.GUI_CheckList)
+         - Label protocol.name: entry run_name
+         - Button run:  run.mainloop() ->  run_prot: App.GUI_protocol(self.protocol) in a new window
+
     """
     # See: http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/minimal-app.html
 
@@ -54,12 +61,11 @@ class App(tkinter.Frame):
 
         class ProtocolFrame(tkinter.Frame):
 
-            def __init__(self, GUI, prot):
-                self.GUI = GUI
+            def __init__(self, prot):
                 self.protocol = prot
                 if prot.run_name is None: prot.run_name = ""
                 print ('protocol: ' + prot.name)
-                tkinter.Frame.__init__(self, GUI.varoutput)
+                tkinter.Frame.__init__(self, prot.pipeline.GUI.GUI_CheckList)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
 
                 self.protocol_label = tkinter.Label(self, text=self.protocol.name)
@@ -81,12 +87,12 @@ class App(tkinter.Frame):
                 self.runb.configure(state='disable')
                 self.protocol.run_name = self.ProtName.get()
                 print('For pipeline Run GUI for protocol: '  + self.protocol.name +' run-named '+ self.protocol.run_name)
-                App.GUI_protocol(self.protocol, tkinter.Tk())
+                App.GUI_protocol(self.protocol)
 
         def __init__(self, pipeline):
             self.pipeline = pipeline   # todo ??
             print('run GUI_init_pipeline for: ')
-            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(pipeline.GUI, prot) for prot in pipeline.protocols]
+            self.ProtcolFrames = [App.GUI_init_pipeline.ProtocolFrame(prot) for prot in pipeline.protocols]
 
         def update_parameters(self):
             pass    # ??
@@ -294,7 +300,7 @@ class App(tkinter.Frame):
         class ReactiveFrame(tkinter.Frame):
 
             def __init__(self, check_list, react):
-                tkinter.Frame.__init__(self, check_list.varoutput)
+                tkinter.Frame.__init__(self, check_list.GUI_CheckList)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
                 self.columnconfigure(0, minsize=140)
                 self.react = react
