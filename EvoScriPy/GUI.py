@@ -191,7 +191,7 @@ class App(tkinter.Frame):
             App.GUI_init_parameters.update_parameters(self)
             self.read_NumOfSamples()
 
-    from protocols.RNAextractionMN_Mag import RNAextr_MN_Vet_Kit
+    from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters
     from protocols.KingFisher_RNAextNucleoMag_EtOH80p         import KingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name   ]=GUI_init_RNAext_parameters

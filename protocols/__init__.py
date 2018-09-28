@@ -17,15 +17,21 @@ def registreExecutable(executable):
     available_classes[executable.name] = executable.__class__
 
 
-import protocols.RNAextractionMN_Mag
-import protocols.PreKingFisher_RNAextNucleoMag
-
-
-
-
-from EvoScriPy.protocol_steps                         import Pipeline
+from protocols.RNAextractionMN_Mag_Vet                import RNAextr_MN_Vet_Kit
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p
+from protocols.KingFisher_RNAextNucleoMag_EtOH80p     import KingFisher_RNAextNucleoMag_EtOH80p
+from protocols.PreKingFisher_RNAextNucleoMag          import PreKingFisher_RNAextNucleoMag
+from EvoScriPy.protocol_steps                         import Pipeline
+
+
+available.append(RNAextr_MN_Vet_Kit                     ())
+available.append(KingFisher_RNAextNucleoMag_EtOH80p     ())
+available.append(PreKingFisher_RNAextNucleoMag_EtOH80p  ())
+available.append(Prefill_plates_VEW1_ElutionBuffer_VEW2 ())
+available.append(PreKingFisher_RNAextNucleoMag          ())
+
+
 
 
 pipeline_PreKingFisher = Pipeline ( protocols=  [Prefill_plates_VEW1_ElutionBuffer_VEW2 (run_name = "Prefill"),
@@ -35,11 +41,9 @@ pipeline_PreKingFisher = Pipeline ( protocols=  [Prefill_plates_VEW1_ElutionBuff
 registreExecutable(pipeline_PreKingFisher)
 
 from protocols.PCRexperiment import PCRexperiment
-
+available.append(PCRexperiment())
 
 available.append(Pipeline())
-
-
 
 
 
