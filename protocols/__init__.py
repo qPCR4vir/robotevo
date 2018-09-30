@@ -40,7 +40,7 @@ pipeline_PreKingFisher = Pipeline ( protocols=  [Prefill_plates_VEW1_ElutionBuff
 
 registreExecutable(pipeline_PreKingFisher)
 
-from protocols.PCRexperiment import PCRexperiment
+from protocols.PCR import PCRexperiment
 available.append(PCRexperiment())
 
 available.append(Pipeline())

@@ -144,7 +144,7 @@ class Protocol (Executable):
 
     def Run(self):
         '''
-        Here we haccesscces to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
+        Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with getLabware()
         :return:
         '''

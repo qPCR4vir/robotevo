@@ -108,11 +108,11 @@ class Primer (Reactive):
 
         Reactive.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
 
+        self.seq = seq
+        self.ID  = ID
         Primer.Names [name]=self   # check duplicate
         Primer.IDs   [ID  ]=self   # check duplicate
         Primer.SEQs  [seq ]=self   # check duplicate  ??
-        self.seq = seq
-        self.ID = ID
         Primer.SEQs.setdefault(seq, []).append(self)
         for kw in KW:
             Primer.KWs.setdefault(kw,[]).append(self)
@@ -215,12 +215,18 @@ class PCRMasterMix(preMix):
 class PCRMix (preMix):
     pass
 
-class PCRReaction (Reaction):
+class PCReaction (Reaction):
+    vol = 25
+    vol_sample = 5
     pass
 
 class PCRexperiment:
     def __init__(self, ID, name):
-        self.reactions = []   # list of PCRReaction to create
+        self.PCReactions = []   # list of PCRReaction to create
+        self.PCRmixes = []
+        self.samples = []
+        self.vol = PCReaction.vol
+        self.vol_sample = PCReaction.vol_sample
 
     def addReactions(self, PCRmix: PCRMix, samples, labware: object) -> list:  # of PCRReaction
         pass
@@ -228,6 +234,8 @@ class PCRexperiment:
         pass
     def pippete_samples(self):
         pass
-
+    def vol (self, vol, vol_sample):
+        self.vol = vol
+        self.vol_sample = vol_sample
 
 

@@ -77,10 +77,10 @@ class App(tkinter.Frame):
                 self.RackNameEntry.grid(row=0, column=1, sticky=tkinter.W)
 
             def Run(self):
-                self.runb = tkinter.Button(self, #state=tkinter.DISABLED,
+                self.runb = tkinter.Button(self,  # state=tkinter.DISABLED,
                                            text='Run', command=self.run_prot)
                 self.runb.grid( row=0, column=2)
-                #self.runb.configure(state='normal')
+                # self.runb.configure(state='normal')
                 self.runb.mainloop()
 
             def run_prot(self):
