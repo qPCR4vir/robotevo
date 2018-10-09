@@ -37,6 +37,7 @@ class Executable:
         self.pipeline    = None
         self.initialized = False
         self.Reactives   = []
+        self.version     = next(iter(self.versions))
         Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!
 
     def set_defaults(self):

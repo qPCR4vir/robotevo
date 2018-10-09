@@ -193,10 +193,8 @@ class App(tkinter.Frame):
 
     from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters
-    from protocols.KingFisher_RNAextNucleoMag_EtOH80p         import KingFisher_RNAextNucleoMag_EtOH80p
-    GUI4parameters[KingFisher_RNAextNucleoMag_EtOH80p.name   ]=GUI_init_RNAext_parameters
-    from protocols.PreKingFisher_RNAextNucleoMag              import PreKingFisher_RNAextNucleoMag
-    GUI4parameters[PreKingFisher_RNAextNucleoMag.name        ]=GUI_init_RNAext_parameters
+    #from protocols.PreKingFisher_RNAextNucleoMag              import PreKingFisher_RNAextNucleoMag
+    #GUI4parameters[PreKingFisher_RNAextNucleoMag.name        ]=GUI_init_RNAext_parameters
     from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p      import PreKingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNAext_parameters
     from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
@@ -249,7 +247,7 @@ class App(tkinter.Frame):
                 self.xScroll = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL)
                 self.xScroll.grid(row=23, column=8, columnspan=8, sticky=tkinter.E + tkinter.W)
 
-                self.comments = tkinter.Listbox(self, height=30, width=200,
+                self.comments = tkinter.Listbox(self, height=30, width=150,
                                                 xscrollcommand=self.xScroll.set,
                                                 yscrollcommand=self.yScroll.set)
                 self.comments.grid(row=3, column=8, rowspan=20, columnspan=8,
@@ -272,6 +270,7 @@ class App(tkinter.Frame):
             self.selected_version.set(next(iter(self.protocol.versions)))  # variable def value
 
         def update_parameters(self):
+            self.protocol.version = self.selected_version.get()
             self.GUI_init.update_parameters()  # ??
 
         class ReplicaFrame(tkinter.Frame):
