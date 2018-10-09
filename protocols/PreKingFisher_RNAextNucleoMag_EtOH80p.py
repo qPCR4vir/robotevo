@@ -151,8 +151,9 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                            to_labware_region=   Plate_lysis,
                            volume=              SampleVolume,
                            using_liquid_class=  (SampleLiqClass, "Serum Disp postMix3"),
-                           optimizeFrom         =False,     # optimizeTo= True,           # todo Really ??
-                           NumSamples=          NumOfSamples)
+                           optimizeFrom         = False,
+                           optimizeTo           = False,           # todo Really ??
+                           NumSamples           = NumOfSamples)
             Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
             if self.version != 'pre Inactivated':
