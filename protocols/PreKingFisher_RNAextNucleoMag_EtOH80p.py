@@ -19,7 +19,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     """
 
     name = "PreKingFisher for RNA extraction modified NucleoMag MN_Vet kit and EtOH80p Plate preFill"
-    versions = {'none'    : not_implemented}
+    versions = {'none'    : not_implemented, 'pre Inactivated': not_implemented}
     min_s, max_s = 1, 96
 
 
@@ -58,7 +58,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         # Set volumen / sample
 
-        SampleVolume        = 200.0
+        SampleVolume        = 100+20+100+10 if self.version == 'pre Inactivated' else 140.0
+
         LysisBufferVolume   = 180.0       # VL1
         IC2Volume           =   5.0       # ? 4
         BindingBufferVolume = 600.0
@@ -80,24 +81,27 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
+        if self.version != 'pre Inactivated':
+            ProtK           = Rtv.Reactive("Proteinase K "                    ,
+                                           Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=Small_vol_disp)
+            cRNA            = Rtv.Reactive("Carrier RNA "                     ,
+                                           Reactives, pos=15, volpersample=  cRNAVolume , defLiqClass=Small_vol_disp)
+            IC_MS2          = Rtv.Reactive("IC MS2 phage culture ",
+                                           Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
 
-        ProtK           = Rtv.Reactive("Proteinase K "                    ,
-                                       Reactives, pos=16, volpersample= ProtKVolume , defLiqClass=Small_vol_disp)
-        cRNA            = Rtv.Reactive("Carrier RNA "                     ,
-                                       Reactives, pos=15, volpersample=  cRNAVolume , defLiqClass=Small_vol_disp)
-        IC_MS2          = Rtv.Reactive("IC MS2 phage culture ",
-                                       Reactives, pos=14, volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
+            # IC2             = Rtv.Reactive("IC2 - synthetic RNA "              ,
+            #                               Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
-        # IC2             = Rtv.Reactive("IC2 - synthetic RNA "              ,
-        #                               Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+            pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
+                                           Reactives, pos=8,   components=[  cRNA, ProtK, IC_MS2]
+                                             , defLiqClass=W_liquidClass, replicas=1, excess=20)
+            LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
+                                           LysBuf,    volpersample=LysisBufferVolume , defLiqClass=B_liquidClass)
 
-        pK_cRNA_MS2     = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "        ,
-                                       Reactives, pos=8,   components=[  cRNA, ProtK, IC_MS2]
-                                         , defLiqClass=W_liquidClass, replicas=1, excess=20)
-        LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer "              ,
-                                       LysBuf,    volpersample=LysisBufferVolume , defLiqClass=B_liquidClass)
+
         B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200,
-                                         pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
+                                     pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
+
         VEB             = Rtv.Reactive("VEB - Binding Buffer "           ,
                                        BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
         EtOH80p         = Rtv.Reactive("Ethanol 80% "                     ,
@@ -122,7 +126,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         for s in all_samples:
             Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
                          pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=par[s] + 1,
+            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
                          excess=0)  # todo revise order !!!
 
             Rtv.Reactive("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
@@ -134,12 +138,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                 spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
 
         with group("Sample Lysis"):
-            with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                pK_cRNA_MS2.make(NumOfSamples)
-                spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+            if self.version != 'pre Inactivated':
+                with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                    pK_cRNA_MS2.make(NumOfSamples)
+                    spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
-            with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+                with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                    spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             with tips(reuse=False, drop=True):
                 transfer(  from_labware_region= Samples,
@@ -150,8 +155,9 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                            NumSamples=          NumOfSamples)
             Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
-            Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
-            with incubation(minutes=5): pass
+            if self.version != 'pre Inactivated':
+                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
+                with incubation(minutes=5): pass
 
 
         with group("Beads binding"):
