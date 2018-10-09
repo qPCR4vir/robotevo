@@ -146,6 +146,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                 with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                     spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
+            Itr.userPrompt("Please make sure the samples are in place").exec()
             with tips(reuse=False, drop=True):
                 transfer(  from_labware_region= Samples,
                            to_labware_region=   Plate_lysis,
