@@ -249,7 +249,7 @@ class App(tkinter.Frame):
                 self.xScroll = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL)
                 self.xScroll.grid(row=23, column=8, columnspan=8, sticky=tkinter.E + tkinter.W)
 
-                self.comments = tkinter.Listbox(self, height=30, width=200,
+                self.comments = tkinter.Listbox(self, height=30, width=170,
                                                 xscrollcommand=self.xScroll.set,
                                                 yscrollcommand=self.yScroll.set)
                 self.comments.grid(row=3, column=8, rowspan=20, columnspan=8,
