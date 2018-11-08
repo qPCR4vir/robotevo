@@ -200,11 +200,11 @@ class Robot:
                 if tip_mask & (1 << i):
                     assert isinstance(tp, Lab.Tip), "No tip in position " + str(i)
                     nv = tp.vol + action * vol[i]
-                    if 0 <= nv <= tp.type.maxVol:
+                    if 0-0.001 <= nv <= tp.type.maxVol+0.001:
                         self.Tips[i].vol = nv
                         continue
                     msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
-                    if nv < 0:
+                    if nv < 0-0.001:
                         raise BaseException('To few Vol in tip ' + msg)
                     raise BaseException('To much Vol in tip ' + msg)
                 else:
