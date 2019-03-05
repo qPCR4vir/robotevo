@@ -446,8 +446,12 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
 
         msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
         with group(msg):
-            msg += " into {:s}[grid:{:d} site:{:d} well:{:d}] from {:d} components:".format(
-                labw.label, labw.location.grid, labw.location.site + 1, preMix.pos + 1, ncomp)
+            msg += " into {:s}[grid:{:d} site:{:d} well:{:s}] from {:d} components:"\
+                                .format( labw.label,
+                                         labw.location.grid,
+                                         labw.location.site + 1,
+                                         str([r.offset + 1 for r in preMix.Replicas]),
+                                         ncomp                        )
             Itr.comment(msg).exec()
             samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
             with tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
@@ -456,9 +460,14 @@ def makePreMix( preMix, NumSamples=None, force_replies=False):
                 for ridx, react in enumerate(preMix.components):
                     labw = react.labware
                     rVol = react.volpersample*NumSamples*preMix.excess
-                    msg = "   {:d}- {:.1f} µL of {:s} from {:s}[grid:{:d} site:{:d} well:{:d}]".format(
-                        ridx + 1, rVol, react.name, labw.label, labw.location.grid, labw.location.site + 1,
-                        react.pos + 1)
+                    msg = "   {idx:d}- {v:.1f} µL of {nm:s} from {l:s}[grid:{g:d} site:{st:d} wells:{w:s}]"\
+                                .format( idx = ridx + 1,
+                                         v   = rVol,
+                                         nm  = react.name,
+                                         l   = labw.label,
+                                         g   = labw.location.grid,
+                                         st  = labw.location.site + 1,
+                                         w   = str([r.offset + 1 for r in react.Replicas])   )
                     Itr.comment(msg).exec()
                     tip += 1  # use the next tip
                     if tip >= nt:
@@ -512,9 +521,15 @@ def spread( volume=None, reactive=None, to_labware_region=None, optimize=True, N
         lt = to_labware_region
         msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
         with group(msg):
-            msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} well:{fw:d}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                .format(v=reactive.minVol(), fg=lf.location.grid, fs=lf.location.site+1, fw=reactive.pos+1, do=str([i+1 for i in to]),
-                        to=lt.label, tg=lt.location.grid, ts=lt.location.site+1)
+            msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} well:{fw:s}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                        .format( v  = reactive.minVol(),
+                                 fg = lf.location.grid,
+                                 fs = lf.location.site+1,
+                                 fw = str([r.offset + 1 for r in reactive.Replicas])  ,
+                                 do = str([i+1 for i in to]),
+                                 to = lt.label,
+                                 tg = lt.location.grid,
+                                 ts = lt.location.site+1)
             Itr.comment(msg).exec()
             availableDisp = 0
             while SampleCnt:
