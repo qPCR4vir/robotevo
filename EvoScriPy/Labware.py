@@ -468,12 +468,14 @@ class Labware:
 
         Replicas = []    # a list of labware-wells, where the replicas for this reactive are.
         for w in pos:
+            if replicas == 0 : return Replicas
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
             assert not w.reactive, self.label + ": Can not put " + reactive.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reactive.name
             w.reactive = reactive
             # w.labware = self
             Replicas += [w]
+            replicas -= 1
         return Replicas
 
     def clearSelection(self):
