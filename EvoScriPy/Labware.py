@@ -434,7 +434,7 @@ class Labware:
         and return a list of the wells used
 
         :param reactive:
-        :param pos: [wells];
+        :param pos: [wells]; if int or [int] will be assumed 1-based not 0-based
         :param replicas: number of replicas
         :return:
         """

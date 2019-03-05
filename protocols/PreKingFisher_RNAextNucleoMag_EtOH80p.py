@@ -92,14 +92,21 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         if self.version != 'pre Inactivated':
-            ProtK       = Rtv.Reactive("Proteinase K "        , Reactives, replicas=2, volpersample= ProtKVolume  , defLiqClass=Small_vol_disp)
-            cRNA        = Rtv.Reactive("Carrier RNA "         , Reactives,  volpersample=  cRNAVolume  , defLiqClass=Small_vol_disp)
-            IC_MS2      = Rtv.Reactive("IC MS2 phage culture ", Reactives,  volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
+            ProtK       = Rtv.Reactive("Proteinase K ",
+                                       Reactives,
+                                       replicas     = 2,
+                                       pos          = [15, 16],
+                                       volpersample = ProtKVolume  ,
+                                       defLiqClass  = Small_vol_disp)
+
+            cRNA        = Rtv.Reactive("Carrier RNA "         , Reactives, pos=14,  volpersample=  cRNAVolume  , defLiqClass=Small_vol_disp)
+            IC_MS2      = Rtv.Reactive("IC MS2 phage culture ", Reactives, pos=13,  volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
 
             # IC2         = Rtv.Reactive("IC2 - synthetic RNA " ,  Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
             pK_cRNA_MS2 = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
                                            Reactives,
+                                           pos=8,
                                            components=[  cRNA, ProtK, IC_MS2] ,
                                            defLiqClass=W_liquidClass,
                                            excess=20)
@@ -107,7 +114,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer " , LysBuf,  volpersample=LysisBufferVolume , defLiqClass='MN VL')
 
 
-        B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200, volpersample= B_BeadsVolume ,  defLiqClass=Beads_LC_2, maxFull=70)
+        B_Beads         = Rtv.Reactive("B - Beads " ,
+                                       Reactives,
+                                       pos          = [1,2],
+                                       initial_vol  = 1200,
+                                       volpersample = B_BeadsVolume ,
+                                       defLiqClass  = Beads_LC_2,
+                                       maxFull      = 70)
 
         VEB             = Rtv.Reactive("VEB - Binding Buffer " ,  BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
 
@@ -144,9 +157,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                          excess=0)  # todo revise order !!!
 
 
+
+
         with group("Prefill plate with EtOH80p"):
             with tips(reuse=True, drop=False, drop_last=True):
                 spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
+
 
         with group("Sample Lysis"):
             if self.version != 'pre Inactivated':
