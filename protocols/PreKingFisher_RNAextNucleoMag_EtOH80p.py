@@ -99,8 +99,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                            LysBuf,    volpersample=LysisBufferVolume , defLiqClass=B_liquidClass)
 
 
-        B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200,
-                                     pos=1, volpersample= B_BeadsVolume , replicas=2, defLiqClass=Beads_LC_2)
+        B_Beads         = Rtv.Reactive("B - Beads " , Reactives, initial_vol=1200, volpersample= B_BeadsVolume ,  defLiqClass=Beads_LC_2, maxFull=70)
 
         VEB             = Rtv.Reactive("VEB - Binding Buffer "           ,
                                        BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)

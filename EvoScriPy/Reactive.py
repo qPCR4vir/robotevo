@@ -20,7 +20,7 @@ class Reactive:
     Reactives = None
 
     def __init__(self, name, labware,  volpersample=0, single_use=None,
-                 pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
+                 pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None, maxFull=None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
@@ -33,6 +33,7 @@ class Reactive:
         :param excess: float; in %
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
+        maxFull = 1 if maxFull is None else maxFull/100
         assert isinstance(labware, Lab.Labware)
         self.labware = labware
         assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
