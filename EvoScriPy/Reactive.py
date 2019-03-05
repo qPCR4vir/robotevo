@@ -131,7 +131,7 @@ class Reaction(Reactive):
 
 
 class preMix(Reactive):
-    def __init__(self, name, labware, pos, components, replicas=1, initial_vol=None,
+    def __init__(self, name, labware, components, pos=None, replicas=None, initial_vol=None,
                  defLiqClass=None, excess=None):
         ex= def_mix_excess if excess is None else excess
         vol=0.0
