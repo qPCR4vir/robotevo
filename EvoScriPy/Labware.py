@@ -438,27 +438,30 @@ class Labware:
         :param replicas: number of replicas
         :return:
         """
-        if pos is None:  # find self where to put the replicas of this reactive
-            replicas = replicas or 1  # default one replica
+
+        replicas = replicas or reactive.minNumRep
+
+        if pos is None:                                          # find self where to put the replicas of this reactive
             continuous, pos = self.find_free_wells(replicas)
             assert replicas == len(pos) , 'putting reactive - '+ str(reactive) + ' - into Labware: ' + \
                                           str(self) + ' different replica number ' + str(replicas) + ' and number of positions ' + \
                                           str(pos) # replicas = len(pos)  # todo What to do?
 
-        elif isinstance(pos, list):
-            if replicas is None:  # put one replica on each of the given wells position
-                replicas = len(pos)
-            else:
+
+        elif isinstance(pos, list):                              # put one replica on each of the given wells position
+            if replicas <= len(pos):
+                pass # replicas = len(pos)
+            else:                              # todo: revise  !!!!!!!!!!!!!!
                 assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reactive.name
-        else:
-            replicas = replicas or 1  # put one replica beginning from the given position
-            if isinstance(pos, Well):
+
+
+        elif isinstance(pos, Well):                              # put one replica beginning from the given position
                 # assert pos.labware is self, "Trying to put the reactive in another labware?"
                 pos = pos.labware.Wells[pos.offset: pos.offset + replicas]
                 # pos = self.Wells[pos.offset: pos.offset + replicas]
-            else:
-                pos = self.offset(pos)
+        else:
+                pos = self.offset(pos)            # todo: revise  !!!!!!!!!!!!!!
                 pos = self.Wells[pos: pos + replicas]
                 # pos = self.offset(pos) + 1
                 # pos = range(pos, pos + replicas)

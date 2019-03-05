@@ -50,6 +50,7 @@ class Reactive:
         self.name = name
         self.volpersample = volpersample
         self.components = []
+        self.minNumRep = int (self.minVol() / (labware.type.maxVol*maxFull)) +1
         self.Replicas = labware.put(self, pos, replicas)   # list of the wells used
         self.pos = self.Replicas[0].offset
         if initial_vol is not None:
@@ -89,6 +90,7 @@ class Reactive:
         for i, w in enumerate(self.Replicas):
             v = V * (NumSamples + replicas - (i+1))//replicas
             if v > w.vol:  w.vol += (v-w.vol)
+            assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reactive.name
 
     def autoselect(self, maxTips=1):
         return self.labware.autoselect(self.pos, maxTips, len(self.Replicas))
