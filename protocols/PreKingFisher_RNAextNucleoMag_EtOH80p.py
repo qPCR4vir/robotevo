@@ -19,9 +19,18 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     """
 
     name = "PreKingFisher for RNA extraction modified NucleoMag MN_Vet kit and EtOH80p Plate preFill"
-    versions = {'none'    : not_implemented, 'pre Inactivated': not_implemented}
     min_s, max_s = 1, 96
 
+    def def_versions(self):
+        self.versions = {'none'                : not_implemented,
+                         'pre Inactivated'     : self.V_inactivated,
+                         'prefill inactivation': self.V_fill_inactivation}
+
+    def V_inactivated(self):
+        pass
+
+    def V_fill_inactivation(self):
+        pass
 
     def __init__(self, GUI = None,  run_name = None):
 
@@ -117,14 +126,19 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"   )  # Plate 12 x 8 ?
         Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
-        Samples     = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
+
+        if self.version != 'prefill inactivation':
+           Samples  = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
 
 
         # Define samples and the place for temporal reactions
         par = Plate_lysis.parallelOrder(self.nTips, all_samples)
         for s in all_samples:
-            Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
-                         pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+
+            if self.version != 'prefill inactivation':
+                Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+                             pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+
             Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=s + 1,
                          excess=0)  # todo revise order !!!
 
@@ -145,21 +159,24 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                 with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                     spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
-            Itr.userPrompt("Please make sure the samples are in place").exec()
-            with tips(reuse=False, drop=True):
-                transfer(  from_labware_region= Samples,
-                           to_labware_region=   Plate_lysis,
-                           volume=              SampleVolume,
-                           using_liquid_class=  (SampleLiqClass, "Serum Disp postMix3"),
-                           optimizeFrom         = False,
-                           optimizeTo           = False,           # todo Really ??
-                           NumSamples           = NumOfSamples)
-            Itr.wash_tips(wasteVol=4, FastWash=True).exec()
+            if self.version != 'prefill inactivation':
+                Itr.userPrompt("Please make sure the samples are in place").exec()
+                with tips(reuse=False, drop=True):
+                    transfer(  from_labware_region= Samples,
+                               to_labware_region=   Plate_lysis,
+                               volume=              SampleVolume,
+                               using_liquid_class=  (SampleLiqClass, "Serum Disp postMix3"),
+                               optimizeFrom         = False,
+                               optimizeTo           = False,           # todo Really ??
+                               NumSamples           = NumOfSamples)
+                Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
             if self.version != 'pre Inactivated':
                 Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
                 with incubation(minutes=5): pass
 
+        if self.version != 'prefill inactivation':
+            Itr.userPrompt("Please make sure the samples are back in place").exec()
 
         with group("Beads binding"):
             with tips(tipsMask=maxMask, reuse=True, drop=False):

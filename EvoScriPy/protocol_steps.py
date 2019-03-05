@@ -26,7 +26,9 @@ class Executable:
 
     # parameters to describe this program
     name = "undefined"
-    versions = {"none": not_implemented}
+
+    def def_versions(self):
+        self.versions = {"none": not_implemented}
 
 
     def __init__(self,  GUI       = None,
@@ -37,6 +39,7 @@ class Executable:
         self.pipeline    = None
         self.initialized = False
         self.Reactives   = []
+        self.def_versions()
         self.version     = next(iter(self.versions))
         Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!
 
