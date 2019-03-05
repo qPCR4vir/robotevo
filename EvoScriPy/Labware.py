@@ -102,7 +102,7 @@ class WorkTable:
                 if labwware_types:             # we have read the types first, now we need to read the labels
                     for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
                         if not labw_t:
-                            if labw_t:
+                            if label:
                                 print("Warning! The worktable template have a label '" +
                                       label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                       " but no labware type")
