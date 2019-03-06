@@ -37,7 +37,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         Evo100_FLI.__init__(   self,
                                GUI                         = GUI,
                                NumOfSamples                = PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
-                               worktable_template_filename = '../EvoScripts/wt_templates/preFisher_RNAext_EtOH.ewt',
+                               worktable_template_filename = '../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
                                output_filename='../current/PreKingFisher_RNAextNucleoMag_EtOH80p',
                                run_name                    = run_name)
 
