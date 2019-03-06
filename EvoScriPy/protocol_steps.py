@@ -109,7 +109,12 @@ class Protocol (Executable):
         self.output_filename             = output_filename or '../current/AWL'
         self.firstTip                    = firstTip if firstTip is not None else ''
         self.nTips                       = nTips
-        self.EvoMode                     = None
+        self.EvoMode                     = None      # EvoMode.multiple
+        self.iRobot                      = None      # EvoMode.iRobot
+        self.Script                      = None      # EvoMode.Script
+        self.comments                    = None      # EvoMode.Comments
+        self.worktable                   = None
+        self.robot                       = None
 
 
     def initialize(self):
@@ -138,8 +143,8 @@ class Protocol (Executable):
                                          self.comments_
                                          ])
         EvoMode.current = self.EvoMode
-        self.worktable = self.iRobot.robot.worktable  # shortcut !!
-        self.robot = self.iRobot.robot
+        self.worktable  = self.iRobot.robot.worktable  # shortcut !!
+        self.robot      = self.iRobot.robot
         assert (self.iRobot.robot.curArm().nTips == self.nTips )
 
 
@@ -152,7 +157,7 @@ class Protocol (Executable):
         self.iRobot.worktable from where we can obtain labwares with getLabware()
         :return:
         '''
-        self.set_EvoModet()
+        self.set_EvoMode()
 
         self.initialize()
         self.set_EvoMode()
@@ -429,7 +434,7 @@ def make( what, NumSamples=None): # OK coordinate with protocol
         if isinstance(what, Rtv.preMix): makePreMix(what, NumSamples)
 
 def makePreMix( preMix, NumSamples=None, force_replies=False):
-        robot = Rbt.Robot.current  # todo revice !!!
+        robot       = Rbt.Robot.current                               # todo revise !!!
         NumSamples  = NumSamples or Rtv.NumOfSamples
         labw        = preMix.labware
         ncomp       = len(preMix.components)
