@@ -29,7 +29,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             NumOfSamples            = Prefill_plates_VEW1_ElutionBuffer_VEW2.max_s,
-                            worktable_template_filename='../EvoScripts/wt_templates/preFisher_RNAext.ewt',
+                            worktable_template_filename='../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt',
                             output_filename         ='../current/' + run_name,
                             run_name                = run_name)
 
