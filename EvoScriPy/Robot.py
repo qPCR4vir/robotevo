@@ -236,7 +236,7 @@ class Robot:
         self.reusetips = False
         self.preservetips = False
         self.usePreservedtips = False
-        self.allow_air = 0.0
+        self.allow_air = 0.2
         self.set_as_current()
         # self.preservedtips = {} # order:well
         # self.last_preserved_tips = None # Lab.DITIrack, offset
@@ -440,11 +440,8 @@ class Robot:
                          " in well " + str(wells[w].offset+1) + " of rack " + labware_selection.label + " but " \
                          + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
 
-                    if nv < 0 :
-                        if nv < -self.allow_air:
-                            print("WARNING !!! trying to change the volume of " + \
-                            wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + ". Set to 0.")
-                        dv = wells[w].vol
+                    assert nv < -self.allow_air, "Error !!! trying to change the volume of " + \
+                            wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + "."
 
                     wells[w].vol -= dv
                     if    action == Robot.Arm.Aspire:

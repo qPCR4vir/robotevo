@@ -24,11 +24,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     """
 
     name = "RNA extraction with the MN_Vet kit"
-    versions = {'Serum with Liquid detection + tracking'    : not_implemented,
-                'Serum without Liquid detection + tracking' : not_implemented,
-                'Tissue without Liquid detection + tracking': not_implemented,
-                'Tissue with Liquid detection + tracking'   : not_implemented}
     min_s, max_s = 1, 48
+
+    def def_versions(self):
+        self.versions = {'Serum with Liquid detection + tracking'    : not_implemented,
+                         'Serum without Liquid detection + tracking' : not_implemented,
+                         'Tissue without Liquid detection + tracking': not_implemented,
+                         'Tissue with Liquid detection + tracking'   : not_implemented}
 
 
     def __init__(self, GUI = None,  run_name = None):

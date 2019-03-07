@@ -102,7 +102,7 @@ class WorkTable:
                 if labwware_types:             # we have read the types first, now we need to read the labels
                     for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
                         if not labw_t:
-                            if labw_t:
+                            if label:
                                 print("Warning! The worktable template have a label '" +
                                       label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                       " but no labware type")
@@ -434,43 +434,48 @@ class Labware:
         and return a list of the wells used
 
         :param reactive:
-        :param pos: [wells];
+        :param pos: [wells]; if int or [int] will be assumed 1-based not 0-based
         :param replicas: number of replicas
         :return:
         """
-        if pos is None:  # find self where to put the replicas of this reactive
-            replicas = replicas or 1  # default one replica
+
+        replicas = replicas or reactive.minNumRep
+
+        if pos is None:                                          # find self where to put the replicas of this reactive
             continuous, pos = self.find_free_wells(replicas)
             assert replicas == len(pos) , 'putting reactive - '+ str(reactive) + ' - into Labware: ' + \
                                           str(self) + ' different replica number ' + str(replicas) + ' and number of positions ' + \
                                           str(pos) # replicas = len(pos)  # todo What to do?
 
-        elif isinstance(pos, list):
-            if replicas is None:  # put one replica on each of the given wells position
-                replicas = len(pos)
-            else:
+
+        elif isinstance(pos, list):                              # put one replica on each of the given wells position
+            if replicas <= len(pos):
+                pass # replicas = len(pos)
+            else:                              # todo: revise  !!!!!!!!!!!!!!
                 assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reactive.name
-        else:
-            replicas = replicas or 1  # put one replica beginning from the given position
-            if isinstance(pos, Well):
+
+
+        elif isinstance(pos, Well):                              # put one replica beginning from the given position
                 # assert pos.labware is self, "Trying to put the reactive in another labware?"
                 pos = pos.labware.Wells[pos.offset: pos.offset + replicas]
                 # pos = self.Wells[pos.offset: pos.offset + replicas]
-            else:
-                pos = self.offset(pos)
+        else:
+                pos = self.offset(pos)            # todo: revise  !!!!!!!!!!!!!!
                 pos = self.Wells[pos: pos + replicas]
                 # pos = self.offset(pos) + 1
                 # pos = range(pos, pos + replicas)
 
         Replicas = []    # a list of labware-wells, where the replicas for this reactive are.
         for w in pos:
+            if replicas == 0 : return Replicas
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
             assert not w.reactive, self.label + ": Can not put " + reactive.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reactive.name
             w.reactive = reactive
             # w.labware = self
             Replicas += [w]
+            replicas -= 1
         return Replicas
 
     def clearSelection(self):

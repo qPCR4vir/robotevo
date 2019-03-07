@@ -19,8 +19,17 @@ class Reactive:
 
     Reactives = None
 
-    def __init__(self, name, labware,  volpersample=0, single_use=None,
-                 pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
+    def __init__(self,
+                 name,
+                 labware,
+                 volpersample   =0,
+                 single_use     =None,
+                 pos            =None,
+                 replicas       =None,
+                 defLiqClass    =None,
+                 excess         =None,
+                 initial_vol    =None,
+                 maxFull: float =None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
@@ -33,8 +42,10 @@ class Reactive:
         :param excess: float; in %
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
+        maxFull = 1 if maxFull is None else maxFull/100.0
         assert isinstance(labware, Lab.Labware)
-        self.labware = labware
+
+
         assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
         if (isinstance(labware, Lab.Labware) and
             isinstance(labware.location, Lab.WorkTable.Location) and
@@ -44,13 +55,17 @@ class Reactive:
           if (Reactive.Reactives): Reactive.Reactives.Reactives.append(self) # todo temporal
 
         ex= def_react_excess if excess is None else excess
-        self.excess = 1.0 + ex/100.0
+
+        self.labware    = labware
+        self.excess     = 1.0 + ex/100.0
         self.defLiqClass = defLiqClass or def_liquidClass
-        self.name = name
+        self.name       = name
         self.volpersample = volpersample
         self.components = []
-        self.Replicas = labware.put(self, pos, replicas)   # list of the wells used
-        self.pos = self.Replicas[0].offset
+        self.minNumRep  = int (self.minVol() / (labware.type.maxVol*maxFull)) +1
+        self.Replicas   = labware.put(self, pos, replicas)   # list of the wells used
+        self.pos        = self.Replicas[0].offset
+
         if initial_vol is not None:
             for w in  self.Replicas:
                  w.vol += initial_vol   # ?? add initial_vol to each replica
@@ -88,22 +103,29 @@ class Reactive:
         for i, w in enumerate(self.Replicas):
             v = V * (NumSamples + replicas - (i+1))//replicas
             if v > w.vol:  w.vol += (v-w.vol)
+            assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reactive.name
 
     def autoselect(self, maxTips=1):
         return self.labware.autoselect(self.pos, maxTips, len(self.Replicas))
 
 class Primer (Reactive):
-    IDs={}
+    IDs ={}
     SEQs={}
     Names={}
-    KWs={}
+    KWs ={}
     Excess = def_mix_excess
 
 
-    def __init__(self, name, seq, ID=None, modif = None,
-                 stk_conc=100, PCR_conc=0.8,
-                 KW=None,
-                 labware=None, pos=None,
+    def __init__(self,
+                 name,
+                 seq,
+                 ID         =None,
+                 modif      = None,
+                 stk_conc   =100,
+                 PCR_conc   =0.8,
+                 KW         =None,
+                 labware    =None,
+                 pos        =None,
                  initial_vol=None ):
 
         Reactive.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
@@ -128,8 +150,17 @@ class Reaction(Reactive):
 
 
 class preMix(Reactive):
-    def __init__(self, name, labware, pos, components, replicas=1, initial_vol=None,
-                 defLiqClass=None, excess=None):
+
+    def __init__(self,
+                 name,
+                 labware,
+                 components,
+                 pos        =None,
+                 replicas   =None,
+                 initial_vol=None,
+                 defLiqClass=None,
+                 excess     =None):
+
         ex= def_mix_excess if excess is None else excess
         vol=0.0
         for react in components:
@@ -197,7 +228,16 @@ class PCRMasterMix(preMix):
     Excess = def_mix_excess
 
 
-    def __init__(self, name, labware, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
+    def __init__(self,
+                 name,
+                 labware,
+                 conc       =10.0,
+                 pos        =None,
+                 components =None,
+                 replicas   =1,
+                 initial_vol=None,
+                 excess     =None):
+
         preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
         vol=0.0
         for react in components:

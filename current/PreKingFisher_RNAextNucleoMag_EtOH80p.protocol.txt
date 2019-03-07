@@ -1,31 +1,31 @@
-Extracting RNA from 8 samples with the MN-Vet kit
+Extracting RNA from 96 samples with the MN-Vet kit
 
 Prefill plate with EtOH80p
 
     Spread: 600.0 킠 of Ethanol 80% 
-        Spread: 600.0 킠 of Ethanol 80%  (4992.0 킠 total) from [grid:23 site:6 well:1] into Plate EtOH[grid:25 site:3] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+        Spread: 600.0 킠 of Ethanol 80%  (59904.0 킠 total) from [grid:23 site:6 well:1] into Plate EtOH[grid:25 site:3] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
 
 Sample Lysis
 
-    preMix: 422.4 킠 of ProtK+cRNA+IC-MS2 mix 
-        preMix: 422.4 킠 of ProtK+cRNA+IC-MS2 mix  into Reactives[grid:8 site:1 well:8] from 3 components:
-           1- 38.4 킠 of Carrier RNA  from Reactives[grid:8 site:1 well:15]
-           2- 192.0 킠 of Proteinase K  from Reactives[grid:8 site:1 well:16]
-           3- 192.0 킠 of IC MS2 phage culture  from Reactives[grid:8 site:1 well:14]
+    preMix: 5068.8 킠 of ProtK+cRNA+IC-MS2 mix 
+        preMix: 5068.8 킠 of ProtK+cRNA+IC-MS2 mix  into Reactives[grid:8 site:1 well:8] from 3 components:
+           1- 460.8 킠 of Carrier RNA  from Reactives[grid:8 site:1 well:15]
+           2- 2304.0 킠 of Proteinase K  from Reactives[grid:8 site:1 well:16]
+           3- 2304.0 킠 of IC MS2 phage culture  from Reactives[grid:8 site:1 well:14]
 
     Spread: 44.0 킠 of ProtK+cRNA+IC-MS2 mix 
-        Spread: 44.0 킠 of ProtK+cRNA+IC-MS2 mix  (422.4 킠 total) from [grid:8 site:1 well:8] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+        Spread: 44.0 킠 of ProtK+cRNA+IC-MS2 mix  (5068.8 킠 total) from [grid:8 site:1 well:8] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
 
-    Spread: 180.0 킠 of VL - Lysis Buffer 
-        Spread: 180.0 킠 of VL - Lysis Buffer  (1497.6 킠 total) from [grid:7 site:2 well:1] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+    Spread: 100.0 킠 of VL - Lysis Buffer 
+        Spread: 100.0 킠 of VL - Lysis Buffer  (9984.0 킠 total) from [grid:7 site:2 well:1] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
 
-    Transfer: 200.0 킠 of Proben
-        Transfer: 200.0 킠 of Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+    Transfer: 140.0 킠 of Proben
+        Transfer: 140.0 킠 of Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96]:
 
 Beads binding
 
     Spread: 20.0 킠 of B - Beads 
-        Spread: 20.0 킠 of B - Beads  (166.4 킠 total) from [grid:8 site:1 well:1] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+        Spread: 20.0 킠 of B - Beads  (1996.8 킠 total) from [grid:8 site:1 well:1] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
 
     Spread: 600.0 킠 of VEB - Binding Buffer 
-        Spread: 600.0 킠 of VEB - Binding Buffer  (4992.0 킠 total) from [grid:7 site:3 well:1] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12]:
+        Spread: 600.0 킠 of VEB - Binding Buffer  (59904.0 킠 total) from [grid:7 site:3 well:1] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
