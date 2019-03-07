@@ -186,7 +186,7 @@ class preMix(Reactive):
         # self.put_min_vol(NumSamples)
 
 
-    def make(self, NumSamples=None):
+    def make(self, NumSamples=None):      # todo deprecate?
         if self.Replicas[0].vol is None:   # ????
             self.put_min_vol(NumSamples)
             assert False

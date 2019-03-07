@@ -54,4 +54,4 @@ class Evo100_FLI(Protocol):
 
 
     def makePreMix( self, preMix, force_replies=False):
-        makePreMix(preMix, NumSamples=self.NumOfSamples, force_replies=force_replies)
+        Protocol.makePreMix(self, preMix, NumSamples=self.NumOfSamples, force_replies=force_replies)
