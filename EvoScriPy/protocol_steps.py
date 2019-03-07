@@ -409,7 +409,7 @@ class Protocol (Executable):
                                              ncomp                        )
                 Itr.comment(msg).exec()
                 samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
-                with tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
+                with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
                     tip = -1
                     ctips = nt
                     for ridx, react in enumerate(preMix.components):
@@ -489,7 +489,7 @@ class Protocol (Executable):
                 availableDisp = 0
                 while SampleCnt:
                     if nt > SampleCnt: nt = SampleCnt
-                    with tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
+                    with self.tips(Rbt.tipsMask[nt], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
                         maxMultiDisp_N = self.robot.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
                         dsp, rst = divmod(SampleCnt, nt)
                         if dsp >= maxMultiDisp_N:
@@ -683,7 +683,7 @@ class Protocol (Executable):
                         if sel:
                             Dst.liquidClass = Asp.labware.selected_wells()[0].reactive.defLiqClass
 
-                with tips(tm, drop=True, preserve=False, selected_samples=spl):
+                with self.tips(tm, drop=True, preserve=False, selected_samples=spl):
                     while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
                         dV = r if r < mV else mV
                         if dV < Rest: break # ??
@@ -696,7 +696,7 @@ class Protocol (Executable):
                         Asp.liquidClass = Te_Mag_Centre
 
 
-                        with tips(allow_air=CtrVol):
+                        with self.tips(allow_air=CtrVol):
                             Asp.exec()
                             if dV + Rest + RestPlus + 2*CtrVol > mV:
                                 Dst.exec()
@@ -707,23 +707,23 @@ class Protocol (Executable):
 
                     Asp.volume = Rest
                     Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
-                    with tips(allow_air=Rest):
+                    with self.tips(allow_air=Rest):
                             Asp.exec()
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
-                    with tips(allow_air=CtrVol):
+                    with self.tips(allow_air=CtrVol):
                             Asp.exec()
                     Asp.volume = RestPlus
                     Asp.liquidClass =  Te_Mag_RestPlus # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
-                    with tips(allow_air=RestPlus):
+                    with self.tips(allow_air=RestPlus):
                             Asp.exec()
                     #Ctr.exec()
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
                     Dst.volume += Rest + RestPlus
-                    with tips(allow_air=CtrVol):
+                    with self.tips(allow_air=CtrVol):
                             Asp.exec()
-                    with tips(allow_air=Rest + RestPlus):
+                    with self.tips(allow_air=Rest + RestPlus):
                             Dst.exec()
 
                 SampleCnt -= nt
@@ -802,6 +802,43 @@ class Protocol (Executable):
         mx.labware.selectOnly(oriSel)
         return oriSel
 
+    @contextmanager
+    def tips(self, tipsMask=None, reuse=None,     drop=None,
+                            preserve=None,  usePreserved=None, selected_samples=None,
+                            allow_air=None, drop_first=False,   drop_last=False):
+        '''
+
+        :param tipsMask:
+        :param reuse: Reuse the tips or drop it and take new BEFORE each individual action
+        :param drop: Drops the tips AFTER each individual action? like after one aspiration and spread of the reactive into various target
+        :param preserve:
+        :param usePreserved:
+        :param selected_samples:
+        :param allow_air:
+        :param drop_first: Reuse the tips or drop it and take new once BEFORE the whole action
+        :param drop_last: Drops the tips at THE END of the whole action
+        :return:
+        '''
+
+        if drop_first:  self.dropTips()
+        if reuse        is not None: reuse_old          = self.reuseTips       (reuse       )
+        if drop         is not None: drop_old           = self.set_dropTips    (drop        )
+        if preserve     is not None: preserve_old       = self.preserveTips    (preserve    )
+        if usePreserved is not None: usePreserved_old   = self.usePreservedTips(usePreserved)
+        if allow_air    is not None: allow_air_old      = self.set_allow_air   (allow_air  )
+
+        if tipsMask     is not None: tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples)
+
+        yield
+
+        if tipsMask     is not None: tipsMask     = self.dropTips        (tipsMask_old)
+
+        if reuse        is not None: reuse        = self.reuseTips       (reuse_old       )
+        if drop         is not None: drop         = self.set_dropTips    (drop_old        )
+        if preserve     is not None: preserve     = self.preserveTips    (preserve_old    )
+        if usePreserved is not None: usePreserved = self.usePreservedTips(usePreserved_old)
+        if allow_air    is not None: allow_air    = self.set_allow_air   (allow_air_old   )
+        if drop_last:   self.dropTips()
 
 
 class Pipeline (Executable):
@@ -860,43 +897,6 @@ def group(titel, mode=None):
     Itr.group_end().exec(mode)
 
 
-@contextmanager
-def tips(tipsMask=None, reuse=None,     drop=None,
-                        preserve=None,  usePreserved=None, selected_samples=None,
-                        allow_air=None, drop_first=False,   drop_last=False):
-    '''
-
-    :param tipsMask:
-    :param reuse: Reuse the tips or drop it and take new BEFORE each individual action
-    :param drop: Drops the tips AFTER each individual action? like after one aspiration and spread of the reactive into various target
-    :param preserve:
-    :param usePreserved:
-    :param selected_samples:
-    :param allow_air:
-    :param drop_first: Reuse the tips or drop it and take new once BEFORE the whole action
-    :param drop_last: Drops the tips at THE END of the whole action
-    :return:
-    '''
-
-    if drop_first:  dropTips()
-    if reuse        is not None: reuse_old          = reuseTips       (reuse       )
-    if drop         is not None: drop_old           = set_dropTips    (drop        )
-    if preserve     is not None: preserve_old       = preserveTips    (preserve    )
-    if usePreserved is not None: usePreserved_old   = usePreservedTips(usePreserved)
-    if allow_air    is not None: allow_air_old      = set_allow_air   (allow_air  )
-
-    if tipsMask     is not None: tipsMask_old     = getTips         (tipsMask, selected_samples=selected_samples)
-
-    yield
-
-    if tipsMask     is not None: tipsMask     = dropTips        (tipsMask_old)
-
-    if reuse        is not None: reuse        = reuseTips       (reuse_old       )
-    if drop         is not None: drop         = set_dropTips    (drop_old        )
-    if preserve     is not None: preserve     = preserveTips    (preserve_old    )
-    if usePreserved is not None: usePreserved = usePreservedTips(usePreserved_old)
-    if allow_air    is not None: allow_air    = set_allow_air   (allow_air_old   )
-    if drop_last:   dropTips()
 
 @contextmanager
 def parallel_execution_of(subroutine, repeat=1):

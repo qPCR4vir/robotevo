@@ -160,23 +160,23 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
 
         with group("Prefill plate with EtOH80p"):
-            with tips(reuse=True, drop=False, drop_last=True):
-                spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
+            with self.tips(reuse=True, drop=False, drop_last=True):
+                self.spread(reactive=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
 
 
         with group("Sample Lysis"):
             if self.version != 'pre Inactivated':
-                with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                    pK_cRNA_MS2.make(NumOfSamples)
-                    spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+                with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                    self.makePreMix(pK_cRNA_MS2)
+                    self.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
                 with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                    spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
+                    self.spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.version != 'prefill inactivation':
                 Itr.userPrompt("Please make sure the samples are in place").exec()
-                with tips(reuse=False, drop=True):
-                    transfer(  from_labware_region= Samples,
+                with self.tips(reuse=False, drop=True):
+                    self.transfer(  from_labware_region= Samples,
                                to_labware_region=   Plate_lysis,
                                volume=              SampleVolume,
                                using_liquid_class=  (SampleLiqClass, "Serum Disp postMix3"),
@@ -193,18 +193,18 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             Itr.userPrompt("Please make sure the samples are back in place").exec()
 
         with group("Beads binding"):
-            with tips(tipsMask=maxMask, reuse=True, drop=False):
+            with self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
-                    mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
-            with tips(reuse=True, drop=False):
-                spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))
-            dropTips()
+                    self.mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+            with self.tips(reuse=True, drop=False):
+                self.spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))
+            self.dropTips()
 
-            with tips(reuse=True, drop=False):
-                spread( reactive=VEB,          to_labware_region=Plate_lysis.selectOnly(all_samples))
+            with self.tips(reuse=True, drop=False):
+                self.spread( reactive=VEB,          to_labware_region=Plate_lysis.selectOnly(all_samples))
 
             Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
-        dropTips()
+        self.dropTips()
         self.done()
 
