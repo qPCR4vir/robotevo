@@ -440,7 +440,7 @@ class Robot:
                          " in well " + str(wells[w].offset+1) + " of rack " + labware_selection.label + " but " \
                          + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
 
-                    assert nv < -self.allow_air, "Error !!! trying to change the volume of " + \
+                    assert nv > -self.allow_air, "Error !!! trying to change the volume of " + \
                             wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + "."
 
                     wells[w].vol -= dv
