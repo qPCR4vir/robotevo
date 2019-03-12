@@ -110,7 +110,7 @@ class Protocol (Executable):
         self.EvoMode                     = None      # EvoMode.multiple
         self.iRobot                      = None      # EvoMode.iRobot
         self.Script                      = None      # EvoMode.Script
-        self.comments                    = None      # EvoMode.Comments
+        self.comments_                   = None      # EvoMode.Comments
         self.worktable                   = None
         self.robot                       = None
 
@@ -230,7 +230,7 @@ class Protocol (Executable):
         mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[self.robot.curArm().nTips]
 
         if self.robot.usePreservedtips:
-            with tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
+            with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
                 self.dropTips(TIP_MASK)
             where = self.robot.where_are_preserved_tips(selected_samples, TIP_MASK, tip_type)
             nTips = self.robot.curArm().nTips
@@ -618,7 +618,7 @@ class Protocol (Executable):
                         Asp.liquidClass = sw[0].reactive.defLiqClass
                         Dst.liquidClass = sw[0].reactive.defLiqClass
 
-                    with tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
+                    with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
                         Asp.labware.selectOnly(src)
                         Asp.exec()
                         Dst.labware.selectOnly(trg)
@@ -803,7 +803,7 @@ class Protocol (Executable):
 
                 sel = oriSel[curSample:curSample + nt]
                 spl = range(curSample, curSample + nt)
-                with tips(Rbt.tipsMask[nt], selected_samples=spl):
+                with self.tips(Rbt.tipsMask[nt], selected_samples=spl):
                     mV = self.robot.curArm().Tips[0].type.maxVol * mix_p
                     mx.labware.selectOnly(sel)
                     if not using_liquid_class:
