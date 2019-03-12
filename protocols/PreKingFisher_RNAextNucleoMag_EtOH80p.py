@@ -170,7 +170,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                     self.makePreMix(pK_cRNA_MS2)
                     self.spread  (  reactive=pK_cRNA_MS2,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
-                with tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                     self.spread  (  reactive=LysisBuffer,   to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.version != 'prefill inactivation':

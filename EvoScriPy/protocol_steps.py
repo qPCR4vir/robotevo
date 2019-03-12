@@ -290,7 +290,7 @@ class Protocol (Executable):
 
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
-        reactive.autoselect()                                         # reactive.labware.selectOnly([reactive.pos])
+        reactive.autoselect(offset = offset)                                         # reactive.labware.selectOnly([reactive.pos])
         Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
     def dispense(self,  tip, reactive, vol=None):                     # OK coordinate with robot
@@ -482,11 +482,11 @@ class Protocol (Executable):
             lt = to_labware_region
             msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
             with group(msg):
-                msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} well:{fw:s}] into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} {fw:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                             .format( v  = reactive.minVol(),
                                      fg = lf.location.grid,
                                      fs = lf.location.site+1,
-                                     fw = str([(r.offset + 1, r.vol) for r in reactive.Replicas])  ,
+                                     fw = str([str(well) for well in reactive.Replicas]) ,
                                      do = str([i+1 for i in to]),
                                      to = lt.label,
                                      tg = lt.location.grid,

@@ -441,7 +441,7 @@ class Robot:
                          + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
 
                     assert nv > -self.allow_air, "Error !!! trying to change the volume of " + \
-                            wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + "."
+                            str (wells[w])   + " to " + str(nv) + "."
 
                     wells[w].vol -= dv
                     if    action == Robot.Arm.Aspire:
