@@ -383,24 +383,35 @@ class Protocol (Executable):
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
             if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
-    def makePreMix(self,  preMix,
-                          NumSamples    =None,
-                          force_replies =False):
+    def makePreMix(self,  preMix: Rtv.preMix,
+                          NumSamples: int     = None,
+                          force_replies: bool = False):
+        """
+        A preMix is just that: a premix of reactive (aka - components)
+        which have been already defined to add some vol per sample.
+        Uses one new tip per component.
+        It find and check self the min and max number of replica of the resulting preMix
+        :param preMix: what to make, predefined preMix
+        :param NumSamples:
+        :param force_replies: use all the preMix predefined replicas
+        :return:
+        """
 
-            robot       = self.robot
-            NumSamples  = NumSamples or Rtv.NumOfSamples
-            labw        = preMix.labware
-            ncomp       = len(preMix.components)
-            tVol        = preMix.minVol(NumSamples)
-            mxnrepl     = len(preMix.Replicas)                     # max number of replies
-            mnnrepl     = int(tVol // labw.type.maxVol + 1 )       # min number of replies
-            assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, preMix.name)
-            nrepl       = mxnrepl if force_replies else mnnrepl
-            if nrepl < mxnrepl:
-                print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
-                preMix.Replicas = preMix.Replicas[:nrepl]
-            mxnTips     = robot.curArm().nTips  # max number of Tips
-            nt          = min(mxnTips, ncomp)
+        assert isinstance(preMix, Rtv.preMix)
+        robot       = self.robot
+        mxnTips     = robot.curArm().nTips  # max number of Tips
+        ncomp       = len(preMix.components)
+        nt          = min(mxnTips, ncomp)
+        NumSamples  = NumSamples or self.NumOfSamples
+        labw        = preMix.labware
+        tVol        = preMix.minVol(NumSamples)
+        mxnrepl     = len(preMix.Replicas)                        # max number of replies
+        mnnrepl     = preMix.min_num_of_replica(NumSamples)       # min number of replies
+        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, preMix.name)
+        nrepl       = mxnrepl if force_replies else mnnrepl
+        if nrepl < mxnrepl:
+            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
+            preMix.Replicas = preMix.Replicas[:nrepl]
 
             msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
             with group(msg):

@@ -22,27 +22,26 @@ class Reactive:
     def __init__(self,
                  name,
                  labware: Lab.Labware,           # ??
-                 volpersample   =0,
-                 single_use     =None,
-                 pos            =None,
-                 replicas       =None,
-                 defLiqClass    =None,
-                 excess         =None,
-                 initial_vol    =None,
-                 maxFull: float =None):
+                 volpersample   = 0,
+                 single_use     = None,
+                 pos            = None,
+                 replicas : int = None,
+                 defLiqClass    = None,
+                 excess         = None,
+                 initial_vol    = None,
+                 maxFull: float = None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
         :param name: str; Reactive name. Ex: "Buffer 1", "forward primer", "IC MS2"
         :param labware: Labware;
         :param volpersample: float; in uL
-        :param pos: [wells]; if not set (=None) we will try to assign consecutive wells for all the replicas
-        :param replicas: int; def 1, number of replicas
+        :param pos: [wells] or offset to begging to put replica. If None will try to assign consecutive wells
+        :param replicas: int; def min_num_of_replica(), number of replicas
         :param defLiqClass: str;
         :param excess: float; in %
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
-        maxFull = 1 if maxFull is None else maxFull/100.0
         assert isinstance(labware, Lab.Labware)             # ??
 
         assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
@@ -56,6 +55,7 @@ class Reactive:
         ex= def_react_excess if excess is None else excess
 
         self.labware    = labware
+        self.maxFull    = 1.0 if maxFull is None else maxFull/100.0
         self.excess     = 1.0 + ex/100.0
         self.defLiqClass = defLiqClass or def_liquidClass
         self.name       = name
@@ -75,7 +75,10 @@ class Reactive:
             self.volpersample = single_use
             self.init_vol(NumSamples=1)
         else:
-            self.init_vol()        # put the initial volumen ?
+            self.init_vol()                           # put the minimal initial volumen ?
+
+    def min_num_of_replica(self, NumSamples: int=None)->int:
+        return int (self.minVol(NumSamples) / (self.labware.type.maxVol*self.maxFull)) +1
 
     @staticmethod
     def SetReactiveList(protocol):
@@ -95,12 +98,20 @@ class Reactive:
     def init_vol(self, NumSamples=None):
         self.put_min_vol(NumSamples)
 
-    def put_min_vol(self, NumSamples=None):   # todo create replicas if needed !!!!
+    def put_min_vol(self, NumSamples=None):          # todo create replicas if needed !!!!
+        """
+        Force you to put an initial volume of reactive that can be used to spread into samples,
+        aspiring equal number of complete doses for each sample from each replica,
+        exept the firsts replicas that can be used to aspire one more dose for the last/rest of samples.
+        That is: all replica have equal volumen (number) of doses or the firsts have one more dose
+        :param NumSamples:
+        :return:
+        """
         NumSamples = NumSamples or NumOfSamples
-        V = self.volpersample * self.excess
+        V_per_sample = self.volpersample * self.excess
         replicas=len(self.Replicas)
         for i, w in enumerate(self.Replicas):
-            v = V * (NumSamples + replicas - (i+1))//replicas
+            v = V_per_sample * (NumSamples + replicas - (i+1))//replicas
             if v > w.vol:  w.vol += (v-w.vol)
             assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reactive.name
 
