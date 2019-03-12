@@ -413,42 +413,47 @@ class Protocol (Executable):
             print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
             preMix.Replicas = preMix.Replicas[:nrepl]
 
-            msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
-            with group(msg):
-                msg += " into {:s}[grid:{:d} site:{:d} well:{:s}] from {:d} components:"\
-                                    .format( labw.label,
-                                             labw.location.grid,
-                                             labw.location.site + 1,
-                                             str([r.offset + 1 for r in preMix.Replicas]),
-                                             ncomp                        )
-                Itr.comment(msg).exec()
-                samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
-                with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
-                    tip = -1
-                    ctips = nt
-                    for ridx, react in enumerate(preMix.components):
-                        labw = react.labware
-                        rVol = react.volpersample*NumSamples*preMix.excess
-                        msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}]"\
-                                    .format( idx = ridx + 1,
-                                             v   = rVol,
-                                             g   = labw.location.grid,
-                                             st  = labw.location.site + 1,
-                                             w   = str([str(well) for well in react.Replicas])   )
-                        Itr.comment(msg).exec()
-                        tip += 1  # use the next tip
-                        if tip >= nt:
-                            ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
-                            tipsType = robot.curArm().Tips[0].type    # only the 0 ??
-                            self.dropTips(Rbt.tipsMask[ctips])
-                            self.getTips(Rbt.tipsMask[ctips], tipsType)
-                            tip = 0
-                        mV = robot.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
-                        while rVol > 0:
-                            dV = rVol if rVol < mV else mV
-                            self.aspire(ridx, react, dV)
-                            self.multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
-                            rVol -= dV
+        msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
+        with group(msg):
+            msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
+                                .format( labw.location.grid,
+                                         labw.location.site + 1,
+                                         str([str(well) for well in preMix.Replicas]) ,
+                                         ncomp                        )
+            Itr.comment(msg).exec()
+            samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
+            with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
+                tip = -1
+                ctips = nt
+                for ridx, react in enumerate(preMix.components):       # iterate reactive components
+                    labw = react.labware
+                    sVol = react.volpersample*preMix.excess       # vol we need for each sample
+                    rVol = sVol*NumSamples                        # the total vol we need of this react component
+                    msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
+                                .format( idx = ridx + 1,
+                                         v   = rVol,
+                                         g   = labw.location.grid,
+                                         st  = labw.location.site + 1,
+                                         w   = str([str(well) for well in react.Replicas])   )
+                    Itr.comment(msg).exec()
+                    tip += 1  # use the next tip
+                    if tip >= nt:
+                        ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
+                        tipsType = robot.curArm().Tips[0].type    # only the 0 ??
+                        self.dropTips(Rbt.tipsMask[ctips])
+                        self.getTips(Rbt.tipsMask[ctips], tipsType)
+                        tip = 0
+                    mV = robot.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
+                    # aspire/dispense multiple times if rVol don't fit in the tip (mV)
+                    # but also if there is not sufficient reactive in the current component replica
+                    current_comp_repl = 0
+                    while rVol > 0:
+                        while (react.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
+                            current_comp_repl +=1
+                        dV = min (rVol, mV, react.Replicas[current_comp_repl].vol)
+                        self.aspire(ridx, react, dV, offset=react.Replicas[current_comp_repl].offset)
+                        self.multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
+                        rVol -= dV
 
 
     def spread(self,  volume            =None,

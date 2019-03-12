@@ -61,14 +61,27 @@ class Reactive:
         self.name       = name
         self.volpersample = volpersample
         self.components = []
-        self.minNumRep  = int (self.minVol() / (labware.type.maxVol*maxFull)) +1
+        self.minNumRep  = self.min_num_of_replica ()
+        if isinstance(initial_vol, list):
+            if replicas is None:
+                replicas = len(initial_vol)
+            elif replicas < len(initial_vol):
+                print("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
+                replicas = len(initial_vol)
+            else:
+                print("WARNING !! The provided initial volume list of "+ name + " will be filled only to first replicas")
+
         self.Replicas   = labware.put(self, pos, replicas)                            # list of the wells used
         self.pos        = self.Replicas[0].offset                                     # ??
 
-        if initial_vol is not None:
+        if isinstance(initial_vol, (int, float)):
             for w in  self.Replicas:
                  w.vol += initial_vol   # ?? add initial_vol to each replica
-        if single_use:
+        elif isinstance(initial_vol, list):
+            for w,v in zip(self.Replicas, ):
+                w.vol += v
+
+        if single_use:                                 # todo revise !!!
             assert not volpersample, str(name) + \
                             ": this is a single use-reactive. Please, don't set any volume per sample."
             assert len(self.Replicas) == 1, "Temporally use only one vial for " + str(name)
