@@ -22,9 +22,16 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     min_s, max_s = 1, 96
 
     def def_versions(self):
-        self.versions = {'none'                : not_implemented,
+        self.versions = {'in-plate inactivated': self.V_in_plate_inactivated,
                          'pre Inactivated'     : self.V_inactivated,
-                         'prefill inactivation': self.V_fill_inactivation}
+                         'prefill inactivation': self.V_fill_inactivation,
+                         'prefill LysisBuffer' : self.V_fill_LysisBuffer                         }
+
+    def V_in_plate_inactivated(self):
+        pass
+
+    def V_fill_LysisBuffer(self):
+        pass
 
     def V_inactivated(self):
         pass
