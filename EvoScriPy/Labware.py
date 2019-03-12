@@ -267,8 +267,12 @@ class Well:
         self.actions = []
 
     def __str__(self):
-        return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}".format(
-            pos=self.offset+1, lab=self.labware.label, label=self.label, vol=self.vol, what=str(self.reactive))
+        return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}"\
+                .format( pos  =self.offset+1,
+                         lab  =self.labware.label,
+                         label=self.label,
+                         vol  =self.vol,
+                         what =str(self.reactive))
 
     def log(self, vol, origin=None):
         self.actions += [(vol, (origin if origin else self))]

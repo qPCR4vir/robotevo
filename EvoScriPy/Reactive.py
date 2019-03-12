@@ -17,11 +17,11 @@ NumOfSamples     = None    # TODO revise this !!! Eliminate this GLOBAL ??????
 
 class Reactive:
 
-    Reactives = None
+    Reactives = None           # todo move to normal member of class protocol ??
 
     def __init__(self,
                  name,
-                 labware,
+                 labware: Lab.Labware,           # ??
                  volpersample   =0,
                  single_use     =None,
                  pos            =None,
@@ -43,8 +43,7 @@ class Reactive:
         :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
         """
         maxFull = 1 if maxFull is None else maxFull/100.0
-        assert isinstance(labware, Lab.Labware)
-
+        assert isinstance(labware, Lab.Labware)             # ??
 
         assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
         if (isinstance(labware, Lab.Labware) and
@@ -63,8 +62,8 @@ class Reactive:
         self.volpersample = volpersample
         self.components = []
         self.minNumRep  = int (self.minVol() / (labware.type.maxVol*maxFull)) +1
-        self.Replicas   = labware.put(self, pos, replicas)   # list of the wells used
-        self.pos        = self.Replicas[0].offset
+        self.Replicas   = labware.put(self, pos, replicas)                            # list of the wells used
+        self.pos        = self.Replicas[0].offset                                     # ??
 
         if initial_vol is not None:
             for w in  self.Replicas:
@@ -80,7 +79,7 @@ class Reactive:
 
     @staticmethod
     def SetReactiveList(protocol):
-        Reactive.Reactives = protocol
+        Reactive.Reactives = protocol                    # ??
 
     @staticmethod
     def StopReactiveList():

@@ -383,7 +383,10 @@ class Protocol (Executable):
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
             if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
-    def makePreMix(self,  preMix, NumSamples=None, force_replies=False):
+    def makePreMix(self,  preMix,
+                          NumSamples    =None,
+                          force_replies =False):
+
             robot       = self.robot
             NumSamples  = NumSamples or Rtv.NumOfSamples
             labw        = preMix.labware
@@ -415,14 +418,12 @@ class Protocol (Executable):
                     for ridx, react in enumerate(preMix.components):
                         labw = react.labware
                         rVol = react.volpersample*NumSamples*preMix.excess
-                        msg = "   {idx:d}- {v:.1f} µL of {nm:s} from {l:s}[grid:{g:d} site:{st:d} wells:{w:s}]"\
+                        msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}]"\
                                     .format( idx = ridx + 1,
                                              v   = rVol,
-                                             nm  = react.name,
-                                             l   = labw.label,
                                              g   = labw.location.grid,
                                              st  = labw.location.site + 1,
-                                             w   = str([r.offset + 1 for r in react.Replicas])   )
+                                             w   = str([str(well) for well in react.Replicas])   )
                         Itr.comment(msg).exec()
                         tip += 1  # use the next tip
                         if tip >= nt:
