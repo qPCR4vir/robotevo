@@ -278,7 +278,7 @@ class Protocol (Executable):
         Itr.dropDITI(TIP_MASK).exec()
         #return TIP_MASK
 
-    def aspire(self,  tip, reactive, vol=None):
+    def aspire(self,  tip, reactive, vol=None, offset = None):
         """
         Aspire vol with ONE tip from reactive
         :param self:

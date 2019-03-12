@@ -115,8 +115,9 @@ class Reactive:
             if v > w.vol:  w.vol += (v-w.vol)
             assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reactive.name
 
-    def autoselect(self, maxTips=1):
-        return self.labware.autoselect(self.pos, maxTips, len(self.Replicas))
+    def autoselect(self, maxTips=1, offset=None, replicas = None):
+
+        return self.labware.autoselect(offset or self.pos, maxTips, len(self.Replicas) if offset is None else 1)
 
 class Primer (Reactive):
     IDs ={}
