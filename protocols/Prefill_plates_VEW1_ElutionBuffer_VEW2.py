@@ -1,8 +1,8 @@
-# Copyright (C) 2018-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2018-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2018-2018
+# 2018-2019
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
@@ -21,8 +21,14 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     """
 
     name = "Prefill plates with VEW1, Elution buffer and VEW2 for KingFisher"
-    versions = {'none'    : not_implemented}
     min_s, max_s = 1, 96
+
+    def def_versions(self):
+        self.versions = {'Standard': self.V_Standard  }
+
+    def V_Standard(self):
+        pass
+
 
     def __init__(self, GUI=None, run_name="Prefill VEW1 ElutB and VEW2"):
 
@@ -53,7 +59,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         Plate_VEW1  = wt.getLabware(Lab.MP96deepwell,   "Plate VEW1"    )  # Plate 12 x 8 ?
         Plate_VEW2  = wt.getLabware(Lab.MP96deepwell,   "Plate VEW2"    )  # Plate 12 x 8 ?
-        Plate_Eluat = wt.getLabware(Lab.MP96well,      "Plate ElutB"    )  # Plate 12 x 8 ? MP96well !!
+        Plate_Eluat = wt.getLabware(Lab.MP96well,       "Plate ElutB"   )  # Plate 12 x 8 ? MP96well !!
 
 
         #  Set the initial position of the tips
@@ -79,14 +85,20 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        VEW1            = Rtv.Reactive("VEW1 - Wash Buffer "              ,
-                                         wt.getLabware(Lab.Trough_100ml,  "4-VEW1 Wash Buffe"),
-                                         volpersample=VEW1Volume    , defLiqClass=B_liquidClass)
-        VEW2            = Rtv.Reactive("VEW2 - WashBuffer "               ,
-                                         wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
-                                         volpersample=VEW2Volume    , defLiqClass=B_liquidClass)
-        ElutionBuffer   = Rtv.Reactive("Elution Buffer "                  ,
-                                       ElutBuf,     volpersample=ElutionBufferVolume , defLiqClass=B_liquidClass)
+        VEW1            = Rtv.Reactive( "VEW1 - Wash Buffer ",
+                                        wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
+                                        volpersample  = VEW1Volume    ,
+                                        defLiqClass   = B_liquidClass)
+
+        VEW2            = Rtv.Reactive("VEW2 - WashBuffer "  ,
+                                       wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
+                                       volpersample  =VEW2Volume    ,
+                                       defLiqClass   =B_liquidClass)
+
+        ElutionBuffer   = Rtv.Reactive("Elution Buffer ",
+                                       ElutBuf,
+                                       volpersample  =ElutionBufferVolume ,
+                                       defLiqClass   =B_liquidClass)
 
         # Show the CheckList GUI to the user for posible small changes
 
@@ -99,27 +111,38 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rtv.Reactive("VEW1_{:02d}".format(s + 1), Plate_VEW1, initial_vol=0.0, pos=par[s]+1,
-                         excess=0)  # todo revise order !!!
-            Rtv.Reactive("VEW2_{:02d}".format(s + 1), Plate_VEW2, initial_vol=0.0, pos=par[s] + 1,
-                         excess=0)  # todo revise order !!!
-            Rtv.Reactive("Eluat_{:02d}".format(s + 1), Plate_Eluat, initial_vol=0.0, pos=par[s] + 1,
-                         excess=0)  # todo revise order !!!
+            Rtv.Reactive("VEW1_{:02d}".format(s + 1),
+                         Plate_VEW1,
+                         initial_vol  = 0.0,
+                         pos          = par[s]+1,
+                         excess       = 0           )  # todo revise order !!!
+
+            Rtv.Reactive("VEW2_{:02d}".format(s + 1),
+                         Plate_VEW2,
+                         initial_vol = 0.0,
+                         pos         = par[s] + 1,
+                         excess      = 0            )
+
+            Rtv.Reactive("Eluat_{:02d}".format(s + 1),
+                         Plate_Eluat,
+                         initial_vol = 0.0,
+                         pos         = par[s] + 1,
+                         excess      = 0            )
 
 
         with group("Prefill plates with VEW1, Elution buffer and VEW2"):
 
             Itr.userPrompt("Put the plates for VEW1, Elution buffer and VEW2 in that order").exec()
 
-            with tips(reuse=True, drop=False):
-                spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples) )  # ,optimize=False
+            with self.tips(reuse=True, drop=False):
+                self.spread(reactive=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples) )  # ,optimize=False
 
-            with tips(reuse=True, drop=False):
-                spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples) )  # , optimize=False
+            with self.tips(reuse=True, drop=False):
+                self.spread(reactive=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples) )  # , optimize=False
 
-            with tips(reuse=True, drop=False):
-                spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))  # , optimize=False
+            with self.tips(reuse=True, drop=False):
+                self.spread(reactive=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))  # , optimize=False
 
-        dropTips()
+        self.dropTips()
 
         self.done()
