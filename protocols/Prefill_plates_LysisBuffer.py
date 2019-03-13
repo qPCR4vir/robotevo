@@ -53,7 +53,10 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Prefill {:d} plates with LysisBuffer for {:d} samples.'\
+        self.num_plates =   1 if self.version == '1 plate' else \
+                            2 if self.version == '2 plate' else 3
+
+        Itr.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'\
                        .format(self.num_plates,
                                NumOfSamples     )).exec()
 
