@@ -89,17 +89,18 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        LysPlat = [wt.getLabware(Lab.MP96deepwell, "Plate lysis-"+str(i)) for i in range(1, self.num_plates+1)]
+        LysPlat = [wt.getLabware(Lab.MP96deepwell, "Plate lysis-"+str(i+1)) for i in range(self.num_plates)]
 
         par = LysPlat[0].parallelOrder(self.nTips, all_samples)
 
         # Define place for temporal reactions
-        for s in all_samples:
-            [Rtv.Reactive("lysis_{:d}-{:02d}".format( i+1, s + 1),
-                         LP,
-                         initial_vol=0.0,
-                         pos=s + 1,
-                         excess=0        ) for i, LP in enumerate(LysPlat) ]
+        for i, LP in enumerate(LysPlat):
+            for s in all_samples:
+                Rtv.Reactive(   "lysis_{:d}-{:02d}".format( i+1, s + 1),
+                                LP,
+                                initial_vol =0.0,
+                                pos         =s + 1,
+                                excess      =0        )
 
         with group("Prefill plates with LysisBufferReact"):
 
