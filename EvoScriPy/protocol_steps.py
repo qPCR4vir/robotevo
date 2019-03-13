@@ -309,7 +309,8 @@ class Protocol (Executable):
 
     def mix_reactive(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
         """
-
+        Select all possible replica of the given reactive and mix using the given % of the current vol in EACH well
+        or the max vol for the tip. Use the given liq class or the reactive deff.
         :param reactive:
         :param LiqClass:
         :param cycles:
@@ -318,6 +319,7 @@ class Protocol (Executable):
         :return:
         """
         assert isinstance(reactive, Rtv.Reactive)
+        LiqClass = LiqClass or reactive.defLiqClass
         v_perc /= 100.0
         vol = []
         reactive.autoselect(maxTips)
