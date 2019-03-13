@@ -445,7 +445,7 @@ class Protocol (Executable):
                         self.dropTips(Rbt.tipsMask[ctips])
                         self.getTips(Rbt.tipsMask[ctips], tipsType)
                         tip = 0
-                    mV = robot.curArm().Tips[tip].type.maxVol # todo what if the tip are different?
+                    mV = robot.curArm().Tips[tip].type.maxVol
                     # aspire/dispense multiple times if rVol don't fit in the tip (mV)
                     # but also if there is not sufficient reactive in the current component replica
                     current_comp_repl = 0
@@ -453,10 +453,10 @@ class Protocol (Executable):
                         while (react.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
                             current_comp_repl +=1
                         dV = min (rVol, mV, react.Replicas[current_comp_repl].vol)
-                        self.aspire(ridx, react, dV, offset=react.Replicas[current_comp_repl].offset)
+                        self.aspire(tip, react, dV, offset=react.Replicas[current_comp_repl].offset)
                         self.multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
-
+                self.mix_reactive(preMix, maxTips=ctips)
 
     def spread(self,  volume            =None,
                       reactive          =None,
