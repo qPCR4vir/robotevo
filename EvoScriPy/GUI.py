@@ -206,6 +206,9 @@ class App(tkinter.Frame):
     from protocols.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
     GUI4parameters[Prefill_plates_LysisBuffer.name]=GUI_init_RNAext_parameters
 
+    from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
+    GUI4parameters[Prefill_plates_LysisBuffer_and_ProtKpreMix.name]=GUI_init_RNAext_parameters
+
 
     class GUI_protocol(tkinter.Frame):
         """ Implements a GUI for the selected protocol. Each protocol receive a reference to it in .GUI
