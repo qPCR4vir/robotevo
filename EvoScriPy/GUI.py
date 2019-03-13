@@ -193,12 +193,18 @@ class App(tkinter.Frame):
 
     from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters
+
     #from protocols.PreKingFisher_RNAextNucleoMag              import PreKingFisher_RNAextNucleoMag
     #GUI4parameters[PreKingFisher_RNAextNucleoMag.name        ]=GUI_init_RNAext_parameters
+
     from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p      import PreKingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNAext_parameters
+
     from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
     GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_RNAext_parameters
+
+    from protocols.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
+    GUI4parameters[Prefill_plates_LysisBuffer.name]=GUI_init_RNAext_parameters
 
 
     class GUI_protocol(tkinter.Frame):
