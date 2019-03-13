@@ -24,9 +24,9 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
     min_s, max_s = 1, 96
 
     def def_versions(self):
-        self.versions = {'1 plate': self.V_1_plate,
+        self.versions = {'3 plate': self.V_3_plate,
                          '2 plate': self.V_2_plate,
-                         '3 plate': self.V_3_plate,                      }
+                         '1 plate': self.V_1_plate                         }
 
     def V_1_plate(self):
         self.num_plates = 1
@@ -52,9 +52,6 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         Rtv.NumOfSamples = self.NumOfSamples
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
-
-        self.num_plates =   1 if self.version == '1 plate' else \
-                            2 if self.version == '2 plate' else 3
 
         Itr.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'\
                        .format(self.num_plates,

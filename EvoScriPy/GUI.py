@@ -225,11 +225,11 @@ class App(tkinter.Frame):
             self.master.title(protocol.name)
             self.grid()
 
-            self.selected_version = tkinter.StringVar(self)                # variable
-            self.selected_version.set(next(iter(self.protocol.versions)))  # variable def value
+            self.selected_version_StrVar = tkinter.StringVar(self)                # variable
+            self.selected_version_StrVar.set(next(iter(self.protocol.versions)))  # variable def value
 
-            self.version_selection = tkinter.OptionMenu(self, self.selected_version, *self.protocol.versions)
-            self.version_selection.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
+            self.version_selection_Menu = tkinter.OptionMenu(self, self.selected_version_StrVar, *self.protocol.versions)
+            self.version_selection_Menu.grid(row=1, column=0, rowspan=1, columnspan=4, sticky=tkinter.W + tkinter.E)
 
             # initialize parameters
             self.GUI_parameters = tkinter.Frame(self)
@@ -269,14 +269,15 @@ class App(tkinter.Frame):
             self.mainloop()
 
         def setVariantsMenu(self, value):
-            m = self.version_selection.children['menu']
+            m = self.version_selection_Menu.children['menu']
             m.delete(0, 'end')
             for val in self.protocol.versions:
-                m.add_command(label=val, command=lambda v=self.selected_version, l=val: v.set(l))
-            self.selected_version.set(next(iter(self.protocol.versions)))  # variable def value
+                m.add_command(label=val, command=lambda v=self.selected_version_StrVar, l=val: v.set(l))
+            self.selected_version_StrVar.set(next(iter(self.protocol.versions)))  # variable def value
 
         def update_parameters(self):
-            self.protocol.version = self.selected_version.get()
+            self.protocol.version = self.selected_version_StrVar.get()
+            self.protocol.versions[self.protocol.version]()
             self.GUI_init.update_parameters()  # ??
 
         class ReplicaFrame(tkinter.Frame):
