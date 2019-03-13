@@ -58,7 +58,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                                NumOfSamples     )).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
-        LysBuf = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+        LysBufCuvette = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
@@ -76,10 +76,11 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        LysisBuffer = Rtv.Reactive("VL - Lysis Buffer ",
-                                    LysBuf,
-                                    volpersample = LysisBufferVolume,
-                                    defLiqClass  = 'MN VL'             )
+        LysisBufferReact = Rtv.Reactive("VL - Lysis Buffer ",
+                                        LysBufCuvette,
+                                        volpersample = LysisBufferVolume,
+                                        defLiqClass  = 'MN VL',
+                                        num_of_samples= self.num_plates * NumOfSamples)
 
         # Show the CheckList GUI to the user for possible small changes
 
@@ -102,12 +103,11 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         with group("Prefill plates with LysisBuffer"):
 
-            Itr.userPrompt("Put the plates for LysisBuffer").exec()
+            Itr.userPrompt("Put the plates for LysisBufferReact").exec()
 
-            with self.tips(reuse=True, drop=False):
-                for LP in LysPlat:
-                    self.spread(reactive=LysisBuffer, to_labware_region=LP.selectOnly(all_samples))
-
-        self.dropTips()
+            for LP in LysPlat:
+                with self.tips(reuse=True, drop=False):
+                    self.spread(reactive=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
+                self.dropTips()
 
         self.done()

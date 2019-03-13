@@ -29,7 +29,8 @@ class Reactive:
                  defLiqClass    = None,
                  excess         = None,
                  initial_vol    = None,
-                 maxFull: float = None):
+                 maxFull: float = None,
+                 num_of_samples = None):
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
@@ -88,7 +89,7 @@ class Reactive:
             self.volpersample = single_use
             self.init_vol(NumSamples=1)
         else:
-            self.init_vol()                           # put the minimal initial volumen ?
+            self.init_vol(num_of_samples)                           # put the minimal initial volumen ?
 
     def min_num_of_replica(self, NumSamples: int=None)->int:
         return int (self.minVol(NumSamples) / (self.labware.type.maxVol*self.maxFull)) +1
