@@ -26,19 +26,40 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
     def def_versions(self):
         self.versions = {'3 plate': self.V_3_plate,
                          '2 plate': self.V_2_plate,
-                         '1 plate': self.V_1_plate                         }
+                         '1 plate': self.V_1_plate,
+                         '3 plate from Cuvette preMix': self.V_3_plate_Cuvette,
+                         '2 plate from Cuvette preMix': self.V_2_plate_Cuvette,
+                         '1 plate from Cuvette preMix': self.V_1_plate_Cuvette
+                         }
 
     def V_1_plate(self):
         self.num_plates = 1
+        self.preMix_from_Cuvette = False
+
 
     def V_2_plate(self):
         self.num_plates = 2
+        self.preMix_from_Cuvette = False
 
     def V_3_plate(self):
         self.num_plates = 3
+        self.preMix_from_Cuvette = False
+
+    def V_1_plate_Cuvette(self):
+        self.num_plates = 1
+        self.preMix_from_Cuvette = True
+
+    def V_2_plate_Cuvette(self):
+        self.num_plates = 2
+        self.preMix_from_Cuvette = True
+
+    def V_3_plate_Cuvette(self):
+        self.num_plates = 3
+        self.preMix_from_Cuvette = True
 
     def __init__(self, GUI=None, run_name="Prefill plates with LysisBuffer"):
-
+        self.num_plates = 1
+        self.preMix_from_Cuvette = False
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             NumOfSamples            = Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
@@ -58,7 +79,9 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                NumOfSamples     )).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
-        LysBufCuvette = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+        if self.preMix_from_Cuvette:
+            preMixProtKCuvette = wt.getLabware(Lab.Trough_100ml, "8-preMix ProtK")
+        LysBufCuvette      = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
@@ -74,7 +97,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         cRNAVolume          =   4.0
         LysisBufferVolume   = 100.0       # VL1 or VL
         IC_MS2Volume        =  10.0
-        IC2Volume           =   5.0       # ? 4
+        #IC2Volume           =   5.0       # ? 4
 
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
@@ -82,38 +105,43 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        ProtK = Rtv.Reactive("Proteinase K ",
-                             Reactives,
-                             volpersample   = ProtKVolume,
-                             defLiqClass    = Small_vol_disp,
-                             num_of_samples = self.num_plates * NumOfSamples,
-                             maxFull        = 90  )
-        ProtK.maxFull=0.96
-
-        cRNA = Rtv.Reactive("Carrier RNA ",
-                            Reactives,
-                            volpersample    = cRNAVolume,
-                            defLiqClass     = Small_vol_disp,
-                            num_of_samples  = self.num_plates * NumOfSamples,
-                            maxFull         = 95  )
-
-        IC_MS2 = Rtv.Reactive("IC MS2 phage culture ",
-                              Reactives,
-                              volpersample   = IC_MS2Volume,
-                              defLiqClass    = Small_vol_disp,
-                              num_of_samples = self.num_plates * NumOfSamples,
-                              maxFull        = 95  )
-
-        # IC2         = Rtv.Reactive("IC2 - synthetic RNA " ,  Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
-
-        pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
+        if self.preMix_from_Cuvette:
+            pK_cRNA_MS2 = Rtv.Reactive("preMix ProtK+cRNA+MS2 ",
+                                         preMixProtKCuvette,
+                                         volpersample=ProtKVolume + cRNAVolume + IC_MS2Volume,
+                                         defLiqClass=Small_vol_disp,
+                                         num_of_samples=self.num_plates * NumOfSamples )
+        else:
+            ProtK = Rtv.Reactive("Proteinase K ",
                                  Reactives,
-                                 components     = [cRNA, ProtK, IC_MS2],
-                                 defLiqClass    = W_liquidClass,
-                                 excess         = 8,
-                                 maxFull        = 90,
-                                 num_of_samples = self.num_plates * NumOfSamples  )
-        pK_cRNA_MS2.maxFull = 0.95
+                                 volpersample   = ProtKVolume,
+                                 defLiqClass    = Small_vol_disp,
+                                 num_of_samples = self.num_plates * NumOfSamples,
+                                 maxFull        = 90  )
+            ProtK.maxFull=0.96
+
+            cRNA = Rtv.Reactive("Carrier RNA ",
+                                Reactives,
+                                volpersample    = cRNAVolume,
+                                defLiqClass     = Small_vol_disp,
+                                num_of_samples  = self.num_plates * NumOfSamples,
+                                maxFull         = 95  )
+
+            IC_MS2 = Rtv.Reactive("IC MS2 phage culture ",
+                                  Reactives,
+                                  volpersample   = IC_MS2Volume,
+                                  defLiqClass    = Small_vol_disp,
+                                  num_of_samples = self.num_plates * NumOfSamples,
+                                  maxFull        = 95  )
+
+            pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
+                                     Reactives,
+                                     components     = [cRNA, ProtK, IC_MS2],
+                                     defLiqClass    = W_liquidClass,
+                                     excess         = 8,
+                                     maxFull        = 90,
+                                     num_of_samples = self.num_plates * NumOfSamples  )
+            pK_cRNA_MS2.maxFull = 0.95
 
         LysisBufferReact = Rtv.Reactive("VL - Lysis Buffer ",
                                         LysBufCuvette,
@@ -132,7 +160,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         par = LysPlat[0].parallelOrder(self.nTips, all_samples)
 
-        # Define place for temporal reactions
+        # Define place for temporal "reactions"
         for i, LP in enumerate(LysPlat):
             for s in all_samples:
                 Rtv.Reactive(   "lysis_{:d}-{:02d}".format( i+1, s + 1),
@@ -143,8 +171,9 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         with group("Prefill plates with LysisBufferReact"):
 
-            with self.tips(tipsMask=maxMask, reuse=True, drop=False):
-                self.makePreMix(pK_cRNA_MS2, NumSamples=self.num_plates * NumOfSamples)
+            if not self.preMix_from_Cuvette:
+                with self.tips(tipsMask=maxMask, reuse=True, drop=False):
+                    self.makePreMix(pK_cRNA_MS2, NumSamples=self.num_plates * NumOfSamples)
 
 
             Itr.userPrompt("Put the plates for LysisBufferReact").exec()
