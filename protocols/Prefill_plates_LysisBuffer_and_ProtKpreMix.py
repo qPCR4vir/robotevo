@@ -29,37 +29,38 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                          '1 plate': self.V_1_plate,
                          '3 plate from Cuvette preMix': self.V_3_plate_Cuvette,
                          '2 plate from Cuvette preMix': self.V_2_plate_Cuvette,
-                         '1 plate from Cuvette preMix': self.V_1_plate_Cuvette
+                         '1 plate from Cuvette preMix': self.V_1_plate_Cuvette,
+                         '3 plate from Cuvette LysBuf-pK-preMix': self.V_3_plate_LysBuf_pK_Cuvette,
+                         '2 plate from Cuvette LysBuf-pK-preMix': self.V_2_plate_LysBuf_pK_Cuvette,
+                         '1 plate from Cuvette LysBuf-pK-preMix': self.V_1_plate_LysBuf_pK_Cuvette
                          }
 
-    def V_1_plate(self):
-        self.num_plates = 1
-        self.preMix_from_Cuvette = False
+    def V_1_plate(self):        self.def_init(1)
+    def V_2_plate(self):        self.def_init(2)
+    def V_3_plate(self):        self.def_init(3)
 
-
-    def V_2_plate(self):
-        self.num_plates = 2
-        self.preMix_from_Cuvette = False
-
-    def V_3_plate(self):
-        self.num_plates = 3
-        self.preMix_from_Cuvette = False
-
-    def V_1_plate_Cuvette(self):
-        self.num_plates = 1
+    def plate_pK_Cuvette(self, num_plates=1):
+        self.def_init(num_plates)
         self.preMix_from_Cuvette = True
+    def V_1_plate_Cuvette(self):        self.plate_pK_Cuvette(1)
+    def V_2_plate_Cuvette(self):        self.plate_pK_Cuvette(2)
+    def V_3_plate_Cuvette(self):        self.plate_pK_Cuvette(3)
 
-    def V_2_plate_Cuvette(self):
-        self.num_plates = 2
-        self.preMix_from_Cuvette = True
+    def plate_LysBuf_pK_Cuvette(self, num_plates=1):
+        self.def_init(num_plates)
+        self.preMix_from_LysBuf_pK_Cuvette = True
+    def V_1_plate_LysBuf_pK_Cuvette(self):        self.plate_LysBuf_pK_Cuvette(1)
+    def V_2_plate_LysBuf_pK_Cuvette(self):        self.plate_LysBuf_pK_Cuvette(2)
+    def V_3_plate_LysBuf_pK_Cuvette(self):        self.plate_LysBuf_pK_Cuvette(3)
 
-    def V_3_plate_Cuvette(self):
-        self.num_plates = 3
-        self.preMix_from_Cuvette = True
+    def def_init(self, num_plates=1):
+        self.num_plates = num_plates
+        self.preMix_from_Cuvette = False
+        self.preMix_from_LysBuf_pK_Cuvette = False
 
     def __init__(self, GUI=None, run_name="Prefill plates with LysisBuffer"):
-        self.num_plates = 1
-        self.preMix_from_Cuvette = False
+        self.def_init()
+
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             NumOfSamples            = Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
@@ -79,8 +80,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                NumOfSamples     )).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
-        if self.preMix_from_Cuvette:
-            preMixProtKCuvette = wt.getLabware(Lab.Trough_100ml, "8-preMix ProtK")
+        preMixProtKCuvette = wt.getLabware(Lab.Trough_100ml, "8-preMix ProtK"   )
         LysBufCuvette      = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
@@ -98,6 +98,11 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         LysisBufferVolume   = 100.0       # VL1 or VL
         IC_MS2Volume        =  10.0
         #IC2Volume           =   5.0       # ? 4
+        preMixVol           = ProtKVolume + cRNAVolume + IC_MS2Volume
+        preMixName          = "ProtK+cRNA+MS2 "
+        if self.preMix_from_LysBuf_pK_Cuvette:
+            preMixVol += LysisBufferVolume
+            preMixName += "+LysB "
 
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
@@ -105,11 +110,11 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        if self.preMix_from_Cuvette:
-            pK_cRNA_MS2 = Rtv.Reactive("preMix ProtK+cRNA+MS2 ",
+        if self.preMix_from_Cuvette or self.preMix_from_LysBuf_pK_Cuvette:
+            pK_cRNA_MS2 = Rtv.Reactive(  preMixName,
                                          preMixProtKCuvette,
-                                         volpersample=ProtKVolume + cRNAVolume + IC_MS2Volume,
-                                         defLiqClass=W_liquidClass,
+                                         volpersample=preMixVol,
+                                         defLiqClass='MN VL',
                                          num_of_samples=self.num_plates * NumOfSamples )
         else:
             ProtK = Rtv.Reactive("Proteinase K ",
@@ -143,7 +148,8 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                      num_of_samples = self.num_plates * NumOfSamples  )
             pK_cRNA_MS2.maxFull = 0.95
 
-        LysisBufferReact = Rtv.Reactive("VL - Lysis Buffer ",
+        if not self.preMix_from_LysBuf_pK_Cuvette:
+            LysisBufferReact = Rtv.Reactive("VL - Lysis Buffer ",
                                         LysBufCuvette,
                                         volpersample    = LysisBufferVolume,
                                         defLiqClass     = 'MN VL',
@@ -171,7 +177,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         with group("Prefill plates with LysisBufferReact"):
 
-            if not self.preMix_from_Cuvette:
+            if not (self.preMix_from_Cuvette or self.preMix_from_LysBuf_pK_Cuvette):
                 with self.tips(tipsMask=maxMask, reuse=True, drop=False):
                     self.makePreMix(pK_cRNA_MS2, NumSamples=self.num_plates * NumOfSamples)
 
@@ -182,8 +188,9 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                 with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                     self.spread(reactive=pK_cRNA_MS2, to_labware_region=LP.selectOnly(all_samples))
 
-                with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                    self.spread(reactive=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
+                if not self.preMix_from_LysBuf_pK_Cuvette:
+                    with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                        self.spread(reactive=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
 
         self.dropTips()
 
