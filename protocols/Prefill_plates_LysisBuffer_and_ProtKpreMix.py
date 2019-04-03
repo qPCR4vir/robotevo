@@ -109,7 +109,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             pK_cRNA_MS2 = Rtv.Reactive("preMix ProtK+cRNA+MS2 ",
                                          preMixProtKCuvette,
                                          volpersample=ProtKVolume + cRNAVolume + IC_MS2Volume,
-                                         defLiqClass=Small_vol_disp,
+                                         defLiqClass=W_liquidClass,
                                          num_of_samples=self.num_plates * NumOfSamples )
         else:
             ProtK = Rtv.Reactive("Proteinase K ",
