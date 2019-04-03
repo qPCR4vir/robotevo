@@ -122,7 +122,7 @@ class App(tkinter.Frame):
                                                                                                 sticky=tkinter.N + tkinter.W)
             self.output_filename_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters)
             self.output_filename_v.set(protocol.output_filename)
-            tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.output_filename_v).grid(row=1,
+            self.output_filename_Entry = tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.output_filename_v).grid(row=1,
                                                                                                             column=1,
                                                                                                             columnspan=9,
                                                                                                             sticky=tkinter.N + tkinter.E + tkinter.W)
@@ -151,6 +151,11 @@ class App(tkinter.Frame):
 
         def set_O_FN(self, *args):
             self.protocol.output_filename = self.output_filename_v.get()
+
+        def change_O_FN(self, new_O_FN):
+            print("\nChanging prot name from: " + self.output_filename_v.get())
+            self.output_filename_v.set(new_O_FN)
+            print("\nto                     : " + self.output_filename_v.get())
 
         def selet_O_FN(self):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
@@ -222,13 +227,14 @@ class App(tkinter.Frame):
 
         def __init__(self, protocol):
             self.protocol = protocol
+            self.output_filename = protocol.output_filename
             protocol.GUI = self
 
             tkinter.Frame.__init__(self, tkinter.Tk())
             self.master.title(protocol.name)
             self.grid()
 
-            self.selected_version_StrVar = tkinter.StringVar(self)                # variable
+            self.selected_version_StrVar = tkinter.StringVar(self, command=lambda v=self: v.setVariant(l))                # variable
             self.selected_version_StrVar.set(next(iter(self.protocol.versions)))  # variable def value
 
             self.version_selection_Menu = tkinter.OptionMenu(self, self.selected_version_StrVar, *self.protocol.versions)
@@ -271,12 +277,17 @@ class App(tkinter.Frame):
             self.GUI_init = GUI4parameters[protocol.name](protocol)
             self.mainloop()
 
+        def setVariant(self, variant):
+            self.selected_version_StrVar.set(variant)
+            self.protocol.output_filename = self.output_filename + "_" + variant
+            self.GUI_init.change_O_FN(self.protocol.output_filename)
+
         def setVariantsMenu(self, value):
             m = self.version_selection_Menu.children['menu']
             m.delete(0, 'end')
             for val in self.protocol.versions:
-                m.add_command(label=val, command=lambda v=self.selected_version_StrVar, l=val: v.set(l))
-            self.selected_version_StrVar.set(next(iter(self.protocol.versions)))  # variable def value
+                m.add_command(label=val, command=lambda v=self, l=val: v.setVariant(l))
+            self.setVariant(next(iter(self.protocol.versions)))  # variable def value
 
         def update_parameters(self):
             self.protocol.version = self.selected_version_StrVar.get()
