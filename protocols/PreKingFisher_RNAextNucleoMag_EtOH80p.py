@@ -99,8 +99,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
-
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
+                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         if self.version != 'pre Inactivated':             # we need to add ProtK+cRNA+MS2 mix
             ProtK       = Rtv.Reactive("Proteinase K ",
