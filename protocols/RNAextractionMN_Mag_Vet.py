@@ -1,17 +1,17 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2018
+# 2014-2019
+__author__ = 'Ariel'
 
 from EvoScriPy.protocol_steps import *
-from EvoScriPy.Instructions_Te_MagS import *
 import EvoScriPy.Instructions as Itr
-import EvoScriPy.Reactive as Rtv
-
+import EvoScriPy.Labware as Lab
 from protocols.Evo100_FLI import Evo100_FLI
+import EvoScriPy.Reactive as Rtv
+from EvoScriPy.Instructions_Te_MagS import *
 
-__author__ = 'Ariel'
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
 mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
@@ -45,51 +45,52 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     def Run(self):
         self.set_EvoMode()
         self.initialize()
-        wt = self.worktable
         Rtv.NumOfSamples = self.NumOfSamples
         NumOfSamples = self.NumOfSamples
+        wt           = self.worktable
 
-        self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
-        self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
+        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
-        TeMag = self.TeMag
-        ElutBuf = wt.getLabware(Lab.Trough_100ml, "1-VEL-ElutionBuffer")
-        LysBuf  = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
-        BindBuf = wt.getLabware(Lab.Trough_100ml, "3-VEB Binding Buffer")
+                                                               # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        BioWaste = wt.getLabware(Lab.Trough_100ml, "6-Waste")
-        # Unused8       = wt.getLabware(Lab.Trough_100ml, "8-Unused"            )
-        # Unused9       = wt.getLabware(Lab.Trough_100ml, "9-Unused"            )
+        LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
+        BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
+        ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
 
-        DiTi1000_1 = wt.getLabware(Lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2 = wt.getLabware(Lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3 = wt.getLabware(Lab.DiTi_1000ul, "1000-3")
-
-        Reactives = wt.getLabware(Lab.GreinRack16_2mL, "Reactives")
         Eluat     = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
         Samples   = wt.getLabware(Lab.EppRack3x16,     "Proben")
 
-        # Rtv.NumOfSamples = self.NumOfSamples
+        DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
+        DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
+        DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(self.NumOfSamples))).exec()
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
-        # DiTi1000_1.fill('C06')
-        # DiTi1000_2.fill('A11')
-        # DiTi1000_3.fill('A10')
+        self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
+        self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
+        TeMag          = self.TeMag
+
+                                                               #  Set the initial position of the tips
+
         self.go_first_pos()
 
+                                                               # Set volumen / sample
+
         SampleVolume        = 200.0
-        LysisBufferVolume   = 180.0
-        IC2Volume           = 4.0
-        BindingBufferVolume = 600.0
-        B_BeadsVolume       = 20.0
-        VEW1Volume          = 600.0
-        VEW2Volume          = 600.0
+        LysisBufferVolume   = 180.0             # VL
+        IC2Volume           = 4.0               # IC2
+        BindingBufferVolume = 600.0             # VEB
+        B_BeadsVolume       = 20.0              # B-Beads
+        VEW1Volume          = 600.0             # VEW1
+        VEW2Volume          = 600.0             # VEW2
         EtOH80pVolume       = 600.0
         ProtKVolume         = 20.0
         cRNAVolume          = 4.0
-        IC_MS2Volume        = 20.0
-        ElutionBufferVolume = 100.0
+        IC_MS2Volume        = 20.0              # MS2
+        ElutionBufferVolume = 100.0             # VEL
+
+                                                        # Liquid classes used for pippetting.
+                                                        # Others liquidClass names are defined in "protocol_steps.py"
 
         SampleLiqClass      = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 

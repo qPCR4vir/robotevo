@@ -2,16 +2,15 @@
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2018-2018
+# 2018-2019
+__author__ = 'Ariel'
+
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100_FLI import Evo100_FLI
-import EvoScriPy.Reactive as Rtv      # ??
-
-
-__author__ = 'Ariel'
+import EvoScriPy.Reactive as Rtv
 
 
 class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
@@ -45,7 +44,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                GUI                         = GUI,
                                NumOfSamples                = PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
                                worktable_template_filename = '../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
-                               output_filename='../current/PreKingFisher_RNAextNucleoMag_EtOH80p',
+                               output_filename             = '../current/PreKingFisher_RNAextNucleoMag_EtOH80p',
                                run_name                    = run_name)
 
     def Run(self):
@@ -57,10 +56,10 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
 
-        # Get Labwares (Cuvette, eppys, etc.) from the work table
+                                                              # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     ) # move to 23.5
-        BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  ) # move to 23.7
+        LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
+        BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
@@ -68,19 +67,19 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
-        #  Set the initial position of the tips
+                                                              #  Set the initial position of the tips
 
         self.go_first_pos()
 
-        # Set volumen / sample
+                                                              # Set volumen / sample
 
         ProtKVolume         =  20.0
         cRNAVolume          =   4.0
-        LysisBufferVolume   = 100.0       # VL1 or VL
-        IC_MS2Volume        =  10.0
-        IC2Volume           =   5.0       # ? 4
-        BindingBufferVolume = 350.0
-        B_BeadsVolume       =  20.0
+        LysisBufferVolume   = 100.0                 # VL1 or VL
+        IC_MS2Volume        =  10.0                 # IC2
+        IC2Volume           =   5.0                 # ? 4
+        BindingBufferVolume = 350.0                 # VEB
+        B_BeadsVolume       =  20.0                 # B-Beads
         EtOH80pVolume       = 600.0
         SampleVolume        = 100.0
         InitLysisVol        = 0.0
@@ -91,8 +90,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         elif self.version == 'pre Inactivated':
             InitLysisVol  = SampleVolume + ProtKVolume + cRNAVolume + IC_MS2Volume + LysisBufferVolume
 
-
-        # Liquid classes used for pippetting. Others liquidClass names are defined in "protocol_steps.py"
+                                                        # Liquid classes used for pippetting.
+                                                        # Others liquidClass names are defined in "protocol_steps.py"
 
         SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 

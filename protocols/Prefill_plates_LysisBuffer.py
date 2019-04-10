@@ -1,16 +1,16 @@
-# Copyright (C) 2018-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2018-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2018-2018
+# 2018-2019
+__author__ = 'Ariel'
+# todo: deprecate, this is now one version in Prefill_plates_LysisBuffer_and_ProtKpreMix
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100_FLI import Evo100_FLI
-import EvoScriPy.Reactive as Rtv      # ??
-
-__author__ = 'Ariel'
+import EvoScriPy.Reactive as Rtv
 
 
 class Prefill_plates_LysisBuffer(Evo100_FLI):

@@ -1,16 +1,16 @@
-# Copyright (C) 2018-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2018-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2018-2018
+# 2018-2019
+__author__ = 'Ariel'
+
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100_FLI import Evo100_FLI
-import EvoScriPy.Reactive as Rtv      # ??
-
-__author__ = 'Ariel'
+import EvoScriPy.Reactive as Rtv
 
 
 class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
@@ -79,7 +79,8 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                        .format(self.num_plates,
                                NumOfSamples     )).exec()
 
-        # Get Labwares (Cuvette, eppys, etc.) from the work table
+                                                            # Get Labwares (Cuvette, eppys, etc.) from the work table
+
         preMixProtKCuvette = wt.getLabware(Lab.Trough_100ml, "8-preMix ProtK"   )
         LysBufCuvette      = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
 
@@ -90,19 +91,22 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
 
-        self.go_first_pos()                      #  Set the initial position of the tips
+        self.go_first_pos()                                 #  Set the initial position of the tips
 
-        # Set volumen / sample
+                                                            # Set volumen / sample
         ProtKVolume         =  20.0
         cRNAVolume          =   4.0
         LysisBufferVolume   = 100.0       # VL1 or VL
         IC_MS2Volume        =  10.0
-        #IC2Volume           =   5.0       # ? 4
+        #IC2Volume           =   5.0              # IC2     4 uL?
         preMixVol           = ProtKVolume + cRNAVolume + IC_MS2Volume
         preMixName          = "ProtK+cRNA+MS2 "
         if self.preMix_from_LysBuf_pK_Cuvette:
             preMixVol += LysisBufferVolume
             preMixName += "+LysB "
+
+                                                        # Liquid classes used for pippetting.
+                                                        # Others liquidClass names are defined in "protocol_steps.py"
 
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
