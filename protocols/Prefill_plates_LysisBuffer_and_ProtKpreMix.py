@@ -112,7 +112,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
+                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         if self.preMix_from_Cuvette or self.preMix_from_LysBuf_pK_Cuvette:
             pK_cRNA_MS2 = Rtv.Reactive(  preMixName,
@@ -159,7 +159,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                         defLiqClass     = 'MN VL',
                                         num_of_samples  = self.num_plates * NumOfSamples  )
 
-        # Show the CheckList GUI to the user for possible small changes
+                                                        # Show the CheckList GUI to the user for possible small changes
 
         self.CheckList()
         self.set_EvoMode()

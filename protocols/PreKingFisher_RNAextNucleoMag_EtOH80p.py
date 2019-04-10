@@ -139,12 +139,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         EtOH80p         = Rtv.Reactive("Ethanol 80% " , wt.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),  volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
 
 
-        # Show the CheckList GUI to the user for possible small changes
+                                                        # Show the CheckList GUI to the user for possible small changes
 
         self.CheckList()
         self.set_EvoMode()
 
-        Itr.wash_tips(wasteVol=30, FastWash=True).exec()
+                                                        # Define the reactives not shown in the CheckList GUI
+                                                        # Define samples and the place for temporal reactions
 
         Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"   )  # Plate 12 x 8 ?
         Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
@@ -153,7 +154,6 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
            Samples  = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
 
 
-        # Define samples and the place for temporal reactions
         par = Plate_lysis.parallelOrder(self.nTips, all_samples)
 
         for s in all_samples:
@@ -168,6 +168,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             Rtv.Reactive("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
                          excess=0)  # todo revise order !!!
 
+
+        Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
         with group("Prefill plate with EtOH80p"):
             with self.tips(reuse=True, drop=False, drop_last=True):
