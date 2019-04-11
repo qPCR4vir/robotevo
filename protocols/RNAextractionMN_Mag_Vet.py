@@ -26,14 +26,43 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     name = "RNA extraction with the MN_Vet kit"
     min_s, max_s = 1, 48
 
-    def def_versions(self):
-        self.versions = {'Serum with Liquid detection + tracking'    : not_implemented,
-                         'Serum without Liquid detection + tracking' : not_implemented,
-                         'Tissue without Liquid detection + tracking': not_implemented,
-                         'Tissue with Liquid detection + tracking'   : not_implemented}
 
+    def def_versions(self):
+        self.versions = {'VL-pKmix prefill'    : self.V_fill_preMix_inactivation,
+                         'VL-only prefill'     : self.V_fill_inactivation,
+                         'VL-only inactivated' : self.V_VL_inactivated,
+                         'VL-pKmix Inactivated': self.V_preMix_inactivated,
+                         'original samples'    : self.V_original_samples                }
+
+    def V_original_samples(self):
+        self.V_default()
+
+    def V_VL_inactivated(self):
+        self.V_default()
+        self.add_VL         = False
+        self.add_samples    = False
+
+    def V_preMix_inactivated(self):
+        self.V_VL_inactivated()
+        self.add_preMix     = False
+
+    def V_fill_preMix_inactivation(self):
+        self.V_default()
+        self.add_samples   = False
+        self.do_extraction = False
+
+    def V_fill_inactivation(self):
+        self.V_fill_preMix_inactivation()
+        self.add_preMix     = False
+
+    def V_default(self):
+        self.add_samples    = True
+        self.add_preMix     = True
+        self.add_VL         = True
+        self.do_extraction  = True
 
     def __init__(self, GUI = None,  run_name = None):
+        self.V_default()
 
         Evo100_FLI.__init__(self,
                             GUI                         = GUI,
@@ -49,16 +78,20 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+        Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit').format(str(NumOfSamples))).exec()
 
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
-        BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
-        ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
+        if self.add_VL:
+            LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
 
-        Eluat     = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
-        Samples   = wt.getLabware(Lab.EppRack3x16,     "Proben")
+        if self.do_extraction:
+            BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
+            ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
+            Eluat     = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
+
+        if self.add_samples:
+            Samples   = wt.getLabware(Lab.EppRack3x16,     "Proben")
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
@@ -66,9 +99,10 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
-        self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
-        self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
-        TeMag          = self.TeMag
+        if self.do_extraction:
+            self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
+            self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
+            TeMag          = self.TeMag
 
                                                                #  Set the initial position of the tips
 
