@@ -234,7 +234,7 @@ class App(tkinter.Frame):
             self.master.title(protocol.name)
             self.grid()
 
-            self.selected_version_StrVar = tkinter.StringVar(self, command=lambda v=self: v.setVariant(l))                # variable
+            self.selected_version_StrVar = tkinter.StringVar(self )                # variable  ? command=lambda v=self: v.setVariant(l)
             self.selected_version_StrVar.set(next(iter(self.protocol.versions)))  # variable def value
 
             self.version_selection_Menu = tkinter.OptionMenu(self, self.selected_version_StrVar, *self.protocol.versions)
