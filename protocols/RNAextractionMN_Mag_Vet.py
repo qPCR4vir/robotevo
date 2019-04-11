@@ -88,10 +88,10 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         if self.do_extraction:
             BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
             ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
-            Eluat     = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
+            Eluat       = wt.getLabware(Lab.EppRack3x16R,    "Eluat")
 
-        if self.add_samples:
-            Samples   = wt.getLabware(Lab.EppRack3x16,     "Proben")
+        Samples     = wt.getLabware(Lab.EppRack3x16,     "Proben")
+        Lysis       = Samples
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
@@ -103,6 +103,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
             self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
             TeMag          = self.TeMag
+            Lysis  =  TeMag
 
                                                                #  Set the initial position of the tips
 
@@ -123,7 +124,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         IC_MS2Volume        = 20.0              # MS2
         ElutionBufferVolume = 100.0             # VEL
 
-                                                        # Liquid classes used for pippetting.
+        InitLysisVol        = 0.0
+        if self.do_extraction:
+            if not self.add_samples:    InitLysisVol += SampleVolume
+            if not self.add_preMix:     InitLysisVol += ProtKVolume + cRNAVolume + IC_MS2Volume
+            if not self.add_VL:         InitLysisVol += LysisBufferVolume
+
+
+        # Liquid classes used for pippetting.
                                                         # Others liquidClass names are defined in "protocol_steps.py"
 
         SampleLiqClass      = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
@@ -131,59 +139,63 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
-        par         = TeMag.parallelOrder(self.nTips, all_samples)
+        if self.do_extraction:
+            par         = TeMag.parallelOrder(self.nTips, all_samples)
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         # IC2         = Rtv.Reactive("IC2 - synthetic RNA " ,  Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
-        ProtK = Rtv.Reactive("Proteinase K ",
-                             Reactives,
-                             replicas=2,
-                             pos=[15, 16],               # only 16 ?  pos=16
-                             volpersample=ProtKVolume,
-                             defLiqClass=Small_vol_disp)
-
-        cRNA   = Rtv.Reactive("Carrier RNA ", Reactives, pos=14, volpersample=cRNAVolume, defLiqClass=Small_vol_disp)
-        IC_MS2 = Rtv.Reactive("IC MS2 phage culture ", Reactives, pos=13, volpersample=IC_MS2Volume, defLiqClass=Small_vol_disp)
-
-        pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
+        if self.add_preMix:
+            ProtK = Rtv.Reactive("Proteinase K ",
                                  Reactives,
-                                 pos=8,
-                                 components=[cRNA, ProtK, IC_MS2],
-                                 defLiqClass=W_liquidClass,
-                                 excess=20)
+                                 replicas=2,
+                                 pos=[15, 16],               # only 16 ?  pos=16
+                                 volpersample=ProtKVolume,
+                                 defLiqClass=Small_vol_disp)
 
-        LysisBuffer = Rtv.Reactive("VL - Lysis Buffer ", LysBuf, volpersample=LysisBufferVolume, defLiqClass='MN VL')
+            cRNA   = Rtv.Reactive("Carrier RNA ", Reactives, pos=14, volpersample=cRNAVolume, defLiqClass=Small_vol_disp)
+            IC_MS2 = Rtv.Reactive("IC MS2 phage culture ", Reactives, pos=13, volpersample=IC_MS2Volume, defLiqClass=Small_vol_disp)
 
-        B_Beads         = Rtv.Reactive("B - Beads " ,
-                                       Reactives,
-                                       pos          = [1,2],
-                                       initial_vol  = 1200,
-                                       volpersample = B_BeadsVolume ,
-                                       defLiqClass  = Beads_LC_2,
-                                       maxFull      = 70)
+            pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
+                                     Reactives,
+                                     pos=8,
+                                     components=[cRNA, ProtK, IC_MS2],
+                                     defLiqClass=W_liquidClass,
+                                     excess=20)
 
-        BindingBuffer   = Rtv.Reactive("VEB - Binding Buffer " ,  BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
+        if self.add_VL:
+            LysisBuffer = Rtv.Reactive("VL - Lysis Buffer ", LysBuf, volpersample=LysisBufferVolume, defLiqClass='MN VL')
 
-        VEW1            = Rtv.Reactive( "VEW1 - Wash Buffer ",
-                                        wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
-                                        volpersample  = VEW1Volume    ,
-                                        defLiqClass   = B_liquidClass)
+        if self.do_extraction:
+            B_Beads         = Rtv.Reactive("B - Beads " ,
+                                           Reactives,
+                                           pos          = [1,2],
+                                           initial_vol  = 1200,
+                                           volpersample = B_BeadsVolume ,
+                                           defLiqClass  = Beads_LC_2,
+                                           maxFull      = 70)
 
-        VEW2            = Rtv.Reactive("VEW2 - WashBuffer "  ,
-                                       wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
-                                       volpersample  =VEW2Volume    ,
-                                       defLiqClass   =B_liquidClass)
+            BindingBuffer   = Rtv.Reactive("VEB - Binding Buffer " ,  BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
 
-        EtOH80p         = Rtv.Reactive("Ethanol 80% "                     ,
-                                         Lab.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
-                                         volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
+            VEW1            = Rtv.Reactive( "VEW1 - Wash Buffer ",
+                                            wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
+                                            volpersample  = VEW1Volume    ,
+                                            defLiqClass   = B_liquidClass)
 
-        ElutionBuffer   = Rtv.Reactive("Elution Buffer ",
-                                       ElutBuf,
-                                       volpersample  =ElutionBufferVolume ,
-                                       defLiqClass   =B_liquidClass)            # defLiqClass="Eluat"   ??
+            VEW2            = Rtv.Reactive("VEW2 - WashBuffer "  ,
+                                           wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
+                                           volpersample  =VEW2Volume    ,
+                                           defLiqClass   =B_liquidClass)
+
+            EtOH80p         = Rtv.Reactive("Ethanol 80% "                     ,
+                                             Lab.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
+                                             volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
+
+            ElutionBuffer   = Rtv.Reactive("Elution Buffer ",
+                                           ElutBuf,
+                                           volpersample  =ElutionBufferVolume ,
+                                           defLiqClass   =B_liquidClass)            # defLiqClass="Eluat"   ??
 
                                                         # Show the CheckList GUI to the user for possible small changes
         self.CheckList()
@@ -191,12 +203,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                         # Define the reactives not shown in the CheckList GUI
                                                         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
-                                                pos=s+1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s+1), TeMag, initial_vol= 0.0,
-                                                pos=par[s]+1, defLiqClass=def_liquidClass, excess=0)
-            Rtv.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
+            Rtv.Reactive("lysis_{:02d}".format(s + 1), Lysis, initial_vol=InitLysisVol,
+                         pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+            if self.do_extraction:
+                Rtv.Reactive(  "RNA_{:02d}".format(s+1), Eluat, initial_vol= 0.0,
                                                 pos=s+1, defLiqClass=def_liquidClass, excess=0)
+                if self.add_samples:
+                    Rtv.Reactive("probe_{:02d}".format(s+1), Samples, single_use=SampleVolume,
+                                                    pos=s+1, defLiqClass=SampleLiqClass, excess=0)
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
         Te_MagS_ActivateHeater(50).exec()
