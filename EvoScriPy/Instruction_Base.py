@@ -180,13 +180,13 @@ class Pipette(Instruction):
         """
         Instruction.__init__(self, name)
         self.robot.curArm(arm)
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
-        self.labware=labware
-        self.spacing = spacing
-        self.loopOptions = LoopOptions
-        self.RackName = RackName
-        self.Well = Well
-        self.arm = self.robot.curArm().index   # current arm can change - keep it here
+        self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.labware            =labware
+        self.spacing            = spacing
+        self.loopOptions        = LoopOptions
+        self.RackName           = RackName
+        self.Well               = Well
+        self.arm                = self.robot.curArm().index   # current arm can change - keep it here
                             # noOfLoopOptions,
                             # loopName,
                             # action,
