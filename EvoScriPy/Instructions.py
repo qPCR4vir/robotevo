@@ -1,9 +1,10 @@
-# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
-#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2016
+# 2014-2019
+__author__ = 'Ariel'
+
 
 __author__ = 'qPCR4vir'
 
@@ -954,6 +955,8 @@ class notification(Instruction):    # todo declare const
                     integer(self.action)              ]
         return True
 
+
+'''
 class Te_MO_Aspirate(Instruction):
     """
     A.15.4.26  Aspirate-Multipip. (only Freedom EVOware Standard)
@@ -1003,7 +1006,7 @@ class Te_MO_Aspirate(Instruction):
                             Well,
                             arm )
 
-
+'''
 
 class subroutine(ScriptONLY):
     """ UNDOCUMENTED

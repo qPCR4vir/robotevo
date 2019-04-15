@@ -1,13 +1,12 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2018
+# 2014-2019
+__author__ = 'Ariel'
+
 
 from EvoScriPy.protocol_steps import *
-
-
-__author__ = 'Ariel'
 
 
 

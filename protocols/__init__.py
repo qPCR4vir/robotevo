@@ -17,6 +17,7 @@ def registreExecutable(executable):
     available_classes[executable.name] = executable.__class__
 
 
+from protocols.Prefill_plate_in_Evo200                import Prefill_plate_in_Evo200
 from protocols.RNAextractionMN_Mag_Vet                import RNAextr_MN_Vet_Kit
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.Prefill_plates_LysisBuffer             import Prefill_plates_LysisBuffer
@@ -26,6 +27,7 @@ from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates
 from EvoScriPy.protocol_steps                         import Pipeline
 
 
+available.append(Prefill_plate_in_Evo200                     ())
 available.append(Prefill_plates_VEW1_ElutionBuffer_VEW2      ())
 available.append(Prefill_plates_LysisBuffer                  ())
 available.append(Prefill_plates_LysisBuffer_and_ProtKpreMix  ())

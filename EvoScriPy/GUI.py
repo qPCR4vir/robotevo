@@ -1,8 +1,10 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
-# GUI.py : authors Ariel Vina-Rodriguez (qPCR4vir), Tobias Winterfeld (dondiablo)
-# 2014-2018
+# author Ariel Vina-Rodriguez (qPCR4vir)
+# 2014-2019
+__author__ = 'Ariel'
+
 """
 Implement a GUI that automatically detect available protocols.
 """
@@ -11,7 +13,7 @@ from tkinter.filedialog import askopenfilename
 
 from protocols import available
 
-__author__ = 'qPCR4vir'
+
 
 GUI4parameters = {}  # map { 'protocol class name' : GUI_init_parameters class to use }
 av_prot_names = []   # list of "protocol names+: + run names" with the same index as available executables
@@ -195,6 +197,9 @@ class App(tkinter.Frame):
         def update_parameters(self):
             App.GUI_init_parameters.update_parameters(self)
             self.read_NumOfSamples()
+
+    from protocols.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
+    GUI4parameters[Prefill_plate_in_Evo200.name] = GUI_init_RNAext_parameters
 
     from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters

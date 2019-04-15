@@ -1,21 +1,20 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2019-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2018
+# 2019-2019
+__author__ = 'Ariel'
+
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Reactive as Rtv
 
 
-__author__ = 'Ariel'
 
-
-
-class Evo200_generic (Protocol):
+class Evo200 (Protocol):
     """ Using the Evo200
     """
-    min_s, max_s = 1, 96
+    min_s, max_s = 1, 96   # ??
 
     def __init__(self,
                      GUI                            = None,
@@ -31,8 +30,8 @@ class Evo200_generic (Protocol):
                                 output_filename             = output_filename,
                                 run_name                    = run_name)
 
-        self.NumOfSamples = int(NumOfSamples)# if NumOfSamples is not None else  Evo200.max_s)
-        Rtv.NumOfSamples  = self.NumOfSamples
+        self.NumOfSamples = int(NumOfSamples)         # if NumOfSamples is not None else  Evo200.max_s)
+        Rtv.NumOfSamples  = self.NumOfSamples         # ?
 
 
 
