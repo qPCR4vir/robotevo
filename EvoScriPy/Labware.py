@@ -65,7 +65,7 @@ class WorkTable:
             self.rack_site = rack_site
 
 
-    def __init__(self, templateFile=None, grids=67, sites=127):
+    def __init__(self, templateFile, grids=67, sites=127):
         self.def_WashWaste   = None
         self.def_WashCleaner = None
         self.def_DiTiWaste   = None
@@ -80,7 +80,9 @@ class WorkTable:
         self.templateFileName = None
         if isinstance(templateFile, list):
             self.template = templateFile
+            print("Template fileis a list")
         else:
+            print("Set template file" + templateFile)
             self.template = self.parseWorTableFile(templateFile)
             self.templateFileName = templateFile
 
@@ -95,8 +97,11 @@ class WorkTable:
             labwware_types=[]
             for line in tmpl:
                 templList += [line]
+                if line.find( "--{ RPG }--")==0:
+                    #print("***********    --{ RPG }--      ******************")
+                    break  # TODO possible error msg ??
                 line = line.split(';')
-                if line[0]=="--{ RPG }--": break     # TODO possible error msg ??
+
                 if line[0]!="998": continue          # TODO possible error msg ??
                 if grid_num >= len(self.grid): continue # ignore lines between this and  "--{ RPG }--"
 
@@ -213,7 +218,8 @@ class WorkTable:
 
 class Frezeer (WorkTable):
     def __init__(self):
-        WorkTable.__init__(self)
+        print("********  Implement Frezer  ***** ")
+        #WorkTable.__init__(self)
 
 stock = Frezeer()
 
