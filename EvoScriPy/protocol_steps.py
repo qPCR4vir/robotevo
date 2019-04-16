@@ -15,7 +15,7 @@ import EvoScriPy.EvoMode as EvoMode
 
 
 
-def not_implemented(NumOfSamples):
+def not_implemented():
     print('This protocols have yet to be implemented.')
 
 

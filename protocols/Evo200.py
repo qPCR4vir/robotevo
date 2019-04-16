@@ -40,6 +40,7 @@ class Evo200 (Protocol):
 
         wt.def_DiTi       = Lab.DiTi_1000ul   # todo revise, this is a type, the others are labwares
 
+        """
         WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""                                  )
         WashWaste       = wt.getLabware(Lab.WasteWS,    ""                                  )
         WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""                                  )
@@ -49,7 +50,7 @@ class Evo200 (Protocol):
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste
-
+        """
 
 
     def makePreMix( self, preMix, force_replies=False, NumSamples=None):
