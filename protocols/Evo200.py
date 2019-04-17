@@ -38,18 +38,19 @@ class Evo200 (Protocol):
     def set_defaults(self):
         wt = self.worktable
 
-        wt.def_DiTi       = Lab.DiTi_1000ul   # todo revise, this is a type, the others are labwares
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""                                  )
+
+        wt.def_DiTi        = Lab.DiTi_1000ul   # todo revise, this is a type, the others are labwares
+        wt.def_DiTiWaste   = DiTiWaste
 
         """
         WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""                                  )
         WashWaste       = wt.getLabware(Lab.WasteWS,    ""                                  )
         WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""                                  )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""                                  )
 
         # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
-        wt.def_DiTiWaste   = DiTiWaste
         """
 
 
