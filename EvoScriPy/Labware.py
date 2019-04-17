@@ -215,6 +215,11 @@ class WorkTable:
         self.retireLabware(labw)
         return labw.type.createLabware(loc, label)
 
+    def set_def_DiTi(self, tips) : # :Labware.DITIrackType) ->Labware.DITIrackType:
+        old = self.def_DiTi
+        self.def_DiTi = tips
+        return old
+
 
 class Frezeer (WorkTable):
     def __init__(self):
@@ -342,14 +347,16 @@ class Labware:
             return labw
 
     class DITIrackType(Type):
+
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
+
             if portrait: nCol, nRow = nRow, nCol # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
-            self.pick_next_rack = None  # labware (DITIrackType or grid,site)
-            self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
-            self.last_preserved_tips = None  # a tip Well in a DiTi rack
+            self.pick_next_rack = None                   # labware (DITIrackType or grid,site)
+            self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
+            self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
         def createLabware(self, loc, label):
             labw = DITIrack(self, loc, label)

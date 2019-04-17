@@ -850,15 +850,16 @@ class Protocol (Executable):
         if drop         is not None: drop_old           = self.set_dropTips    (drop        )
         if preserve     is not None: preserve_old       = self.preserveTips    (preserve    )
         if usePreserved is not None: usePreserved_old   = self.usePreservedTips(usePreserved)
-        if allow_air    is not None: allow_air_old      = self.set_allow_air   (allow_air  )
+        if allow_air    is not None: allow_air_old      = self.set_allow_air   (allow_air   )
+        if tip_type     is not None: tip_type_old       = self.worktable.set_def_DiTi(tip_type)
 
         if tipsMask     is not None:
             tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples, tip_type=tip_type)
 
         yield
 
+        if tip_type     is not None: tip_type     = self.worktable.set_def_DiTi(tip_type_old)
         if tipsMask     is not None: tipsMask     = self.dropTips        (tipsMask_old)
-
         if reuse        is not None: reuse        = self.reuseTips       (reuse_old       )
         if drop         is not None: drop         = self.set_dropTips    (drop_old        )
         if preserve     is not None: preserve     = self.preserveTips    (preserve_old    )
