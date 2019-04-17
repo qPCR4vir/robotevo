@@ -604,13 +604,26 @@ class Labware:
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 class DITIrack (Labware):
-    def __init__(self, type, location, label=None, worktable=None):
+    """
+    Objects of this class represent physical objects (with location) of
+    some type Labware.DITIrackType
+    """
+
+    def __init__(self, type : Labware.DITIrackType,
+                       location,
+                       label=None,
+                       worktable=None    ):
+
         assert isinstance(type, Labware.DITIrackType)
-        Labware.__init__(self, type, location, label=label, worktable=worktable)
+
+        Labware.__init__(self, type,
+                               location,
+                               label=label,
+                               worktable=worktable  )
         self.fill()
-        if type.pick_next_rack is None: # update an iRobot state !! Only initialization, please!
+        if type.pick_next_rack is None:            # update an iRobot state !! Only initialization, please!
             type.pick_next_rack = self
-            # type.last_preserved_tips = ?
+                                                   # type.last_preserved_tips = ?
 
     def fill(self, beg=1, end=None):   # todo it belong to Robot ??
         if isinstance(beg, list): assert end is None
@@ -830,10 +843,11 @@ class Cuvette(Labware):
 
 #  "predefining" common labwares types:
 
-Trough_100ml    = Labware.CuvetteType("Trough 100ml",               8,      maxVol=  100000)
+Trough_100ml    = Labware.CuvetteType("Trough 100ml",                8,     maxVol=  100000)
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
 EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=    1500)
+EppRack6x4      = Labware.Type("24 Pos Eppi Tube Rack",              4, 6,  maxVol=    1500)
 EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=    1500)
 EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  maxVol=    1500) # defined in Evoware !!!
                     # by duplicating and then editing the labware 'Tube Eppendorf 3x 16 Pos' and also the carrier
@@ -852,6 +866,8 @@ EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVo
 
 
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
+DiTi_1000ul_SBS = Labware.DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
+
 DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise

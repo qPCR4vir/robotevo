@@ -830,7 +830,7 @@ class Protocol (Executable):
     @contextmanager
     def tips(self, tipsMask=None, reuse=None,     drop=None,
                             preserve=None,  usePreserved=None, selected_samples=None,
-                            allow_air=None, drop_first=False,   drop_last=False):
+                            allow_air=None, drop_first=False,   drop_last=False, tip_type=None):
         '''
 
         :param tipsMask:
@@ -852,7 +852,8 @@ class Protocol (Executable):
         if usePreserved is not None: usePreserved_old   = self.usePreservedTips(usePreserved)
         if allow_air    is not None: allow_air_old      = self.set_allow_air   (allow_air  )
 
-        if tipsMask     is not None: tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples)
+        if tipsMask     is not None:
+            tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples, tip_type=tip_type)
 
         yield
 
