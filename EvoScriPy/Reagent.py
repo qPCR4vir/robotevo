@@ -3,9 +3,6 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-__author__ = 'Ariel'
-
-
 __author__ = 'qPCR4vir'
 
 
@@ -17,7 +14,8 @@ def_react_excess =  4
 def_mix_excess   =  8
 NumOfSamples     = None    # TODO revise this !!! Eliminate this GLOBAL ??????
 
-class Reactive:
+
+class Reagent:
 
     Reactives = None           # todo move to normal member of class protocol ??
 
@@ -36,7 +34,7 @@ class Reactive:
         """
         Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
 
-        :param name: str; Reactive name. Ex: "Buffer 1", "forward primer", "IC MS2"
+        :param name: str; Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
         :param labware: Labware;
         :param volpersample: float; in uL
         :param pos: [wells] or offset to begging to put replica. If None will try to assign consecutive wells
@@ -53,7 +51,7 @@ class Reactive:
             isinstance(labware.location.worktable, Lab.WorkTable) ):
           labware.location.worktable.Reactives.append(self)
         else:
-          if (Reactive.Reactives): Reactive.Reactives.Reactives.append(self) # todo temporal
+          if (Reagent.Reactives): Reagent.Reactives.Reactives.append(self) # todo temporal
 
         ex= def_react_excess if excess is None else excess
 
@@ -98,11 +96,11 @@ class Reactive:
 
     @staticmethod
     def SetReactiveList(protocol):
-        Reactive.Reactives = protocol                    # ??
+        Reagent.Reactives = protocol                    # ??
 
     @staticmethod
     def StopReactiveList():
-        Reactive.Reactives = None
+        Reagent.Reactives = None
 
     def __str__(self):
         return "{name:s}".format(name=self.name)
@@ -135,7 +133,7 @@ class Reactive:
 
         return self.labware.autoselect(offset or self.pos, maxTips, len(self.Replicas) if offset is None else 1)
 
-class Primer (Reactive):
+class Primer (Reagent):
     IDs ={}
     SEQs={}
     Names={}
@@ -155,7 +153,7 @@ class Primer (Reactive):
                  pos        =None,
                  initial_vol=None ):
 
-        Reactive.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
+        Reagent.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
 
         self.seq = seq
         self.ID  = ID
@@ -168,15 +166,15 @@ class Primer (Reactive):
 
 
 
-class Reaction(Reactive):
+class Reaction(Reagent):
     def __init__(self, name, track_sample, labware,
                  pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
-        Reactive.__init__(self, name, labware, single_use=0,
-                 pos=pos, replicas=replicas, defLiqClass=defLiqClass, excess=excess, initial_vol=initial_vol)
+        Reagent.__init__(self, name, labware, single_use=0,
+                         pos=pos, replicas=replicas, defLiqClass=defLiqClass, excess=excess, initial_vol=initial_vol)
         self.track_sample = track_sample
 
 
-class preMix(Reactive):
+class preMix(Reagent):
 
     def __init__(self,
                  name,
@@ -199,16 +197,16 @@ class preMix(Reactive):
 
         if initial_vol is None: initial_vol = 0.0
 
-        Reactive.__init__(self,name,
-                          labware,
-                          vol,
-                          pos           = pos,
-                          replicas      = replicas,
-                          defLiqClass   = defLiqClass,
-                          excess        = ex,
-                          initial_vol   = initial_vol,
-                          maxFull       = maxFull,
-                          num_of_samples = num_of_samples)
+        Reagent.__init__(self, name,
+                         labware,
+                         vol,
+                         pos           = pos,
+                         replicas      = replicas,
+                         defLiqClass   = defLiqClass,
+                         excess        = ex,
+                         initial_vol   = initial_vol,
+                         maxFull       = maxFull,
+                         num_of_samples = num_of_samples)
 
         self.components = components
         #self.init_vol()
@@ -220,7 +218,7 @@ class preMix(Reactive):
                 self.volpersample += react.volpersample
         pass
         # put volume in replicas only at the moment of making  !!
-        # Reactive.init_vol(self, NumSamples)
+        # Reagent.init_vol(self, NumSamples)
         # self.put_min_vol(NumSamples)
 
 
@@ -253,8 +251,8 @@ class PrimerMix(preMix):
 
         if initial_vol is None: initial_vol = 0.0
 
-        Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
-                          defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
+        Reagent.__init__(self, name, labware, vol, pos=pos, replicas=replicas,
+                         defLiqClass=defLiqClass, excess=ex, initial_vol=initial_vol)
         self.components = components
         #self.init_vol()
 
@@ -285,8 +283,8 @@ class PCRMasterMix(preMix):
 
         if initial_vol is None: initial_vol = 0.0
 
-        Reactive.__init__(self,name,labware,vol,pos=pos,replicas=replicas,
-                          defLiqClass=defLiqClass,excess=ex, initial_vol=initial_vol)
+        Reagent.__init__(self, name, labware, vol, pos=pos, replicas=replicas,
+                         defLiqClass=defLiqClass, excess=ex, initial_vol=initial_vol)
         self.components = components
         #self.init_vol()
 

@@ -7,7 +7,7 @@ __author__ = 'Ariel'
 
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Reagent as Rtv
 
 
 

@@ -5,7 +5,7 @@
 # 2014-2018
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Reagent as Rtv
 
 
 __author__ = 'Ariel'

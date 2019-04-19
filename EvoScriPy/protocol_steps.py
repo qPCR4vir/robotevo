@@ -9,7 +9,7 @@ __author__ = 'Ariel'
 from contextlib import contextmanager
 import EvoScriPy.Robot as Rbt
 import EvoScriPy.Instructions as Itr
-import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Reagent as Rtv
 import EvoScriPy.Labware as Lab
 import EvoScriPy.EvoMode as EvoMode
 
@@ -42,7 +42,7 @@ class Executable:
         self.Reactives   = []
         self.def_versions()
         self.version     = next(iter(self.versions))
-        Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!
+        Rtv.Reagent.SetReactiveList(self)  # todo Revise !!!
 
     def set_defaults(self):
         """Set initial values that will not be rest during secondary initializations.
@@ -319,7 +319,7 @@ class Protocol (Executable):
         :param v_perc:
         :return:
         """
-        assert isinstance(reactive, Rtv.Reactive)
+        assert isinstance(reactive, Rtv.Reagent)
         LiqClass = LiqClass or reactive.defLiqClass
         v_perc /= 100.0
         vol = []
@@ -469,12 +469,12 @@ class Protocol (Executable):
                       num_tips          =None):
             """
             :param NumSamples: Priorized   !!!! If true reset the selection
-            :param reactive: Reactive to spread
+            :param reactive: Reagent to spread
             :param to_labware_region: Labware in which the destine well are selected
             :param volume: if not, volume is set from the default of the source reactive
             :param optimize: minimize zigzag of multi pipetting
             """
-            assert isinstance(reactive, Rtv.Reactive), 'A Reactive expected in reactive to spread'
+            assert isinstance(reactive, Rtv.Reagent), 'A Reagent expected in reactive to spread'
             assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
 
             if num_tips is None:
@@ -542,7 +542,7 @@ class Protocol (Executable):
 
 
             :param NumSamples: Priorized   !!!! If true reset the selection
-            :param from_reactive: Reactive to spread
+            :param from_reactive: Reagent to spread
             :param to_labware_region: Labware in which the destine well are selected
             :param volume: if not, volume is set from the default of the source reactive
             :param optimize: minimize zigzag of multipippeting

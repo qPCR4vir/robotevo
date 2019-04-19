@@ -10,7 +10,7 @@ __author__ = 'Ariel'
 from   EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions   as     Itr
 import EvoScriPy.Labware        as     Lab
-import EvoScriPy.Reactive       as     Rtv
+import EvoScriPy.Reagent       as     Rtv
 
 from protocols.Evo200 import Evo200
 
@@ -78,11 +78,11 @@ class Prefill_plate_in_Evo200(Evo200):
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        BufferReact = Rtv.Reactive("Buffer ",
-                                        BufCuvette,
-                                        volpersample = BufferVolume,
-                                        defLiqClass  = 'MN VL',
-                                        num_of_samples= self.num_plates * NumOfSamples)
+        BufferReact = Rtv.Reagent("Buffer ",
+                                  BufCuvette,
+                                  volpersample = BufferVolume,
+                                  defLiqClass  = 'MN VL',
+                                  num_of_samples= self.num_plates * NumOfSamples)
 
         # Show the CheckList GUI to the user for possible small changes
 
@@ -98,11 +98,11 @@ class Prefill_plate_in_Evo200(Evo200):
         # Define place for temporal reactions
         for i, LP in enumerate(LysPlat):
             for s in all_samples:
-                Rtv.Reactive(   "lysis_{:d}-{:02d}".format( i+1, s + 1),
-                                LP,
-                                initial_vol =0.0,
-                                pos         =s + 1,
-                                excess      =0        )
+                Rtv.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
+                            LP,
+                            initial_vol =0.0,
+                            pos         =s + 1,
+                            excess      =0)
 
         with group("Prefill plates with BufferReact"):
 

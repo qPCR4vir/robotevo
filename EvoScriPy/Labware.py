@@ -3,13 +3,10 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-__author__ = 'Ariel'
-
-
 __author__ = 'qPCR4vir'
 
 
-def count_tips(TIP_MASK)->int:
+def count_tips(TIP_MASK : int)->int:
     n = 0
     while TIP_MASK:
         n += (TIP_MASK & 1)
@@ -26,7 +23,7 @@ class Tip:    # OK play with this idea
         return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
 
 class usedTip(Tip):
-    def __init__(self, tip, origin=None):
+    def __init__(self, tip : Tip, origin=None):
         Tip.__init__(self, tip.type)
         self.vol = tip.vol
         self.origin = origin
