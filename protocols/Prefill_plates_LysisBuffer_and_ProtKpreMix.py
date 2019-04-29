@@ -88,7 +88,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
 
 
         self.go_first_pos()                                 #  Set the initial position of the tips

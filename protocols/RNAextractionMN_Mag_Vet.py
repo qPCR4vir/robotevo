@@ -97,7 +97,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
 
         if self.do_extraction:
             self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
@@ -144,7 +144,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+        # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
         if self.add_preMix:
             ProtK = Rtv.Reagent("Proteinase K ",
@@ -249,7 +249,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             with self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
-                    self.mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+                    self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
             with self.tips(reuse=True, drop=True):
                 self.spread( reactive=B_Beads,      to_labware_region=TeMag.selectOnly(all_samples))
 

@@ -13,6 +13,7 @@ def count_tips(TIP_MASK : int)->int:
         TIP_MASK = TIP_MASK >> 1
     return n
 
+
 class Tip:    # OK play with this idea
     def __init__(self, rack_type):
         assert isinstance(rack_type, Labware.DITIrackType)
@@ -21,6 +22,7 @@ class Tip:    # OK play with this idea
 
     def __str__(self):
         return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
+
 
 class usedTip(Tip):
     def __init__(self, tip : Tip, origin=None):
@@ -44,7 +46,6 @@ class WorkTable:
             """
             :param grid: int, 1-67.   worktable grid. Carrier grid position
             :param site: int, 0 - 127. Site on carrier (on RAck?) = lab location - (site on carrier - 1) !!!!!
-            :param label:
             :param rack:
             :param rack_site:
             """
@@ -881,7 +882,8 @@ DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxV
 DiTi_1000ul_SBS = Labware.DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
 DiTi_200ul_SBS  = Labware.DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
 DiTi_10ul_SBS   = Labware.DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  #   9,5 ??
-
+DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
+DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
 
 DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol

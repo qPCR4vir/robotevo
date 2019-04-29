@@ -65,7 +65,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
 
                                                               #  Set the initial position of the tips
 
@@ -112,7 +112,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             cRNA        = Rtv.Reagent("Carrier RNA ", Reactives, pos=14, volpersample=  cRNAVolume, defLiqClass=Small_vol_disp)
             IC_MS2      = Rtv.Reagent("IC MS2 phage culture ", Reactives, pos=13, volpersample= IC_MS2Volume, defLiqClass=Small_vol_disp)
 
-            # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+            # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
             pK_cRNA_MS2 = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
                                            Reactives,
@@ -213,7 +213,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         with group("Beads binding"):
             with self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
-                    self.mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+                    self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
             with self.tips(reuse=True, drop=False):
                 self.spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))
             self.dropTips()

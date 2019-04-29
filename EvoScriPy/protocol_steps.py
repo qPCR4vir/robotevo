@@ -308,7 +308,7 @@ class Protocol (Executable):
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 
-    def mix_reactive(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
+    def mix_reagent(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
         """
         Select all possible replica of the given reactive and mix using the given % of the current vol in EACH well
         or the max vol for the tip. Use the given liq class or the reactive deff.
@@ -457,7 +457,7 @@ class Protocol (Executable):
                         self.aspire(tip, react, dV, offset=react.Replicas[current_comp_repl].offset)
                         self.multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
-                self.mix_reactive(preMix, maxTips=ctips)
+                self.mix_reagent(preMix, maxTips=ctips)
 
     def spread(self,  volume            =None,
                       reactive          =None,
