@@ -1,9 +1,10 @@
-# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
-#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2016
+# 2014-2019
+__author__ = 'Ariel'
+
 
 __author__ = 'qPCR4vir'
 
@@ -926,26 +927,86 @@ class execute_VBscript(Instruction):
 class notification(Instruction):    # todo declare const
     """ A.15.4.25 Notification (Worklist: Notification)
     """
-    def __init__(self,receiverGroup, AttachScreen_ShotFlag = False, emailSubject="",emailMessage="", action  = 0 ):
+    def __init__(self,   receiverGroup,
+                         AttachScreen_ShotFlag  = False,
+                         emailSubject           = "",
+                         emailMessage           = "",
+                         action                 = 0   ):
         """
 
         :param receiverGroup:
         :param AttachScreen_ShotFlag:
         :param emailSubject:
-        :param action:
+        :param action: 0 = send email now, 1 = send email on error, 2 = stop sending email on error
         """
         Instruction.__init__(self, "Notification")
-        self.emailMessage = emailMessage
-        self.emailSubject = emailSubject
-        self.AttachScreen_ShotFlag = AttachScreen_ShotFlag
-        self.action = action
-        self.receiverGroup = receiverGroup
+        self.emailMessage           = emailMessage
+        self.emailSubject           = emailSubject
+        self.AttachScreen_ShotFlag  = AttachScreen_ShotFlag
+        self.action                 = action
+        self.receiverGroup          = receiverGroup
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg= [integer(self.AttachScreen_ShotFlag), string1(self.receiverGroup),  string1(self.emailSubject),
-                    string1(self.emailMessage),integer(self.action) ]
+        self.arg= [ integer(self.AttachScreen_ShotFlag),
+                    string1(self.receiverGroup),
+                    string1(self.emailSubject),
+                    string1(self.emailMessage),
+                    integer(self.action)              ]
         return True
+
+
+'''
+class Te_MO_Aspirate(Instruction):
+    """
+    A.15.4.26  Aspirate-Multipip. (only Freedom EVOware Standard)
+    Te-MO (Tecan Multi-Pipetting Option). Can pipette to 96 or 384 wells simultaneously.
+    the same volume is pipetted by all of the tips.
+    """
+    def __init__(self,  tipMask     = None,
+                        liquidClass = def_liquidClass,
+                        volume      = def_vol,
+                        labware     = None,
+                        spacing     = 1,
+                        wellSelection= None,
+                        LoopOptions = def_LoopOp,
+                        RackName    = None,
+                        Well        = None,
+                        arm         = None):
+        """
+
+        :param tipMask: Number of tips on the Te-MO pipetting head. Only two values: 255 = 96 tip; 65535 = 384 tip head
+        :param liquidClass:
+        :param volume:
+        :param labware:
+        :param spacing:
+        :param wellSelection:
+        :param LoopOptions:
+        :param RackName:
+        :param Well:
+        :param arm:
+        """
+        Instruction.__init__(self, 'Aspirate')
+        self.robot.curArm(arm)
+        self.tipMask        = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.labware        =labware
+        self.spacing        = spacing
+        self.loopOptions    = LoopOptions
+        self.RackName       = RackName
+        self.Well           = Well
+        self.arm = self.robot.curArm().index   # current arm can change - keep it here
+                            tipMask,
+                            liquidClass,
+                            volume,
+                            labware or Lab.def_LabW,
+                            spacing,
+                            wellSelection,
+                            LoopOptions,
+                            RackName,
+                            Well,
+                            arm )
+
+'''
 
 class subroutine(ScriptONLY):
     """ UNDOCUMENTED

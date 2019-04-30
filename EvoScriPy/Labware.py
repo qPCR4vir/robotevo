@@ -1,19 +1,18 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2018
-# import EvoScriPy.EvoMode
-
+# 2014-2019
 __author__ = 'qPCR4vir'
 
 
-def count_tips(TIP_MASK)->int:
+def count_tips(TIP_MASK : int)->int:
     n = 0
     while TIP_MASK:
         n += (TIP_MASK & 1)
         TIP_MASK = TIP_MASK >> 1
     return n
+
 
 class Tip:    # OK play with this idea
     def __init__(self, rack_type):
@@ -24,8 +23,9 @@ class Tip:    # OK play with this idea
     def __str__(self):
         return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
 
+
 class usedTip(Tip):
-    def __init__(self, tip, origin=None):
+    def __init__(self, tip : Tip, origin=None):
         Tip.__init__(self, tip.type)
         self.vol = tip.vol
         self.origin = origin
@@ -46,7 +46,6 @@ class WorkTable:
             """
             :param grid: int, 1-67.   worktable grid. Carrier grid position
             :param site: int, 0 - 127. Site on carrier (on RAck?) = lab location - (site on carrier - 1) !!!!!
-            :param label:
             :param rack:
             :param rack_site:
             """
@@ -64,7 +63,7 @@ class WorkTable:
             self.rack_site = rack_site
 
 
-    def __init__(self, templateFile=None, grids=67, sites=127):
+    def __init__(self, templateFile, grids=67, sites=127):
         self.def_WashWaste   = None
         self.def_WashCleaner = None
         self.def_DiTiWaste   = None
@@ -79,7 +78,9 @@ class WorkTable:
         self.templateFileName = None
         if isinstance(templateFile, list):
             self.template = templateFile
+            print("Template fileis a list")
         else:
+            print("Set template file" + templateFile)
             self.template = self.parseWorTableFile(templateFile)
             self.templateFileName = templateFile
 
@@ -94,8 +95,11 @@ class WorkTable:
             labwware_types=[]
             for line in tmpl:
                 templList += [line]
+                if line.find( "--{ RPG }--")==0:
+                    #print("***********    --{ RPG }--      ******************")
+                    break  # TODO possible error msg ??
                 line = line.split(';')
-                if line[0]=="--{ RPG }--": break     # TODO possible error msg ??
+
                 if line[0]!="998": continue          # TODO possible error msg ??
                 if grid_num >= len(self.grid): continue # ignore lines between this and  "--{ RPG }--"
 
@@ -209,10 +213,16 @@ class WorkTable:
         self.retireLabware(labw)
         return labw.type.createLabware(loc, label)
 
+    def set_def_DiTi(self, tips) : # :Labware.DITIrackType) ->Labware.DITIrackType:
+        old = self.def_DiTi
+        self.def_DiTi = tips
+        return old
+
 
 class Frezeer (WorkTable):
     def __init__(self):
-        WorkTable.__init__(self)
+        print("********  Implement Frezer  ***** ")
+        #WorkTable.__init__(self)
 
 stock = Frezeer()
 
@@ -335,14 +345,16 @@ class Labware:
             return labw
 
     class DITIrackType(Type):
+
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
+
             if portrait: nCol, nRow = nRow, nCol # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol)
             self.pick_next      = 0
             self.pick_next_back = nRow*nCol-1
-            self.pick_next_rack = None  # labware (DITIrackType or grid,site)
-            self.preserved_tips = {} # order:well ??? sample order:tip well ??sample offset:tip well
-            self.last_preserved_tips = None  # a tip Well in a DiTi rack
+            self.pick_next_rack = None                   # labware (DITIrackType or grid,site)
+            self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
+            self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
         def createLabware(self, loc, label):
             labw = DITIrack(self, loc, label)
@@ -357,8 +369,12 @@ class Labware:
             return labw
 
     class CuvetteType(Type):
-        def __init__(self, name, nPseudoWells, maxVol, nCol=1):
-            Labware.Type.__init__(self, name, nRow=nPseudoWells, maxVol=maxVol)
+
+        def __init__(self,   name,
+                             nRow,
+                             maxVol,
+                             nCol=1):
+            Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
 
         def createLabware(self, loc, label):
             labw = Cuvette(self, loc, label)
@@ -597,13 +613,26 @@ class Labware:
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 class DITIrack (Labware):
-    def __init__(self, type, location, label=None, worktable=None):
+    """
+    Objects of this class represent physical objects (with location) of
+    some type Labware.DITIrackType
+    """
+
+    def __init__(self, type : Labware.DITIrackType,
+                       location,
+                       label=None,
+                       worktable=None    ):
+
         assert isinstance(type, Labware.DITIrackType)
-        Labware.__init__(self, type, location, label=label, worktable=worktable)
+
+        Labware.__init__(self, type,
+                               location,
+                               label=label,
+                               worktable=worktable  )
         self.fill()
-        if type.pick_next_rack is None: # update an iRobot state !! Only initialization, please!
+        if type.pick_next_rack is None:            # update an iRobot state !! Only initialization, please!
             type.pick_next_rack = self
-            # type.last_preserved_tips = ?
+                                                   # type.last_preserved_tips = ?
 
     def fill(self, beg=1, end=None):   # todo it belong to Robot ??
         if isinstance(beg, list): assert end is None
@@ -823,12 +852,17 @@ class Cuvette(Labware):
 
 #  "predefining" common labwares types:
 
-Trough_100ml    = Labware.CuvetteType("Trough 100ml",               8,      maxVol=  100000)
+Trough_100ml    = Labware.CuvetteType("Trough 100ml",                8,     maxVol=  100000)
+Trough_25ml_rec = Labware.CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
+Trough_300ml_MCA= Labware.CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)# \todo test it works OK
+
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
 EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=    1500)
+EppRack6x4      = Labware.Type("24 Pos Eppi Tube Rack",              4, 6,  maxVol=    1500)
 EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=    1500)
 EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  maxVol=    1500) # defined in Evoware !!!
+MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  maxVol=    1000)
                     # by duplicating and then editing the labware 'Tube Eppendorf 3x 16 Pos' and also the carrier
                     # to have 6 instead of 3 columns. It was needed to change the position X of the last well (96)
                     # It was done by change the grig 6 positions to the right and coping the X pos of the first well,
@@ -845,6 +879,12 @@ EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVo
 
 
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
+DiTi_1000ul_SBS = Labware.DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
+DiTi_200ul_SBS  = Labware.DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
+DiTi_10ul_SBS   = Labware.DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  #   9,5 ??
+DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
+DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
+
 DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
@@ -867,6 +907,7 @@ DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
 MP96deepwell = Labware.Type("96 Well DeepWell square", 8, 12, maxVol=2000)    # todo define in Evoware !!!
 PCR96well    = Labware.Type("96 Well PCR Plate"      , 8, 12, maxVol= 100)
+BioRad96well = Labware.Type("96 Well BioRad"         , 8, 12, maxVol= 100)
 
 Box9x9       = Labware.Type("Box 9x9"                , 9,  9, maxVol= 2000)
 Box10x10     = Labware.Type("Box 10x10"              ,10, 10, maxVol= 2000)

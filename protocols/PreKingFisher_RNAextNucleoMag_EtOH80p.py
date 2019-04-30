@@ -10,7 +10,7 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100_FLI import Evo100_FLI
-import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Reagent as Rtv
 
 
 class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
@@ -65,7 +65,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
 
                                                               #  Set the initial position of the tips
 
@@ -102,17 +102,17 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         if self.version != 'pre Inactivated':             # we need to add ProtK+cRNA+MS2 mix
-            ProtK       = Rtv.Reactive("Proteinase K ",
-                                       Reactives,
-                                       replicas     = 2,
-                                       pos          = [15, 16],
-                                       volpersample = ProtKVolume  ,
-                                       defLiqClass  = Small_vol_disp)
+            ProtK       = Rtv.Reagent("Proteinase K ",
+                                      Reactives,
+                                      replicas     = 2,
+                                      pos          = [15, 16],
+                                      volpersample = ProtKVolume,
+                                      defLiqClass  = Small_vol_disp)
 
-            cRNA        = Rtv.Reactive("Carrier RNA "         , Reactives, pos=14,  volpersample=  cRNAVolume  , defLiqClass=Small_vol_disp)
-            IC_MS2      = Rtv.Reactive("IC MS2 phage culture ", Reactives, pos=13,  volpersample= IC_MS2Volume , defLiqClass=Small_vol_disp)
+            cRNA        = Rtv.Reagent("Carrier RNA ", Reactives, pos=14, volpersample=  cRNAVolume, defLiqClass=Small_vol_disp)
+            IC_MS2      = Rtv.Reagent("IC MS2 phage culture ", Reactives, pos=13, volpersample= IC_MS2Volume, defLiqClass=Small_vol_disp)
 
-            # IC2         = Rtv.Reactive("IC2 - synthetic RNA " ,  Reactives, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+            # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
             pK_cRNA_MS2 = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
                                            Reactives,
@@ -122,21 +122,21 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                            excess=20)
 
             if self.version != 'in-VL inactivated':
-                LysisBuffer     = Rtv.Reactive("VL - Lysis Buffer " , LysBuf,  volpersample=LysisBufferVolume , defLiqClass='MN VL')
+                LysisBuffer     = Rtv.Reagent("VL - Lysis Buffer ", LysBuf, volpersample=LysisBufferVolume, defLiqClass='MN VL')
 
 
 
-        B_Beads         = Rtv.Reactive("B - Beads " ,
-                                       Reactives,
-                                       pos          = [1,2],
-                                       initial_vol  = 1200,
-                                       volpersample = B_BeadsVolume ,
-                                       defLiqClass  = Beads_LC_2,
-                                       maxFull      = 70)
+        B_Beads         = Rtv.Reagent("B - Beads ",
+                                      Reactives,
+                                      pos          = [1,2],
+                                      initial_vol  = 1200,
+                                      volpersample = B_BeadsVolume,
+                                      defLiqClass  = Beads_LC_2,
+                                      maxFull      = 70)
 
-        VEB             = Rtv.Reactive("VEB - Binding Buffer " ,  BindBuf,   volpersample=BindingBufferVolume , defLiqClass=B_liquidClass)
+        VEB             = Rtv.Reagent("VEB - Binding Buffer ", BindBuf, volpersample=BindingBufferVolume, defLiqClass=B_liquidClass)
 
-        EtOH80p         = Rtv.Reactive("Ethanol 80% " , wt.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),  volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
+        EtOH80p         = Rtv.Reagent("Ethanol 80% ", wt.getLabware(Lab.Trough_100ml, "7-EtOH80p"), volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
 
                                                         # Show the CheckList GUI to the user for possible small changes
@@ -159,14 +159,14 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         for s in all_samples:
 
             if self.version == 'original samples':
-                Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
-                             pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+                Rtv.Reagent("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+                            pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
 
-            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=InitLysisVol, pos=s + 1,
-                         excess=0)
+            Rtv.Reagent("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=InitLysisVol, pos=s + 1,
+                        excess=0)
 
-            Rtv.Reactive("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
-                         excess=0)  # todo revise order !!!
+            Rtv.Reagent("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
+                        excess=0)  # todo revise order !!!
 
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
@@ -213,7 +213,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         with group("Beads binding"):
             with self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
-                    self.mix_reactive(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+                    self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
             with self.tips(reuse=True, drop=False):
                 self.spread( reactive=B_Beads,      to_labware_region=Plate_lysis.selectOnly(all_samples))
             self.dropTips()

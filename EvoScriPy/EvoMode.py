@@ -1,14 +1,21 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2018
+# 2014-2019
 
 __author__ = 'qPCR4vir'
+
+"""
+Implement the "modes" in which RobotEvo execute the low levels instructions, effectively creating the corresponding
+type of "output".
+"""
+
 
 import EvoScriPy.Robot as Rbt
 
 encoding = 'Latin-1'      # ISO/IEC 8859-1
+
 
 class Mode:
     """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
@@ -17,17 +24,20 @@ class Mode:
     """
     encoding = encoding
     # Tip_tNum = 4
+
     def exec(self, instr):
         pass
 
         # def allowed(self, instr):
         #       return True
+
     def done(self):
         pass
 
     def __del__(self):
         self.done()
         pass
+
 
 class toString(Mode):
     """ (Base class) Create an string representation of the instructions.
@@ -53,8 +63,8 @@ class multiple(Mode):
     """ A collection (list) of all the "modes" to be generated in a single run
     """
 
-    def __init__(self, EvoList=[]):
-        self.EvoList = EvoList
+    def __init__(self, EvoList=None):
+        self.EvoList = EvoList if EvoList is not None else []
 
     def addMode(self, mode):
         self.EvoList += [mode]
@@ -73,6 +83,8 @@ class inFile(toString):
     """
 
     def __init__(self, filename = None):
+        self.f = None
+        self.filename = None
         self.set_file(filename)
 
     def exec(self, instr):
@@ -95,12 +107,14 @@ class inFile(toString):
         self.done()
 
     def set_file(self, filename=None):
+        self.done()       # ??
         self.filename = filename
         self.f = open(filename, 'w', encoding=Mode.encoding) if filename is not None else None
 
 
 class Comments(inFile):
-    """  Create a list with all (and only with) the comments and the Groups. Useful to be shown immediately after generation,
+    """  Create a list with all (and only with) the comments and the Groups.
+    Useful to be shown immediately after generation,
     but also to the final user just before the actual physical run.
     """
 
@@ -128,7 +142,8 @@ class Comments(inFile):
 
 
 
-        if isinstance(instr, group_end): self.current_identation -= 1
+        if isinstance(instr, group_end):
+            self.current_identation -= 1
 
 
 
@@ -151,6 +166,7 @@ class Script(ScriptBody):
     """
 
     def __init__(self, filename=None, template=None, robot=None):
+        self.templateNotAdded = True
         ScriptBody.__init__(self, filename)
         assert isinstance(robot, Rbt.Robot)
         self.robot = robot            # ?? may be None?
@@ -174,14 +190,14 @@ class Script(ScriptBody):
 
 
 class iRobot(Mode):
-    """ It will be used to validate instructions based on an the state of an internal model af the physical robot.
+    """ Used to validate instructions based on an the state of an internal model af the physical robot.
     It will check the kind and number of tips, and the volume already aspired in each tips, and the existence
-    and current volume in wells in labware, etc. One basic use of this, is to garante that the robot will be actualize
+    and current volume in wells in labware, etc.
+    One basic use of this, is to guarantee that the robot will be actualized
     once and only once even when multiple modes are used.
     """
     def __init__(self, index,  nTips , arms=None):
         Mode.__init__(self )
-        # import Robot as Rbt
         self.robot = Rbt.Robot(index=index, arms=arms, nTips=nTips)
         self.set_as_current()
 
@@ -195,4 +211,3 @@ class iRobot(Mode):
 
 
 current = None   # Intended to be the principal EvoMode of the current protocol. Mostly mulitiple
-

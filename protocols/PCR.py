@@ -7,7 +7,7 @@
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
-import EvoScriPy.Reactive as Rtv      # ??
+import EvoScriPy.Reagent as Rtv      # ??
 #from protocols.Evo75_FLI import Evo75_FLI
 from protocols.Evo100_FLI import Evo100_FLI
 
@@ -95,7 +95,7 @@ class MixPCR(Evo75_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reactives" )
+        Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reagents" )
 
         #  Set the initial position of the tips
 
@@ -118,11 +118,11 @@ class MixPCR(Evo75_FLI):
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
 
-        VEB             = Rtv.Reactive("VEB - Binding Buffer "           ,
-                                       BindBuf,   volpersample=BindingBufferVolume ,defLiqClass=B_liquidClass)
-        EtOH80p         = Rtv.Reactive("Ethanol 80% "                     ,
-                                         wt.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
-                                         volpersample=EtOH80pVolume , defLiqClass=B_liquidClass)
+        VEB             = Rtv.Reagent("VEB - Binding Buffer ",
+                                      BindBuf, volpersample=BindingBufferVolume, defLiqClass=B_liquidClass)
+        EtOH80p         = Rtv.Reagent("Ethanol 80% ",
+                                      wt.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
+                                      volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
 
         # Show the CheckList GUI to the user for possible small changes
@@ -140,13 +140,13 @@ class MixPCR(Evo75_FLI):
         # Define samples and the place for temporal reactions
         par = Plate_lysis.parallelOrder(self.nTips, all_samples)
         for s in all_samples:
-            Rtv.Reactive("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
-                         pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reactive("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=par[s] + 1,
-                         excess=0)  # todo revise order !!!
+            Rtv.Reagent("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+                        pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+            Rtv.Reagent("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=par[s] + 1,
+                        excess=0)  # todo revise order !!!
 
-            Rtv.Reactive("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
-                         excess=0)  # todo revise order !!!
+            Rtv.Reagent("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
+                        excess=0)  # todo revise order !!!
 
 
         with group("Prefill plate with EtOH80p"):
