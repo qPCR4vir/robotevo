@@ -49,7 +49,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'.format(str(NumOfSamples))).exec()
 
 
-        # Get Labwares (Cuvette, eppys, etc.) from the work table
+                                                            # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
 
@@ -62,18 +62,18 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Plate_Eluat = wt.getLabware(Lab.MP96well,       "Plate ElutB"   )  # Plate 12 x 8 ? MP96well !!
 
 
-        #  Set the initial position of the tips
+                                                            #  Set the initial position of the tips
 
         self.go_first_pos()
 
-        # Set volumen / sample
+                                                            # Set volumen / sample
 
         VEW1Volume          = 600.0
         VEW2Volume          = 600.0
         ElutionBufferVolume = 100.0
 
-
-        # Liquid classes used for pippetting. Others liquidClass names are defined in "protocol_steps.py"
+                                                        # Liquid classes used for pippetting.
+                                                        # Others liquidClass names are defined in "protocol_steps.py"
 
         # SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
@@ -82,8 +82,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
-
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
+                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         VEW1            = Rtv.Reactive( "VEW1 - Wash Buffer ",
                                         wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
@@ -100,7 +99,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                                        volpersample  =ElutionBufferVolume ,
                                        defLiqClass   =B_liquidClass)
 
-        # Show the CheckList GUI to the user for posible small changes
+                                                        # Show the CheckList GUI to the user for posible small changes
 
         self.CheckList()
         self.set_EvoMode()
