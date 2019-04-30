@@ -1,20 +1,21 @@
-# Copyright (C) 2014-2018, Ariel Vina Rodriguez ( Ariel.VinaRodriguez@fli.de , arielvina@yahoo.es )
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2018
+# 2014-2019
+__author__ = 'Ariel'
+
 
 from contextlib import contextmanager
 import EvoScriPy.Robot as Rbt
 import EvoScriPy.Instructions as Itr
-import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Reagent as Rtv
 import EvoScriPy.Labware as Lab
 import EvoScriPy.EvoMode as EvoMode
 
-__author__ = 'qPCR4vir'
 
 
-def not_implemented(NumOfSamples):
+def not_implemented():
     print('This protocols have yet to be implemented.')
 
 
@@ -41,7 +42,7 @@ class Executable:
         self.Reactives   = []
         self.def_versions()
         self.version     = next(iter(self.versions))
-        Rtv.Reactive.SetReactiveList(self)  # todo Revise !!!
+        Rtv.Reagent.SetReactiveList(self)  # todo Revise !!!
 
     def set_defaults(self):
         """Set initial values that will not be rest during secondary initializations.
@@ -307,7 +308,7 @@ class Protocol (Executable):
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
 
-    def mix_reactive(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
+    def mix_reagent(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
         """
         Select all possible replica of the given reactive and mix using the given % of the current vol in EACH well
         or the max vol for the tip. Use the given liq class or the reactive deff.
@@ -318,7 +319,7 @@ class Protocol (Executable):
         :param v_perc:
         :return:
         """
-        assert isinstance(reactive, Rtv.Reactive)
+        assert isinstance(reactive, Rtv.Reagent)
         LiqClass = LiqClass or reactive.defLiqClass
         v_perc /= 100.0
         vol = []
@@ -456,7 +457,7 @@ class Protocol (Executable):
                         self.aspire(tip, react, dV, offset=react.Replicas[current_comp_repl].offset)
                         self.multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
-                self.mix_reactive(preMix, maxTips=ctips)
+                self.mix_reagent(preMix, maxTips=ctips)
 
     def spread(self,  volume            =None,
                       reactive          =None,
@@ -468,12 +469,12 @@ class Protocol (Executable):
                       num_tips          =None):
             """
             :param NumSamples: Priorized   !!!! If true reset the selection
-            :param reactive: Reactive to spread
+            :param reactive: Reagent to spread
             :param to_labware_region: Labware in which the destine well are selected
             :param volume: if not, volume is set from the default of the source reactive
             :param optimize: minimize zigzag of multi pipetting
             """
-            assert isinstance(reactive, Rtv.Reactive), 'A Reactive expected in reactive to spread'
+            assert isinstance(reactive, Rtv.Reagent), 'A Reagent expected in reactive to spread'
             assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
 
             if num_tips is None:
@@ -541,7 +542,7 @@ class Protocol (Executable):
 
 
             :param NumSamples: Priorized   !!!! If true reset the selection
-            :param from_reactive: Reactive to spread
+            :param from_reactive: Reagent to spread
             :param to_labware_region: Labware in which the destine well are selected
             :param volume: if not, volume is set from the default of the source reactive
             :param optimize: minimize zigzag of multipippeting
@@ -829,7 +830,7 @@ class Protocol (Executable):
     @contextmanager
     def tips(self, tipsMask=None, reuse=None,     drop=None,
                             preserve=None,  usePreserved=None, selected_samples=None,
-                            allow_air=None, drop_first=False,   drop_last=False):
+                            allow_air=None, drop_first=False,   drop_last=False, tip_type=None):
         '''
 
         :param tipsMask:
@@ -849,14 +850,16 @@ class Protocol (Executable):
         if drop         is not None: drop_old           = self.set_dropTips    (drop        )
         if preserve     is not None: preserve_old       = self.preserveTips    (preserve    )
         if usePreserved is not None: usePreserved_old   = self.usePreservedTips(usePreserved)
-        if allow_air    is not None: allow_air_old      = self.set_allow_air   (allow_air  )
+        if allow_air    is not None: allow_air_old      = self.set_allow_air   (allow_air   )
+        if tip_type     is not None: tip_type_old       = self.worktable.set_def_DiTi(tip_type)
 
-        if tipsMask     is not None: tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples)
+        if tipsMask     is not None:
+            tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples, tip_type=tip_type)
 
         yield
 
+        if tip_type     is not None: tip_type     = self.worktable.set_def_DiTi(tip_type_old)
         if tipsMask     is not None: tipsMask     = self.dropTips        (tipsMask_old)
-
         if reuse        is not None: reuse        = self.reuseTips       (reuse_old       )
         if drop         is not None: drop         = self.set_dropTips    (drop_old        )
         if preserve     is not None: preserve     = self.preserveTips    (preserve_old    )

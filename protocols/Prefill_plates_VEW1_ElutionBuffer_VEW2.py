@@ -10,7 +10,7 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100_FLI import Evo100_FLI
-import EvoScriPy.Reactive as Rtv
+import EvoScriPy.Reagent as Rtv
 
 
 class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
@@ -49,7 +49,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'.format(str(NumOfSamples))).exec()
 
 
-        # Get Labwares (Cuvette, eppys, etc.) from the work table
+                                                            # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
 
@@ -62,18 +62,18 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Plate_Eluat = wt.getLabware(Lab.MP96well,       "Plate ElutB"   )  # Plate 12 x 8 ? MP96well !!
 
 
-        #  Set the initial position of the tips
+                                                            #  Set the initial position of the tips
 
         self.go_first_pos()
 
-        # Set volumen / sample
+                                                            # Set volumen / sample
 
         VEW1Volume          = 600.0
         VEW2Volume          = 600.0
         ElutionBufferVolume = 100.0
 
-
-        # Liquid classes used for pippetting. Others liquidClass names are defined in "protocol_steps.py"
+                                                        # Liquid classes used for pippetting.
+                                                        # Others liquidClass names are defined in "protocol_steps.py"
 
         # SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
@@ -82,25 +82,24 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
+                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
+        VEW1            = Rtv.Reagent("VEW1 - Wash Buffer ",
+                                      wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
+                                      volpersample  = VEW1Volume,
+                                      defLiqClass   = B_liquidClass)
 
-        VEW1            = Rtv.Reactive( "VEW1 - Wash Buffer ",
-                                        wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
-                                        volpersample  = VEW1Volume    ,
-                                        defLiqClass   = B_liquidClass)
+        VEW2            = Rtv.Reagent("VEW2 - WashBuffer ",
+                                      wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
+                                      volpersample  =VEW2Volume,
+                                      defLiqClass   =B_liquidClass)
 
-        VEW2            = Rtv.Reactive("VEW2 - WashBuffer "  ,
-                                       wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
-                                       volpersample  =VEW2Volume    ,
-                                       defLiqClass   =B_liquidClass)
+        ElutionBuffer   = Rtv.Reagent("Elution Buffer ",
+                                      ElutBuf,
+                                      volpersample  =ElutionBufferVolume,
+                                      defLiqClass   =B_liquidClass)
 
-        ElutionBuffer   = Rtv.Reactive("Elution Buffer ",
-                                       ElutBuf,
-                                       volpersample  =ElutionBufferVolume ,
-                                       defLiqClass   =B_liquidClass)
-
-        # Show the CheckList GUI to the user for posible small changes
+                                                        # Show the CheckList GUI to the user for posible small changes
 
         self.CheckList()
         self.set_EvoMode()
@@ -111,23 +110,23 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rtv.Reactive("VEW1_{:02d}".format(s + 1),
-                         Plate_VEW1,
-                         initial_vol  = 0.0,
-                         pos          = par[s]+1,
-                         excess       = 0           )  # todo revise order !!!
+            Rtv.Reagent("VEW1_{:02d}".format(s + 1),
+                        Plate_VEW1,
+                        initial_vol  = 0.0,
+                        pos          = par[s]+1,
+                        excess       = 0)  # todo revise order !!!
 
-            Rtv.Reactive("VEW2_{:02d}".format(s + 1),
-                         Plate_VEW2,
-                         initial_vol = 0.0,
-                         pos         = par[s] + 1,
-                         excess      = 0            )
+            Rtv.Reagent("VEW2_{:02d}".format(s + 1),
+                        Plate_VEW2,
+                        initial_vol = 0.0,
+                        pos         = par[s] + 1,
+                        excess      = 0)
 
-            Rtv.Reactive("Eluat_{:02d}".format(s + 1),
-                         Plate_Eluat,
-                         initial_vol = 0.0,
-                         pos         = par[s] + 1,
-                         excess      = 0            )
+            Rtv.Reagent("Eluat_{:02d}".format(s + 1),
+                        Plate_Eluat,
+                        initial_vol = 0.0,
+                        pos         = par[s] + 1,
+                        excess      = 0)
 
 
         with group("Prefill plates with VEW1, Elution buffer and VEW2"):

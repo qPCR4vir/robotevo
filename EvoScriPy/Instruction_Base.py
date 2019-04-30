@@ -1,11 +1,15 @@
-# Copyright (C) 2014-2016, Ariel Vina Rodriguez ( ariel.rodriguez@fli.bund.de , arielvina@yahoo.es )
-#  https://www.fli.de/en/institutes/institut-fuer-neue-und-neuartige-tierseuchenerreger/wissenschaftlerinnen/prof-dr-m-h-groschup/
+# Copyright (C) 2014-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
 #  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
-# 2014-2016
+# 2014-2019
 
 __author__ = 'qPCR4vir'
+
+"""
+Implement the 
+"""
+
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoScriPy.EvoMode
 import EvoScriPy.Labware as Lab
@@ -180,13 +184,13 @@ class Pipette(Instruction):
         """
         Instruction.__init__(self, name)
         self.robot.curArm(arm)
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
-        self.labware=labware
-        self.spacing = spacing
-        self.loopOptions = LoopOptions
-        self.RackName = RackName
-        self.Well = Well
-        self.arm = self.robot.curArm().index   # current arm can change - keep it here
+        self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.labware            =labware
+        self.spacing            = spacing
+        self.loopOptions        = LoopOptions
+        self.RackName           = RackName
+        self.Well               = Well
+        self.arm                = self.robot.curArm().index   # current arm can change - keep it here
                             # noOfLoopOptions,
                             # loopName,
                             # action,
