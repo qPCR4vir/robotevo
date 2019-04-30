@@ -98,7 +98,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
+        Reagents   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
 
         if self.do_extraction:
             self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
@@ -114,15 +114,15 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         SampleVolume        = 200.0
         LysisBufferVolume   = 180.0             # VL
-        IC2Volume           = 4.0               # IC2
+        IC2Volume           =   4.0             # IC2
+        IC_MS2Volume        =  20.0             # MS2
+        ProtKVolume         =  20.0
+        cRNAVolume          =   4.0
         BindingBufferVolume = 600.0             # VEB
-        B_BeadsVolume       = 20.0              # B-Beads
+        B_BeadsVolume       =  20.0             # B-Beads
         VEW1Volume          = 600.0             # VEW1
         VEW2Volume          = 600.0             # VEW2
         EtOH80pVolume       = 600.0
-        ProtKVolume         = 20.0
-        cRNAVolume          = 4.0
-        IC_MS2Volume        = 20.0              # MS2
         ElutionBufferVolume = 100.0             # VEL
 
         InitLysisVol        = 0.0
@@ -131,8 +131,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             if not self.add_preMix:     InitLysisVol += ProtKVolume + cRNAVolume + IC_MS2Volume
             if not self.add_VL:         InitLysisVol += LysisBufferVolume
 
-
-        # Liquid classes used for pippetting.
+                                                        # Liquid classes used for pippetting.
                                                         # Others liquidClass names are defined in "protocol_steps.py"
 
         SampleLiqClass      = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
@@ -143,41 +142,57 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         if self.do_extraction:
             par         = TeMag.parallelOrder(self.nTips, all_samples)
 
-                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
+                                                        # Define the Reagents in each labware (Cuvette, eppys, etc.)
 
-        # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+        # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
+        #                            volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
         if self.add_preMix:
             ProtK = Rtv.Reagent("Proteinase K ",
-                                Reactives,
-                                replicas=2,
-                                pos=[15, 16],  # only 16 ?  pos=16
-                                volpersample=ProtKVolume,
-                                defLiqClass=Small_vol_disp)
+                                Reagents,
+                                replicas            = 2,
+                                pos=[15, 16],                   # only 16 ?  pos=16
+                                volpersample        = ProtKVolume,
+                                defLiqClass         = Small_vol_disp)
 
-            cRNA   = Rtv.Reagent("Carrier RNA ", Reactives, pos=14, volpersample=cRNAVolume, defLiqClass=Small_vol_disp)
-            IC_MS2 = Rtv.Reagent("IC MS2 phage culture ", Reactives, pos=13, volpersample=IC_MS2Volume, defLiqClass=Small_vol_disp)
+            cRNA   = Rtv.Reagent("Carrier RNA ",
+                                 Reagents,
+                                 pos                = 14,
+                                 volpersample       = cRNAVolume,
+                                 defLiqClass        = Small_vol_disp)
+
+            IC_MS2 = Rtv.Reagent("IC MS2 phage culture ",
+                                 Reagents,
+                                 pos                = 13,
+                                 volpersample       = IC_MS2Volume,
+                                 defLiqClass        = Small_vol_disp)
 
             pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
-                                     Reactives,
-                                     pos=8,
-                                     components=[cRNA, ProtK, IC_MS2],
-                                     defLiqClass=W_liquidClass,
-                                     excess=20)
+                                     Reagents,
+                                     pos            = 8,
+                                     components     = [cRNA, ProtK, IC_MS2],
+                                     defLiqClass    = W_liquidClass,
+                                     excess         = 20)
 
         if self.add_VL:
-            LysisBuffer = Rtv.Reagent("VL - Lysis Buffer ", LysBuf, volpersample=LysisBufferVolume, defLiqClass='MN VL')
+            LysisBuffer = Rtv.Reagent("VL - Lysis Buffer ",
+                                      LysBuf,
+                                      volpersample  =LysisBufferVolume,
+                                      defLiqClass   ='MN VL')
 
         if self.do_extraction:
             B_Beads         = Rtv.Reagent("B - Beads ",
-                                          Reactives,
+                                          Reagents,
                                           pos          = [1,2],
                                           initial_vol  = 1200,
                                           volpersample = B_BeadsVolume,
                                           defLiqClass  = Beads_LC_2,
                                           maxFull      = 70)
 
-            BindingBuffer   = Rtv.Reagent("VEB - Binding Buffer ", BindBuf, volpersample=BindingBufferVolume, defLiqClass=B_liquidClass)
+            BindingBuffer   = Rtv.Reagent("VEB - Binding Buffer ",
+                                          BindBuf,
+                                          volpersample  = BindingBufferVolume,
+                                          defLiqClass   = B_liquidClass)
 
             VEW1            = Rtv.Reagent("VEW1 - Wash Buffer ",
                                           wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
@@ -201,11 +216,16 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                         # Show the CheckList GUI to the user for possible small changes
         self.CheckList()
         self.set_EvoMode()
-                                                        # Define the reactives not shown in the CheckList GUI
+                                                        # Define the Reagents not shown in the CheckList GUI
                                                         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rtv.Reagent("lysis_{:02d}".format(s + 1), Lysis, initial_vol=InitLysisVol,
-                        pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
+            Rtv.Reagent("lysis_{:02d}".format(s + 1),
+                        Lysis,
+                        initial_vol     = InitLysisVol,
+                        pos             = s + 1,
+                        defLiqClass     = SampleLiqClass,
+                        excess          = 0)
+
             if self.do_extraction:
                 Rtv.Reagent("RNA_{:02d}".format(s + 1), Eluat, initial_vol= 0.0,
                             pos=s+1, defLiqClass=def_liquidClass, excess=0)
