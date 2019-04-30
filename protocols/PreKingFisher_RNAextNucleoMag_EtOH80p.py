@@ -21,11 +21,6 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     min_s, max_s = 1, 96
 
     def def_versions(self):
-        self.versions = {'prefill inactivation': self.V_fill_inactivation,
-                         'in-VL inactivated'   : self.V_VL_inactivated,
-                         'pre Inactivated'     : self.V_inactivated,
-                         'original samples'    : self.V_original_samples                }
-
         self.versions = {'VL-pKmix prefill'     : self.V_fill_preMix_inactivation,
                          'VL-only prefill'      : self.V_fill_inactivation,
                          'VL-only inactivated'  : self.V_VL_inactivated,
@@ -76,18 +71,21 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+        Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit').format(str(NumOfSamples))).exec()
 
                                                               # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
-        BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
+        if self.add_VL:
+            LysBuf      = wt.getLabware(Lab.Trough_100ml,   "2-Vl Lysis Buffer"     )
+
+        if self.do_extraction:
+            BindBuf     = wt.getLabware(Lab.Trough_100ml,   "3-VEB Binding Buffer"  )
 
         DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
+        Reagents   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
 
                                                               #  Set the initial position of the tips
 
@@ -95,27 +93,26 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
                                                               # Set volumen / sample
 
+        SampleVolume        = 100.0
+        LysisBufferVolume   = 100.0                 # VL
+        IC2Volume           =   5.0                 # IC2 ? 4
+        IC_MS2Volume        =  10.0                 # MS2
         ProtKVolume         =  20.0
         cRNAVolume          =   4.0
-        LysisBufferVolume   = 100.0                 # VL1 or VL
-        IC_MS2Volume        =  10.0                 # IC2
-        IC2Volume           =   5.0                 # ? 4
         BindingBufferVolume = 350.0                 # VEB
         B_BeadsVolume       =  20.0                 # B-Beads
         EtOH80pVolume       = 600.0
-        SampleVolume        = 100.0
-        InitLysisVol        = 0.0
 
-        if self.version == 'in-VL inactivated':
-            InitLysisVol  = SampleVolume + LysisBufferVolume
-
-        elif self.version == 'pre Inactivated':
-            InitLysisVol  = SampleVolume + ProtKVolume + cRNAVolume + IC_MS2Volume + LysisBufferVolume
+        InitLysisVol        =   0.0
+        if self.do_extraction:
+            if not self.add_samples:    InitLysisVol += SampleVolume
+            if not self.add_preMix:     InitLysisVol += ProtKVolume + cRNAVolume + IC_MS2Volume
+            if not self.add_VL:         InitLysisVol += LysisBufferVolume
 
                                                         # Liquid classes used for pippetting.
                                                         # Others liquidClass names are defined in "protocol_steps.py"
 
-        SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
+        SampleLiqClass = "Serum Asp"
 
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
@@ -123,50 +120,66 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        if self.version != 'pre Inactivated':             # we need to add ProtK+cRNA+MS2 mix
+        if self.add_preMix:                            # we need to add ProtK+cRNA+MS2 mix
             ProtK       = Rtv.Reagent("Proteinase K ",
-                                      Reactives,
+                                      Reagents,
                                       replicas     = 2,
                                       pos          = [15, 16],
                                       volpersample = ProtKVolume,
                                       defLiqClass  = Small_vol_disp)
 
-            cRNA        = Rtv.Reagent("Carrier RNA ", Reactives, pos=14, volpersample=  cRNAVolume, defLiqClass=Small_vol_disp)
-            IC_MS2      = Rtv.Reagent("IC MS2 phage culture ", Reactives, pos=13, volpersample= IC_MS2Volume, defLiqClass=Small_vol_disp)
+            cRNA        = Rtv.Reagent("Carrier RNA ",
+                                      Reagents,
+                                      pos           = 14,
+                                      volpersample  = cRNAVolume,
+                                      defLiqClass   = Small_vol_disp)
 
-            # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13, volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+            IC_MS2      = Rtv.Reagent("IC MS2 phage culture ",
+                                      Reagents,
+                                      pos           = 13,
+                                      volpersample  = IC_MS2Volume,
+                                      defLiqClass   = Small_vol_disp)
+
+            # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
+            #                           volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
             pK_cRNA_MS2 = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
-                                           Reactives,
-                                           pos=8,
-                                           components=[  cRNA, ProtK, IC_MS2] ,
-                                           defLiqClass=W_liquidClass,
-                                           excess=20)
+                                       Reagents,
+                                       pos          = 8,
+                                       components   = [cRNA, ProtK, IC_MS2] ,
+                                       defLiqClass  = W_liquidClass,
+                                       excess       = 20)
 
-            if self.version != 'in-VL inactivated':
-                LysisBuffer     = Rtv.Reagent("VL - Lysis Buffer ", LysBuf, volpersample=LysisBufferVolume, defLiqClass='MN VL')
+        if self.add_VL:
+            LysisBuffer = Rtv.Reagent("VL - Lysis Buffer ",
+                                      LysBuf,
+                                      volpersample  = LysisBufferVolume,
+                                      defLiqClass   = 'MN VL')
 
+        if self.do_extraction:
+            B_Beads         = Rtv.Reagent("B - Beads ",
+                                          Reagents,
+                                          pos          = [1,2],
+                                          initial_vol  = 1200,
+                                          volpersample = B_BeadsVolume,
+                                          defLiqClass  = Beads_LC_2,
+                                          maxFull      = 70)
 
+            BindingBuffer   = Rtv.Reagent("VEB - Binding Buffer ",
+                                          BindBuf,
+                                          volpersample  = BindingBufferVolume,
+                                          defLiqClass   = B_liquidClass)
 
-        B_Beads         = Rtv.Reagent("B - Beads ",
-                                      Reactives,
-                                      pos          = [1,2],
-                                      initial_vol  = 1200,
-                                      volpersample = B_BeadsVolume,
-                                      defLiqClass  = Beads_LC_2,
-                                      maxFull      = 70)
-
-        VEB             = Rtv.Reagent("VEB - Binding Buffer ", BindBuf, volpersample=BindingBufferVolume, defLiqClass=B_liquidClass)
-
-        EtOH80p         = Rtv.Reagent("Ethanol 80% ", wt.getLabware(Lab.Trough_100ml, "7-EtOH80p"), volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
-
+        EtOH80p         = Rtv.Reagent("Ethanol 80% ",
+                                      wt.getLabware(Lab.Trough_100ml, "7-EtOH80p"),
+                                      volpersample      =EtOH80pVolume,
+                                      defLiqClass       =B_liquidClass)
 
                                                         # Show the CheckList GUI to the user for possible small changes
-
         self.CheckList()
         self.set_EvoMode()
 
-                                                        # Define the reactives not shown in the CheckList GUI
+                                                        # Define the Reagents not shown in the CheckList GUI
                                                         # Define samples and the place for temporal reactions
 
         Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"   )  # Plate 12 x 8 ?
