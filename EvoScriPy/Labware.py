@@ -95,7 +95,7 @@ class WorkTable:
             labwware_types=[]
             for line in tmpl:
                 templList += [line]
-                if line.find( "--{ RPG }--")==0:
+                if line.startswith("--{ RPG }--"):
                     #print("***********    --{ RPG }--      ******************")
                     break  # TODO possible error msg ??
                 line = line.split(';')

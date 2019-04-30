@@ -459,81 +459,82 @@ class Protocol (Executable):
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
 
-    def spread(self,  volume            =None,
-                      reactive          =None,
-                      to_labware_region =None,
-                      optimize          =True,
-                      NumSamples        =None,
-                      using_liquid_class=None,
-                      TIP_MASK          =None,
-                      num_tips          =None):
-            """
-            :param NumSamples: Priorized   !!!! If true reset the selection
-            :param reactive: Reagent to spread
-            :param to_labware_region: Labware in which the destine well are selected
-            :param volume: if not, volume is set from the default of the source reactive
-            :param optimize: minimize zigzag of multi pipetting
-            """
-            assert isinstance(reactive, Rtv.Reagent), 'A Reagent expected in reactive to spread'
-            assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
+    def spread(self,
+               volume            = None,
+               reagent           = None,
+               to_labware_region = None,
+               optimize          = True,
+               NumSamples        = None,
+               using_liquid_class= None,
+               TIP_MASK          = None,
+               num_tips          = None):
+        """
+        :param NumSamples: Priorized   !!!! If true reset the selection
+        :param reagent: Reagent to spread
+        :param to_labware_region: Labware in which the destine well are selected
+        :param volume: if not, volume is set from the default of the source reactive
+        :param optimize: minimize zigzag of multi pipetting
+        """
+        assert isinstance(reagent, Rtv.Reagent), 'A Reagent expected in reagent to spread'
+        assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
 
-            if num_tips is None:
-                num_tips = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pipetting = all
+        if num_tips is None:
+            num_tips = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pipetting = all
 
-            if NumSamples:
-                to_labware_region.selectOnly(range(NumSamples))
-            else:
-                if not to_labware_region.selected():
-                    to_labware_region.selectOnly(range(self.NumOfSamples))
+        if NumSamples:
+            to_labware_region.selectOnly(range(NumSamples))
+        else:
+            if not to_labware_region.selected():
+                to_labware_region.selectOnly(range(self.NumOfSamples))
 
-            to = to_labware_region.selected()        # list of offset of selected wells
-            if optimize: to = to_labware_region.parallelOrder(num_tips, to)
-            NumSamples = len(to)
-            SampleCnt = NumSamples
+        to = to_labware_region.selected()        # list of offset of selected wells
+        if optimize: to = to_labware_region.parallelOrder(num_tips, to)
+        NumSamples = len(to)
+        SampleCnt = NumSamples
 
-            volume = volume or reactive.volpersample
+        volume = volume or reagent.volpersample
 
-            Asp_liquidClass, Dst_liquidClass = (reactive.defLiqClass, reactive.defLiqClass) if using_liquid_class is None else \
-                                               (using_liquid_class[0] or reactive.defLiqClass, using_liquid_class[1] or reactive.defLiqClass)
+        Asp_liquidClass, Dst_liquidClass = (reagent.defLiqClass, reagent.defLiqClass) if using_liquid_class is None else \
+                                           (using_liquid_class[0] or reagent.defLiqClass, using_liquid_class[1] or reagent.defLiqClass)
 
 
-            lf = reactive.labware
-            lt = to_labware_region
-            msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reactive.name)
-            with group(msg):
-                msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} {fw:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                            .format( v  = reactive.minVol(),
-                                     fg = lf.location.grid,
-                                     fs = lf.location.site+1,
-                                     fw = str([str(well) for well in reactive.Replicas]) ,
-                                     do = str([i+1 for i in to]),
-                                     to = lt.label,
-                                     tg = lt.location.grid,
-                                     ts = lt.location.site+1)
-                Itr.comment(msg).exec()
-                availableDisp = 0
-                while SampleCnt:
-                    if num_tips > SampleCnt: num_tips = SampleCnt
-                    with self.tips(Rbt.tipsMask[num_tips], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
-                        maxMultiDisp_N = self.robot.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
-                        dsp, rst = divmod(SampleCnt, num_tips)
-                        if dsp >= maxMultiDisp_N:
-                            dsp = maxMultiDisp_N
-                            vol = [volume * dsp] * num_tips
-                            availableDisp = dsp
-                        else:
-                            vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (num_tips - rst)
-                            availableDisp = dsp + bool(rst)
+        lf = reagent.labware
+        lt = to_labware_region
+        msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reagent.name)
+        with group(msg):
+            msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} {fw:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                        .format(v  = reagent.minVol(),
+                                fg = lf.location.grid,
+                                fs = lf.location.site+1,
+                                fw = str([str(well) for well in reagent.Replicas]),
+                                do = str([i+1 for i in to]),
+                                to = lt.label,
+                                tg = lt.location.grid,
+                                ts = lt.location.site+1)
+            Itr.comment(msg).exec()
+            availableDisp = 0
+            while SampleCnt:
+                if num_tips > SampleCnt: num_tips = SampleCnt
+                with self.tips(Rbt.tipsMask[num_tips], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
+                    maxMultiDisp_N = self.robot.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
+                    dsp, rst = divmod(SampleCnt, num_tips)
+                    if dsp >= maxMultiDisp_N:
+                        dsp = maxMultiDisp_N
+                        vol = [volume * dsp] * num_tips
+                        availableDisp = dsp
+                    else:
+                        vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (num_tips - rst)
+                        availableDisp = dsp + bool(rst)
 
-                        self.aspiremultiTips(num_tips, reactive, vol, LiqClass=Asp_liquidClass)
+                    self.aspiremultiTips(num_tips, reagent, vol, LiqClass=Asp_liquidClass)
 
-                        while availableDisp:
-                            if num_tips > SampleCnt: num_tips = SampleCnt
-                            curSample = NumSamples - SampleCnt
-                            sel = to[curSample: curSample + num_tips]  # todo what if volume > maxVol_tip ?
-                            self.dispensemultiwells(num_tips, Dst_liquidClass, to_labware_region.selectOnly(sel), [volume] * num_tips)
-                            availableDisp -= 1
-                            SampleCnt -= num_tips
+                    while availableDisp:
+                        if num_tips > SampleCnt: num_tips = SampleCnt
+                        curSample = NumSamples - SampleCnt
+                        sel = to[curSample: curSample + num_tips]  # todo what if volume > maxVol_tip ?
+                        self.dispensemultiwells(num_tips, Dst_liquidClass, to_labware_region.selectOnly(sel), [volume] * num_tips)
+                        availableDisp -= 1
+                        SampleCnt -= num_tips
 
 
     def transfer(self,  from_labware_region, to_labware_region, volume, using_liquid_class=None,

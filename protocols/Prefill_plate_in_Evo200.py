@@ -110,7 +110,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
             for LP in LysPlat:
                 with self.tips(reuse=True, drop=False):
-                    self.spread(reactive=BufferReact, to_labware_region=LP.selectOnly(all_samples))
+                    self.spread(reagent=BufferReact, to_labware_region=LP.selectOnly(all_samples))
                 self.dropTips()
 
         self.done()
