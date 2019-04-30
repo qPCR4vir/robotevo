@@ -34,6 +34,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                          'VL-pKmix Inactivated': self.V_preMix_inactivated,
                          'original samples'    : self.V_original_samples                }
 
+
+    def V_default(self):
+        self.add_samples    = True
+        self.add_preMix     = True
+        self.add_VL         = True
+        self.do_extraction  = True
+
     def V_original_samples(self):
         self.V_default()
 
@@ -54,12 +61,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     def V_fill_inactivation(self):
         self.V_fill_preMix_inactivation()
         self.add_preMix     = False
-
-    def V_default(self):
-        self.add_samples    = True
-        self.add_preMix     = True
-        self.add_VL         = True
-        self.do_extraction  = True
 
     def __init__(self, GUI = None,  run_name = None):
         self.V_default()

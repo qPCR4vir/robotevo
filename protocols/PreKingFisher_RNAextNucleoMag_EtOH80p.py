@@ -26,19 +26,41 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                          'pre Inactivated'     : self.V_inactivated,
                          'original samples'    : self.V_original_samples                }
 
-    def V_VL_inactivated(self):
-        pass
+        self.versions = {'VL-pKmix prefill'     : self.V_fill_preMix_inactivation,
+                         'VL-only prefill'      : self.V_fill_inactivation,
+                         'VL-only inactivated'  : self.V_VL_inactivated,
+                         'VL-pKmix Inactivated' : self.V_preMix_inactivated,
+                         'original samples'     : self.V_original_samples           }
+
+    def V_default(self):
+        self.add_samples    = True
+        self.add_preMix     = True
+        self.add_VL         = True
+        self.do_extraction  = True
 
     def V_original_samples(self):
-        pass
+        self.V_default()
 
-    def V_inactivated(self):
-        pass
+    def V_VL_inactivated(self):
+        self.V_default()
+        self.add_VL         = False
+        self.add_samples    = False
+
+    def V_preMix_inactivated(self):
+        self.V_VL_inactivated()
+        self.add_preMix     = False
+
+    def V_fill_preMix_inactivation(self):
+        self.V_default()
+        self.add_samples    = False
+        self.do_extraction  = False
 
     def V_fill_inactivation(self):
-        pass
+        self.V_fill_preMix_inactivation()
+        self.add_preMix     = False
 
-    def __init__(self, GUI = None,  run_name = None):
+    def __init__(self, GUI=None, run_name=None):
+        self.V_default()
 
         Evo100_FLI.__init__(   self,
                                GUI                         = GUI,
