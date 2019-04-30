@@ -31,7 +31,6 @@ available.append(Prefill_plates_LysisBuffer                  ())
 available.append(Prefill_plates_LysisBuffer_and_ProtKpreMix  ())
 available.append(PreKingFisher_RNAextNucleoMag_EtOH80p       ())
 available.append(RNAextr_MN_Vet_Kit                          ())
-#available.append(PreKingFisher_RNAextNucleoMag          ())
 
 
 
