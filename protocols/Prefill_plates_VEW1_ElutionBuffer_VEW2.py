@@ -46,7 +46,8 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'.format(str(NumOfSamples))).exec()
+        Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'
+                                                            .format(str(NumOfSamples))).exec()
 
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
@@ -62,7 +63,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Plate_Eluat = wt.getLabware(Lab.MP96well,       "Plate ElutB"   )  # Plate 12 x 8 ? MP96well !!
 
 
-                                                            #  Set the initial position of the tips
+                                                            # Set the initial position of the tips
 
         self.go_first_pos()
 
@@ -134,13 +135,16 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
             Itr.userPrompt("Put the plates for VEW1, Elution buffer and VEW2 in that order").exec()
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent=ElutionBuffer, to_labware_region=Plate_Eluat.selectOnly(all_samples))  # ,optimize=False
+                self.spread(reagent             = ElutionBuffer,
+                            to_labware_region   = Plate_Eluat.selectOnly(all_samples))    # ,optimize=False
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent=VEW2, to_labware_region=Plate_VEW2.selectOnly(all_samples))  # , optimize=False
+                self.spread(reagent             =VEW2,
+                            to_labware_region   =Plate_VEW2.selectOnly(all_samples))      # , optimize=False
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent=VEW1, to_labware_region=Plate_VEW1.selectOnly(all_samples))  # , optimize=False
+                self.spread(reagent             =VEW1,
+                            to_labware_region   =Plate_VEW1.selectOnly(all_samples))      # , optimize=False
 
         self.dropTips()
 

@@ -87,7 +87,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reagents   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
+        Reagents   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
                                                                 # Set the initial position of the tips
 

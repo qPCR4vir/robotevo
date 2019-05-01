@@ -88,7 +88,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
+        Reagents_TubeRack   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
 
         self.go_first_pos()                                 #  Set the initial position of the tips
@@ -122,7 +122,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                       num_of_samples=self.num_plates * NumOfSamples)
         else:
             ProtK = Rtv.Reagent("Proteinase K ",
-                                Reactives,
+                                Reagents_TubeRack,
                                 volpersample   = ProtKVolume,
                                 defLiqClass    = Small_vol_disp,
                                 num_of_samples = self.num_plates * NumOfSamples,
@@ -130,21 +130,21 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             ProtK.maxFull=0.96
 
             cRNA = Rtv.Reagent("Carrier RNA ",
-                               Reactives,
+                               Reagents_TubeRack,
                                volpersample    = cRNAVolume,
                                defLiqClass     = Small_vol_disp,
                                num_of_samples  = self.num_plates * NumOfSamples,
                                maxFull         = 95)
 
             IC_MS2 = Rtv.Reagent("IC MS2 phage culture ",
-                                 Reactives,
+                                 Reagents_TubeRack,
                                  volpersample   = IC_MS2Volume,
                                  defLiqClass    = Small_vol_disp,
                                  num_of_samples = self.num_plates * NumOfSamples,
                                  maxFull        = 95)
 
             pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
-                                     Reactives,
+                                     Reagents_TubeRack,
                                      components     = [cRNA, ProtK, IC_MS2],
                                      defLiqClass    = W_liquidClass,
                                      excess         = 8,
