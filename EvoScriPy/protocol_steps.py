@@ -92,7 +92,12 @@ class Executable:
 
 
 class Protocol (Executable):
-    """ Each custom protocol need to implement these functions.
+    """
+    Base class from which each custom protocol need to be derived, directly
+    or from one of already derived. For example from the already adapted to some
+    generic type robot like Evo200 or from an even more especially adapted like Evo100_FLI.
+    Each newly derived protocol have to optionally override some of the following functions,
+    especially .Run().
 
     """
 
