@@ -1,0 +1,20 @@
+VL-pKmix prefillfor extracting RNA from 96 samples with the MN-Vet kit
+
+Prefill plate with EtOH80p
+
+    Spread: 600.0 킠 of Ethanol 80% 
+        Spread: 600.0 킠 of Ethanol 80%  (59904.0 킠 total) from [grid:23 site:6 ['well 1 in 7-EtOH80p :  with 59904.0 uL of Ethanol 80% '] into Plate EtOH[grid:25 site:3] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
+
+Sample Lysis
+
+    preMix: 3916.8 킠 of ProtK+cRNA+IC-MS2 mix 
+        preMix: 3916.8 킠 of ProtK+cRNA+IC-MS2 mix  into grid:19 site:1 ['well 8 in Reactives :  with 0.0 uL of ProtK+cRNA+IC-MS2 mix ', 'well 9 in Reactives :  with 0.0 uL of ProtK+cRNA+IC-MS2 mix '] from 3 components:
+           1- 460.8 킠 from grid:19 site:1:['well 14 in Reactives :  with 476.0 uL of Carrier RNA ']
+           2- 2304.0 킠 from grid:19 site:1:['well 15 in Reactives :  with 1202.0 uL of Proteinase K ', 'well 16 in Reactives :  with 1190.0 uL of Proteinase K ']
+           3- 1152.0 킠 from grid:19 site:1:['well 13 in Reactives :  with 1190.0 uL of IC MS2 phage culture ']
+
+    Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix 
+        Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (3916.8 킠 total) from [grid:19 site:1 ['well 8 in Reactives :  with 1958.4 uL of ProtK+cRNA+IC-MS2 mix ', 'well 9 in Reactives :  with 1958.4 uL of ProtK+cRNA+IC-MS2 mix '] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
+
+    Spread: 100.0 킠 of VL - Lysis Buffer 
+        Spread: 100.0 킠 of VL - Lysis Buffer  (9984.0 킠 total) from [grid:23 site:5 ['well 1 in 2-Vl Lysis Buffer :  with 9984.0 uL of VL - Lysis Buffer '] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60, 65, 66, 67, 68, 73, 74, 75, 76, 81, 82, 83, 84, 89, 90, 91, 92, 93, 94, 95, 96, 85, 86, 87, 88, 77, 78, 79, 80, 69, 70, 71, 72, 61, 62, 63, 64, 53, 54, 55, 56, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
