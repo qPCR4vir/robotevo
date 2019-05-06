@@ -9,7 +9,7 @@ import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 import EvoScriPy.Reagent as Rtv      # ??
 #from protocols.Evo75_FLI import Evo75_FLI
-from protocols.Evo100_FLI import Evo100_FLI
+from protocols.Evo100 import Evo100_FLI
 
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p

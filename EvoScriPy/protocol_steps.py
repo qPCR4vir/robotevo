@@ -3,7 +3,8 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-__author__ = 'Ariel'
+
+__author__ = 'qPCR4vir'
 
 
 from contextlib import contextmanager

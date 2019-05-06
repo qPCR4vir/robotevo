@@ -3,18 +3,18 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-__author__ = 'Ariel'
+
+__author__ = 'qPCR4vir'
 
 
 from EvoScriPy.protocol_steps import *
 
-
-
-class Evo75_FLI(Protocol):
-    """ Using the Evo75_FLI_INNT
+class Evo75(Protocol):
+    """ Using the Evo75
     """
 
     def __init__(self,  GUI                 = None,
+                        nTips               = 1,
                         worktable_template_filename='../EvoScripts/Freedom75_FLI_PCR.ewt',
                         output_filename     = None,
                         run_name            = None):
@@ -36,7 +36,27 @@ class Evo75_FLI(Protocol):
         WashCleanerL    = wt.getLabware(Lab.CleanerDeep, ""                                )
         DiTiWaste       = wt.getLabware(Lab.DiTi_Waste_plate, "TipWaste"                   )
 
-        # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste
+
+
+class Evo75_FLI(Evo75):
+    """ Using the Evo75_FLI_INNT
+    """
+
+    def __init__(self,  GUI                 = None,
+                        nTips               = 1,
+                        worktable_template_filename='../EvoScripts/Freedom75_FLI_PCR.ewt',
+                        output_filename     = None,
+                        run_name            = None):
+
+        Evo75.__init__(self,    GUI                         = GUI,
+                                nTips                       = 1,
+                                worktable_template_filename = worktable_template_filename,
+                                output_filename             = output_filename,
+                                run_name                    = run_name)
+
+
+    def set_defaults(self):
+        Evo75.set_defaults(self)

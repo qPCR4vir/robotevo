@@ -423,9 +423,6 @@ class App(tkinter.Frame):
         tkinter.Frame.__init__(self, master)
         self.master.title('RobotEvo')
 
-        self.logo = tkinter.PhotoImage(file="../EvoScriPy/logo.png")
-        self.w = tkinter.Label(self, image=self.logo)
-        self.w.grid(row=0, column=0, columnspan=4, sticky=tkinter.W + tkinter.E)
         tkinter.Label(self,  padx=10, text='Please, select the protocol for which you want to generate an Evoware script:').grid(row=1, columnspan=3)
 
         # Protocol selection ------------------
@@ -437,8 +434,6 @@ class App(tkinter.Frame):
         self.protocol_selection = tkinter.OptionMenu(self, self.selected_protocol, *av_prot_names, command=self.protocol_selected)
         self.protocol_selection.grid(row=2, column=1, rowspan=1, columnspan=3, sticky=tkinter.W + tkinter.E)
 
-        explanation = "Hier entsteht die neue Grafische Benutzeroberfläche für die einfache Anwendung der automatisierten RNA-Extraktion"
-        tkinter.Label(self, justify=tkinter.CENTER, padx=10, text=explanation).grid(row=3, columnspan=4)
         self.grid()
 
         #self.protocol_selected(None)
