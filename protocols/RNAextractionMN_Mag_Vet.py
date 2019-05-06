@@ -13,10 +13,10 @@ import EvoScriPy.Reagent as Rtv
 from EvoScriPy.Instructions_Te_MagS import *
 
 
-mix_mag_sub = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
-mix_mag_eluat = br"C:\Prog\robotevo\EvoScriPy\avr_MagMix_Eluat.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
+mix_mag_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
+mix_mag_eluat = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix_Eluat.esc".decode(EvoScriPy.EvoMode.Mode.encoding)
 # Rbt.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
-Rbt.rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
+Rbt.rep_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\repeat_subroutine.esc".decode(EvoScriPy.EvoMode.Mode.encoding)
 
 
 class RNAextr_MN_Vet_Kit(Evo100_FLI):
@@ -79,7 +79,8 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit').format(str(NumOfSamples))).exec()
+        Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit')
+                    .format(str(NumOfSamples))).exec()
 
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
 
@@ -98,7 +99,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
         DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
 
-        Reagents   = wt.getLabware(Lab.GreinRack16_2mL, "Reagents" )
+        Reagents   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
 
         if self.do_extraction:
             self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
@@ -286,8 +287,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with self.tips(reuse=True, drop=False, preserve=True, usePreserved=True):
                 self.wash_in_TeMag(reactive=BindingBuffer, wells=all_samples)
 
-
-
         with self.tips(reuse=True, drop=False, preserve=True):
             self.wash_in_TeMag(reactive=VEW1, wells=all_samples)
             self.wash_in_TeMag(reactive=VEW2, wells=all_samples)
@@ -306,7 +305,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
                 with incubation(minutes=4):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
-
 
             self.spread(reagent=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
             with incubation(minutes=2):
