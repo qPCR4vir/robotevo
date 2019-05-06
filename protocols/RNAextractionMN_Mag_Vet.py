@@ -285,11 +285,11 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 self.spread(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
 
             with self.tips(reuse=True, drop=False, preserve=True, usePreserved=True):
-                self.wash_in_TeMag(reactive=BindingBuffer, wells=all_samples)
+                self.wash_in_TeMag(reagent=BindingBuffer, wells=all_samples)
 
         with self.tips(reuse=True, drop=False, preserve=True):
-            self.wash_in_TeMag(reactive=VEW1, wells=all_samples)
-            self.wash_in_TeMag(reactive=VEW2, wells=all_samples)
+            self.wash_in_TeMag(reagent=VEW1, wells=all_samples)
+            self.wash_in_TeMag(reagent=VEW2, wells=all_samples)
 
             with self.group("Wash in TeMag with " + EtOH80p.name), self.tips():
                 self.spread(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
@@ -324,23 +324,23 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                  using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
         self.done()
 
-    def wash_in_TeMag( self, reactive, wells=None, using_liquid_class=None, vol=None):
-            """
+    def wash_in_TeMag(self, reagent, wells=None, using_liquid_class=None, vol=None):
+        """
 
-            :param reactive:
-            :param wells:
-            :param using_liquid_class: dict
-            :param vol:
-            """
+        :param reagent:
+        :param wells:
+        :param using_liquid_class: dict
+        :param vol:
+        """
             # import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
 
-            wells = wells or reactive.labware.selected() or range(self.NumOfSamples)
+            wells = wells or reagent.labware.selected() or range(self.NumOfSamples)
             if not using_liquid_class:
-                using_liquid_class =  reactive.defLiqClass
-            with group("Wash in TeMag with " + reactive.name):
+                using_liquid_class =  reagent.defLiqClass
+            with group("Wash in TeMag with " + reagent.name):
 
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-                self.spread(reagent=reactive, to_labware_region=self.TeMag.selectOnly(wells))
+                self.spread(reagent=reagent, to_labware_region=self.TeMag.selectOnly(wells))
 
                 with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//self.nTips + 1):
                     self.mix(self.TeMag.selectOnly(wells), using_liquid_class, vol)

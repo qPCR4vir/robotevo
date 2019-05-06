@@ -423,15 +423,19 @@ class Robot:
     def pipette(self, action, volume, labware_selection, tip_mask=-1) -> (list, int):
         volume, tip_mask = self.curArm().pipette(action, volume, tip_mask)
         w = 0
-        # assert isinstance(labware_selection, Lab.Labware)
+        assert isinstance(labware_selection, Lab.Labware)
         wells = labware_selection.selected_wells()
         for i, tp in enumerate(self.curArm().Tips):
                 if tip_mask & (1 << i):
                     dv = action*volume[i]
                     if wells[w].reactive is None:
                         print("WARNING !!! There is nothing in well {:d} of rack {:s}".format(wells[w].offset+1,
-                                                                                            labware_selection.label))
-                    assert wells[w].vol is not None, "Volume of " + wells[w].reactive.name + " not initialized."
+                                                                   labware_selection.type.name + ": " + labware_selection.label))
+                    assert wells[w].vol is not None, (  "Volume of "
+                                                      + wells[w].reactive.name
+                                                      + " in well {:d} of rack {:s} not initialized."
+                                                      .format(wells[w].offset + 1,
+                                                              labware_selection.label))
                     nv = wells[w].vol - dv
 
                     assert  nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \

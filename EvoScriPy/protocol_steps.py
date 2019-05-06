@@ -641,7 +641,11 @@ class Protocol (Executable):
             return oriSel, dstSel
 
 
-    def waste(self,  from_labware_region=None, using_liquid_class=None, volume=None, to_waste_labware=None, optimize=True):
+    def waste(self,  from_labware_region    = None,
+                     using_liquid_class     = None,
+                     volume                 = None,
+                     to_waste_labware       = None,
+                     optimize               = True):
 
         """
 
@@ -678,7 +682,7 @@ class Protocol (Executable):
         if volume:
             v = volume
         else:
-            v = from_labware_region.Wells[oriSel[0]].vol
+            v = from_labware_region.Wells[oriSel[0]].vol    # all wells with = vol. todo: waste all vol from EACH well?
 
         Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
         # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
@@ -693,13 +697,13 @@ class Protocol (Executable):
             Itr.comment(msg).exec()
             while SampleCnt:
                 curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:
+                if nt > SampleCnt:                # only a few sample left
                     nt = SampleCnt
                     tm = Rbt.tipsMask[nt]
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 
-                sel = oriSel[curSample:curSample + nt]
+                sel = oriSel[curSample:curSample + nt]   # todo: use oriSel to calculate number of "samples"?
                 spl = range(curSample, curSample + nt)
                 Asp.labware.selectOnly(sel)
 
@@ -708,7 +712,7 @@ class Protocol (Executable):
                 else:
                     vols = [w.vol for w in Asp.labware.selected_wells()]
                     r_min, r_max = min(vols), max(vols)
-                    assert r_min == r_max
+                    assert r_min == r_max                         # all wells with = vol.  ??
                     r = r_max
 
                 if not using_liquid_class:
@@ -716,7 +720,7 @@ class Protocol (Executable):
                             Dst.liquidClass = Asp.labware.selected_wells()[0].reactive.defLiqClass
 
                 with self.tips(tm, drop=True, preserve=False, selected_samples=spl):
-                    while r > Rest:      # dont aspire Rest with these Liq Class (Liq Detect)
+                    while r > Rest:                         # dont aspire Rest with these Liq Class (Liq Detect)
                         dV = r if r < mV else mV
                         if dV < Rest: break # ??
                         dV -= Rest       # the last Rest uL have to be aspired with the other Liq Class
@@ -965,21 +969,21 @@ def opening_example(filename):
     finally:
         f.close() # Ditto for errors here (however unlikely)
 
-# TODO  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
+# OK  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
 # OK  implement preserveTips and usePreservedTips !!
 # OK  mix well <B-beads
-# TODO  Elution buffer to eppis !!!
+# OK  Elution buffer to eppis !!!
 # OK  implement accumulated volume
 # OK  implement actualize vol in reactives in pipette
-# TODO  comentar las replicas, como 2x b-beads
+# OK  comentar las replicas, como 2x b-beads
 # OK  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
-# TODO  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
+# OK  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
 # OK?  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait
 # OK  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
 # OK  write the total vol to spread.                      - ok ?!
-# TODO  actualize liquid classes                            - ok ?!
-# TODO  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
+# OK  actualize liquid classes                            - ok ?!
+# OK  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
 # OK  test no drop                                        - ok ?!
 # OK  reimplementar rest... for waste                     - ok ?!
 
