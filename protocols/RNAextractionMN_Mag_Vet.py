@@ -291,7 +291,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             self.wash_in_TeMag(reagent=VEW1, wells=all_samples)
             self.wash_in_TeMag(reagent=VEW2, wells=all_samples)
 
-            with self.group("Wash in TeMag with " + EtOH80p.name), self.tips():
+            with group("Wash in TeMag with " + EtOH80p.name), self.tips():
                 self.spread(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
 
                 with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//self.nTips + 1):
@@ -332,20 +332,20 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         :param using_liquid_class: dict
         :param vol:
         """
-            # import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
+        # import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
 
-            wells = wells or reagent.labware.selected() or range(self.NumOfSamples)
-            if not using_liquid_class:
-                using_liquid_class =  reagent.defLiqClass
-            with group("Wash in TeMag with " + reagent.name):
+        wells = wells or reagent.labware.selected() or range(self.NumOfSamples)
+        if not using_liquid_class:
+            using_liquid_class =  reagent.defLiqClass
+        with group("Wash in TeMag with " + reagent.name):
 
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-                self.spread(reagent=reagent, to_labware_region=self.TeMag.selectOnly(wells))
+            Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
+            self.spread(reagent=reagent, to_labware_region=self.TeMag.selectOnly(wells))
 
-                with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//self.nTips + 1):
-                    self.mix(self.TeMag.selectOnly(wells), using_liquid_class, vol)
+            with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//self.nTips + 1):
+                self.mix(self.TeMag.selectOnly(wells), using_liquid_class, vol)
 
-                with incubation(minutes=0.5, timer=2):
-                    Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
-                with self.tips(usePreserved=self.preserveingTips(), preserve=False, drop=True):
-                    self.waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)
+            with incubation(minutes=0.5, timer=2):
+                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
+            with self.tips(usePreserved=self.preserveingTips(), preserve=False, drop=True):
+                self.waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)

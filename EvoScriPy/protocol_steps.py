@@ -747,19 +747,19 @@ class Protocol (Executable):
                             Asp.exec()
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
-                    with self.tips(allow_air=CtrVol):
+                    with self.tips(    allow_air = Rest + CtrVol ):
                             Asp.exec()
                     Asp.volume = RestPlus
-                    Asp.liquidClass =  Te_Mag_RestPlus # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
-                    with self.tips(allow_air=RestPlus):
+                    Asp.liquidClass =  Te_Mag_RestPlus  # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
+                    with self.tips(    allow_air = RestPlus + Rest + CtrVol ):
                             Asp.exec()
-                    #Ctr.exec()
+                    # Ctr.exec()
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
                     Dst.volume += Rest + RestPlus
-                    with self.tips(allow_air=CtrVol):
+                    with self.tips(    allow_air = CtrVol + RestPlus + Rest + CtrVol ):
                             Asp.exec()
-                    with self.tips(allow_air=Rest + RestPlus):
+                    with self.tips(    allow_air = CtrVol + RestPlus + Rest + CtrVol ):
                             Dst.exec()
 
                 SampleCnt -= nt

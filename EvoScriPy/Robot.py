@@ -443,12 +443,14 @@ class Robot:
                          " in well " + str(wells[w].offset+1) + " of rack " + labware_selection.label + " but " \
                          + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
 
-                    assert nv > -self.allow_air, "Error !!! trying to change the volume of " + \
-                            str (wells[w])   + " to " + str(nv) + "."
+                    assert nv > -self.allow_air, "Error !!! trying to change the volume of " + str (wells[w])   \
+                            + " to " + str(nv) + "uL. But only " + str(self.allow_air) + "uL of air are allowed"
 
                     wells[w].vol -= dv
+                    if wells[w].vol < 0:                                   # don't allow air to fake reagent.
+                        wells[w].vol = 0
                     if    action == Robot.Arm.Aspire:
-                        self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])
+                        self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])  # todo FIX for already used tips
                         wells[w].log(-dv)
                     elif  action == Robot.Arm.Dispense:
                         assert isinstance(tp, Lab.usedTip)
