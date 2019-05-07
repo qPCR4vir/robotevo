@@ -273,16 +273,16 @@ class Well:
         self.track = self
 
         self.vol = 0.0
-        self.reactive = None
+        self.reagent = None
         self.actions = []
 
     def __str__(self):
         return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}"\
-                .format( pos  =self.offset+1,
-                         lab  =self.labware.label,
-                         label=self.label,
-                         vol  =self.vol,
-                         what =str(self.reactive))
+                .format(pos  =self.offset+1,
+                        lab  =self.labware.label,
+                        label=self.label,
+                        vol  =self.vol,
+                        what =str(self.reagent))
 
     def log(self, vol, origin=None):
         self.actions += [(vol, (origin if origin else self))]
@@ -291,19 +291,28 @@ class Well:
         self.selFlag = sel
 
     @property
-    def vol(self):              return self._vol
+    def vol(self):
+        return self._vol
+
     @vol.setter
-    def vol(self, newvol):      self._vol = newvol
+    def vol(self, newvol):
+        self._vol = newvol
 
     @property
-    def reactive(self):              return self._reactive
-    @reactive.setter
-    def reactive(self, reactive):      self._reactive = reactive
+    def reagent(self):
+        return self._reactive
+
+    @reagent.setter
+    def reagent(self, reactive):
+        self._reactive = reactive
 
     @property
-    def actions(self):              return self._actions
+    def actions(self):
+        return self._actions
+
     @actions.setter
-    def actions(self, actions):      self._actions = actions
+    def actions(self, actions):
+        self._actions = actions
 
 class conectedWell(Well):
     @property
@@ -312,9 +321,9 @@ class conectedWell(Well):
     def vol(self, newvol):      self.labware.vol = newvol
 
     @property
-    def reactive(self):              return self.labware.reactive
+    def reactive(self):              return self.labware.reagent
     @reactive.setter
-    def reactive(self, reactive):      self.labware.reactive = reactive
+    def reagent(self, reactive):      self.labware.reagent = reactive
 
     @property
     def actions(self):              return self.labware.actions
@@ -439,10 +448,10 @@ class Labware:
         continuous = True
         free_wells = []
         for i in range(init_pos, len(self.Wells) - n+1):
-            if any(w.reactive for w in self.Wells[i:i + n]): continue
+            if any(w.reagent for w in self.Wells[i:i + n]): continue
             return continuous, self.Wells[i:i + n]
         for w in self.Wells[init_pos:]:
-            if w.reactive: continue
+            if w.reagent: continue
             free_wells += [w]
             if len(free_wells) == n: break
         continuous = all((free_wells[i].offset+1 == free_wells[i+1].offset)
@@ -473,7 +482,7 @@ class Labware:
                 pass # replicas = len(pos)
             else:                              # todo: revise  !!!!!!!!!!!!!!
                 assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " + str(
-                w.offset + 1) + " already occupied by " + w.reactive.name
+                w.offset + 1) + " already occupied by " + w.reagent.name
 
 
         elif isinstance(pos, Well):                              # put one replica beginning from the given position
@@ -490,9 +499,9 @@ class Labware:
         for w in pos:
             if replicas == 0 : return Replicas
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
-            assert not w.reactive, self.label + ": Can not put " + reactive.name + " in position " + str(
-                w.offset + 1) + " already occupied by " + w.reactive.name
-            w.reactive = reactive
+            assert not w.reagent, self.label + ": Can not put " + reactive.name + " in position " + str(
+                w.offset + 1) + " already occupied by " + w.reagent.name
+            w.reagent = reactive
             # w.labware = self
             Replicas += [w]
             replicas -= 1
@@ -503,7 +512,10 @@ class Labware:
             well.selFlag = False
         return self
 
-    def selected(self):
+    def selected(self) -> list :
+        """
+        :return: list of the selected well offset
+        """
         return [well.offset for well in self.Wells if well.selFlag]
 
     def selected_wells(self):
@@ -641,10 +653,10 @@ class DITIrack (Labware):
         end = self.offset(end)
         r = range(beg, end+1)
         for w in self.Wells:
-            w.reactive = None
+            w.reagent = None
             # w.labware = None   #   hummm ??
         for w in r:
-            self.Wells[w].reactive = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
+            self.Wells[w].reagent = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
             # self.Wells[w].labware = self    #   hummm ??
 
     def find_new_tips(self, TIP_MASK, lastPos=False)->(bool, list):
@@ -673,13 +685,13 @@ class DITIrack (Labware):
             # todo do we really need a correspondence mask - wells??
 
             for i in range(len(r)-n+1):
-                if all(isinstance(w.reactive, Tip) for w in r[i:i + n]):
+                if all(isinstance(w.reagent, Tip) for w in r[i:i + n]):
                     return continuous, tips + r[i:i + n]
 
             continuous = False
             for w in r:
-                if isinstance(w.reactive, Tip):
-                    tip = w.reactive
+                if isinstance(w.reagent, Tip):
+                    tip = w.reagent
                     assert tip.type is rack_type
                     tips += [w]
                     n -= 1
@@ -722,9 +734,9 @@ class DITIrack (Labware):
         i, d = [end, -1] if lastPos else [beg, 1]
         tips = []
         while n:
-            assert rack.Wells[i].reactive.type is tp
-            tips += [rack.Wells[i].reactive]
-            rack.Wells[i].reactive = None
+            assert rack.Wells[i].reagent.type is tp
+            tips += [rack.Wells[i].reagent]
+            rack.Wells[i].reagent = None
             print ("Pick tip "+str(i+1)+" from rack site "+str(rack.location.site+1)
                    + " named: " + rack.label)
             n -= 1
@@ -774,11 +786,11 @@ class DITIrack (Labware):
         n = count_tips(TIP_MASK)
         assert n == len(self.selected()), "Too much or too few wells selected to put tip back"
         for i, w in enumerate(self.selected_wells()):
-            assert w.reactive is not Tip, ("Another tip " + w.reactive.type.name +
+            assert w.reagent is not Tip, ("Another tip " + w.reagent.type.name +
                             "is already in position " + str(self.position(i)) + " of " + self.label)
             tp = tips[i]
             assert isinstance(tp, usedTip)
-            w.reactive = tp
+            w.reagent = tp
             self.type.preserved_tips[tp.origin.track.offset] = w
             self.type.last_preserved_tips = w
 
@@ -792,10 +804,10 @@ class DITIrack (Labware):
         assert n == len(self.selected()), "Too much or too few wells selected to pick up tips"
         tips = []
         for i, w in enumerate(self.selected_wells()):
-            assert isinstance(w.reactive, usedTip), ("No tip " + w.reactive.type.name +
+            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name +
                             "were found in position " + str(self.position(i)) + " of " + self.label)
-            tips += [w.reactive]
-            w.reactive = None
+            tips += [w.reagent]
+            w.reagent = None
             #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
         return tips
 
@@ -807,7 +819,7 @@ class DITIwaste(Labware):
 
     def waste(self, tips):
         for tp in tips:
-            self.Wells[self.wasted].reactive = tp
+            self.Wells[self.wasted].reagent = tp
             self.wasted += 1
 
             # todo make following assert a Warning or a UserPrompt
@@ -817,11 +829,11 @@ class DITIwaste(Labware):
                 if react_well.offset in tp.type.preserved_tips:
                     tip_well = tp.type.preserved_tips[react_well.offset]
                     assert isinstance(tip_well, Well)
-                    if tip_well.reactive is None:
-                        tip_well.reactive = banned_well  # don't used this well again (is "contaminated")
+                    if tip_well.reagent is None:
+                        tip_well.reagent = banned_well  # don't used this well again (is "contaminated")
                         del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
                     else:
-                        assert tp is not tip_well.reactive
+                        assert tp is not tip_well.reagent
 
 class Cuvette(Labware):
     def __init__(self, type, location, label=None, worktable=None):

@@ -15,7 +15,6 @@ import EvoScriPy.Labware as Lab
 import EvoScriPy.EvoMode as EvoMode
 
 
-
 def not_implemented():
     print('This protocols have yet to be implemented.')
 
@@ -40,8 +39,10 @@ class Executable:
         self.run_name    = run_name
         self.pipeline    = None
         self.initialized = False
-        self.Reactives   = []
+        self.reagents    = []
+        self.versions    = {"none": not_implemented}
         self.def_versions()
+
         self.version     = next(iter(self.versions))
         Rtv.Reagent.SetReactiveList(self)  # todo Revise !!!
 
@@ -123,7 +124,6 @@ class Protocol (Executable):
 
         Executable.__init__(self, GUI=GUI, run_name  = run_name)
 
-
     def initialize(self):
         if not self.initialized:
             Executable.initialize(self)
@@ -153,7 +153,6 @@ class Protocol (Executable):
         self.worktable  = self.iRobot.robot.worktable  # shortcut !!
         self.robot      = self.iRobot.robot
         assert (self.iRobot.robot.curArm().nTips == self.nTips )
-
 
     def comments(self):
         return self.comments_.comments
@@ -203,10 +202,8 @@ class Protocol (Executable):
         """
         return self.robot.set_dropTips(drop)
 
-
     def set_allow_air(self, allow_air=0.0)->float:
         return self.robot.set_allow_air(allow_air)
-
 
     def reuseTips(self, reuse=True)->bool:
         """     Reuse the tips or drop it and take new after each action?
@@ -214,7 +211,6 @@ class Protocol (Executable):
         :return:
         """
         return self.robot.reuseTips(reuse)
-
 
     def reuse_tips_and_drop(self, reuse=True, drop=True)->(bool, bool):
         return self.set_dropTips(drop), self.reuseTips(reuse)
@@ -230,7 +226,6 @@ class Protocol (Executable):
 
     def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
         pass # Itr.moveLiha
-
 
     def getTips(self, TIP_MASK=-1, tip_type=None, selected_samples=None):
 
@@ -259,7 +254,6 @@ class Protocol (Executable):
             I = Itr.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm)
             I.exec()
         return mask                                    # todo REVISE !!   I.tipMask
-
 
     def dropTips(self, TIP_MASK=-1):
 
@@ -313,7 +307,6 @@ class Protocol (Executable):
         v[tip] = vol
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-
     def mix_reagent(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
         """
         Select all possible replica of the given reactive and mix using the given % of the current vol in EACH well
@@ -341,7 +334,6 @@ class Protocol (Executable):
                 labware     =reactive.labware,
                 cycles      =cycles).exec()
 
-
     def multidispense_in_replicas(self, tip, reactive, vol):
         """ Multi-dispense of the content of ONE tip into the reactive replicas
 
@@ -353,7 +345,7 @@ class Protocol (Executable):
         re = reactive.Replicas
         assert len(vol) <= len(re)
         for v, w in zip(vol, re):                                 # zip continues until the shortest iterable is exhausted
-            Itr.dispense(Rbt.tipMask[tip], self.robot.curArm().Tips[tip].origin.reactive.defLiqClass,
+            Itr.dispense(Rbt.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
                          # reactive.defLiqClass,
                          v, w.labware.selectOnly([w.offset])).exec()
 
@@ -619,14 +611,14 @@ class Protocol (Executable):
                         if using_liquid_class[0]:
                             Asp.liquidClass = using_liquid_class[0]
                         else:
-                            Asp.liquidClass = sw[0].reactive.defLiqClass
+                            Asp.liquidClass = sw[0].reagent.defLiqClass
                         if using_liquid_class[1]:
                             Dst.liquidClass = using_liquid_class[1]
                         else:
-                            Dst.liquidClass = sw[0].reactive.defLiqClass
+                            Dst.liquidClass = sw[0].reagent.defLiqClass
                     else:
-                        Asp.liquidClass = sw[0].reactive.defLiqClass
-                        Dst.liquidClass = sw[0].reactive.defLiqClass
+                        Asp.liquidClass = sw[0].reagent.defLiqClass
+                        Dst.liquidClass = sw[0].reagent.defLiqClass
 
                     with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
                         Asp.labware.selectOnly(src)
@@ -641,109 +633,135 @@ class Protocol (Executable):
             return oriSel, dstSel
 
 
-    def waste(self,  from_labware_region    = None,
-                     using_liquid_class     = None,
-                     volume                 = None,
-                     to_waste_labware       = None,
-                     optimize               = True):
+    def waste(self,  from_labware_region : Lab.Labware              = None,
+                     using_liquid_class  : str                      = None,
+                     volume              : float                    = None,     # todo accept a list ??
+                     to_waste_labware    : Lab.Labware.CuvetteType  = None,
+                     optimize            : bool                     = True):    # todo: set default as False ??
 
         """
+        Use this function as a final step of a `in-well` pellet wash procedure (magnetic or centrifuge created).
+        Waste a `volume` from each of the selected wells `from_labware_region` (source labware wells)
+        `to_waste_labware` using the current LiHa arm with maximum number of tips (of type: `self.worktable.def_DiTi`,
+        which can be set `with self.tips(tip_type = myTipsRackType)`). # todo: count for 'broken' tips
+        If no source wells are selected this function will auto select a `self.NumOfSamples` number
+        of wells in the source labware.
+        If no destination is indicated, `self.worktable.def_WashWaste` will be used.
+        The same volume will be wasted from each well (todo: revise this, waste all from EACH well?).
+        If no `volume` is indicated then the volume expected to be in the first selected well will be used.
+        todo: current hack to be resolved: using an special liquid class that aspirate from a side to avoid a pellet
+        expected to be in the opposite side. The user must specify an equivalent class, or we need to introduce a
+        kind of `Protocol.def_Waste_liqClass`.
+        Aspirate and waste repeatedly with allowed volume until only an small rest are in wells and then change the LC
+        to one without liquid detection - liquid level trace. (this rest depends on the well geometry - todo: make it
+        a function parameter?). This avoid collision with the button of the well.
+        Warning: modify the selection of wells in both source and target labware
 
-        :param from_labware_region:
+        :param from_labware_region: source labware possibly with selected wells
         :param using_liquid_class:
-        :param volume:
-        :param to_waste_labware:
-        :param optimize:
-        :return:
+        :param volume:              is None the volume expected to be in the first selected well will be used
+        :param to_waste_labware:    to_waste_labware or self.worktable.def_WashWaste
+        :param optimize:            use optimized order of wells - relevant only if re-using tips
         """
+
         to_waste_labware = to_waste_labware or self.worktable.def_WashWaste
-        assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
-        if not volume or volume< 0.0 : volume = 0.0
+        assert isinstance(from_labware_region, Lab.Labware), \
+          'A Labware is expected in from_labware_region to waste from, but "' + str(from_labware_region) + '" was used.'
+
+        if not volume or volume < 0.0 :
+            volume = 0.0
         assert isinstance(volume, (int, float))
-        oriSel = from_labware_region.selected()
-        nt = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+
+        oriSel = from_labware_region.selected()         # list of the selected well offset
+        nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pipetting
+
         if not oriSel:
             oriSel = range(Rtv.NumOfSamples)
-        if optimize:
+        if optimize:                                    # todo: if None reuse self.optimize (to be created !!)
             oriSel = from_labware_region.parallelOrder(nt, oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
 
-        if nt > SampleCnt:
+        NumSamples = len(oriSel)                        # oriSel used to calculate number of "samples"
+        SampleCnt = NumSamples                          # the number of selected wells
+
+        if nt > SampleCnt:                              # very few wells selected (less than tips)
             nt = SampleCnt
-        tm = Rbt.tipsMask[nt]
+        tm = Rbt.tipsMask[nt]                           # todo: count for 'broken' tips
         nt = to_waste_labware.autoselect(maxTips=nt)
-        mV = self.worktable.def_DiTi.maxVol      # todo revise !! What tip tp use !
+        mV = self.worktable.def_DiTi.maxVol
 
-        Rest = 50  # the volume we cannot more aspire with liquid detection, to small, collisions
+        Rest = 50                    # the volume we cannot further aspirate with liquid detection, to small, collisions
         RestPlus = 50
         CtrVol = 0.5
 
-        if volume:
-            v = volume
-        else:
-            v = from_labware_region.Wells[oriSel[0]].vol    # all wells with = vol. todo: waste all vol from EACH well?
+        # all wells with equal volume. todo: waste all vol from EACH well?. v: just for msg
+        v = volume if volume else from_labware_region.Wells[oriSel[0]].vol
 
-        Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)
+        Asp = Itr.aspirate(tm, Te_Mag_LC, volume, from_labware_region)                 # todo: revert this LC temp hack
         # Asp = Itr.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
+
         Dst = Itr.dispense(tm, using_liquid_class, volume, to_waste_labware)
         # Ctr = Itr.moveLiha(Itr.moveLiha.y_move, Itr.moveLiha.z_start, 3.0, 2.0, tm, from_labware_region)
 
         lf = from_labware_region
-        msg = "Waste: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
+        msg = "Waste: {v:.1f} µL from {n:s}".format(v=v, n=lf.label)
         with group(msg):
-            msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
-                                     + str([i+1 for i in oriSel])
+
+            msg += " in [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+                  + str([i+1 for i in oriSel])
             Itr.comment(msg).exec()
-            while SampleCnt:
+
+            while SampleCnt:                                # loop wells (samples)
                 curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:                # only a few sample left
-                    nt = SampleCnt
+                if nt > SampleCnt:                          # only a few samples left
+                    nt = SampleCnt                          # don't use all tips
                     tm = Rbt.tipsMask[nt]
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 
-                sel = oriSel[curSample:curSample + nt]   # todo: use oriSel to calculate number of "samples"?
+                sel = oriSel[curSample:curSample + nt]      # select the next nt (number of used tips) wells
                 spl = range(curSample, curSample + nt)
                 Asp.labware.selectOnly(sel)
 
-                if volume:
-                    r = volume   # r: Waste_available yet; volume: to be Waste
+                if volume:                                                  # volume: to be Waste
+                    r = volume                                              # r: Waste_available yet
                 else:
-                    vols = [w.vol for w in Asp.labware.selected_wells()]
+                    vols = [w.vol for w in Asp.labware.selected_wells()]    # todo priorize this vols !!
                     r_min, r_max = min(vols), max(vols)
-                    assert r_min == r_max                         # all wells with = vol.  ??
+                    assert r_min == r_max, "Currently we assumed equal volumen in all wells, but got: " + str(vols)
                     r = r_max
 
                 if not using_liquid_class:
-                        if sel:
-                            Dst.liquidClass = Asp.labware.selected_wells()[0].reactive.defLiqClass
+                    if sel:
+                        Dst.liquidClass = Asp.labware.selected_wells()[0].reagent.defLiqClass
 
                 with self.tips(tm, drop=True, preserve=False, selected_samples=spl):
-                    while r > Rest:                         # dont aspire Rest with these Liq Class (Liq Detect)
-                        dV = r if r < mV else mV
-                        if dV < Rest: break # ??
-                        dV -= Rest       # the last Rest uL have to be aspired with the other Liq Class
-                        Asp.volume = dV  #  with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
-                        Dst.volume = dV
-                        Asp.liquidClass = Te_Mag_LC # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
-                        Asp.exec()
-                        Asp.volume = CtrVol
-                        Asp.liquidClass = Te_Mag_Centre
 
+                    # aspirate and waste repeatedly with allowed volume until only Rest uL are in wells
+                    while r > Rest:                     # don't aspirate Rest with these Liq Class (Liq Detect)
+                        dV = min (r, mV)                # don't aspirate more than the max for that tip type
+                        if dV < Rest:
+                            break                       # ??  mV < Rest
+                        dV -= Rest                      # the last Rest uL have to be aspired with the other Liq Class
+                        Asp.volume = dV                 # with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
+                        Dst.volume = dV
+                        Asp.liquidClass = Te_Mag_LC     # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
+                        Asp.exec()                      # <---- low level, direct aspirate here !!
+                        Asp.volume = CtrVol             # ?? minimal, 'fake' vol ?
+                        Asp.liquidClass = Te_Mag_Centre # just to go to the center
 
                         with self.tips(allow_air=CtrVol):
                             Asp.exec()
                             if dV + Rest + RestPlus + 2*CtrVol > mV:
-                                Dst.exec()
+                                Dst.exec()              # dispense if there is no capacity for further aspirations
                                 r -= dV
                                 Dst.volume = 0
                             else:
                                 break
 
-                    Asp.volume = Rest
-                    Asp.liquidClass =  Te_Mag_Rest # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
-                    with self.tips(allow_air=Rest):
+                    # now waste the Rest with a LC with no liquid level detection, avoiding collisions
+                    Asp.volume = Rest                   # force aspirate Rest, which may be more than rests in well
+                    Asp.liquidClass =  Te_Mag_Rest      # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
+                    with self.tips(    allow_air = Rest ):
                             Asp.exec()
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
@@ -822,7 +840,7 @@ class Protocol (Executable):
                     mx.labware.selectOnly(sel)
                     if not using_liquid_class:
                         if sel:
-                            mx.liquidClass = mx.labware.selected_wells()[0].reactive.defLiqClass
+                            mx.liquidClass = mx.labware.selected_wells()[0].reagent.defLiqClass
                     if volume:
                         r = volume   # r: Waste_available yet; volume: to be Waste
                     else:
@@ -920,7 +938,7 @@ Small_vol_disp  = "Water wet"     #    or "Water free Low Volume"  ??
 Beads_LC_1      = "MixBeads_1"
 Beads_LC_2      = "MixBeads_2"
 
-Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentred
+Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentered
 Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
 Te_Mag_Rest     = "Te-Mag Rest"
 Te_Mag_Force_Centre   = "Te-Mag Force Centre"

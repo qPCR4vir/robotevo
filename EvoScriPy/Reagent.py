@@ -127,7 +127,7 @@ class Reagent:
         for i, w in enumerate(self.Replicas):
             v = V_per_sample * (NumSamples + replicas - (i+1))//replicas
             if v > w.vol:  w.vol += (v-w.vol)
-            assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reactive.name
+            assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reagent.name
 
     def autoselect(self, maxTips=1, offset=None, replicas = None):
 

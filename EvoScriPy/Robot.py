@@ -428,20 +428,20 @@ class Robot:
         for i, tp in enumerate(self.curArm().Tips):
                 if tip_mask & (1 << i):
                     dv = action*volume[i]
-                    if wells[w].reactive is None:
+                    if wells[w].reagent is None:
                         print("WARNING !!! There is nothing in well {:d} of rack {:s}".format(wells[w].offset+1,
                                                                    labware_selection.type.name + ": " + labware_selection.label))
                     assert wells[w].vol is not None, (  "Volume of "
-                                                      + wells[w].reactive.name
+                                                      + wells[w].reagent.name
                                                       + " in well {:d} of rack {:s} not initialized."
                                                       .format(wells[w].offset + 1,
                                                               labware_selection.label))
                     nv = wells[w].vol - dv
 
                     assert  nv <= wells[w].labware.type.maxVol, "Error trying to change the volume of " + \
-                         wells[w].reactive.name + " from " + str(wells[w].vol)  + " to " + str(nv) + \
+                                                                wells[w].reagent.name + " from " + str(wells[w].vol) + " to " + str(nv) + \
                          " in well " + str(wells[w].offset+1) + " of rack " + labware_selection.label + " but " \
-                         + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
+                                                                + "the maximun volumen is " + str(wells[w].labware.type.maxVol)
 
                     assert nv > -self.allow_air, "Error !!! trying to change the volume of " + str (wells[w])   \
                             + " to " + str(nv) + "uL. But only " + str(self.allow_air) + "uL of air are allowed"
