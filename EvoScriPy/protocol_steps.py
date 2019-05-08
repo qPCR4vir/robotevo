@@ -31,6 +31,12 @@ class Executable:
     def def_versions(self):
         self.versions = {"none": not_implemented}
 
+    def use_version(self, version : str):
+        assert version in self.versions, \
+            version + " is not a valid version. Valid versions are: " + str(self.versions.keys())
+        self.version = version
+        self.versions[version]()
+
 
     def __init__(self,  GUI       = None,
                         run_name  = None):
