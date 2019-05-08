@@ -17,7 +17,7 @@ NumOfSamples     = None    # TODO revise this !!! Eliminate this GLOBAL ??????
 
 class Reagent:
 
-    Reagents = None           # todo move to normal member of class protocol ??
+    current_protocol = None           # to register a list of reagents todo  ??
 
     def __init__(self,
                  name,
@@ -46,12 +46,13 @@ class Reagent:
         assert isinstance(labware, Lab.Labware)             # ??
 
         assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
-        if (isinstance(labware, Lab.Labware) and
-            isinstance(labware.location, Lab.WorkTable.Location) and
-            isinstance(labware.location.worktable, Lab.WorkTable) ):
-          labware.location.worktable.Reactives.append(self)
+        if (isinstance(labware,                     Lab.Labware) and
+            isinstance(labware.location,            Lab.WorkTable.Location) and
+            isinstance(labware.location.worktable,  Lab.WorkTable) ):
+          labware.location.worktable.reagents.append(self)
         else:
-          if (Reagent.Reagents): Reagent.Reagents.Reactives.append(self) # todo temporal
+          if (Reagent.current_protocol):
+              Reagent.current_protocol.Reactives.append(self) # todo temporal
 
         ex= def_react_excess if excess is None else excess
 
@@ -96,11 +97,11 @@ class Reagent:
 
     @staticmethod
     def SetReactiveList(protocol):
-        Reagent.Reagents = protocol                    # ??
+        Reagent.current_protocol = protocol                    # ??
 
     @staticmethod
     def StopReactiveList():
-        Reagent.Reagents = None
+        Reagent.current_protocol = None
 
     def __str__(self):
         return "{name:s}".format(name=self.name)

@@ -37,7 +37,7 @@ class App(tkinter.Frame):
          - self.GUI_init       = GUI4parameters[protocol.name](protocol):
                                  populate and update GUI_parameters to check protocol initialization parameters
          - self.GUI_parameters = tkinter.Frame(self): (between Versions and buttons), for file IO, #samples, first tip, ect.
-         - self.GUI_CheckList  = tkinter.Frame(self): Headers, ReactFrames, ReplicaFrame   . self.master.mainloop()
+         - self.GUI_CheckList  = tkinter.Frame(self): Headers, reagent_frames, ReplicaFrame   . self.master.mainloop()
          - self.mainloop()
 
      GUI_init (and derived GUI_init_parameters, GUI_init_pipeline):
@@ -321,27 +321,27 @@ class App(tkinter.Frame):
                                 to=100000,
                                 width=7).grid(column=2, row=0)
 
-        class ReactiveFrame(tkinter.Frame):
+        class ReagentFrame(tkinter.Frame):
 
-            def __init__(self, check_list, react):
+            def __init__(self, check_list, reagent):
                 tkinter.Frame.__init__(self, check_list.GUI_CheckList)
                 self.grid(sticky=tkinter.N + tkinter.S and tkinter.E)
                 self.columnconfigure(0, minsize=140)
-                self.react = react
+                self.reagent = reagent
                 self.RackName = tkinter.StringVar(self)
-                self.RackName.set(react.labware.label)
+                self.RackName.set(reagent.labware.label)
                 self.RackGrid = tkinter.IntVar(self)
-                self.RackGrid.set(react.labware.location.grid)
+                self.RackGrid.set(reagent.labware.location.grid)
                 self.RackSite = tkinter.IntVar(self)
-                self.RackSite.set(react.labware.location.site+1)
+                self.RackSite.set(reagent.labware.location.site + 1)
                 self.check_list = check_list
 
-                tkinter.Label(self, text=react.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
+                tkinter.Label(self, text=reagent.name, justify=tkinter.RIGHT).grid(row=0, column=0, sticky=tkinter.E)
 
-                dis = tkinter.DISABLED if react.components else tkinter.NORMAL
+                dis = tkinter.DISABLED if reagent.components else tkinter.NORMAL
 
                 self.Vol = tkinter.DoubleVar(self)
-                self.Vol.set(react.volpersample)
+                self.Vol.set(reagent.volpersample)
                 tkinter.Spinbox(self,
                                 textvariable=self.Vol,  state=dis,     command=self.setVol,
                                 increment=1, from_=0.0, to=100000, width=5).grid(row=0, column=1, sticky=tkinter.W)
@@ -356,22 +356,22 @@ class App(tkinter.Frame):
                                                    textvariable=self.RackSite, width=2).grid(row=0, column=4, padx=5,
                                                                                              sticky=tkinter.W)
 
-                self.ReplicaFrames = [App.GUI_protocol.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(react.Replicas)]
+                self.ReplicaFrames = [App.GUI_protocol.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(reagent.Replicas)]
 
             def setVol(self, *args):
 
                 print("changing volumen of '{0}' from {1} to {2}".format(
-                    self.react.name, self.react.volpersample, self.Vol.get()))
+                    self.reagent.name, self.reagent.volpersample, self.Vol.get()))
 
-                self.react.volpersample = self.Vol.get()
+                self.reagent.volpersample = self.Vol.get()
 
                 for rf in self.check_list.ReactFrames:  # change possibles mix.
                     for c in rf.react.components:
-                        if self.react is c:
+                        if self.reagent is c:
                             rf.react.init_vol()
                             rf.Vol.set(rf.react.volpersample)
 
-                self.react.init_vol()
+                self.reagent.init_vol()
                 for rf in self.ReplicaFrames:  # change replicas
                     rf.Vol.set(rf.reply.vol)
 
@@ -392,7 +392,8 @@ class App(tkinter.Frame):
             tkinter.Label (Header, text="µL/total",                     ).grid(row=0, column=7, sticky=tkinter.E)
             # todo: add "global protocol variables" like number of samples, worktable template and output files
 
-            self.ReactFrames = [App.GUI_protocol.ReactiveFrame(self, react) for react in self.protocol.worktable.Reactives]
+            self.reagent_frames = [App.GUI_protocol.ReagentFrame(self, reagent)
+                                   for reagent in self.protocol.worktable.reagents]
 
             # self.GUI_parameters.destroy() #    ['state'] = 'disabled'
             for child in self.GUI_parameters.winfo_children():

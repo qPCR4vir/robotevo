@@ -71,7 +71,7 @@ class WorkTable:
         # assert WorkTable.curWorkTable is None      # TODO revise.
         WorkTable.curWorkTable = self              # TODO revise
         self.labTypes = {}  # typeName:labwares. For each type mountain a list of labwares (with have self locations)
-        self.Reactives = []
+        self.reagents = []
         self.Racks = []
         self.nSites = sites
         self.grid = [None] * grids

@@ -429,7 +429,7 @@ class Protocol (Executable):
                 for ridx, react in enumerate(preMix.components):       # iterate reactive components
                     labw = react.labware
                     sVol = react.volpersample*preMix.excess       # vol we need for each sample
-                    rVol = sVol*NumSamples                        # the total vol we need of this react component
+                    rVol = sVol*NumSamples                        # the total vol we need of this reagent component
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
                                 .format( idx = ridx + 1,
                                          v   = rVol,
