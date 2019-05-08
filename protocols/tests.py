@@ -6,12 +6,16 @@
 __author__ = 'qPCR4vir'
 
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2 as Prt
+
 p = Prt (NumOfSamples    = 96,
          output_filename = '../current/tests/Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_96s")
 p.Run()
 
-
+p = Prt (NumOfSamples    = 6,
+         output_filename = '../current/tests/Prefill_plates_VEW1_ElutionBuffer_VEW2',
+         run_name        = "_test_6s")
+p.Run()
 
 
 #from protocols.Prefill_plate_in_Evo200                import Prefill_plate_in_Evo200
