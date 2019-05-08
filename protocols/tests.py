@@ -14,25 +14,33 @@ from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1
 p = Prt (NumOfSamples    = 96,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_96s")
+print("\n\n************ " + p.output_filename + "**************\n")
 p.Run()
+
 
 p = Prt (NumOfSamples    = 6,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_6s")
+print("\n\n************ " + p.output_filename + "**************\n")
 p.Run()
+
 
 
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p as Prt
 
 p = Prt (NumOfSamples    = 96,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
-         run_name        = "_test_96s")
-p.use_version('x')
+         run_name        = "_test_96s_VL-pKmix prefill")
+p.use_version('VL-pKmix prefill')
+print("\n\n************ " + p.output_filename + "**************\n")
 p.Run()
+
 
 p = Prt (NumOfSamples    = 6,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
-         run_name        = "_test_6s")
+         run_name        = "_test_6s_VL-pKmix prefill")
+p.use_version('VL-pKmix prefill')
+print("\n\n************ " + p.output_filename + "**************\n")
 p.Run()
 
 
