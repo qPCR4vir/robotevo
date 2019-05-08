@@ -116,7 +116,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         SampleVolume        = 200.0
         LysisBufferVolume   = 180.0             # VL
         IC2Volume           =   4.0             # IC2
-        IC_MS2Volume        =  20.0             # MS2
+        IC_MS2Volume        =  10.0             # MS2
         ProtKVolume         =  20.0
         cRNAVolume          =   4.0
         BindingBufferVolume = 600.0             # VEB
