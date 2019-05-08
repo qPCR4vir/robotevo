@@ -1,0 +1,13 @@
+VL-pKmix prefillfor extracting RNA from 48 samples with the MN-Vet kit
+
+preMix: 2534.4 킠 of ProtK+cRNA+IC-MS2 mix 
+    preMix: 2534.4 킠 of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8 in Reactives :  with 0.0 uL of ProtK+cRNA+IC-MS2 mix ', 'well 9 in Reactives :  with 0.0 uL of ProtK+cRNA+IC-MS2 mix '] from 3 components:
+       1- 230.4 킠 from grid:5 site:1:['well 14 in Reactives :  with 238.0 uL of Carrier RNA ']
+       2- 1152.0 킠 from grid:5 site:1:['well 15 in Reactives :  with 607.0 uL of Proteinase K ', 'well 16 in Reactives :  with 595.0 uL of Proteinase K ']
+       3- 1152.0 킠 from grid:5 site:1:['well 13 in Reactives :  with 1190.0 uL of IC MS2 phage culture ']
+
+Spread: 44.0 킠 of ProtK+cRNA+IC-MS2 mix 
+    Spread: 44.0 킠 of ProtK+cRNA+IC-MS2 mix  (2534.4 킠 total) from [grid:5 site:1 ['well 8 in Reactives :  with 1267.2 uL of ProtK+cRNA+IC-MS2 mix ', 'well 9 in Reactives :  with 1267.2 uL of ProtK+cRNA+IC-MS2 mix '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18, 19, 20, 33, 34, 35, 36, 37, 38, 39, 40, 21, 22, 23, 24, 5, 6, 7, 8, 9, 10, 11, 12, 25, 26, 27, 28, 41, 42, 43, 44, 45, 46, 47, 48, 29, 30, 31, 32, 13, 14, 15, 16]:
+
+Spread: 180.0 킠 of VL - Lysis Buffer 
+    Spread: 180.0 킠 of VL - Lysis Buffer  (8985.6 킠 total) from [grid:20 site:2 ['well 1 in 2-Vl Lysis Buffer :  with 8985.0 uL of VL - Lysis Buffer '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18, 19, 20, 33, 34, 35, 36, 37, 38, 39, 40, 21, 22, 23, 24, 5, 6, 7, 8, 9, 10, 11, 12, 25, 26, 27, 28, 41, 42, 43, 44, 45, 46, 47, 48, 29, 30, 31, 32, 13, 14, 15, 16]:
