@@ -265,7 +265,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 
         if self.add_VL:                                                                     # add  LysisBuffer
-            with self.tips(reuse=True, drop=False):    # better reuse=True, drop=False ??
+            with self.tips(reuse=True, drop=False, drop_first=True):
                 self.spread  (reagent=LysisBuffer, to_labware_region= Lysis.selectOnly(all_samples))
 
 
