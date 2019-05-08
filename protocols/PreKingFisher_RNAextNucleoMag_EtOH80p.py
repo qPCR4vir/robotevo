@@ -54,16 +54,23 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         self.V_fill_preMix_inactivation()
         self.add_preMix     = False
 
-    def __init__(self, GUI=None, run_name=None):
+
+    def __init__(self,
+                 GUI                            = None,
+                 NumOfSamples       : int       = None,
+                 worktable_template_filename    ='../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
+                 output_filename                ='../current/PreKingFisher_RNAextNucleoMag_EtOH80p'  ,
+                 run_name           : str       = ""  ):
+
         self.V_default()
 
-        Evo100_FLI.__init__(   self,
-                               GUI                         = GUI,
-                               NumOfSamples                = PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
-                               worktable_template_filename =
-                                                '../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
-                               output_filename             = '../current/PreKingFisher_RNAextNucleoMag_EtOH80p',
-                               run_name                    = run_name)
+        Evo100_FLI.__init__(self,
+                            GUI                     = GUI,
+                            NumOfSamples            = NumOfSamples or PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
+                            worktable_template_filename
+                                                    =worktable_template_filename,
+                            output_filename         = output_filename + run_name,
+                            run_name                = run_name)
 
     def Run(self):
         self.set_EvoMode()

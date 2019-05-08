@@ -29,13 +29,12 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     def V_Standard(self):
         pass
 
-
     def __init__(self,
                  GUI                            = None,
                  NumOfSamples       : int       = None,
                  worktable_template_filename    ='../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt',
                  output_filename                ='../current/Prefill_plates_VEW1_ElutionBuffer_VEW2'  ,
-                 run_name: str                  = "Prefill VEW1 ElutB and VEW2"  ):
+                 run_name: str                  = ""  ):
 
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
