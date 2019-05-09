@@ -14,14 +14,14 @@ from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1
 p = Prt (NumOfSamples    = 96,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_96s")
-print("\n\n************ " + p.output_filename + "**************\n")
+print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
 p = Prt (NumOfSamples    = 6,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_6s")
-print("\n\n************ " + p.output_filename + "**************\n")
+print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
@@ -32,7 +32,7 @@ p = Prt (NumOfSamples    = 96,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
          run_name        = "_test_96s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
-print("\n\n************ " + p.output_filename + "**************\n")
+print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
@@ -40,9 +40,46 @@ p = Prt (NumOfSamples    = 6,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
-print("\n\n************ " + p.output_filename + "**************\n")
+print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
+
+from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit as Prt
+
+p = Prt (NumOfSamples    = 48,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_48s_VL-pKmix prefill")
+p.use_version('VL-pKmix prefill')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_6s_VL-pKmix prefill")
+p.use_version('VL-pKmix prefill')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 48,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_48s_VL-pKmix Inactivated")
+p.use_version('VL-pKmix Inactivated')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_6s_VL-pKmix Inactivated")
+p.use_version('VL-pKmix Inactivated')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
 
 
 #from protocols.Prefill_plate_in_Evo200                import Prefill_plate_in_Evo200

@@ -62,15 +62,22 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         self.V_fill_preMix_inactivation()
         self.add_preMix     = False
 
-    def __init__(self, GUI = None,  run_name = None):
+    def __init__(self,
+                 GUI                            = None,
+                 NumOfSamples       : int       = None,
+                 worktable_template_filename    ='../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
+                 output_filename                ='../current/RNAext_MNVet_TeMag',
+                 run_name           : str       = ""):
+
         self.V_default()
 
         Evo100_FLI.__init__(self,
-                            GUI                         = GUI,
-                            NumOfSamples                = RNAextr_MN_Vet_Kit.max_s,
-                            worktable_template_filename = '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
-                            output_filename             ='../current/AWL_RNAext_MNVet',
-                            run_name                    = run_name)
+                            GUI                     = GUI,
+                            NumOfSamples            = NumOfSamples or RNAextr_MN_Vet_Kit.max_s,
+                            worktable_template_filename
+                                                    = worktable_template_filename,
+                            output_filename         = output_filename + run_name,
+                            run_name                = run_name)
 
     def Run(self):
         self.set_EvoMode()
@@ -322,6 +329,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                  volume=                ElutionBufferVolume,
                                  optimizeTo=            False,
                                  using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
+        self.dropTips()
         self.done()
 
     def wash_in_TeMag(self, reagent, wells=None, using_liquid_class=None, vol=None):
