@@ -1,0 +1,14 @@
+VL-pKmix Inactivatedfor extracting RNA from 6 samples with the MN-Vet kit
+
+Beads binding
+
+    Spread: 20.0 킠 of B - Beads 
+        Spread: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1 in Reactives :  with 1200.0 uL of B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+
+    Wash in TeMag with VEB - Binding Buffer 
+
+        Spread: 600.0 킠 of VEB - Binding Buffer 
+            Spread: 600.0 킠 of VEB - Binding Buffer  (3744.0 킠 total) from [grid:20 site:3 ['well 1 in 3-VEB Binding Buffer :  with 3744.0 uL of VEB - Binding Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+
+        Mix: 846.0 킠 of 48PosMagnet
+            Mix: 846.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
