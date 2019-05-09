@@ -119,7 +119,7 @@ class Protocol (Executable):
 
         self.worktable_template_filename = worktable_template_filename or ""
         self.output_filename             = output_filename or '../current/AWL'
-        self.firstTip                    = firstTip if firstTip is not None else ''
+        self.firstTip                    = firstTip
         self.nTips                       = nTips
         self.EvoMode                     = None      # EvoMode.multiple
         self.iRobot                      = None      # EvoMode.iRobot
@@ -195,8 +195,10 @@ class Protocol (Executable):
         self.EvoMode.done()
         Executable.done(self)
 
-    def go_first_pos(self):
-        if self.firstTip:
+    def go_first_pos(self, first_tip=None):
+        if first_tip is not None:
+            self.firstTip = first_tip
+        if self.firstTip is not None and self.worktable is not None:
             rack, firstTip = self.worktable.get_first_pos(posstr=self.firstTip)
             Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
 
