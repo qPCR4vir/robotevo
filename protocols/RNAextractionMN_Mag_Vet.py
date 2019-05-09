@@ -291,7 +291,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with self.tips(reuse=True, drop=True):
                 self.spread(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
 
-            with self.tips(reuse=True, drop=False, preserve=True, usePreserved=True):
+            with self.tips(reuse=True, drop=False, preserve=True, usePreserved=self.add_samples):
                 self.wash_in_TeMag(reagent=BindingBuffer, wells=all_samples)
 
         with self.tips(reuse=True, drop=False, preserve=True):
