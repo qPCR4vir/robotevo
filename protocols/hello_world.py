@@ -6,11 +6,11 @@ class HelloWorld(Protocol):
 
     name = "Hello World"
 
-    def __init__(self):
-        Protocol.__init__(self, output_filename = '../current/tests/hello_world')
+    def __init__(self, GUI = None):
+        Protocol.__init__(self, GUI= GUI, output_filename = '../current/tests/hello_world')
 
     def Run(self):
-        self.initialize()
+        self.CheckList()
         Itr.userPrompt("Hello World!").exec()
         self.done()
 
