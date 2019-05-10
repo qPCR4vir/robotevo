@@ -108,9 +108,12 @@ class Protocol (Executable):
     especially .Run().
 
     """
+    name = ""
+    min_s, max_s = 1, 96
 
     def __init__(self,  nTips                       =4,
                         parameters                  = None,
+                        NumOfSamples                = max_s,
                         GUI                         = None,
                         worktable_template_filename = None,
                         output_filename             = None,
@@ -127,6 +130,7 @@ class Protocol (Executable):
         self.comments_                   = None      # EvoMode.Comments
         self.worktable                   = None
         self.robot                       = None
+        self.NumOfSamples                = int(NumOfSamples)
 
         Executable.__init__(self, GUI=GUI, run_name  = run_name)
 

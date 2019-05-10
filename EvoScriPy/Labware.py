@@ -221,7 +221,8 @@ class WorkTable:
 
 class Frezeer (WorkTable):
     def __init__(self):
-        print("********  Implement Frezer  ***** ")
+        pass
+        # todo print("********  Implement Frezer  ***** ")
         #WorkTable.__init__(self)
 
 stock = Frezeer()
