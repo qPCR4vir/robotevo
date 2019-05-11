@@ -1143,6 +1143,158 @@ class RoMa(Instruction):
                     ]
         return True
 
+
+class vector(Instruction):
+
+    """
+    15.61 RoMa Vector Command
+    This command executes a RoMa vector, which is a predefined sequence of RoMa
+    movements. You can also specify gripper actions at the Safe and End positions.
+    See 9.6.1 “Using RoMa Vectors”,  9-59 for more information.
+    The RoMa Vector command is intended for special RoMa movements and not for
+    moving labware from one position to another - you should use the Transfer
+    Labware command instead for this purpose. See also 15.61.1 “Moving labware
+    with the RoMa Vector command”,  15-145.
+    The parameters of the RoMa Vector command are as follows:
+        - RoMa-No.
+    Choose the RoMa you want to use (1 or 2) if your instrument is fitted with
+    more than one.
+        - Use RoMa Vector
+    Choose the RoMa vector you want to use for the RoMa movement. The
+    popup list shows the RoMa vectors which are currently defined in the
+    Freedom EVOware database.
+    The digit at the end of the vector name (e.g. Carousel_Narrow_1) indicates
+    the RoMa for which the vector was defined (1 or 2). See also 9.6.1 “Using
+    RoMa Vectors”,  9-59.
+    You can also choose a user-defined vector. User-defined vectors are created
+    in the Control Bar (Robot Vectors section).
+    Then specify the grid position and carrier site for which the vector is intended.
+    The Grid field is protected (gray) if you have chosen a vector for a device
+    which is not positioned on the worktable (see Carrier is Device checkbox in
+    the carrier definition).
+    Tip: If you click on a carrier, the current grid position is shown in the small
+    yellow tab at the bottom left.
+        - Move along RoMa Vector
+    Choose the required direction of the RoMa movement. Click And back if you
+    want the RoMa to return to the Safe position after reaching the End position.
+        - Gripper action
+    Choose the gripper action which should be executed at the Safe position and
+    at the End position. The required gripper spacing to pick up and release the
+    labware is taken from the Grip Width and Release Width parameters in the
+    chosen RoMa vector.
+        - Speed
+    Choose Maximum if you want the RoMa to move at maximum speed. Choose
+    Slow if you want the RoMa to move at the speed specified in the RoMa vector.
+
+    15.61.1 Moving labware with the RoMa Vector command
+    If you have scanned the labware barcode and you move the labware with the
+    Transfer Labware command, the barcode remains assigned to the labware (i.e.
+    the labware data record) at the new location. In addition, pipetting information, if
+    any, remains assigned to the labware (see 15.29 “Export Data Command”,  15-
+    50).
+    This is not the case with the RoMa Vector command. The barcode and the
+    pipetting information are no longer available at the new location.
+    This also applies analogously to the MCA96 Vector command and the MCA384
+    Vector command.
+    Proceed as follows if you want to use a Vector command to move barcoded
+    labware in special situations:
+     After scanning the barcode, assign it to a temporary variable (see
+      14.1.11 “Labware Attributes and String Variables”,  14-16).
+     Move the labware.
+     Re-assign the barcode from the temporary variable to the labware.
+    This workaround transfers the barcode but not the pipetting information.
+    """
+
+class Transfer(Instruction):
+
+    """
+    This command is used to transfer labware (e.g. a microplate) from one position to
+    another with the plate robot (RoMa).
+    If you have scanned the labware barcode and you move the labware with the
+    Transfer Labware command, the barcode remains assigned to the labware (i.e.
+    the labware data record) at the new location. In addition, pipetting information, if
+    any, remains assigned to the labware (see 15.29 “Export Data Command”,  15-
+    50).
+    Grip and release commands for the RoMa (used to pick up and put down the
+    labware) are handled automatically. The required gripper spacing is taken from
+    the advanced properties for the respective labware type (see 9.4.2 “Editing
+    Labware, Advanced Tab”,  9-22):
+    The parameters of the Transfer Labware command are as follows:
+        Move with
+    Choose the RoMa you want to use (1 or 2) if your instrument is fitted with
+    more than one.
+        Vector
+    Choose the RoMa vector that you want to use to pick up the labware.
+    Choose Narrow to pick up the labware on the narrow side; choose Wide to
+    pick up the labware on the wide side.
+    Choose User defined (Narrow) or (Wide) to pick up the labware on the narrow
+    or wide side with a user-defined vector. In this case, you must choose the
+    user-defined vector to use for picking up the labware at the source position
+    and putting down it at the destination position in the two User Vector pull-down
+    lists. User-defined vectors are created in the Control Bar (Robot Vectors
+    section). See 5.4.1.4 “Robot Vectors”,  5-11.
+    Above all if you did not create the user-defined vector yourself, we
+    recommend you to check carefully that the vector moves the RoMa to the
+    correct (i.e. intended) source and destination carrier positions before using it
+    for pipetting. Tip: Test the RoMa vector in a script using the 3D simulation
+    program EVOSim.
+    Freedom EVOware will report an error when you complete the Transfer
+    Labware command if the narrow or wide RoMa vector has not yet been
+    created for the chosen labware type. It is best to create the required RoMa
+    vectors in advance (see 9.6.2 “Teach Plate Robot Vector Dialog Box”,  9-60).
+
+        Transfer Labware command, Step 1
+    Specify the parameters for the source position:
+        - Source position
+    Select the current position of the labware by clicking on it in the Worktable
+    Editor.
+    Grid and Site then show the position you have chosen. The gray (protected)
+    field Defined Carrier then shows the type of carrier at the chosen site and the
+    gray (protected) field Defined Labware shows the type of labware at the
+    chosen site.
+    If you want to fetch the labware from a device such as a hotel or barcode
+    scanner, click on the device icon. You then need to choose the site and the
+    labware type. The list shows labware types which are allowed for the device
+    (see 9.5 “Configuring Carriers”,  9-39, “Allowed Labware on this carrier”).
+
+        Transfer Labware command, Step 2
+    Specify the parameters for the labware lid. These parameters are only available
+    for labware types which can be fitted with a lid:
+        - Lid handling
+    Check this checkbox if the labware has a lid. Choose Cover at source if you
+    want to put on the lid before moving the labware. Choose Uncover at
+    destination if you want to remove the lid after moving the labware to the
+    destination position (i.e. the lid was already present). In either case, select the
+    position for fetching or putting aside the lid by clicking on the site in the
+    Worktable Editor. Grid and Site then show the position you have chosen. The
+    gray (protected) field Defined Carrier shows the type of carrier on which the lid
+    is placed/will be placed. You can only put aside lids on unused carrier sites.
+
+        Transfer Labware command, Step 3
+    Specify the parameters for the destination position:
+        - Destination Position
+    Select the required destination position of the labware by clicking on the site in
+    the Worktable Editor.
+    The destination site must be suitable for the labware type you are moving (see
+    9.5 “Configuring Carriers”,  9-39, “Allowed labware on this carrier”).
+    Grid and Site then show the position you have chosen. The gray (protected)
+    field Defined Carrier then shows the type of carrier at the chosen site.
+    If you want to move the labware to a device such as a hotel or barcode
+    scanner, click on the device icon. You then need to choose the site and the
+    labware type. The list shows labware types which are allowed for the device
+    (see 9.5 “Configuring Carriers”,  9-39, “Allowed Labware on this carrier”).
+        - Speed
+    Choose Maximum if you want the RoMa to move at maximum speed. Choose
+    Taught in vector dialog if you want the RoMa to move at the speed specified in
+    the RoMa vector.
+        - Move back to Home Position
+    Check this checkbox if you want the RoMa to move back to its home (parking)
+    position after transferring the labware. See 9.6.4 “Defining the Home Position
+    for a RoMa”,  9-63.
+    """
+
+
+
 class subroutine(ScriptONLY):
     """ UNDOCUMENTED
     """
