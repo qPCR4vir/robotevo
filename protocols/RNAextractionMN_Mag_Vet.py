@@ -7,7 +7,7 @@ __author__ = 'Ariel'
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
-import EvoScriPy.Labware as Lab
+# import EvoScriPy.Labware as Lab
 from protocols.Evo100 import Evo100_FLI
 import EvoScriPy.Reagent as Rtv
 from EvoScriPy.Instructions_Te_MagS import *
@@ -28,38 +28,38 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
 
     def def_versions(self):
-        self.versions = {'VL-pKmix prefill'    : self.V_fill_preMix_inactivation,
-                         'VL-only prefill'     : self.V_fill_inactivation,
-                         'VL-only inactivated' : self.V_VL_inactivated,
-                         'VL-pKmix Inactivated': self.V_preMix_inactivated,
-                         'original samples'    : self.V_original_samples                }
+        self.versions = {'VL-only prefill'     : self.ver_fill_inactivation,
+                         'VL-pKmix prefill'    : self.ver_fill_preMix_inactivation,
+                         'VL-only inactivated' : self.ver_VL_inactivated,
+                         'VL-pKmix Inactivated': self.ver_preMix_inactivated,
+                         'original samples'    : self.ver_original_samples}
 
 
-    def V_default(self):
+    def versions_defaults(self):
         self.add_samples    = True
         self.add_preMix     = True
         self.add_VL         = True
         self.do_extraction  = True
 
-    def V_original_samples(self):
-        self.V_default()
+    def ver_original_samples(self):
+        self.versions_defaults()
 
-    def V_VL_inactivated(self):
-        self.V_default()
+    def ver_VL_inactivated(self):
+        self.versions_defaults()
         self.add_VL         = False
         self.add_samples    = False
 
-    def V_preMix_inactivated(self):
-        self.V_VL_inactivated()
+    def ver_preMix_inactivated(self):
+        self.ver_VL_inactivated()
         self.add_preMix     = False
 
-    def V_fill_preMix_inactivation(self):
-        self.V_default()
+    def ver_fill_preMix_inactivation(self):
+        self.versions_defaults()
         self.add_samples   = False
         self.do_extraction = False
 
-    def V_fill_inactivation(self):
-        self.V_fill_preMix_inactivation()
+    def ver_fill_inactivation(self):
+        self.ver_fill_preMix_inactivation()
         self.add_preMix     = False
 
     def __init__(self,
@@ -69,7 +69,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                  output_filename                ='../current/RNAext_MNVet_TeMag',
                  run_name           : str       = ""):
 
-        self.V_default()
+        self.versions_defaults()
 
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
@@ -112,7 +112,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             self.TeMg_Heat = wt.getLabware(Lab.TeMag48, "48 Pos Heat")
             self.TeMag     = wt.getLabware(Lab.TeMag48, "48PosMagnet")
             TeMag          = self.TeMag
-            Lysis  =  TeMag
+            Lysis          = TeMag
 
                                                                #  Set the initial position of the tips
 
@@ -147,8 +147,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
-        if self.do_extraction:
-            par         = TeMag.parallelOrder(self.nTips, all_samples)
+        par         = Lysis.parallelOrder(self.nTips, all_samples)
 
                                                         # Define the Reagents in each labware (Cuvette, eppys, etc.)
 
@@ -230,7 +229,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             Rtv.Reagent("lysis_{:02d}".format(s + 1),
                         Lysis,
                         initial_vol     = InitLysisVol,
-                        pos             = s + 1,
+                        pos             = par[s] + 1,
                         defLiqClass     = SampleLiqClass,
                         excess          = 0)
 
@@ -260,11 +259,11 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 self.makePreMix(pK_cRNA_MS2)
                 self.spread  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
 
-        if self.add_samples:                                                               # add samples
+        if self.do_extraction:                                                            # add samples
             with self.tips(reuse=True, drop=True, preserve=True):
                 self.transfer( from_labware_region  = Samples,
                                to_labware_region    = Lysis,
-                               volume               = SampleVolume,
+                               volume               = SampleVolume if self.add_samples else InitLysisVol,
                                using_liquid_class   = (SampleLiqClass, "Serum Disp postMix3"),
                                optimizeFrom         = False,
                                optimizeTo           = True,
