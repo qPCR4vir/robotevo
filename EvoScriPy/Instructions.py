@@ -1028,6 +1028,121 @@ class Te_MO_Aspirate(Instruction):
 
 '''
 
+
+class RoMa(Instruction):
+    """
+    15.60 Move RoMa Command
+    This command is used to carry out simple RoMa movements without using a
+    RoMa vector:
+    The parameters of the Move RoMa command are as follows:
+         - ROMA-No.
+    Choose the RoMa you want to use (1 or 2) if your instrument is fitted with
+    more than one.
+         - Open Gripper
+    This opens the gripper to the specified width (range: 55 to 140 mm).
+        Close Gripper
+    This closes the gripper to the specified width (range: 55 to 140 mm) using the
+    specified force (range: 0 to 249). A Grip Error message will be output if no
+    resistance is detected when gripping.
+         - Move to home position
+    This moves the RoMa to the specified home position.
+    After completing a sequence of movements with the RoMa, you should move
+    it back to its home (parking) position, out of the way of other objects on the
+    worktable (see 9.6.4 “Defining the Home Position for a RoMa”,  9-63).
+         - Move relative to current position
+    This moves the RoMa relative to its current position. You must then specify
+    the relative distances (range: -400 to 400 mm) and whether the RoMa should
+    move at a particular speed (range: 0.1 to 400 mm/s) or at maximum speed.
+    The movements in A and B are not aligned with the instrument axes, but with
+    the current rotator position (angle).
+    The movement in A is perpendicular to the gripper. Example #1: If the gripper
+    points to the front (angle = 0°) and the A value is positive, then the RoMA will
+    move to the left. Example #2: If the gripper points to the left (angle = 90°) and
+    the A value is positive, then the RoMA will move to the back.
+    The movement in B is in line with the gripper. Example #1: If the gripper points
+    to the front (angle = 0°) and the B value is positive, then the RoMA will move
+    to the front. Example #2: If the gripper points to the left (angle = 90°) and the B
+    value is positive, then the RoMA will move to the left.
+    See also 9.4.8.2 “RoMa Coordinate System”,  9-39.
+
+    """
+    # action
+    open_gripper    = 0
+    close_gripper   = 1
+    move_to         = 2
+    home_position   = 3
+    move_relative   = 4 # 3 = move relative to current position
+
+    # xyzMax
+    use_xyzSpeed    = 0
+    use_max_speed   = 1 # use_maximum speed
+
+    # number of the RoMa performing the action:
+    RoMa_1 = 0
+    RoMa_2 = 1
+
+    def __init__(self,   action         : int,
+                         distance       : float,
+                         force          : int,
+                         xOffset        : float,
+                         yOffset        : float,
+                         zOffset        : float,
+                         xyzSpeed       : float,
+                         xyzMax         : int,
+                         romaNo         : int
+                 ):
+        """
+
+        :type yOffset: object
+        :param action: 0 = open gripper, 1 = close,  2 = move to home position, 3 = move relative to current position
+        :param distance:    55 - 140,   gripper distance in mm for opening or closing
+        :param force:       0 - 249,    force when closing gripper
+        :param xOffset:     -400 - 400, x-distance for relative move in mm
+        :param yOffset:     -400 - 400, y-distance for relative move in mm
+        :param zOffset:     -400 - 400, z-distance for relative move in mm
+        :param xyzSpeed:    0.1 - 400,  speed in mm/s
+        :param xyzMax:      0 = use xyzSpeed, 1 = use maximum speed
+        :param romaNo:   number of the RoMa performing the action: 0 = RoMa 1, 1 = RoMa 2
+        """
+        Instruction.__init__(self, "RoMa")
+        self.action         = action
+        self.distance       = distance
+        self.force          = force
+        self.xOffset        = xOffset
+        self.yOffset        = yOffset
+        self.zOffset        = zOffset
+        self.xyzSpeed       = xyzSpeed
+        self.xyzMax         = xyzMax
+        self.romaNo         = romaNo
+
+    def actualize_robot_state(self):
+        pass                            # todo  and exec()?
+
+
+    def validateArg(self):
+        Instruction.validateArg(self)
+        assert    0 > self.action   >   3, "RoMa action must be 0,1, 2 or 3, but passed: " + str(self.action)
+        assert   55 > self.distance > 140, "RoMa distance must be 55-140, but passed: " + str(self.distance)
+        assert    0 > self.force    > 249, "RoMa force must be 0-249, but passed: " + str(self.force)
+        assert -400 > self.xOffset  > 400, "RoMa xOffset must be 0-249, but passed: " + str(self.xOffset)
+        assert -400 > self.yOffset  > 400, "RoMa yOffset must be 0-249, but passed: " + str(self.yOffset)
+        assert -400 > self.zOffset  > 400, "RoMa zOffset must be 0-249, but passed: " + str(self.zOffset)
+        assert  0.1 > self.xyzSpeed > 400, "RoMa xyzSpeed must be 0-249, but passed: " + str(self.xyzSpeed)
+        assert    0 > self.xyzMax   >   1, "RoMa xyzMax must be 0 or 1, but passed: " + str(self.xyzMax)
+        assert    0 > self.romaNo   >   1, "RoMa romaNo must be 0 or 1, but passed: " + str(self.romaNo) # todo ?
+
+        self.arg= [ integer       (self.action),
+                    floating_point(self.distance),
+                    integer       (self.force),
+                    floating_point(self.xOffset),
+                    floating_point(self.yOffset),
+                    floating_point(self.zOffset),
+                    floating_point(self.xyzSpeed),
+                    integer       (self.xyzMax),
+                    integer       (self.romaNo)
+                    ]
+        return True
+
 class subroutine(ScriptONLY):
     """ UNDOCUMENTED
     """
