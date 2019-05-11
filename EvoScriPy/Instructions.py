@@ -693,26 +693,28 @@ class moveLiha(Pipette ):
                              Well      ,
                              arm       )
 
-        self.speed = speed
-        self.offset = offset
-        self.zTarget = zTarget
-        self.zMove = zMove
+        self.speed      = speed
+        self.offset     = offset
+        self.zTarget    = zTarget
+        self.zMove      = zMove
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[5:5] = [integer(self.zMove),         integer(self.zTarget),       # arg 6, 7
-                         floating_point(self.offset), floating_point(self.speed)]  # arg 8, 9
+        self.arg[5:5] = [integer        (self.zMove),
+                         integer        (self.zTarget),       # arg 6, 7
+                         floating_point (self.offset),
+                         floating_point (self.speed)]  # arg 8, 9
         return True
 
 class waste(Instruction):
     """ A.15.4.15 Waste (Worklist: Waste)
     """
-    init_system       = 0
-    activate_waste_1  = 1
-    activate_waste_2  = 2
-    activate_waste_3  = 3
+    init_system           = 0
+    activate_waste_1      = 1
+    activate_waste_2      = 2
+    activate_waste_3      = 3
     deactivate_all_wastes = 4
-    deactivate_system = 5
+    deactivate_system     = 5
 
     def __init__(self, action = init_system ):
         Instruction.__init__(self, "Waste")
@@ -860,17 +862,28 @@ class userPrompt(Instruction):    # todo declare const
 class variable(Instruction):    # OK declare const
     """ A.15.4.23 Set Variable (Worklist: Variable)
     """
-    Numeric = 0
-    String = 1
-    Run = 0
-    Instance = 1
-    Script = 2
-    Fixed_value = 0
-    User_query = 1
-    File_import =2
+    Numeric     = 0
+    String      = 1
 
-    def __init__(self, var_name, default, queryFlag = False, queryString="", checkLimits=False,
-                 lowerLimit=0.0, upperLimit=0.0, type=0, scope=0,InitMode=0, QueryAtStart=False):
+    Run         = 0
+    Instance    = 1
+    Script      = 2
+
+    Fixed_value = 0
+    User_query  = 1
+    File_import = 2
+
+    def __init__(self, var_name,
+                       default,
+                       queryFlag    = False,
+                       queryString  = "",
+                       checkLimits  = False,
+                       lowerLimit   = 0.0,
+                       upperLimit   = 0.0,
+                       type         = 0,
+                       scope        = 0,
+                       InitMode     = 0,
+                       QueryAtStart = False):
         """
 
         :param var_name: string2 ; name of variable
@@ -899,11 +912,18 @@ class variable(Instruction):    # OK declare const
         self.queryFlag = queryFlag
 
     def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string2(self.var_name), expression(self.default), integer(self.queryFlag)]
-        self.arg += [string1( self.queryString), integer(self.checkLimits), floating_point(self.lowerLimit) ]
-        self.arg += [floating_point(self.upperLimit), integer(self.type), integer(self.scope)  ]
-        self.arg += [  integer(self.InitMode), integer(self.QueryAtStart)  ]
+        Instruction.validateArg     (self)
+        self.arg =  [string2        (self.var_name),
+                     expression     (self.default),
+                     integer        (self.queryFlag)]
+        self.arg += [string1        (self.queryString),
+                     integer        (self.checkLimits),
+                     floating_point (self.lowerLimit) ]
+        self.arg += [floating_point (self.upperLimit),
+                     integer        (self.type),
+                     integer        (self.scope)  ]
+        self.arg += [integer        (self.InitMode),
+                     integer        (self.QueryAtStart)  ]
         return True
 
 class execute_VBscript(Instruction):
