@@ -241,13 +241,12 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             defLiqClass = def_liquidClass,
                             excess      = 0)
 
-                if self.add_samples:
-                    Rtv.Reagent("probe_{:02d}".format(s + 1),
-                                Samples,
-                                single_use  = SampleVolume,
-                                pos         = s+1,
-                                defLiqClass = SampleLiqClass,
-                                excess      = 0)
+                Rtv.Reagent("probe_{:02d}".format(s + 1),
+                            Samples,
+                            single_use  = SampleVolume if self.add_samples else InitLysisVol,
+                            pos         = s+1,
+                            defLiqClass = SampleLiqClass,
+                            excess      = 0)
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
         if self.do_extraction:
