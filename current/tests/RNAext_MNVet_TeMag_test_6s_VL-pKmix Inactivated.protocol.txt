@@ -1,0 +1,4 @@
+VL-pKmix Inactivatedfor extracting RNA from 6 samples with the MN-Vet kit
+
+Transfer: 414.0 µL of Proben
+    Transfer: 414.0 µL of Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:

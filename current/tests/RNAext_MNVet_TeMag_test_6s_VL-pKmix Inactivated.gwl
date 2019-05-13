@@ -1,0 +1,9 @@
+B;Comment("VL-pKmix Inactivatedfor extracting RNA from 6 samples with the MN-Vet kit");
+B;Set_DITI_Counter2("DiTi 1000ul","25","1","1",0);
+B;Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
+B;FACTS("Te-MagS","Te-MagS_ActivateHeater","50","0","");
+B;FACTS("Te-MagS","Te-MagS_MoveToPosition","0","0","");
+B;Comment("Transfer: 414.0 µL of Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:");
+B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
+B;Aspirate(15,"Serum Asp","414.00","414.00","414.00","414.00",0,0,0,0,0,0,0,0,9,0,1,"0310?000000",0,0);
+B;Dispense(15,"Serum Disp postMix3","414.00","414.00","414.00","414.00",0,0,0,0,0,0,0,0,12,1,1,"0608?000000",0,0);
