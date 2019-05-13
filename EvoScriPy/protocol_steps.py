@@ -239,7 +239,7 @@ class Protocol (Executable):
     def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
         pass # Itr.moveLiha
 
-    def getTips(self, TIP_MASK=-1, tip_type=None, selected_samples=None):
+    def getTips(self, TIP_MASK=-1, tip_type=None, selected_samples=None):  # todo TIP_MASK=None
 
         mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[self.robot.curArm().nTips]
 
@@ -638,7 +638,7 @@ class Protocol (Executable):
                         Dst.labware.selectOnly(trg)
                         Dst.exec()
                         for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
-                            d.track = s.track
+                            d.track = s.track            # todo revise !!
                     SampleCnt -= nt
             Asp.labware.selectOnly(oriSel)
             Dst.labware.selectOnly(dstSel)
@@ -899,8 +899,8 @@ class Protocol (Executable):
 
         yield
 
-        if tip_type     is not None: tip_type     = self.worktable.set_def_DiTi(tip_type_old)
         if tipsMask     is not None: tipsMask     = self.dropTips        (tipsMask_old)
+        if tip_type     is not None: tip_type     = self.worktable.set_def_DiTi(tip_type_old)
         if reuse        is not None: reuse        = self.reuseTips       (reuse_old       )
         if drop         is not None: drop         = self.set_dropTips    (drop_old        )
         if preserve     is not None: preserve     = self.preserveTips    (preserve_old    )

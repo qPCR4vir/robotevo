@@ -767,8 +767,8 @@ class DITIrack (Labware):
     def set_next_to_next_rack(self, worktable=None):
         rack = self.next_rack(worktable)
         assert isinstance(rack, DITIrack)
-        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)
-        assert self is not rack
+        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)      # todo ? USER PROMPT: Fill Rack
+        assert self is not rack                   # todo why???
         rack.fill()
         tp = self.type
         tp.pick_next = 0
