@@ -393,7 +393,18 @@ class Labware:
     class Te_Mag (Type):
         pass
 
-    def __init__(self, type, location=None, label=None, worktable=None):
+    def __init__(self,
+                 type       : object,
+                 location   : object = None,
+                 label      : object = None,
+                 worktable  : object = None) -> object:
+        """
+
+        :param type:
+        :param location:
+        :param label:
+        :param worktable:
+        """
         self.type = type
         self.label = label
         self.location = location
@@ -631,11 +642,17 @@ class DITIrack (Labware):
     some type Labware.DITIrackType
     """
 
-    def __init__(self, type : Labware.DITIrackType,
-                       location,
-                       label=None,
-                       worktable=None    ):
+    def __init__(self, type         : Labware.DITIrackType,
+                       location     : Labware.location,
+                       label        : str                   = None,
+                       worktable    : WorkTable             = None    ):
+        """
 
+        :param type:
+        :param location:
+        :param label:
+        :param worktable:
+        """
         assert isinstance(type, Labware.DITIrackType)
 
         Labware.__init__(self, type,
@@ -647,15 +664,17 @@ class DITIrack (Labware):
             type.pick_next_rack = self
                                                    # type.last_preserved_tips = ?
 
-    def fill(self, beg=1, end=None):   # todo it belong to Robot ??
+    def fill(self, beg=1, end=None):                # todo it belong to Robot ??
+
         if isinstance(beg, list): assert end is None
         end = end if end else self.type.size()
+
         beg = self.offset(beg)
         end = self.offset(end)
+
         r = range(beg, end+1)
         for w in self.Wells:
             w.reagent = None
-            # w.labware = None   #   hummm ??
         for w in r:
             self.Wells[w].reagent = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
             # self.Wells[w].labware = self    #   hummm ??
