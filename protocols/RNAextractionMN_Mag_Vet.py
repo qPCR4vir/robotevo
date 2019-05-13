@@ -33,7 +33,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                          'VL-only inactivated' : self.ver_VL_inactivated,
                          'VL-pKmix Inactivated': self.ver_preMix_inactivated,
                          'original samples'    : self.ver_original_samples}
-
+        # add new version from plate to plate
 
     def versions_defaults(self):
         self.add_samples    = True
@@ -278,7 +278,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             self.done()
             return
 
-        with incubation(10): pass
+        with incubation(10): pass # if self.add_samples
 
 
         with group("Beads binding"):
@@ -289,14 +289,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with self.tips(reuse=True, drop=True):
                 self.spread(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
 
-            with self.tips(reuse=True, drop=False, preserve=True, usePreserved=self.add_samples):
+            with self.tips(reuse=True, drop=False, preserve=True, usePreserved=self.add_samples): # usePreserved=True move with the other washes
                 self.wash_in_TeMag(reagent=BindingBuffer, wells=all_samples)
 
         with self.tips(reuse=True, drop=False, preserve=True):
             self.wash_in_TeMag(reagent=VEW1, wells=all_samples)
             self.wash_in_TeMag(reagent=VEW2, wells=all_samples)
 
-            with group("Wash in TeMag with " + EtOH80p.name), self.tips():
+            with group("Wash in TeMag with " + EtOH80p.name), self.tips():         # move with the other washes
                 self.spread(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
 
                 with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//self.nTips + 1):
@@ -315,7 +315,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with incubation(minutes=2):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
 
-            Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
+            Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()  #dont mix or dont reuse tips ???
             with parallel_execution_of(mix_mag_eluat, repeat=NumOfSamples//self.nTips+1):
                 self.mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
 
