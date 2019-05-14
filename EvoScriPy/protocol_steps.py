@@ -557,51 +557,73 @@ class Protocol (Executable):
                  NumSamples         : int           = None) -> object:
         """
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
-        the same number of wells in the target labware using all LiHa tips.
+        the same number of wells in the target labware using the current LiHa arm with maximum number of tips
+        (of type: `self.worktable.def_DiTi`, which can be set `with self.tips(tip_type = myTipsRackType)`).
+        # todo: count for 'broken' tips
+
         The number of "samples" may be explicitly indicated in which case will be assumed to begin from the
-        first well of the labware. Alternatively the wells in the source or
-        target or in both  may be
-        previously directly "selected" (`well.selFlag=True`). If not, the protocol's `NumOfSamples` will be used.
+        first well of the labware. Alternatively the wells in the source or target or in both may be
+        previously directly "selected" (setting `well.selFlag=True`, for example by calling
+        `from_labware_region.selectOnly(self, sel_idx_list)`), in which case transfer the minimum length selected.
+        If no source wells are selected this function will auto select the protocol's `self.NumOfSamples` number
+        of wells in the source and target labwares.
+        Please, carefully indicate whether to use "parallel optimization" in the pipetting order for both source and
+        target by setting `optimizeFrom` and `optimizeTo`. (very important unless you are using a full column
+        pipetting arm). Check that the created script don't have conflicts in
+        the order of the samples and the "geometry" of the labware areas (selection of wells)
+        during each pipetting step. This is ease to "see" in the EVOware visual script editor. The generated
+        .protocol.txt can also be used to check this. RobotEvo will detect
+        some errors, but currently not all, assuming the areas are relatively "regular".
+
+        The same volume will be transfer from each well. It will be aspirated/dispensed in only one pass: muss fit
+        into the current tips
+        todo ?! If no `volume` is indicated then the volume expected to be in the first selected well will be used.
+
+        If the liquid classes (LC) to be used are not explicitly passed the default LC in the first well of the current
+        pipetting step will be used. The generated .esc and .gwl can also be used to check this.
+
+        Warning: modify the selection of wells in both source and target labware to reflect the wells actually used
+
 
         :param from_labware_region  : Labware in which the source wells are located and possibly selected
         :param to_labware_region    : Labware in which the target wells are located and possibly selected
         :param volume               : if not, volume is set from the default of the source reactive
-        :param using_liquid_class   :
-        :param optimizeFrom         :
-        :param optimizeTo           :
-        :param NumSamples           : Priorized   !!!! If true reset the selection
+        :param using_liquid_class   : LC or tuple (LC to aspirate, LC to dispense)
+        :param optimizeFrom         : bool - use from_labware_region.parallelOrder(...) to aspirate
+        :param optimizeTo           : bool - use to_labware_region.parallelOrder(...) to aspirate
+        :param NumSamples           : Prioritized. If used reset the well selection
         :return:
         """
-            assert isinstance(from_labware_region, Lab.Labware), 'Labware expected in from_labware_region to transfer'
-            assert isinstance(to_labware_region,   Lab.Labware), 'Labware expected in to_labware_region to transfer'
-            # assert isinstance(using_liquid_class, tuple)
-            nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pippeting
+        assert isinstance(from_labware_region, Lab.Labware), 'Labware expected in from_labware_region to transfer'
+        assert isinstance(to_labware_region,   Lab.Labware), 'Labware expected in to_labware_region to transfer'
+        # assert isinstance(using_liquid_class, tuple)
+        nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pippeting
 
-            if NumSamples:                                  # select convenient def
-                oriSel = range(NumSamples)
-                dstSel = range(NumSamples)
-            else:
-                oriSel = to_labware_region.selected()
-                dstSel = from_labware_region.selected()
+        if NumSamples:                                  # select convenient def
+            oriSel = range(NumSamples)
+            dstSel = range(NumSamples)
+        else:
+            oriSel = to_labware_region.selected()
+            dstSel = from_labware_region.selected()
 
-                if not dstSel:
-                    if not oriSel:
-                        oriSel = range(self.NumOfSamples)
-                        dstSel = range(self.NumOfSamples)
-                    else:
-                        dstSel = oriSel
+            if not dstSel:
+                if not oriSel:
+                    oriSel = range(self.NumOfSamples)
+                    dstSel = range(self.NumOfSamples)
                 else:
-                    if not oriSel:
-                        oriSel = dstSel
-                    else:
-                        l = min(len(oriSel), len(dstSel))  # todo transfer the minimun of the selected ???? Best reise error
-                        oriSel = oriSel[:l]
-                        dstSel = dstSel[:l]
-            if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)
-            if optimizeTo: dstSel = to_labware_region.parallelOrder(nt, dstSel)
+                    dstSel = oriSel
+            else:
+                if not oriSel:
+                    oriSel = dstSel
+                else:
+                    l = min(len(oriSel), len(dstSel))   # transfer the minimum of the selected
+                    oriSel = oriSel[:l]                 # todo Best reise an error ??
+                    dstSel = dstSel[:l]
+        if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)   # a list of well offset s
+        if optimizeTo  : dstSel = to_labware_region.parallelOrder  (nt, dstSel)
 
-            NumSamples = len(dstSel)
-            SampleCnt = NumSamples
+        NumSamples = len(dstSel)
+        SampleCnt = NumSamples
 
             assert isinstance(volume, (int, float))
             if nt > SampleCnt: nt = SampleCnt
@@ -627,24 +649,24 @@ class Protocol (Executable):
                         Asp.tipMask = Rbt.tipsMask[nt]
                         Dst.tipMask = Rbt.tipsMask[nt]
 
-                    src = oriSel[curSample:curSample + nt]
-                    trg = dstSel[curSample:curSample + nt]
-                    spl = range(curSample, curSample + nt)
+                src = oriSel[curSample:curSample + nt]      # only the next nt wells
+                trg = dstSel[curSample:curSample + nt]
+                spl = range(curSample, curSample + nt)
 
-                    sw = Asp.labware.selected_wells()
+                sw = Asp.labware.selected_wells()
 
-                    if isinstance(using_liquid_class, tuple):
-                        if using_liquid_class[0]:
-                            Asp.liquidClass = using_liquid_class[0]
-                        else:
-                            Asp.liquidClass = sw[0].reagent.defLiqClass
-                        if using_liquid_class[1]:
-                            Dst.liquidClass = using_liquid_class[1]
-                        else:
-                            Dst.liquidClass = sw[0].reagent.defLiqClass
+                if isinstance(using_liquid_class, tuple):
+                    if using_liquid_class[0]:
+                        Asp.liquidClass = using_liquid_class[0]
                     else:
                         Asp.liquidClass = sw[0].reagent.defLiqClass
+                    if using_liquid_class[1]:
+                        Dst.liquidClass = using_liquid_class[1]
+                    else:
                         Dst.liquidClass = sw[0].reagent.defLiqClass
+                else:
+                    Asp.liquidClass = sw[0].reagent.defLiqClass
+                    Dst.liquidClass = sw[0].reagent.defLiqClass
 
                     with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
                         Asp.labware.selectOnly(src)
