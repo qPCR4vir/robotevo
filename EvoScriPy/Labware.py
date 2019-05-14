@@ -269,13 +269,13 @@ class Well:
         self.selFlag = False
         self.label = ""
         self._vol = 0.0
-        self._reactive = None
+        self._reagent = None
         self._actions = []
-        self.track = self
+        self.track = None           # todo use this to check what the tips uses?
 
         self.vol = 0.0
         self.reagent = None
-        self.actions = []
+        self.actions = []           # todo transfer actualize this ? how this works?
 
     def __str__(self):
         return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}"\
@@ -301,11 +301,11 @@ class Well:
 
     @property
     def reagent(self):
-        return self._reactive
+        return self._reagent
 
     @reagent.setter
-    def reagent(self, reactive):
-        self._reactive = reactive
+    def reagent(self, reagent):
+        self._reagent = reagent
 
     @property
     def actions(self):
@@ -317,19 +317,28 @@ class Well:
 
 class conectedWell(Well):
     @property
-    def vol(self):              return self.labware.vol
+    def vol(self):
+        return self.labware.vol
+
     @vol.setter
-    def vol(self, newvol):      self.labware.vol = newvol
+    def vol(self, newvol):
+        self.labware.vol = newvol
 
     @property
-    def reactive(self):              return self.labware.reagent
-    @reactive.setter
-    def reagent(self, reactive):      self.labware.reagent = reactive
+    def reagent(self):
+        return self.labware.reagent
+
+    @reagent.setter
+    def reagent(self, reactive):
+        self.labware.reagent = reactive
 
     @property
-    def actions(self):              return self.labware.actions
+    def actions(self):
+        return self.labware.actions
+
     @actions.setter
-    def actions(self, actions):      self.labware.actions = actions
+    def actions(self, actions):
+        self.labware.actions = actions
 
 
 banned_well = object() # Well(None, 0)
@@ -643,7 +652,7 @@ class DITIrack (Labware):
     """
 
     def __init__(self, type         : Labware.DITIrackType,
-                       location     : Labware.location,
+                       location     : WorkTable.Location,
                        label        : str                   = None,
                        worktable    : WorkTable             = None    ):
         """
@@ -770,23 +779,24 @@ class DITIrack (Labware):
         return tips
 
     def next_rack(self, worktable=None):
-        tp = self.type
-        if worktable is None: worktable=WorkTable.curWorkTable   # ??? WorkTable.curWorkTable
+        if worktable is None: worktable=WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
-        racks = worktable.labTypes[tp.name]
+
+        racks = worktable.labTypes[self.type.name]  # all the racks of the same type
         assert isinstance(racks,list)
-        i = racks.index(self)
-        i = i+1
+        i = racks.index(self)                       # my index
+        i = i+1                                     # point to the next rack of my type
         if i == len (racks):
-            i = 0
-        # if racks[i] is self: return None
-        return racks[i]
+            i = 0                                   # or to the first if I'm the last
+
+        return racks[i]                             # todo if racks[i] is self: return None ???
+
 
 
     def set_next_to_next_rack(self, worktable=None):
-        rack = self.next_rack(worktable)
+        rack = self.next_rack(worktable)            # the next or the first
         assert isinstance(rack, DITIrack)
-        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)      # todo ? USER PROMPT: Fill Rack
+        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)  # todo ? USER PROMPT: Fill Rack
         assert self is not rack                   # todo why???
         rack.fill()
         tp = self.type
@@ -811,7 +821,7 @@ class DITIrack (Labware):
             tp = tips[i]
             assert isinstance(tp, usedTip)
             w.reagent = tp
-            self.type.preserved_tips[tp.origin.track.offset] = w
+            self.type.preserved_tips[tp.origin.track.offset if tp.origin.track else tp.origin.offset] = w
             self.type.last_preserved_tips = w
 
     def pick_up(self, TIP_MASK)->[usedTip]:
@@ -839,13 +849,13 @@ class DITIwaste(Labware):
 
     def waste(self, tips):
         for tp in tips:
-            self.Wells[self.wasted].reagent = tp
+            self.Wells[self.wasted].reagent = tp      # todo revise ?
             self.wasted += 1
-
-            # todo make following assert a Warning or a UserPrompt
+                                                  # todo make following assert a Warning or a UserPrompt
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
+
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
-                react_well = tp.origin.track
+                react_well = tp.origin.track or tp.origin
                 if react_well.offset in tp.type.preserved_tips:
                     tip_well = tp.type.preserved_tips[react_well.offset]
                     assert isinstance(tip_well, Well)

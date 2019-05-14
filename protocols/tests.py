@@ -8,6 +8,12 @@ __author__ = 'qPCR4vir'
 
 test_dir = '../current/tests/'
 
+from protocols.hello_world import HelloWorld as Prt
+
+p = Prt ()
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
 
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2 as Prt
 

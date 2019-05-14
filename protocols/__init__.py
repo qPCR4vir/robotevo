@@ -8,6 +8,7 @@ __author__ = 'qPCR4vir'
 
 """
 Maintain here a list of all available customer protocols
+# todo separate this into a new registre_protocols.py and registre_in_GUI.py
 """
 
 from protocols.Prefill_plate_in_Evo200                import Prefill_plate_in_Evo200
