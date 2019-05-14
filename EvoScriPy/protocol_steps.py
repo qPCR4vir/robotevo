@@ -547,23 +547,37 @@ class Protocol (Executable):
                         SampleCnt -= num_tips
 
 
-    def transfer(self,  from_labware_region, to_labware_region, volume, using_liquid_class=None,
-                     optimizeFrom=True, optimizeTo=True, NumSamples=None):
-            """
+    def transfer(self,
+                 from_labware_region: Lab.Labware,
+                 to_labware_region  : Lab.Labware,
+                 volume             : float,
+                 using_liquid_class : (str,tuple)   = None,
+                 optimizeFrom       : bool          = True,
+                 optimizeTo         : bool          = True,
+                 NumSamples         : int           = None) -> object:
+        """
+        To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
+        the same number of wells in the target labware using all LiHa tips.
+        The number of "samples" may be explicitly indicated in which case will be assumed to begin from the
+        first well of the labware. Alternatively the wells in the source or
+        target or in both  may be
+        previously directly "selected" (`well.selFlag=True`). If not, the protocol's `NumOfSamples` will be used.
 
-
-            :param NumSamples: Priorized   !!!! If true reset the selection
-            :param from_reactive: Reagent to spread
-            :param to_labware_region: Labware in which the destine well are selected
-            :param volume: if not, volume is set from the default of the source reactive
-            :param optimize: minimize zigzag of multipippeting
-            """
-            assert isinstance(from_labware_region, Lab.Labware), 'A Labware expected in from_labware_region to transfer'
-            assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to transfer'
+        :param from_labware_region  : Labware in which the source wells are located and possibly selected
+        :param to_labware_region    : Labware in which the target wells are located and possibly selected
+        :param volume               : if not, volume is set from the default of the source reactive
+        :param using_liquid_class   :
+        :param optimizeFrom         :
+        :param optimizeTo           :
+        :param NumSamples           : Priorized   !!!! If true reset the selection
+        :return:
+        """
+            assert isinstance(from_labware_region, Lab.Labware), 'Labware expected in from_labware_region to transfer'
+            assert isinstance(to_labware_region,   Lab.Labware), 'Labware expected in to_labware_region to transfer'
             # assert isinstance(using_liquid_class, tuple)
-            nt = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+            nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pippeting
 
-            if NumSamples:  # OK?  select convenient def
+            if NumSamples:                                  # select convenient def
                 oriSel = range(NumSamples)
                 dstSel = range(NumSamples)
             else:
@@ -572,8 +586,8 @@ class Protocol (Executable):
 
                 if not dstSel:
                     if not oriSel:
-                        oriSel = range(Rtv.NumOfSamples)
-                        dstSel = range(Rtv.NumOfSamples)
+                        oriSel = range(self.NumOfSamples)
+                        dstSel = range(self.NumOfSamples)
                     else:
                         dstSel = oriSel
                 else:
@@ -652,7 +666,7 @@ class Protocol (Executable):
                      optimize            : bool                     = True):    # todo: set default as False ??
 
         """
-        Use this function as a final step of a `in-well` pellet wash procedure (magnetic or centrifuge created).
+        Use this function as a final step of a `in-well` pellet wash procedure (magnetically or by centrifuge created).
         Waste a `volume` from each of the selected wells `from_labware_region` (source labware wells)
         `to_waste_labware` using the current LiHa arm with maximum number of tips (of type: `self.worktable.def_DiTi`,
         which can be set `with self.tips(tip_type = myTipsRackType)`). # todo: count for 'broken' tips
