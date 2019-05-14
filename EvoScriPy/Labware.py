@@ -779,23 +779,24 @@ class DITIrack (Labware):
         return tips
 
     def next_rack(self, worktable=None):
-        tp = self.type
-        if worktable is None: worktable=WorkTable.curWorkTable   # ??? WorkTable.curWorkTable
+        if worktable is None: worktable=WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
-        racks = worktable.labTypes[tp.name]
+
+        racks = worktable.labTypes[self.type.name]  # all the racks of the same type
         assert isinstance(racks,list)
-        i = racks.index(self)
-        i = i+1
+        i = racks.index(self)                       # my index
+        i = i+1                                     # point to the next rack of my type
         if i == len (racks):
-            i = 0
-        # if racks[i] is self: return None
-        return racks[i]
+            i = 0                                   # or to the first if I'm the last
+
+        return racks[i]                             # todo if racks[i] is self: return None ???
+
 
 
     def set_next_to_next_rack(self, worktable=None):
-        rack = self.next_rack(worktable)
+        rack = self.next_rack(worktable)            # the next or the first
         assert isinstance(rack, DITIrack)
-        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)      # todo ? USER PROMPT: Fill Rack
+        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)  # todo ? USER PROMPT: Fill Rack
         assert self is not rack                   # todo why???
         rack.fill()
         tp = self.type
