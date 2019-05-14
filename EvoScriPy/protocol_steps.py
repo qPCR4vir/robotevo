@@ -550,7 +550,7 @@ class Protocol (Executable):
     def transfer(self,
                  from_labware_region: Lab.Labware,
                  to_labware_region  : Lab.Labware,
-                 volume             : float,
+                 volume             : (int, float),
                  using_liquid_class : (str,tuple)   = None,
                  optimizeFrom       : bool          = True,
                  optimizeTo         : bool          = True,
@@ -572,91 +572,92 @@ class Protocol (Executable):
         :param NumSamples           : Priorized   !!!! If true reset the selection
         :return:
         """
-            assert isinstance(from_labware_region, Lab.Labware), 'Labware expected in from_labware_region to transfer'
-            assert isinstance(to_labware_region,   Lab.Labware), 'Labware expected in to_labware_region to transfer'
-            # assert isinstance(using_liquid_class, tuple)
-            nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pippeting
+        assert isinstance(from_labware_region, Lab.Labware), 'Labware expected in from_labware_region to transfer'
+        assert isinstance(to_labware_region,   Lab.Labware), 'Labware expected in to_labware_region to transfer'
+        # assert isinstance(using_liquid_class, tuple)
+        nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pippeting
 
-            if NumSamples:                                  # select convenient def
-                oriSel = range(NumSamples)
-                dstSel = range(NumSamples)
-            else:
-                oriSel = to_labware_region.selected()
-                dstSel = from_labware_region.selected()
+        if NumSamples:                                  # select convenient def
+            oriSel = range(NumSamples)
+            dstSel = range(NumSamples)
+        else:
+            oriSel = to_labware_region.selected()
+            dstSel = from_labware_region.selected()
 
-                if not dstSel:
-                    if not oriSel:
-                        oriSel = range(self.NumOfSamples)
-                        dstSel = range(self.NumOfSamples)
-                    else:
-                        dstSel = oriSel
+            if not dstSel:
+                if not oriSel:
+                    oriSel = range(self.NumOfSamples)
+                    dstSel = range(self.NumOfSamples)
                 else:
-                    if not oriSel:
-                        oriSel = dstSel
-                    else:
-                        l = min(len(oriSel), len(dstSel))  # todo transfer the minimun of the selected ???? Best reise error
-                        oriSel = oriSel[:l]
-                        dstSel = dstSel[:l]
-            if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)
-            if optimizeTo: dstSel = to_labware_region.parallelOrder(nt, dstSel)
+                    dstSel = oriSel
+            else:
+                if not oriSel:
+                    oriSel = dstSel
+                else:
+                    l = min(len(oriSel), len(dstSel))  # todo transfer the minimun of the selected ???? Best reise error
+                    oriSel = oriSel[:l]
+                    dstSel = dstSel[:l]
+        if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)
+        if optimizeTo:   dstSel = to_labware_region.parallelOrder(nt, dstSel)
 
-            NumSamples = len(dstSel)
-            SampleCnt = NumSamples
+        NumSamples = len(dstSel)
+        SampleCnt = NumSamples
 
-            assert isinstance(volume, (int, float))
-            if nt > SampleCnt: nt = SampleCnt
-            lf = from_labware_region
-            lt = to_labware_region
-            Asp = Itr.aspirate(Rbt.tipsMask[nt], volume=volume, labware=from_labware_region)
-            Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
-            msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
-            with group(msg):
-                msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                    .format(fg =lf.location.grid,
-                            fs =lf.location.site+1,
-                            oo =str([i+1 for i in oriSel]),
-                            do =str([i+1 for i in dstSel]),
-                            to =lt.label,
-                            tg =lt.location.grid,
-                            ts =lt.location.site+1)
-                Itr.comment(msg).exec()
-                while SampleCnt:
-                    curSample = NumSamples - SampleCnt
-                    if nt > SampleCnt:
-                        nt = SampleCnt
-                        Asp.tipMask = Rbt.tipsMask[nt]
-                        Dst.tipMask = Rbt.tipsMask[nt]
+        assert isinstance(volume, (int, float))
+        nt = min(SampleCnt, nt)
+        lf = from_labware_region
+        lt = to_labware_region
 
-                    src = oriSel[curSample:curSample + nt]
-                    trg = dstSel[curSample:curSample + nt]
-                    spl = range(curSample, curSample + nt)
+        Asp = Itr.aspirate(Rbt.tipsMask[nt], volume=volume, labware=from_labware_region)
+        Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
+        msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
+        with group(msg):
+            msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                .format(fg =lf.location.grid,
+                        fs =lf.location.site+1,
+                        oo =str([i+1 for i in oriSel]),
+                        do =str([i+1 for i in dstSel]),
+                        to =lt.label,
+                        tg =lt.location.grid,
+                        ts =lt.location.site+1)
+            Itr.comment(msg).exec()
+            while SampleCnt:
+                curSample = NumSamples - SampleCnt
+                if nt > SampleCnt:
+                    nt = SampleCnt
+                    Asp.tipMask = Rbt.tipsMask[nt]                  # todo count for broken tips
+                    Dst.tipMask = Rbt.tipsMask[nt]
 
-                    sw = Asp.labware.selected_wells()
+                src = oriSel[curSample:curSample + nt]
+                trg = dstSel[curSample:curSample + nt]
+                spl = range(curSample, curSample + nt)
 
-                    if isinstance(using_liquid_class, tuple):
-                        if using_liquid_class[0]:
-                            Asp.liquidClass = using_liquid_class[0]
-                        else:
-                            Asp.liquidClass = sw[0].reagent.defLiqClass
-                        if using_liquid_class[1]:
-                            Dst.liquidClass = using_liquid_class[1]
-                        else:
-                            Dst.liquidClass = sw[0].reagent.defLiqClass
+                sw = Asp.labware.selected_wells()
+
+                if isinstance(using_liquid_class, tuple):
+                    if using_liquid_class[0]:
+                        Asp.liquidClass = using_liquid_class[0]
                     else:
                         Asp.liquidClass = sw[0].reagent.defLiqClass
+                    if using_liquid_class[1]:
+                        Dst.liquidClass = using_liquid_class[1]
+                    else:
                         Dst.liquidClass = sw[0].reagent.defLiqClass
+                else:
+                    Asp.liquidClass = sw[0].reagent.defLiqClass
+                    Dst.liquidClass = sw[0].reagent.defLiqClass
 
-                    with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
-                        Asp.labware.selectOnly(src)
-                        Asp.exec()
-                        Dst.labware.selectOnly(trg)
-                        Dst.exec()
-                        for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
-                            d.track = s.track            # todo revise !!
-                    SampleCnt -= nt
-            Asp.labware.selectOnly(oriSel)
-            Dst.labware.selectOnly(dstSel)
-            return oriSel, dstSel
+                with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
+                    Asp.labware.selectOnly(src)
+                    Asp.exec()
+                    Dst.labware.selectOnly(trg)
+                    Dst.exec()
+                    for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
+                        d.track = s.track            # todo revise !!
+                SampleCnt -= nt
+        Asp.labware.selectOnly(oriSel)
+        Dst.labware.selectOnly(dstSel)
+        return oriSel, dstSel
 
 
     def waste(self,  from_labware_region : Lab.Labware              = None,
