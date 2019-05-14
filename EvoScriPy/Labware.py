@@ -271,7 +271,7 @@ class Well:
         self._vol = 0.0
         self._reagent = None
         self._actions = []
-        self.track = self
+        self.track = None           # todo use this to check what the tips uses?
 
         self.vol = 0.0
         self.reagent = None
@@ -820,7 +820,7 @@ class DITIrack (Labware):
             tp = tips[i]
             assert isinstance(tp, usedTip)
             w.reagent = tp
-            self.type.preserved_tips[tp.origin.track.offset] = w
+            self.type.preserved_tips[tp.origin.track.offset if tp.origin.track else tp.origin.offset] = w
             self.type.last_preserved_tips = w
 
     def pick_up(self, TIP_MASK)->[usedTip]:
@@ -854,7 +854,7 @@ class DITIwaste(Labware):
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
 
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
-                react_well = tp.origin.track
+                react_well = tp.origin.track or tp.origin
                 if react_well.offset in tp.type.preserved_tips:
                     tip_well = tp.type.preserved_tips[react_well.offset]
                     assert isinstance(tip_well, Well)

@@ -625,29 +625,33 @@ class Protocol (Executable):
         NumSamples = len(dstSel)
         SampleCnt = NumSamples
 
-            assert isinstance(volume, (int, float))
-            if nt > SampleCnt: nt = SampleCnt
-            lf = from_labware_region
-            lt = to_labware_region
-            Asp = Itr.aspirate(Rbt.tipsMask[nt], volume=volume, labware=from_labware_region)
-            Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
-            msg = "Transfer: {v:.1f} µL of {n:s}".format(v=volume, n=lf.label)
-            with group(msg):
-                msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                    .format(fg =lf.location.grid,
-                            fs =lf.location.site+1,
-                            oo =str([i+1 for i in oriSel]),
-                            do =str([i+1 for i in dstSel]),
-                            to =lt.label,
-                            tg =lt.location.grid,
-                            ts =lt.location.site+1)
-                Itr.comment(msg).exec()
-                while SampleCnt:
-                    curSample = NumSamples - SampleCnt
-                    if nt > SampleCnt:
-                        nt = SampleCnt
-                        Asp.tipMask = Rbt.tipsMask[nt]
-                        Dst.tipMask = Rbt.tipsMask[nt]
+        assert isinstance(volume, (int, float))
+        assert 0 < volume <= self.worktable.def_DiTi.maxVol, \
+            "Invalid volumen to transfer ("+str(volume)+") with tips " + self.worktable.def_DiTi
+
+        nt = min(SampleCnt, nt)
+        lf = from_labware_region
+        lt = to_labware_region
+        Asp = Itr.aspirate(Rbt.tipsMask[nt], volume=volume, labware=from_labware_region)
+        Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
+        msg = "Transfer: {v:.1f} µL from {n:s}".format(v=volume, n=lf.label)
+        with group(msg):
+            msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                .format(fg =lf.location.grid,
+                        fs =lf.location.site+1,
+                        oo =str([i+1 for i in oriSel]),
+                        do =str([i+1 for i in dstSel]),
+                        to =lt.label,
+                        tg =lt.location.grid,
+                        ts =lt.location.site+1)
+            Itr.comment(msg).exec()
+            while SampleCnt:                                # loop wells (samples)
+                curSample = NumSamples - SampleCnt
+                if nt > SampleCnt:                          # only a few samples left
+                    nt = SampleCnt                          # don't use all tips
+                    tm = Rbt.tipsMask[nt]
+                    Asp.tipMask = tm
+                    Dst.tipMask = tm
 
                 src = oriSel[curSample:curSample + nt]      # only the next nt wells
                 trg = dstSel[curSample:curSample + nt]
@@ -668,17 +672,18 @@ class Protocol (Executable):
                     Asp.liquidClass = sw[0].reagent.defLiqClass
                     Dst.liquidClass = sw[0].reagent.defLiqClass
 
-                    with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
-                        Asp.labware.selectOnly(src)
-                        Asp.exec()
-                        Dst.labware.selectOnly(trg)
-                        Dst.exec()
-                        for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
-                            d.track = s.track            # todo revise !!
-                    SampleCnt -= nt
-            Asp.labware.selectOnly(oriSel)
-            Dst.labware.selectOnly(dstSel)
-            return oriSel, dstSel
+                with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
+                    Asp.labware.selectOnly(src)
+                    Asp.exec()                                           # <---- low level aspirate
+                    Dst.labware.selectOnly(trg)
+                    Dst.exec()                                           # <---- low level dispense
+                    for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
+                        d.track = s                                     # todo revise !! and .actions []
+                        d.actions += s.actions                          # ????
+                SampleCnt -= nt
+        Asp.labware.selectOnly(oriSel)
+        Dst.labware.selectOnly(dstSel)
+        return oriSel, dstSel
 
 
     def waste(self,  from_labware_region : Lab.Labware              = None,
