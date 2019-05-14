@@ -905,20 +905,22 @@ class Protocol (Executable):
         return oriSel
 
     @contextmanager
-    def tips(self, tipsMask=None, reuse=None,     drop=None,
-                            preserve=None,  usePreserved=None, selected_samples=None,
-                            allow_air=None, drop_first=False,   drop_last=False, tip_type=None):
+    def tips(self,  tipsMask    = None, tip_type     = None,
+                    reuse       = None, drop         = None,
+                    preserve    = None, usePreserved = None,  selected_samples   = None,
+                    allow_air   = None, drop_first   = False, drop_last          = False   ):
         '''
 
-        :param tipsMask:
-        :param reuse: Reuse the tips or drop it and take new BEFORE each individual action
-        :param drop: Drops the tips AFTER each individual action? like after one aspiration and spread of the reactive into various target
-        :param preserve:
-        :param usePreserved:
+        :param tipsMask     :
+        :param reuse        : Reuse the tips or drop it and take new BEFORE each individual action
+        :param drop         : Drops the tips AFTER each individual action,
+                              like after one aspiration and spread of the reactive into various target
+        :param preserve     : puts the tip back into a free place in some rackt of the same type
+        :param usePreserved : pick the tips from the preserved
         :param selected_samples:
-        :param allow_air:
-        :param drop_first: Reuse the tips or drop it and take new once BEFORE the whole action
-        :param drop_last: Drops the tips at THE END of the whole action
+        :param allow_air    :
+        :param drop_first   : Reuse the tips or drop it and take new once BEFORE the whole action
+        :param drop_last    : Drops the tips at THE END of the whole action
         :return:
         '''
 
