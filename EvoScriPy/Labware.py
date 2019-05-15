@@ -6,7 +6,7 @@
 __author__ = 'qPCR4vir'
 
 
-def count_tips(TIP_MASK : int)->int:
+def count_tips(TIP_MASK : int) -> int:
     n = 0
     while TIP_MASK:
         n += (TIP_MASK & 1)
@@ -56,7 +56,7 @@ class WorkTable:
 
             self.rack = rack
             assert 1 <= grid <= len(self.worktable.grid)
-            site -= 1    # TODO revise - it will be an error if site is None
+            site -= 1                         # TODO revise - it will be an error if site is None
             assert 0 <= site <= self.worktable.nSites
             self.grid = grid
             self.site = site
@@ -69,7 +69,7 @@ class WorkTable:
         self.def_DiTiWaste   = None
         self.def_DiTi        = None
         # assert WorkTable.curWorkTable is None      # TODO revise.
-        WorkTable.curWorkTable = self              # TODO revise
+        WorkTable.curWorkTable = self                # TODO revise
         self.labTypes = {}  # typeName:labwares. For each type mountain a list of labwares (with have self locations)
         self.reagents = []
         self.Racks = []
@@ -87,21 +87,24 @@ class WorkTable:
 
 
     def parseWorTableFile(self, templateFile):
-        if not templateFile: return []
+        if not templateFile:
+            return []
         templList = []
         with open(templateFile, 'r', encoding='Latin-1') as tmpl:
             # parsing_grid=False
-            grid_num=-1
-            labwware_types=[]
+            grid_num       = -1
+            labwware_types = []
             for line in tmpl:
                 templList += [line]
                 if line.startswith("--{ RPG }--"):
-                    #print("***********    --{ RPG }--      ******************")
+                    # print("***********    --{ RPG }--      ******************")
                     break  # TODO possible error msg ??
                 line = line.split(';')
 
-                if line[0]!="998": continue          # TODO possible error msg ??
-                if grid_num >= len(self.grid): continue # ignore lines between this and  "--{ RPG }--"
+                if line[0] != "998":
+                    continue                   # TODO possible error msg ??
+                if grid_num >= len(self.grid):
+                    continue                   # ignore lines between this and  "--{ RPG }--"
 
                 if labwware_types:             # we have read the types first, now we need to read the labels
                     for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
@@ -111,18 +114,18 @@ class WorkTable:
                                       label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                       " but no labware type")
                             continue
-                        loc=WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
-                        labw = self.createLabware(labw_t,loc,label)
+                        loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
+                        labw = self.createLabware(labw_t, loc, label)
                         if labw:
-                            pass # self.addLabware(labw)
+                            pass               # self.addLabware(labw)
                         else:
                             print("Warning! The worktable template have a label '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                   " but non registered labware type '" + labw_t + "'")
-                    labwware_types=[]
+                    labwware_types = []
 
-                else:                           # we need to read the types first
-                    grid_num+=1
+                else:                         # we need to read the types first
+                    grid_num      += 1
                     labwware_types = line[2:-1]
                     assert int(line[1]) == len(labwware_types)  # TODO error msg
 
@@ -133,7 +136,8 @@ class WorkTable:
 
     def createLabware(self, labw_t, loc, label):
         labw_t = Labware.Types.get(labw_t)
-        if not labw_t: return None
+        if not labw_t:
+            return None
         labw = labw_t.createLabware(loc, label)
         return labw
 
@@ -174,24 +178,26 @@ class WorkTable:
             raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
 
         for labw in self.labTypes[labw_type.name]:
-            if labw.label == label: return labw
+            if labw.label == label:
+                return labw
 
-        raise Exception("Labware '" + labw_type.name + "' with label '" + label + "' was not found in worktable: " + self.templateFileName)
+        raise Exception("Labware '" + labw_type.name + "' with label '" + label
+                        + "' was not found in worktable: " + self.templateFileName)
 
     def get_first_pos(self, labw_type_name=None, posstr=None):
 
         if labw_type_name:
             if labw_type_name not in self.labTypes:
                 raise Exception("Labware '" + labw_type_name + "' was not found in worktable: " + self.templateFileName)
-            labws= self.labTypes[labw_type_name]
+            labws = self.labTypes[labw_type_name]
         else:
-            labw_type= self.def_DiTi
+            labw_type = self.def_DiTi
             if labw_type.name not in self.labTypes:
                 raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
             labws = self.labTypes[labw_type.name]
 
-        pos=posstr.split('-')
-        if len(pos)==2:
+        pos = posstr.split('-')
+        if len(pos) == 2:
             labw = labws[int(pos[0])-1]
             fpos = pos[1]
         else:
@@ -213,7 +219,7 @@ class WorkTable:
         self.retireLabware(labw)
         return labw.type.createLabware(loc, label)
 
-    def set_def_DiTi(self, tips) : # :Labware.DITIrackType) ->Labware.DITIrackType:
+    def set_def_DiTi(self, tips) :                 # :Labware.DITIrackType) ->Labware.DITIrackType:
         old = self.def_DiTi
         self.def_DiTi = tips
         return old
@@ -223,21 +229,23 @@ class Frezeer (WorkTable):
     def __init__(self):
         pass
         # todo print("********  Implement Frezer  ***** ")
-        #WorkTable.__init__(self)
+        # WorkTable.__init__(self)
+
 
 stock = Frezeer()
+
 
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
 
     class Type:
         def __init__(self, name, width=1, nSite=1):
-            self.width = width
-            self.nSite = nSite
-            self.allowedLabwaresTypes = []
-            self.name = name
+            self.width                  = width
+            self.nSite                  = nSite
+            self.allowedLabwaresTypes   = []
+            self.name                   = name
 
-    def __init__(self, RackType, grid, label=""): # , worktable=WorkTable.curWorkTable or Rbt.Robot.current.worktable
+    def __init__(self, RackType, grid, label=""):  # , worktable=WorkTable.curWorkTable or Rbt.Robot.current.worktable
         self.site = grid
         self.type = RackType
         self.labwares = [None] * self.nSite
@@ -260,6 +268,7 @@ class Carrier:
             if labware.location.grid is not None:
                 print("Warning, original grid changed to that of the Rack.")
             labware.location.grid = self.grid
+
 
 class Well:
     def __init__(self, labware, Well_Offset):
@@ -315,6 +324,7 @@ class Well:
     def actions(self, actions):
         self._actions = actions
 
+
 class conectedWell(Well):
     @property
     def vol(self):
@@ -341,12 +351,15 @@ class conectedWell(Well):
         self.labware.actions = actions
 
 
-banned_well = object() # Well(None, 0)
+banned_well = object()                                 # Well(None, 0)
+
 
 class Labware:
-    Types = {}  # typeName label-string from template worktable file: labwares class-name.
-                # Mountain a list of labwares types
-                # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+
+    # typeName label-string from template worktable file: labwares class-name.
+    # Mountain a list of labwares types
+    # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+    Types = {}
 
     class Type:
 
@@ -367,7 +380,7 @@ class Labware:
                 labware.serie                = self
 
 
-            def __next__(self, labware: Labware = None) ->  (Labware, bool):
+            def set_next(self, labware: Labware = None) ->  (Labware, bool):
                 """
                 Set current to the next
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
@@ -379,7 +392,7 @@ class Labware:
             @staticmethod
             def next(labware: Labware) ->  (Labware, bool):
                 assert isinstance(labware, Labware)
-                return labware.serie.next()
+                return labware.serie.set_next()
 
             def show_next(self, labware: Labware = None) ->  (Labware, bool):
                 """
@@ -405,7 +418,7 @@ class Labware:
             self.maxVol         = maxVol
             Labware.Types[name] = self     # .__getattribute__("__class__")
 
-        def size(self)-> int:
+        def size(self) -> int:
             return self.nRow * self.nCol
 
         def createLabware(self, loc, label):
@@ -422,7 +435,8 @@ class Labware:
 
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
 
-            if portrait: nCol, nRow = nRow, nCol # todo revise !
+            if portrait:
+                nCol, nRow = nRow, nCol                  # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol)
             self.pick_next_rack = None                   # labware (DITIrackType or grid,site)
             self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
@@ -474,9 +488,9 @@ class Labware:
         self.Wells      = []
         worktable       = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
 
-        if isinstance(worktable, WorkTable):             #   ??????????????
+        if isinstance(worktable, WorkTable):             # ??????????????
             worktable.addLabware(self, location)
-        if location and location.rack:                   #   ??????????????
+        if location and location.rack:                   # ??????????????
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
 
@@ -489,7 +503,7 @@ class Labware:
             self.row = row
             self.col = col
 
-    def autoselect(self, offset=0, maxTips=1, replys=1): #OK make this "virtual". Implement cuvette
+    def autoselect(self, offset=0, maxTips=1, replys=1):   # OK make this "virtual". Implement cuvette
         """
 
         :param offset:
@@ -519,21 +533,24 @@ class Labware:
     def position(self, offset):
         return self.Position(offset % self.type.nCol + 1, offset // self.type.nCol + 1)
 
-    def find_free_wells(self, n=1, init_pos=0)-> (bool, [Well]):
+    def find_free_wells(self, n=1, init_pos=0) -> (bool, [Well]):
         continuous = True
         free_wells = []
         for i in range(init_pos, len(self.Wells) - n+1):
-            if any(w.reagent for w in self.Wells[i:i + n]): continue
+            if any(w.reagent for w in self.Wells[i:i + n]):
+                continue
             return continuous, self.Wells[i:i + n]
         for w in self.Wells[init_pos:]:
-            if w.reagent: continue
+            if w.reagent:
+                continue
             free_wells += [w]
-            if len(free_wells) == n: break
+            if len(free_wells) == n:
+                break
         continuous = all((free_wells[i].offset+1 == free_wells[i+1].offset)
                             for i in range(len(free_wells)-1))
         return continuous, free_wells
 
-    def put(self, reactive, pos=None, replicas=None)->list:
+    def put(self, reactive, pos=None, replicas=None) -> list:
         """ Put a reactive with replicas in the given wells position of this labware,
         and return a list of the wells used
 
@@ -547,17 +564,18 @@ class Labware:
 
         if pos is None:                                          # find self where to put the replicas of this reactive
             continuous, pos = self.find_free_wells(replicas)
-            assert replicas == len(pos) , 'putting reactive - '+ str(reactive) + ' - into Labware: ' + \
-                                          str(self) + ' different replica number ' + str(replicas) + ' and number of positions ' + \
-                                          str(pos) # replicas = len(pos)  # todo What to do?
+            assert replicas == len(pos) , 'putting reactive - ' + str(reactive) + ' - into Labware: ' \
+                                          + str(self) + ' different replica number ' + str(replicas) \
+                                          + ' and number of positions ' \
+                                          + str(pos)        # replicas = len(pos)   # todo What to do?
 
 
         elif isinstance(pos, list):                              # put one replica on each of the given wells position
             if replicas <= len(pos):
-                pass # replicas = len(pos)
+                pass                           # replicas = len(pos)
             else:                              # todo: revise  !!!!!!!!!!!!!!
-                assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " + str(
-                w.offset + 1) + " already occupied by " + w.reagent.name
+                assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " \
+                                               + str( w.offset + 1) + " already occupied by " + w.reagent.name
 
 
         elif isinstance(pos, Well):                              # put one replica beginning from the given position
@@ -572,7 +590,8 @@ class Labware:
 
         Replicas = []    # a list of labware-wells, where the replicas for this reactive are.
         for w in pos:
-            if replicas == 0 : return Replicas
+            if replicas == 0 :
+                return Replicas
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
             assert not w.reagent, self.label + ": Can not put " + reactive.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reagent.name
@@ -607,7 +626,8 @@ class Labware:
         return self
 
     def select(self, sel_idx_list):
-        if isinstance(sel_idx_list, int): sel_idx_list = [sel_idx_list]
+        if isinstance(sel_idx_list, int):
+            sel_idx_list = [sel_idx_list]
         for i in sel_idx_list:
             self.Wells[i].selFlag = True
         return self
@@ -690,7 +710,8 @@ class Labware:
         bit = 0
         for w in self.Wells:
             bit = w.offset % 7
-            if w.selFlag: bitMask |= (1 << bit)
+            if w.selFlag:
+                bitMask |= (1 << bit)
             if bit == 6:
                 sel.append(null + bitMask)
                 bitMask = 0
@@ -698,6 +719,7 @@ class Labware:
             sel.append(null + bitMask)
         from EvoScriPy.EvoMode import encoding
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
+
 
 class DITIrack (Labware):
     """
@@ -726,13 +748,14 @@ class DITIrack (Labware):
         self.pick_next_back = nRow * nCol - 1
 
         self.fill()
-        # if type.pick_next_rack is None:            # update an iRobot state !! Only initialization, please!
+        # if type.pick_next_rack is None:           # update an iRobot state !! Only initialization, please!
         #    type.pick_next_rack = self
-                                                     # type.last_preserved_tips = ?
+        # type.last_preserved_tips = ?
 
-    def fill(self, beg=1, end=None):                 # todo it belong to Robot ??
+    def fill(self, beg=1, end=None):                   # todo it belong to Robot ??
 
-        if isinstance(beg, list): assert end is None
+        if isinstance(beg, list):
+                            assert end is None
         end = end if end else self.type.size()
 
         beg = self.offset(beg)
@@ -749,13 +772,13 @@ class DITIrack (Labware):
         self.pick_next_back = end - 1
 
     def find_new_tips(self, TIP_MASK,
-                            lastPos  = False)->(bool, list):
+                            lastPos  = False) -> (bool, list):
         return self.find_tips(TIP_MASK, self.serie, lastPos)
 
     @staticmethod
     def find_tips(TIP_MASK,
                   serie   : Labware.DITIrackType.DITIrackTypeSerie,
-                  lastPos : bool                            = False) ->(bool, list):
+                  lastPos : bool                            = False) -> (bool, list):
         """
 
         :param TIP_MASK:
@@ -787,7 +810,7 @@ class DITIrack (Labware):
                     assert tip.type is serie
                     tips += [w]
                     n -= 1
-                    if n==0:
+                    if n == 0:
                         return continuous, tips
             # we need to find in other rack
             next_rack = serie.pick_next_rack.next_rack()
@@ -812,7 +835,7 @@ class DITIrack (Labware):
         :param lastPos:
         :return:
         """
-        n = count_tips(TIP_MASK)# todo do we really need a correspondence mask - wells??
+        n = count_tips(TIP_MASK)         # todo do we really need a correspondence mask - wells??
         tp = labware
         tp = tp if isinstance(tp, Labware.Type) else tp.type
         return self._remove_tip(n, tp, worktable, lastPos)
@@ -836,17 +859,20 @@ class DITIrack (Labware):
             if not rest:
                 self.set_next_to_next_rack(worktable)   # ??? WorkTable.curWorkTable
                 return tips + self._remove_tip(n, tp, worktable, lastPos)
-            i+=d
-            if lastPos:  tp.pick_next_back -= 1
-            else:        tp.pick_next      += 1
+            i += d
+            if lastPos:
+                        tp.pick_next_back -= 1
+            else:
+                        tp.pick_next      += 1
         return tips
 
-    def next_rack(self, worktable=None):
-        if worktable is None: worktable=WorkTable.curWorkTable
+    def next_rack(self, worktable = None):
+        if worktable is None:
+                        worktable = WorkTable.curWorkTable
         assert isinstance(worktable, WorkTable)
 
         racks = worktable.labTypes[self.type.name]  # all the racks of the same type
-        assert isinstance(racks,list)
+        assert isinstance(racks, list)
         i = racks.index(self)                       # my index
         i = i+1                                     # point to the next rack of my type
         if i == len (racks):
@@ -864,7 +890,7 @@ class DITIrack (Labware):
         rack.fill()
         tp = self.type
         tp.pick_next = 0
-        tp.pick_next_back = tp.size() -1
+        tp.pick_next_back = tp.size() - 1
         tp.pick_next_rack = rack
 
     def set_back(self, TIP_MASK, tips):
@@ -879,15 +905,15 @@ class DITIrack (Labware):
         n = count_tips(TIP_MASK)
         assert n == len(self.selected()), "Too much or too few wells selected to put tip back"
         for i, w in enumerate(self.selected_wells()):
-            assert w.reagent is not Tip, ("Another tip " + w.reagent.type.name +
-                            "is already in position " + str(self.position(i)) + " of " + self.label)
+            assert w.reagent is not Tip, ("Another tip " + w.reagent.type.name + "is already in position "
+                                          + str(self.position(i)) + " of " + self.label)
             tp = tips[i]
             assert isinstance(tp, usedTip)
             w.reagent = tp
             self.type.preserved_tips[tp.origin.track.offset if tp.origin.track else tp.origin.offset] = w
             self.type.last_preserved_tips = w
 
-    def pick_up(self, TIP_MASK)->[usedTip]:
+    def pick_up(self, TIP_MASK) -> [usedTip]:
         """ Low level. Part of the job have been already done: the rack self hat
         already the source tip-wells selected. We need to return these tips.
 
@@ -897,12 +923,13 @@ class DITIrack (Labware):
         assert n == len(self.selected()), "Too much or too few wells selected to pick up tips"
         tips = []
         for i, w in enumerate(self.selected_wells()):
-            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name +
-                            "were found in position " + str(self.position(i)) + " of " + self.label)
+            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name + "were found in position "
+                                                    + str(self.position(i)) + " of " + self.label)
             tips += [w.reagent]
             w.reagent = None
-            #self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
+            # self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
         return tips
+
 
 class DITIwaste(Labware):
     def __init__(self, type, location, label=None, worktable=None):
@@ -913,8 +940,7 @@ class DITIwaste(Labware):
     def waste(self, tips):
         for tp in tips:
             self.Wells[self.wasted].reagent = tp      # todo revise ?
-            self.wasted += 1
-                                                  # todo make following assert a Warning or a UserPrompt
+            self.wasted += 1                          # todo make following assert a Warning or a UserPrompt
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
 
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
@@ -923,10 +949,11 @@ class DITIwaste(Labware):
                     tip_well = tp.type.preserved_tips[react_well.offset]
                     assert isinstance(tip_well, Well)
                     if tip_well.reagent is None:
-                        tip_well.reagent = banned_well  # don't used this well again (is "contaminated")
-                        del tp.type.preserved_tips[react_well.offset]# todo could be mounted in another position?
+                        tip_well.reagent = banned_well       # don't used this well again (is "contaminated")
+                        del tp.type.preserved_tips[react_well.offset]  # todo could be mounted in another position?
                     else:
                         assert tp is not tip_well.reagent
+
 
 class Cuvette(Labware):
     def __init__(self, type, location, label=None, worktable=None):
@@ -938,7 +965,6 @@ class Cuvette(Labware):
 
     def init_wells(self):
         self.Wells = [conectedWell(self, offset) for offset in range(self.type.size())]
-
 
     def autoselect(self, offset=0, maxTips=1, replys=1):
         """
@@ -959,14 +985,14 @@ class Cuvette(Labware):
 
 Trough_100ml    = Labware.CuvetteType("Trough 100ml",                8,     maxVol=  100000)
 Trough_25ml_rec = Labware.CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
-Trough_300ml_MCA= Labware.CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)# \todo test it works OK
+Trough_300ml_MCA= Labware.CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)  # \todo test it works OK
 
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
 EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=    1500)
 EppRack6x4      = Labware.Type("24 Pos Eppi Tube Rack",              4, 6,  maxVol=    1500)
 EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=    1500)
-EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  maxVol=    1500) # defined in Evoware !!!
+EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  maxVol=    1500)  # defined in Evoware !!!
 MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  maxVol=    1000)
                     # by duplicating and then editing the labware 'Tube Eppendorf 3x 16 Pos' and also the carrier
                     # to have 6 instead of 3 columns. It was needed to change the position X of the last well (96)
@@ -986,25 +1012,25 @@ EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVo
 DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
 DiTi_1000ul_SBS = Labware.DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
 DiTi_200ul_SBS  = Labware.DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
-DiTi_10ul_SBS   = Labware.DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  #   9,5 ??
+DiTi_10ul_SBS   = Labware.DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  # 0 9,5 ??
 DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
 DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
 
-DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  #  ??
+DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  # ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
-#def_DiTi        = DiTi_1000ul
+# def_DiTi        = DiTi_1000ul
 
 
-#Evo100
+# Evo100
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
 CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
-WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000) # 10 L
+WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
 CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
 DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
 #Evo75
 CleanerShallow  = Labware.CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
-WasteWash       = Labware.CuvetteType("Wash Station Waste",              8, maxVol=10000000) # 10 L
+WasteWash       = Labware.CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
 CleanerDeep     = Labware.CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
 DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
 
