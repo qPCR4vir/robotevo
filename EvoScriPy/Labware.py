@@ -881,14 +881,17 @@ class DITIrack (Labware):
                                worktable=worktable  )
         self.pick_next      = 0
         self.pick_next_back = type.nRow * type.nCol - 1
+        self.lastPos        = False
 
         self.fill()
 
-    def set_DITI_counter(self, posInRack, lastPos):
+    def set_DITI_counter(self, posInRack, lastPos = False):
         if lastPos:
             self.pick_next_back = self.offset(posInRack)
+            self.lastPos        = True
         else:
             self.pick_next = self.offset(posInRack)
+            self.lastPos   = False
 
         # type.last_preserved_tips = ?
 
