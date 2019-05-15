@@ -337,7 +337,7 @@ class Robot:
     # correspond to actions in the hardware.
     # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method Itr.actualize_robot_state(self):
 
-    def getTips(self, rack, tip_mask=-1,lastPos=False) -> (int, list):  # (int, [Lab.Tip])
+    def getTips(self, rack_series, tip_mask=-1 ) -> (int, list):  # (int, [Lab.Tip])
         """ To be call from Itr.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
         status and the number of tips already mounted.
@@ -348,14 +348,11 @@ class Robot:
         :param lastPos: begging in backward direction?
         :return: int
         """
-        if isinstance(rack, Lab.Labware.DITIrackType):
-            rack = rack.pick_next_rack
-        assert isinstance(rack, Lab.DITIrack)
 
-        tip_mask = self.getTips_test(rack.type, tip_mask)
 
-        tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
-        return self.curArm().getTips(rack_type=rack.type, tip_mask=tip_mask, tips=tips)
+        tip_mask = self.getTips_test(rack_series.type, tip_mask)
+        tips = rack_series.remove_tips(tip_mask)
+        return self.curArm().getTips(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
 
     def dropTips(self, TIP_MASK=-1, waste=None):
         if not self.droptips: return 0
