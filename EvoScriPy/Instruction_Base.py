@@ -160,7 +160,7 @@ class Pipette(Instruction):
                  LoopOptions                = def_LoopOp,  # todo how to model???
                  RackName                   = None,        # todo I need to this???
                  Well                       = None,        # todo I need to this???
-                 arm                        = LiHa1):
+                 arm                        = LiHa1):      # set this as def
         """
 
         :param name: str; Instruction name
@@ -186,14 +186,13 @@ class Pipette(Instruction):
         :param arm:
         """
         Instruction.__init__(self, name)
-        self.robot.curArm(arm)
-        self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.arm                = self.robot.curArm(arm)      # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.arm.nTips]
         self.labware            = labware
         self.spacing            = spacing
         self.loopOptions        = LoopOptions
         self.RackName           = RackName
         self.Well               = Well
-        self.arm                = self.robot.curArm().index   # current arm can change - keep it here
                             # noOfLoopOptions,
                             # loopName,
                             # action,
@@ -207,17 +206,18 @@ class Pipette(Instruction):
 
         """
         assert isinstance(self.labware, Lab.Labware)
+        self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid),
-                      integer(self.labware.location.site), # arg 2, 3
+                      integer(self.labware.location.site),                                      # arg 2, 3
                       integer(self.spacing),
-                      string1( self.labware.wellSelectionStr()) ]# arg 4, 5
+                      string1( self.labware.wellSelectionStr()) ]                               # arg 4, 5
         self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6
         for op in self.loopOptions:
             self.arg +=  [string1(op.name),
                           integer(op.action),
-                          integer(op.difference) ]        # arg 7, 8, 9
+                          integer(op.difference) ]                                              # arg 7, 8, 9
         self.arg +=  [integer(self.arm)]                                                        # arg 10
 
         return True
@@ -230,7 +230,7 @@ class Pipetting(Pipette):
     def __init__(self, name, tipMask     = None,
                              liquidClass = def_liquidClass,
                              volume      = def_vol,
-                             labware     = None,    # todo ??????
+                             labware     = None,                            # todo ??????
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
@@ -250,9 +250,10 @@ class Pipetting(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        nTips = self.robot.curArm().nTips   # todo FIX arm is arg
-        self.arg[1:1] = [string1(self.liquidClass)] + expr(nTips, self.volume).split() + [int(0)] * (
-            12 - nTips)  # arg 2, 3 - 14
+        nTips = self.robot.curArm().nTips                                   # todo FIX arm is arg
+        self.arg[1:1] = [string1(self.liquidClass)] \
+                        + expr(nTips, self.volume).split() \
+                        + [int(0)] * (12 - nTips)                           # arg 2, 3 - 14
         return True
 
     def actualize_robot_state(self):
@@ -274,13 +275,16 @@ class DITIs(Instruction):
         :param arm:
         """
         Instruction.__init__(self, name)
+        self.arm     = self.robot.curArm(arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
         self.options = options
         self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
-        self.arm = arm
+
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg = [integer(self.tipMask)]   # arg 1
+        self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+
+        self.arg  = [integer(self.tipMask)]  # arg 1
         self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
         self.arg += [integer(self.arm)]      # arg 4
         return True

@@ -482,5 +482,7 @@ class Robot:
         return usePreserved
 
     def curArm(self, arm=None):
-        if arm is not None: self.def_arm = arm
+        if arm is not None:
+            assert 0 <= arm < len(self.arms)
+            self.def_arm = arm
         return self.arms[self.def_arm]
