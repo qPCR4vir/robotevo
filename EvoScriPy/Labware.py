@@ -243,6 +243,23 @@ class WorkTable:
         self.def_DiTi = tips
         return old
 
+    def get_DITI_series(self, rack):
+
+        if isinstance(rack, Lab.Labware.DITIrackType.DITIrackTypeSeries):  # get the series directly
+            return rack
+
+        if isinstance(rack, Lab.DITIrack):
+            return rack.serie
+
+        if rack is None:
+            rack = self.def_DiTi.name
+
+        if isinstance(rack, Lab.Labware.DITIrackType):
+            rack = rack.name
+
+        return self.labTypes[rack]
+
+
 
 class Frezeer (WorkTable):
     def __init__(self):
@@ -487,6 +504,8 @@ class Labware:
                     assert rack is not self.current                                       # todo return incomplete ??
 
 
+
+
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
 
             if portrait:
@@ -504,6 +523,7 @@ class Labware:
         def create_series(self, labware : Labware):
             # assert isinstance(labware.type, DITIrackType)
             return DITIrackTypeSeries(labware)
+
 
 
 
@@ -818,6 +838,12 @@ class DITIrack (Labware):
         self.pick_next_back = type.nRow * type.nCol - 1
 
         self.fill()
+
+    def set_DITI_counter(self, posInRack, lastPos):
+        if lastPos:
+            self.pick_next_back = self.offset(posInRack)
+        else:
+            self.pick_next = self.offset(posInRack)
 
         # type.last_preserved_tips = ?
 

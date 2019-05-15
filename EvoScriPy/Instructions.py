@@ -255,20 +255,22 @@ class getDITI(DITIs):
 
 class getDITI2(DITIs):
     """ A.15.4.5 Get DITIs (Worklist: GetDITI) pag. A - 129
-    It take a labware name instead of the labware itself because the real robot take track of the next position to pick
-    including the rack and the site (that is - the labware). 
+    It take a labware type or name instead of the labware itself because the real robot take track of the
+    next position to pick including the rack and the site (that is - the labware).
     It need a labware type and it know where to pick the next tip.
     """
-    def __init__(self,  tipMask         = None,
-                        LabwareTypeName = None,
-                        options         = 0,
-                        arm             = None,
-                        AirgapVolume    = 0,
-                        AirgapSpeed     = def_AirgapSpeed ):
+    def __init__(self,
+                 tipMask         = None,
+                 DITI_series  :(str, Lab.Labware.DITIrackType, Lab.DITIrack,
+                                Lab.Labware.DITIrackType.DITIrackTypeSeries)     = None,
+                 options         = 0,
+                 arm             = None,
+                 AirgapVolume    = 0,
+                 AirgapSpeed     = def_AirgapSpeed):
         """
 
         :param tipMask:
-        :param LabwareTypeName: string or labware or labware.Type? DiTi labware name
+        :param DITI_series: string or labware or labware.Type? DiTi labware name
         :param options:
         :param arm:
         :param AirgapVolume: int. used to specify a system trailing airgap (STAG) which will be aspirated after
@@ -276,34 +278,27 @@ class getDITI2(DITIs):
         :param AirgapSpeed: int. Speed for the airgap in μl/s
         """
         DITIs.__init__(self, "GetDITI2", tipMask, options, arm)
-        self.LabwareTypeName = LabwareTypeName # OK Implement!! Find the rack and the current position to pick.
-        self.AirgapSpeed = AirgapSpeed
+        self.DITI_series  = DITI_series                             # to find the rack and the current position to pick.
+        self.AirgapSpeed  = AirgapSpeed
         self.AirgapVolume = AirgapVolume
 
     def validateArg(self):
         DITIs.validateArg(self)
 
-        ln= self.LabwareTypeName
-        if   ln is None                     : ln = self.robot.worktable.def_DiTi.name # = Labware.Type("DiTi 1000ul", 8, 12, maxVol=940)
-        elif isinstance(ln, Lab.DITIrack)    : ln = ln.type.name
-        elif isinstance(ln, Lab.Labware.DITIrackType): ln = ln.name
+        self.DITI_series = self.robot.worktable.get_DITI_series(self.DITI_series)
 
-        self.arg[1:1] = [string1(ln)]                              # arg 2 TODO string1 or expression?
-        self.arg += [integer(self.AirgapVolume), integer(self.AirgapSpeed)]   # arg 5, 6 (3, 4 are grid, site)
+        self.arg[1:1] = [string1(s.type.name)]                                # arg 2 TODO string1 or expression?
+        self.arg += [integer(self.AirgapVolume),
+                     integer(self.AirgapSpeed)]                               # arg 5, 6 (3, 4 are grid, site)
 
         return True
 
     def actualize_robot_state(self):
-        maxVol = None                   # todo Implement all this in the iRobot or in the Labware !!!
-        ln = self.LabwareTypeName if self.LabwareTypeName else self.robot.worktable.def_DiTi
-        if isinstance(ln, str)        :
-            curW = self.robot.worktable
-            assert isinstance(curW, Lab.WorkTable)
-            ln = curW.labTypes [ln][0].type
-        assert isinstance(ln, (Lab.DITIrack, Lab.Labware.DITIrackType))
-        self.tipMask, tips = self.robot.getTips(ln, self.tipMask)   # todo what with ,lastPos=False
+        self.validateArg()
+        maxVol = None
+        self.tipMask, tips = self.robot.getTips(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
-        self.LabwareTypeName = ln
+
 
 class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI). pag A - 130 and 15 - 14
@@ -422,7 +417,7 @@ class set_DITI_Counter2(Pipette):
 
     def validateArg(self):
         if not isinstance(self.labware, Lab.DITIrack):
-            self.labware  = self.robot.worktable.get_current(self.labware)
+            self.labware  = self.robot.worktable.get_DITI_series(self.labware).current
         assert isinstance(self.labware, Lab.DITIrack)
 
         self.arg = [string1(self.labware.type.name),
@@ -434,12 +429,8 @@ class set_DITI_Counter2(Pipette):
 
     def actualize_robot_state(self):
         self.validateArg()
-        self.robot.worktable.set_current(self.labware)       # todo really    ??????????
-
-        if self.lastPos:
-            self.labware.pick_next_back = self.labware.offset(self.posInRack)
-        else:
-            self.labware.pick_next      = self.labware.offset(self.posInRack)
+        self.robot.worktable.set_current(self.labware)                     # todo really    ??????????
+        self.labware.set_DITI_counter(self.posInRack, self.lastPos)
 
 
 class pickUp_DITIs(Pipette):

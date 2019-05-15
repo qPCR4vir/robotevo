@@ -351,7 +351,9 @@ class Robot:
         if isinstance(rack, Lab.Labware.DITIrackType):
             rack = rack.pick_next_rack
         assert isinstance(rack, Lab.DITIrack)
+
         tip_mask = self.getTips_test(rack.type, tip_mask)
+
         tips = rack.remove_tips(tip_mask, rack.type, self.worktable, lastPos=lastPos)
         return self.curArm().getTips(rack_type=rack.type, tip_mask=tip_mask, tips=tips)
 
