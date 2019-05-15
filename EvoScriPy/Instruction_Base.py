@@ -150,14 +150,17 @@ def_AirgapSpeed = 300
 class Pipette(Instruction):
     LiHa1 = 0
     LiHa2 = 1
-    def __init__(self, name, tipMask     = None,
-                             labware     = None,
-                             spacing     = 1,           # todo how to use???
-                             wellSelection = None,      # todo how to use???
-                             LoopOptions = def_LoopOp,  # todo how to model???
-                             RackName    = None,        # todo I need to this???
-                             Well        = None,        # todo I need to this???
-                             arm         = LiHa1):
+
+    def __init__(self,
+                 name,
+                 tipMask                    = None,
+                 labware      : Lab.Labware = None,
+                 spacing                    = 1,           # todo how to use???
+                 wellSelection              = None,        # todo how to use???
+                 LoopOptions                = def_LoopOp,  # todo how to model???
+                 RackName                   = None,        # todo I need to this???
+                 Well                       = None,        # todo I need to this???
+                 arm                        = LiHa1):
         """
 
         :param name: str; Instruction name
@@ -185,7 +188,7 @@ class Pipette(Instruction):
         Instruction.__init__(self, name)
         self.robot.curArm(arm)
         self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
-        self.labware            =labware
+        self.labware            = labware
         self.spacing            = spacing
         self.loopOptions        = LoopOptions
         self.RackName           = RackName
@@ -203,6 +206,8 @@ class Pipette(Instruction):
         :return:
 
         """
+        assert isinstance(self.labware, Lab.Labware)
+
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid),
                       integer(self.labware.location.site), # arg 2, 3

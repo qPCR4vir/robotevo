@@ -288,21 +288,21 @@ class Robot:
                 well_tip.labware.selectOnly(well_tip.offset)
         return where
 
-    def where_preserve_tips(self, TIP_MASK)->list:      #  [Lab.DITIrack]
+    def where_preserve_tips(self, TIP_MASK) -> list:                     # [Lab.DITIrack]
         """ Return a list of racks with the tips-wells already selected.
-
+            Means to set back the tips currently in the arm.
         :param selection:
-        :return:
-        """   # todo this in Labware??
+        :return:    list of racks with the tips-wells already selected.
+        """                                                              # todo this in Labware??
 
         TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
-        types = []
-        t_masks = []
-        racks = []
-        tips = []
+        types    = []
+        t_masks  = []
+        racks    = []
+        tips     = []
 
         for i, tip in enumerate(self.curArm().Tips):
-            if TIP_MASK & (1 << i):
+            if TIP_MASK & (1 << i):                                      # this was selected
                 assert tip, "There are no tip mounted in position " + str(i)
                 tips += [tip]
                 if tip.type in types:
@@ -315,7 +315,7 @@ class Robot:
         tpe = types[0]
         m = t_masks[0]
 
-        if not self.usePreservedtips:  # no re-back DiTi for multiple reuse
+        if not self.usePreservedtips:                            # no re-back DiTi for multiple reuse
             assert isinstance(tpe, Lab.Labware.DITIrackType)
             if not tpe.last_preserved_tips:
                 tpe.last_preserved_tips = tpe.pick_next_rack.Wells[0] # todo set to first tip used !!!!!

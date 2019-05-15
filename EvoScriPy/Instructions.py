@@ -338,7 +338,8 @@ class dropDITI(Pipette):
     def actualize_robot_state(self):
         self.tipMask = self.robot.dropTips(self.tipMask, self.labware)
 
-class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.def_LabW
+
+class set_DITI_Counter(Pipette):            # todo help determining the type,set other Lab.def_LabW,   deprecated???
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter) pag. 15 - 15
         If you are using DITIs, Freedom EVOware remembers the position in the DITI
     rack of the last DITI which was fetched. When starting a new run, the Get DITIs
@@ -364,18 +365,21 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.
     DITIs) is used by both arms.
     """
 
-    def __init__(self, type,
+    def __init__(self, type      = None,
                        posInRack = 0,
                        labware   = None ):
+
         Pipette.__init__(self, "Set_DITI_Counter" , labware = labware, tipMask=True)
-        self.type = type
-        self.labware = labware or self.robot.worktable.def_DiTi
+
+        self.type      = type
+        self.labware   = labware or self.robot.worktable.def_DiTi
         self.posInRack = posInRack
 
     def validateArg(self):
-        self.arg = [integer(self.type), string1(self.labware.location.grid),
-                                        string1(self.labware.location.site),
-                                        string1(self.posInRack)] # OK extract from Location
+        self.arg = [integer(self.type),
+                    string1(self.labware.location.grid),
+                    string1(self.labware.location.site),
+                    string1(self.posInRack)] # OK extract from Location
         return True
 
     def actualize_robot_state(self):
@@ -383,7 +387,8 @@ class set_DITI_Counter(Pipette): # todo help determining the type,set other Lab.
         self.labware.type.pick_next_rack = self.labware
         self.labware.type.pick_next      = self.labware.offset(self.posInRack)
 
-class set_DITI_Counter2(Pipette): # OK  set other Lab.def_LabW
+
+class set_DITI_Counter2(Pipette):
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter)     NOT DOCUMENTED
         example: Set_DITI_Counter2("DiTi 1000ul","25","2","5",0);
         last position
@@ -408,9 +413,11 @@ class set_DITI_Counter2(Pipette): # OK  set other Lab.def_LabW
     def __init__(self, labware   = None,
                        posInRack = 0,
                        lastPos   = False  ):
+
         Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware, tipMask=True)
-        self.lastPos = lastPos #todo implement internally; how??
-        self.labware = labware or self.robot.worktable.def_DiTi
+
+        self.lastPos   = lastPos                                     # todo implement internally; how??
+        self.labware   = labware or self.robot.worktable.def_DiTi
         self.posInRack = posInRack
 
     def validateArg(self):
@@ -443,7 +450,7 @@ class pickUp_DITIs(Pipette):
     used and put back into a DITI rack with the Set DITIs Back command. You must
     specify the DITIs you want to pick up.
     """
-    def __init__(self, tipMask     = None,
+    def __init__(self,       tipMask     = None,
                              labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
@@ -451,6 +458,7 @@ class pickUp_DITIs(Pipette):
                              arm         = None,
                              RackName    = None,
                              Well        = None):
+
         Pipette.__init__(self, 'PickUp_DITIs',
                              tipMask     = tipMask,
                              labware     = labware,
@@ -464,7 +472,7 @@ class pickUp_DITIs(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[3:4] = []
+        self.arg[3:4]   = []
         self.arg[-1:-1] = [integer(self.type)]
         return True
 
@@ -480,7 +488,7 @@ class pickUp_DITIs2(Pipette):
     used and put back into a DITI rack with the Set DITIs Back command. You must
     specify the DITIs you want to pick up.
     """
-    def __init__(self, tipMask     = None,
+    def __init__(self,       tipMask     = None,
                              labware     = None,
                              wellSelection= None,
                              LoopOptions = def_LoopOp,
@@ -495,12 +503,12 @@ class pickUp_DITIs2(Pipette):
                              RackName    = RackName,
                              Well        = Well,
                              arm         = arm)
-        self.type = type
+        self.type    = type
         self.labware = labware or self.robot.worktable.def_DiTi
 
     def validateArg(self):
         Pipette.validateArg(self)
-        self.arg[3:4] = []        # delete arg tip spacing
+        self.arg[3:4]   = []        # delete arg tip spacing
         self.arg[-1:-1] = [string1(self.labware.type.name)]
         return True
 

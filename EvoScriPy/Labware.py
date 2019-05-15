@@ -70,11 +70,11 @@ class WorkTable:
         self.def_DiTi        = None
         # assert WorkTable.curWorkTable is None      # TODO revise.
         WorkTable.curWorkTable = self                # TODO revise
-        self.labTypes = {}  # typeName:labwares. For each type mountain a list of labwares (with have self locations)
+        self.labTypes = {}  # typeName: Series. For each type mountain a series of labwares (with have self locations)
         self.reagents = []
-        self.Racks = []
-        self.nSites = sites
-        self.grid = [None] * grids
+        self.Racks    = []
+        self.nSites   = sites
+        self.grid     = [None] * grids
         self.templateFileName = None
         if isinstance(templateFile, list):
             self.template = templateFile
@@ -84,44 +84,41 @@ class WorkTable:
             self.template = self.parseWorTableFile(templateFile)
             self.templateFileName = templateFile
 
-
-
     def parseWorTableFile(self, templateFile):
         if not templateFile:
             return []
-        templList = []
+        templList = []                                                        # a grid-line first list the types
         with open(templateFile, 'r', encoding='Latin-1') as tmpl:
             # parsing_grid=False
             grid_num       = -1
             labwware_types = []
             for line in tmpl:
                 templList += [line]
-                if line.startswith("--{ RPG }--"):
-                    # print("***********    --{ RPG }--      ******************")
-                    break  # TODO possible error msg ??
+                if line.startswith("--{ RPG }--"):                            # end of the worktable description
+                                            break
                 line = line.split(';')
 
                 if line[0] != "998":
-                    continue                   # TODO possible error msg ??
+                                            continue                         # TODO possible error msg ??
                 if grid_num >= len(self.grid):
-                    continue                   # ignore lines between this and  "--{ RPG }--"
+                                            continue                   # ignore lines between this and  "--{ RPG }--"
 
-                if labwware_types:             # we have read the types first, now we need to read the labels
-                    for site, (labw_t, label) in enumerate(zip(labwware_types, line[1:-1])):
-                        if not labw_t:
+                if labwware_types:                      # we have read the types first, now we need to read the labels
+                    for site, (lab_t_label, label) in enumerate(zip(labwware_types, line[1:-1])):
+                        if not lab_t_label:
                             if label:
                                 print("Warning! The worktable template have a label '" +
                                       label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                       " but no labware type")
                             continue
                         loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
-                        labw = self.createLabware(labw_t, loc, label)
+                        labw = self.createLabware(lab_t_label, loc, label)
                         if labw:
                             pass               # self.addLabware(labw)
                         else:
                             print("Warning! The worktable template have a label '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
-                                  " but non registered labware type '" + labw_t + "'")
+                                  " but non registered labware type '" + lab_t_label + "'")
                     labwware_types = []
 
                 else:                         # we need to read the types first
@@ -134,8 +131,9 @@ class WorkTable:
         self.templateFileName = templateFile
         return templList
 
-    def createLabware(self, labw_t, loc, label):
-        labw_t = Labware.Types.get(labw_t)
+    def createLabware(self, labw_t_name : str, loc : Location, label : str):
+        labw_t = Labware.Types.get(labw_t_name)
+        assert isinstance(labw_t, Labware.Type)
         if not labw_t:
             return None
         labw = labw_t.createLabware(loc, label)
@@ -149,13 +147,13 @@ class WorkTable:
         """
         if loc:
             if loc.grid >= len(self.grid):
-                raise "This WT have only " + str(len(self.grid)) + " grid."
+                raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
             labware.location = loc
         labware.location.worktable = self
 
-        for type_name, labw_list in self.labTypes.items():
-            for labw in labw_list:
-                if labw is labware:
+        for type_name, labw_list in self.labTypes.items():                # loop lab_types already in worktable
+            for labw in labw_list:                                        # loop labwares in that series
+                if labw is labware:                                       # already there ?? or other ??
                     print("Warning! The worktable template already have this labware. " +
                             labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
                     return
@@ -163,8 +161,8 @@ class WorkTable:
                    labware.location.grid == labw.location.grid and \
                    labware.location.site == labw.location.site:
 
-                    print("Warning! The worktable template already have a labware with label '" +
-                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+                    print("Warning! Trying to add a labware. The worktable template already have a labware with label '"
+                          + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
 
         if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
             self.labTypes[labware.type.name] = []
@@ -364,7 +362,7 @@ class Labware:
     class Type:
 
 
-        class Serie:
+        class Series:
 
             def __init__(self, labware: Labware ):
                 self.labwares   = []
@@ -378,7 +376,6 @@ class Labware:
                 self.labwares               += [labware]
                 self.labels[ labware.label ] = labware
                 labware.serie                = self
-
 
             def set_next(self, labware: Labware = None) ->  (Labware, bool):
                 """
@@ -427,18 +424,22 @@ class Labware:
 
     class DITIrackType(Type):
 
-        class DITIrackTypeSerie(Labware.Type.Serie):
+
+        class DITIrackTypeSeries(Labware.Type.Serie):
 
             def __init__(self, labware: Labware ):
-                Labware.Type.Serie.__init__(self, labware)
+                Labware.Type.Series.__init__(self, labware)
                 self.last_preserved_tips = None              # a tip Well in a DiTi rack
+
 
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
 
             if portrait:
                 nCol, nRow = nRow, nCol                  # todo revise !
+
             Labware.Type.__init__(self, name, nRow, nCol, maxVol)
-            self.pick_next_rack = None                   # labware (DITIrackType or grid,site)
+
+            self.pick_next_rack = None                   # now serie.currrent !!  labware (DITIrackType or grid,site)
             self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
@@ -454,6 +455,7 @@ class Labware:
             labw = DITIwaste(self, loc, label)
             return labw
 
+
     class CuvetteType(Type):
 
         def __init__(self,   name,
@@ -466,8 +468,10 @@ class Labware:
             labw = Cuvette(self, loc, label)
             return labw
 
+
     class Te_Mag (Type):
         pass
+
 
     def __init__(self,
                  type       : Type,
@@ -502,6 +506,7 @@ class Labware:
         def __init__(self, row, col=1):
             self.row = row
             self.col = col
+
 
     def autoselect(self, offset=0, maxTips=1, replys=1):   # OK make this "virtual". Implement cuvette
         """
@@ -777,7 +782,7 @@ class DITIrack (Labware):
 
     @staticmethod
     def find_tips(TIP_MASK,
-                  serie   : Labware.DITIrackType.DITIrackTypeSerie,
+                  serie   : Labware.DITIrackType.DITIrackTypeSeries,
                   lastPos : bool                            = False) -> (bool, list):
         """
 
@@ -786,7 +791,7 @@ class DITIrack (Labware):
         :param lastPos:
         :return:
         """
-        assert isinstance(serie, Labware.DITIrackType.DITIrackTypeSerie)
+        assert isinstance(serie, Labware.DITIrackType.DITIrackTypeSeries)
         n       = count_tips(TIP_MASK)
         rack    = serie.current
         r       = rack.Wells[serie.pick_next,
