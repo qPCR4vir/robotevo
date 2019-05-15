@@ -6,8 +6,6 @@
 
 __author__ = 'qPCR4vir'
 
-#from Instruction_Base import *
-#from Instructions import *
 import EvoScriPy.Labware as Lab
 rep_sub = None # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
 
@@ -16,9 +14,6 @@ tipsMask = []  # mask for the first tips
 for tip in range(13):
     tipMask += [1 << tip]
     tipsMask += [2 ** tip - 1]
-
-# def_nTips = 4
-# nTips = def_nTips
 
 
 class Robot:
@@ -240,26 +235,6 @@ class Robot:
         # self.preservedtips = {} # order:well
         # self.last_preserved_tips = None # Lab.DITIrack, offset
 
-    def set_worktable(self,templateFile):
-        # w = Lab.WorkTable.curWorkTable
-        if templateFile is None: return
-        if isinstance(self.worktable, Lab.WorkTable):  # todo temp? really to set
-            assert self.worktable.templateFileName == templateFile, 'Attemp to reset wortable from '\
-                   + self.worktable.templateFileName + ' into ' + templateFile
-        else:
-            self.worktable  = Lab.WorkTable(templateFile)
-
-    def set_as_current(self):
-        Robot.current = self
-        Lab.curWorkTable=self.worktable # todo inconsistent duplication? allow for manuall actions?
-
-    def setUsed(self, tipMask, labware_selection):
-        # Deprecated ??????
-        mask, tips = self.curArm().drop_test(tipMask)
-        assert len(tips) == len(labware_selection.selected())
-        for i, w in enumerate(labware_selection.selected_wells()):
-            self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
-
 
     # Functions to observe the iRobot status (intern-physical status, or user status with are modificators of future
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
@@ -349,36 +324,6 @@ class Robot:
                 tip_well.labware.selectOnly(tip_well.offset)
         return racks
 
-
-    def set_dropTips(self, drop=True)->bool:
-        '''
-        Drops the tips at THE END of the whole action? like after spread of the reactive into various target?
-        :param drop:
-        :return: the previous value
-        '''
-        self.droptips, drop = drop, self.droptips
-        return drop
-
-    def set_allow_air(self, allow_air=0.0)->float:
-        self.allow_air, allow_air = allow_air, self.allow_air
-        return allow_air
-
-    def reuseTips(self, reuse=True)->bool:
-        self.reusetips, reuse = reuse, self.reusetips
-        return reuse
-
-    def preserveTips(self, preserve=True)->bool:
-        self.preservetips, preserve = preserve, self.preservetips
-        return preserve
-
-    def usePreservedTips(self, usePreserved=True)->bool:
-        self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
-        return usePreserved
-
-    def curArm(self, arm=None):
-        if arm is not None: self.def_arm = arm
-        return self.arms[self.def_arm]
-
     def getTips_test(self, rack_type, tip_mask=-1) -> int:   # todo REVISE
         if self.reusetips:
             tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
@@ -386,6 +331,7 @@ class Robot:
             # self.dropTips(tip_mask)  # todo REVISE  here ???
             tip_mask = self.curArm().getTips_test(tip_mask)
         return tip_mask
+
 
     # Functions to change the physical status, to model physical actions, or that directly
     # correspond to actions in the hardware.
@@ -485,4 +431,54 @@ class Robot:
         tips = labware_selection.pick_up(TIP_MASK)
         return self.curArm().getTips(tip_mask=TIP_MASK, tips=tips)
 
+    def setUsed(self, tipMask, labware_selection):
+        # Deprecated ??????
+        mask, tips = self.curArm().drop_test(tipMask)
+        assert len(tips) == len(labware_selection.selected())
+        for i, w in enumerate(labware_selection.selected_wells()):
+            self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
 
+
+    # relatively simple "setters" and "getters" of current default options
+
+    def set_worktable(self,templateFile):
+        # w = Lab.WorkTable.curWorkTable
+        if templateFile is None: return
+        if isinstance(self.worktable, Lab.WorkTable):  # todo temp? really to set
+            assert self.worktable.templateFileName == templateFile, 'Attemp to reset wortable from '\
+                   + self.worktable.templateFileName + ' into ' + templateFile
+        else:
+            self.worktable  = Lab.WorkTable(templateFile)
+
+    def set_as_current(self):
+        Robot.current = self
+        Lab.curWorkTable=self.worktable # todo inconsistent duplication? allow for manuall actions?
+
+    def set_dropTips(self, drop=True)->bool:
+        '''
+        Drops the tips at THE END of the whole action? like after spread of the reactive into various target?
+        :param drop:
+        :return: the previous value
+        '''
+        self.droptips, drop = drop, self.droptips
+        return drop
+
+    def set_allow_air(self, allow_air=0.0)->float:
+        self.allow_air, allow_air = allow_air, self.allow_air
+        return allow_air
+
+    def reuseTips(self, reuse=True)->bool:
+        self.reusetips, reuse = reuse, self.reusetips
+        return reuse
+
+    def preserveTips(self, preserve=True)->bool:
+        self.preservetips, preserve = preserve, self.preservetips
+        return preserve
+
+    def usePreservedTips(self, usePreserved=True)->bool:
+        self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
+        return usePreserved
+
+    def curArm(self, arm=None):
+        if arm is not None: self.def_arm = arm
+        return self.arms[self.def_arm]
