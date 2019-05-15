@@ -450,12 +450,42 @@ class Labware:
     class DITIrackType(Type):
 
 
-        class DITIrackTypeSeries(Labware.Type.Serie):
+        class DITIrackTypeSeries(Labware.Type.Series):
 
             def __init__(self, labware: Labware ):
                 Labware.Type.Series.__init__(self, labware)
                 self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
+            def find_tips(self, TIP_MASK, lastPos: bool = False) -> (bool, list):
+                """
+
+                :param TIP_MASK:
+                :param lastPos:
+                :return:
+                """
+                n           = count_tips(TIP_MASK)
+                tips        = []
+                rack        = self.current
+                continuous  = True
+                while (True):
+                    #                  begin                   end                   direction
+                    r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if lastPos else 1]
+
+                    for w in r:
+                        if isinstance(w.reagent, Tip):
+                            tip = w.reagent
+                            assert tip.type is self.type, "A tip of unexpected type encounetred"    # todo really??
+                            tips += [w]
+                            n    -= 1
+                            if n == 0:
+                                return continuous, tips
+
+                    # we need to find in other rack
+                    next_rack, rotated = self.show_next(rack)
+                    assert next_rack is not self.current
+                    r = next_rack.Wells[0,
+                                        serie.nCol * serie.nRow,
+                                        -1 if lastPos else 1]
 
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
 
@@ -474,6 +504,7 @@ class Labware:
         def create_series(self, labware : Labware):
             # assert isinstance(labware.type, DITIrackType)
             return DITIrackTypeSeries(labware)
+
 
 
     class DITIwasteType(Type):
@@ -787,8 +818,7 @@ class DITIrack (Labware):
         self.pick_next_back = type.nRow * type.nCol - 1
 
         self.fill()
-        # if type.pick_next_rack is None:           # update an iRobot state !! Only initialization, please!
-        #    type.pick_next_rack = self
+
         # type.last_preserved_tips = ?
 
     def fill(self, beg=1, end=None):                   # todo it belong to Robot ??
@@ -810,53 +840,8 @@ class DITIrack (Labware):
         self.pick_next      = beg - 1
         self.pick_next_back = end - 1
 
-    def find_new_tips(self, TIP_MASK,
-                            lastPos  = False) -> (bool, list):
-        return self.find_tips(TIP_MASK, self.serie, lastPos)
-
-    @staticmethod
-    def find_tips(TIP_MASK,
-                  serie   : Labware.DITIrackType.DITIrackTypeSeries,
-                  lastPos : bool                            = False) -> (bool, list):
-        """
-
-        :param TIP_MASK:
-        :param serie:
-        :param lastPos:
-        :return:
-        """
-        assert isinstance(serie, Labware.DITIrackType.DITIrackTypeSeries)
-        n       = count_tips(TIP_MASK)
-        rack    = serie.current
-        r       = rack.Wells[serie.pick_next,
-                             serie.pick_next_back + 1,
-                             -1 if lastPos else 1]
-        continuous = True
-        try_in_next_rack = 2        # hummm !
-        tips = []
-        while (try_in_next_rack):
-            try_in_next_rack -= 1
-            # todo do we really need a correspondence mask - wells??
-
-            for i in range(len(r)-n+1):
-                if all(isinstance(w.reagent, Tip) for w in r[i:i + n]):
-                    return continuous, tips + r[i:i + n]
-
-            continuous = False
-            for w in r:
-                if isinstance(w.reagent, Tip):
-                    tip = w.reagent
-                    assert tip.type is serie
-                    tips += [w]
-                    n -= 1
-                    if n == 0:
-                        return continuous, tips
-            # we need to find in other rack
-            next_rack = serie.pick_next_rack.next_rack()
-            assert next_rack is not serie.pick_next_rack
-            r = next_rack.Wells[0,
-                                serie.nCol * serie.nRow,
-                                -1 if lastPos else 1]
+    def find_new_tips(self, TIP_MASK, lastPos  = False) -> (bool, list):
+        return self.serie.find_tips(TIP_MASK, lastPos)
 
     def remove_tips(self, TIP_MASK,
                           labware,
