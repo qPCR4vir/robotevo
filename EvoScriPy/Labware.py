@@ -149,7 +149,9 @@ class WorkTable:
             if loc.grid >= len(self.grid):
                 raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
             labware.location = loc
-        labware.location.worktable = self
+        else:
+            loc = labware.location
+        labware.location.worktable = self                                 # todo remove from previous worktable ?
 
         for type_name, labw_list in self.labTypes.items():                # loop lab_types already in worktable
             for labw in labw_list:                                        # loop labwares in that series
@@ -165,9 +167,28 @@ class WorkTable:
                           + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
 
         if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
-            self.labTypes[labware.type.name] = []
+            self.labTypes[labware.type.name] = labware.type.create_series(labware)
+        else:
+            self.labTypes[labware.type.name] += labware
 
-        self.labTypes[labware.type.name] += [labware]
+        # todo add to self.grid labware.location.grid dict site, labware
+
+    def get_current(self, labware):
+
+        if isinstance(labware, Labware.Type):
+            labware = labware.name
+        else:
+            if isinstance(labware, Labware):
+                labware = labware.type.name
+
+        return self.labTypes[labware]              # todo  what if this is the label of the labware
+
+    def set_current(self, labware):
+        assert isinstance(labware, Labware)
+        series = self.labTypes[labware.type.name]
+        assert isinstance(series, Labware.Type.Series)
+        series.current = labware
+
 
     def getLabware(self, labw_type , label):
         assert isinstance(labw_type, Labware.Type )
@@ -422,6 +443,10 @@ class Labware:
             labw = Labware(self, loc, label)
             return labw
 
+        def create_series(self, labware : Labware):
+            return Labware.Type.Series(labware)
+
+
     class DITIrackType(Type):
 
 
@@ -439,13 +464,17 @@ class Labware:
 
             Labware.Type.__init__(self, name, nRow, nCol, maxVol)
 
-            self.pick_next_rack = None                   # now serie.currrent !!  labware (DITIrackType or grid,site)
             self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
         def createLabware(self, loc, label):
             labw = DITIrack(self, loc, label)
             return labw
+
+        def create_series(self, labware : Labware):
+            # assert isinstance(labware.type, DITIrackType)
+            return DITIrackTypeSeries(labware)
+
 
     class DITIwasteType(Type):
         def __init__(self, name, capacity=5*96):
@@ -490,7 +519,12 @@ class Labware:
         self.location   = location
         self.serie      = None
         self.Wells      = []
-        worktable       = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
+
+        if not isinstance(worktable, WorkTable):
+            if isinstance(location, WorkTable.Location) and isinstance(location.worktable, WorkTable):
+                worktable = location.worktable
+            else:
+                worktable = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
 
         if isinstance(worktable, WorkTable):             # ??????????????
             worktable.addLabware(self, location)
@@ -750,7 +784,7 @@ class DITIrack (Labware):
                                label=label,
                                worktable=worktable  )
         self.pick_next      = 0
-        self.pick_next_back = nRow * nCol - 1
+        self.pick_next_back = type.nRow * type.nCol - 1
 
         self.fill()
         # if type.pick_next_rack is None:           # update an iRobot state !! Only initialization, please!
@@ -834,41 +868,42 @@ class DITIrack (Labware):
         The tips are removed at the "current" position, the position where
         begin the fresh tips, with is maintained internally by the robot and
         is unknown to the user
+        todo put this function in Labware.DITIrackType ?? or in serie
         :param TIP_MASK:
-        :param labware:
+        :param labware:    Labware.DITIrackType todo add str name
         :param worktable:
         :param lastPos:
         :return:
         """
-        n = count_tips(TIP_MASK)         # todo do we really need a correspondence mask - wells??
-        tp = labware
-        tp = tp if isinstance(tp, Labware.Type) else tp.type
-        return self._remove_tip(n, tp, worktable, lastPos)
+        number_tips = count_tips(TIP_MASK)         # todo do we really need a correspondence mask - wells??
+        rack_type = labware if isinstance(labware, Labware.Type) else labware.type
+        return self._remove_tip(number_tips, rack_type, worktable, lastPos)
 
-    def _remove_tip(self, n, tp, worktable=None, lastPos=False):
+    def _remove_tip(self, number_tips, rack_type, worktable=None, lastPos=False):
         #  return removed tips and set it in the arm
-        assert isinstance(tp, Labware.DITIrackType)
-        beg, end, rack = tp.pick_next, tp.pick_next_back, tp.pick_next_rack
+        assert isinstance(rack_type, Labware.DITIrackType)
+
+        beg, end, rack = rack_type.pick_next, rack_type.pick_next_back, rack_type.pick_next_rack
         assert isinstance(rack, DITIrack)
         rest = end - beg + 1
         i, d = [end, -1] if lastPos else [beg, 1]
         tips = []
-        while n:
-            assert rack.Wells[i].reagent.type is tp
+        while number_tips:
+            assert rack.Wells[i].reagent.type is rack_type
             tips += [rack.Wells[i].reagent]
             rack.Wells[i].reagent = None
             print ("Pick tip "+str(i+1)+" from rack site "+str(rack.location.site+1)
                    + " named: " + rack.label)
-            n -= 1
+            number_tips -= 1
             rest -= 1
             if not rest:
                 self.set_next_to_next_rack(worktable)   # ??? WorkTable.curWorkTable
-                return tips + self._remove_tip(n, tp, worktable, lastPos)
+                return tips + self._remove_tip(number_tips, rack_type, worktable, lastPos)
             i += d
             if lastPos:
-                        tp.pick_next_back -= 1
+                        rack_type.pick_next_back -= 1
             else:
-                        tp.pick_next      += 1
+                        rack_type.pick_next      += 1
         return tips
 
     def next_rack(self, worktable = None):

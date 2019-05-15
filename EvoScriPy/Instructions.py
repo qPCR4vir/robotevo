@@ -421,11 +421,10 @@ class set_DITI_Counter2(Pipette):
         self.posInRack = posInRack
 
     def validateArg(self):
-        if isinstance(self.labware, Lab.DITIrack):
-            self.labware.type.pick_next_rack = self.labware
-        else:
-            assert isinstance(self.labware, Lab.Labware.DITIrackType)
-            self.labware = self.labware.pick_next_rack
+        if not isinstance(self.labware, Lab.DITIrack):
+            self.labware  = self.robot.worktable.get_current(self.labware)
+        assert isinstance(self.labware, Lab.DITIrack)
+
         self.arg = [string1(self.labware.type.name),
                     string1(self.labware.location.grid),
                     string1(self.labware.location.site+1),
@@ -434,15 +433,14 @@ class set_DITI_Counter2(Pipette):
         return True
 
     def actualize_robot_state(self):
-        if isinstance(self.labware, Lab.DITIrack):
-            self.labware.type.pick_next_rack = self.labware
-        else:
-            assert isinstance(self.labware, Lab.Labware.DITIrackType)
-            self.labware = self.labware.pick_next_rack
+        self.validateArg()
+        self.robot.worktable.set_current(self.labware)       # todo really    ??????????
+
         if self.lastPos:
-            self.labware.type.pick_next_back = self.labware.offset(self.posInRack)
+            self.labware.pick_next_back = self.labware.offset(self.posInRack)
         else:
-            self.labware.type.pick_next      = self.labware.offset(self.posInRack)
+            self.labware.pick_next      = self.labware.offset(self.posInRack)
+
 
 class pickUp_DITIs(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI) pag. A-131 and 15-16
