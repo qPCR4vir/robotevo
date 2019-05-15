@@ -479,13 +479,13 @@ class Labware:
                             n    -= 1
                             if n == 0:
                                 return continuous, tips
+                        else:
+                            continuous = False
 
                     # we need to find in other rack
-                    next_rack, rotated = self.show_next(rack)
-                    assert next_rack is not self.current
-                    r = next_rack.Wells[0,
-                                        serie.nCol * serie.nRow,
-                                        -1 if lastPos else 1]
+                    rack, rotated = self.show_next(rack)
+                    assert rack is not self.current                                       # todo return incomplete ??
+
 
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
 
