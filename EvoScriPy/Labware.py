@@ -349,12 +349,61 @@ class Labware:
                 # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
 
     class Type:
+
+
+        class Serie:
+
+            def __init__(self, labware: Labware ):
+                self.labwares   = []
+                self.labels     = {}
+                self.type       = labware.type
+                self           += labware
+                self.current    = labware
+
+            def __iadd__(self, labware : Labware ):
+                assert self.type is labware.type
+                self.labwares               += [labware]
+                self.labels[ labware.label ] = labware
+                labware.serie                = self
+
+
+            def __next__(self, labware: Labware = None) ->  (Labware, bool):
+                """
+                Set current to the next
+                :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
+                :param labware:
+                """
+                self.current, rotated = self.show_next(labware)
+                return self.current, rotated
+
+            @staticmethod
+            def next(labware: Labware) ->  (Labware, bool):
+                assert isinstance(labware, Labware)
+                return labware.serie.next()
+
+            def show_next(self, labware: Labware = None) ->  (Labware, bool):
+                """
+                Set current to the next
+                :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
+                :param labware:
+                """
+                labware = labware or self.current
+                idx = self.labwares.index(labware) + 1
+                if idx == len(self.labwares):
+                    return self.current, True
+                else:
+                    return self.current, False
+
+            def __len__(self):
+                return len(self.labwares)
+
+
         def __init__(self, name, nRow, nCol=1, maxVol=None):
-            self.name = name
-            self.nRow = nRow
-            self.nCol = nCol
-            self.maxVol = maxVol
-            Labware.Types[name]=self     # .__getattribute__("__class__")
+            self.name           = name
+            self.nRow           = nRow
+            self.nCol           = nCol
+            self.maxVol         = maxVol
+            Labware.Types[name] = self     # .__getattribute__("__class__")
 
         def size(self)-> int:
             return self.nRow * self.nCol
@@ -365,12 +414,16 @@ class Labware:
 
     class DITIrackType(Type):
 
+        class DITIrackTypeSerie(Labware.Type.Serie):
+
+            def __init__(self, labware: Labware ):
+                Labware.Type.Serie.__init__(self, labware)
+                self.last_preserved_tips = None              # a tip Well in a DiTi rack
+
         def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
 
             if portrait: nCol, nRow = nRow, nCol # todo revise !
             Labware.Type.__init__(self, name, nRow, nCol, maxVol)
-            self.pick_next      = 0
-            self.pick_next_back = nRow*nCol-1
             self.pick_next_rack = None                   # labware (DITIrackType or grid,site)
             self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
             self.last_preserved_tips = None              # a tip Well in a DiTi rack
@@ -403,10 +456,10 @@ class Labware:
         pass
 
     def __init__(self,
-                 type       : object,
-                 location   : object = None,
-                 label      : object = None,
-                 worktable  : object = None) -> object:
+                 type       : Type,
+                 location   : WorkTable.Location = None,
+                 label      : str                = None,
+                 worktable  : WorkTable          = None) :
         """
 
         :param type:
@@ -414,11 +467,12 @@ class Labware:
         :param label:
         :param worktable:
         """
-        self.type = type
-        self.label = label
-        self.location = location
-        self.Wells = []
-        worktable = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
+        self.type       = type
+        self.label      = label
+        self.location   = location
+        self.serie      = None
+        self.Wells      = []
+        worktable       = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
 
         if isinstance(worktable, WorkTable):             #   ??????????????
             worktable.addLabware(self, location)
@@ -668,12 +722,15 @@ class DITIrack (Labware):
                                location,
                                label=label,
                                worktable=worktable  )
-        self.fill()
-        if type.pick_next_rack is None:            # update an iRobot state !! Only initialization, please!
-            type.pick_next_rack = self
-                                                   # type.last_preserved_tips = ?
+        self.pick_next      = 0
+        self.pick_next_back = nRow * nCol - 1
 
-    def fill(self, beg=1, end=None):                # todo it belong to Robot ??
+        self.fill()
+        # if type.pick_next_rack is None:            # update an iRobot state !! Only initialization, please!
+        #    type.pick_next_rack = self
+                                                     # type.last_preserved_tips = ?
+
+    def fill(self, beg=1, end=None):                 # todo it belong to Robot ??
 
         if isinstance(beg, list): assert end is None
         end = end if end else self.type.size()
@@ -688,24 +745,30 @@ class DITIrack (Labware):
             self.Wells[w].reagent = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
             # self.Wells[w].labware = self    #   hummm ??
 
-    def find_new_tips(self, TIP_MASK, lastPos=False)->(bool, list):
-        return self.find_tips(TIP_MASK, self.type, lastPos)
+        self.pick_next      = beg - 1
+        self.pick_next_back = end - 1
+
+    def find_new_tips(self, TIP_MASK,
+                            lastPos  = False)->(bool, list):
+        return self.find_tips(TIP_MASK, self.serie, lastPos)
 
     @staticmethod
-    def find_tips(TIP_MASK, rack_type, lastPos=False)->(bool, list):
+    def find_tips(TIP_MASK,
+                  serie   : Labware.DITIrackType.DITIrackTypeSerie,
+                  lastPos : bool                            = False) ->(bool, list):
         """
 
         :param TIP_MASK:
-        :param rack_type:
+        :param serie:
         :param lastPos:
         :return:
         """
-        assert isinstance(rack_type, Labware.DITIrackType)
-        n = count_tips(TIP_MASK)
-        rack = rack_type.pick_next_rack
-        r = rack.Wells[rack_type.pick_next,
-                       rack_type.pick_next_back+1,
-                       -1 if lastPos else 1]
+        assert isinstance(serie, Labware.DITIrackType.DITIrackTypeSerie)
+        n       = count_tips(TIP_MASK)
+        rack    = serie.current
+        r       = rack.Wells[serie.pick_next,
+                             serie.pick_next_back + 1,
+                             -1 if lastPos else 1]
         continuous = True
         try_in_next_rack = 2        # hummm !
         tips = []
@@ -721,16 +784,16 @@ class DITIrack (Labware):
             for w in r:
                 if isinstance(w.reagent, Tip):
                     tip = w.reagent
-                    assert tip.type is rack_type
+                    assert tip.type is serie
                     tips += [w]
                     n -= 1
                     if n==0:
                         return continuous, tips
             # we need to find in other rack
-            next_rack = rack_type.pick_next_rack.next_rack()
-            assert next_rack is not rack_type.pick_next_rack
+            next_rack = serie.pick_next_rack.next_rack()
+            assert next_rack is not serie.pick_next_rack
             r = next_rack.Wells[0,
-                                rack_type.nCol*rack_type.nRow,
+                                serie.nCol * serie.nRow,
                                 -1 if lastPos else 1]
 
     def remove_tips(self, TIP_MASK,
