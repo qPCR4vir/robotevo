@@ -206,7 +206,7 @@ class Pipette(Instruction):
 
         """
         assert isinstance(self.labware, Lab.Labware)
-        self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid),
@@ -218,7 +218,7 @@ class Pipette(Instruction):
             self.arg +=  [string1(op.name),
                           integer(op.action),
                           integer(op.difference) ]                                              # arg 7, 8, 9
-        self.arg +=  [integer(self.arm)]                                                        # arg 10
+        self.arg +=  [integer(self.arm.index)]                                                  # arg 10
 
         return True
 
