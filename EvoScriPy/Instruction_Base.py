@@ -282,11 +282,11 @@ class DITIs(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.arm = self.robot.curArm(self.arm)
 
         self.arg  = [integer(self.tipMask)]  # arg 1
         self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
-        self.arg += [integer(self.arm)]      # arg 4
+        self.arg += [integer(self.arm.index)]      # arg 4
         return True
 
     def exec(self, mode=None):
