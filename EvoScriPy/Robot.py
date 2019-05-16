@@ -26,10 +26,12 @@ class Robot:
     current=None # use immediately, for a short time.
 
     class Arm:
-        DiTi = 0
-        Fixed = 1
-        Aspire = 1
-        Dispense = -1
+
+        DiTi        = 0         # DiTi types
+        Fixed       = 1
+
+        Aspire      =  1        # Actions types
+        Dispense    = -1
 
         def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
             """
@@ -483,3 +485,4 @@ class Robot:
             assert 0 <= arm < len(self.arms)
             self.def_arm = arm
         return self.arms[self.def_arm]
+

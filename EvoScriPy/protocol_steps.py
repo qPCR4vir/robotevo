@@ -111,7 +111,7 @@ class Protocol (Executable):
     name = ""
     min_s, max_s = 1, 96
 
-    def __init__(self,  nTips                       =4,
+    def __init__(self,  nTips                       = 4,
                         parameters                  = None,
                         NumOfSamples                = max_s,
                         GUI                         = None,
@@ -687,11 +687,11 @@ class Protocol (Executable):
         return oriSel, dstSel
 
 
-    def waste(self,  from_labware_region : Lab.Labware              = None,
-                     using_liquid_class  : str                      = None,
-                     volume              : float                    = None,     # todo accept a list ??
-                     to_waste_labware    : Lab.Labware.CuvetteType  = None,
-                     optimize            : bool                     = True):    # todo: set default as False ??
+    def waste(self,  from_labware_region : Lab.Labware      = None,
+                     using_liquid_class  : str              = None,
+                     volume              : float            = None,     # todo accept a list ??
+                     to_waste_labware    : Lab.CuvetteType  = None,
+                     optimize            : bool             = True):    # todo: set default as False ??
 
         """
         Use this function as a final step of a `in-well` pellet wash procedure (magnetically or by centrifuge created).

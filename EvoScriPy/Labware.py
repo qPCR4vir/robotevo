@@ -143,7 +143,7 @@ class WorkTable:
         if labware.type.name not in self.labTypes:              # first time this type of labware is in this worktable
             self.labTypes[labware.type.name] = labware.type.create_series(labware)
         else:
-            self.labTypes[labware.type.name] += labware
+            self.labTypes[labware.type.name].add(labware)
 
         # todo add to self.grid labware.location.grid dict site, labware
 
@@ -181,15 +181,15 @@ class WorkTable:
         assert isinstance(series, Labware.Type.Series)
         series.current = labware
 
-    def getLabware(self, labw_type , label):
+    def getLabware(self, labw_type , label):                    # todo make labw_type optional
         assert isinstance(labw_type, Labware.Type )
 
         if labw_type.name not in self.labTypes:
             raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
 
-        for labw in self.labTypes[labw_type.name]:
-            if labw.label == label:
-                return labw
+        series = self.labTypes[labw_type.name]
+        if label in series.labels:
+            return series.labels[label]
 
         raise Exception("Labware '" + labw_type.name + "' with label '" + label
                         + "' was not found in worktable: " + self.templateFileName)
@@ -390,7 +390,7 @@ def count_tips(TIP_MASK : int) -> int:
 
 class Tip:    # OK play with this idea
     def __init__(self, rack_type):
-        assert isinstance(rack_type, Labware.DITIrackType)
+        assert isinstance(rack_type, DITIrackType)
         self.vol = 0
         self.type = rack_type
 
@@ -424,14 +424,17 @@ class Labware:
                 self.labwares   = []
                 self.labels     = {}
                 self.type       = labware.type
-                self           += labware
+                self.add(labware)
                 self.current    = labware
 
-            def __iadd__(self, labware):                                # labware : Labware
+            def add(self, labware):                                    # labware : Labware
                 assert self.type is labware.type
-                self.labwares               += [labware]
+                self.labwares.append(labware)
                 self.labels[ labware.label ] = labware
                 labware.serie                = self
+
+            def __iadd__(self, labware):                                # labware : Labware
+                self.add(labware)
 
             def set_next(self, labware = None):                          #  ->  (Labware, bool): labware: Labware
                 """
@@ -475,7 +478,7 @@ class Labware:
             return self.nRow * self.nCol
 
         def createLabware(self, loc, label):
-            labw = Labware(self, loc, label)
+            labw = Labware(self, label, loc)
             return labw
 
         def create_series(self, labware ):
@@ -491,8 +494,8 @@ class Labware:
 
     def __init__(self,
                  type       : Type,
-                 label: str = None,
-                 location   : WorkTable.Location = None) :
+                 label      : str ,
+                 location   : WorkTable.Location    = None) :
         """
 
         :param type:
@@ -867,8 +870,7 @@ class DITIrack (Labware):
 
     def __init__(self, type         : DITIrackType,
                        location     : WorkTable.Location,
-                       label        : str                   = None,
-                       worktable    : WorkTable             = None    ):
+                       label        : str           ):
         """
 
         :param type:
@@ -878,10 +880,7 @@ class DITIrack (Labware):
         """
         assert isinstance(type, DITIrackType)
 
-        Labware.__init__(self, type,
-                               location,
-                               label=label,
-                               worktable=worktable  )
+        Labware.__init__(self, type, label=label, location = location)
         self.pick_next      = 0
         self.pick_next_back = type.nRow * type.nCol - 1
         self.lastPos        = False
@@ -983,7 +982,7 @@ class DITIrack (Labware):
         return tips
 
 
-class DITIwasteType(Type):
+class DITIwasteType(Labware.Type):
     def __init__(self, name, capacity=5*96):
         Labware.Type.__init__(self, name, nRow=capacity)
 
@@ -993,9 +992,9 @@ class DITIwasteType(Type):
 
 
 class DITIwaste(Labware):
-    def __init__(self, type, location, label=None, worktable=None):
-        assert isinstance(type, Labware.DITIwasteType)
-        Labware.__init__(self, type, location, label=label, worktable=worktable)
+    def __init__(self, type, location, label=None):
+        assert isinstance(type, DITIwasteType)
+        Labware.__init__(self, type, label, location)
         self.wasted = 0
 
     def waste(self, tips):
@@ -1016,7 +1015,7 @@ class DITIwaste(Labware):
                         assert tp is not tip_well.reagent
 
 
-class CuvetteType(Type):
+class CuvetteType(Labware.Type):
 
     def __init__(self,   name,
                          nRow,
@@ -1030,12 +1029,12 @@ class CuvetteType(Type):
 
 
 class Cuvette(Labware):
-    def __init__(self, type, location, label=None, worktable=None):
-        assert isinstance(type, Labware.CuvetteType)
+    def __init__(self, type, location, label=None):
+        assert isinstance(type, CuvetteType)
         self.vol = 0.0
         self.reactive = None
         self.actions = []
-        Labware.__init__(self, type, location, label=label, worktable=worktable)
+        Labware.__init__(self, type, label, location)
 
     def init_wells(self):
         self.Wells = [conectedWell(self, offset) for offset in range(self.type.size())]
@@ -1055,7 +1054,7 @@ class Cuvette(Labware):
         return maxTips
 
 
-class Te_Mag (Type):
+class Te_Mag (Labware.Type):
     pass
 
 
