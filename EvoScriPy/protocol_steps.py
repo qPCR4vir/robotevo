@@ -199,11 +199,13 @@ class Protocol (Executable):
         self.EvoMode.done()
         Executable.done(self)
 
-    def go_first_pos(self, first_tip=None):
+    def go_first_pos(self, first_tip: (int, str) = None):
+
         if first_tip is not None:
-            self.firstTip = first_tip
-        if self.firstTip is not None and self.worktable is not None:
-            rack, firstTip = self.worktable.get_first_pos(posstr=self.firstTip)
+            self.firstTip = first_tip                                       # just keep it
+
+        if self.firstTip is not None and self.worktable is not None:        # set in wt
+            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip)
             Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
 
     def set_dropTips(self, drop=True)->bool:

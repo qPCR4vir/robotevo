@@ -164,16 +164,19 @@ class WorkTable:
         assert isinstance(loc, WorkTable.Location)
         self.add_new_labware(labware, loc)
 
+    def get_current_labware(self, labware):
 
-    def get_current(self, labware):
-
-        if isinstance(labware, Labware.Type):
-            labware = labware.name
+        if isinstance(labware, Labware):
+            series = labware.series
         else:
-            if isinstance(labware, Labware):
-                labware = labware.type.name
+            if isinstance(labware, Labware.Type):
+                labware = labware.name
+            if labware not in self.labTypes:                        # todo  what if this is the label of the labware
+                raise Exception("Labware '" + labware + "' was not found in worktable: " + self.templateFileName)
 
-        return self.labTypes[labware]              # todo  what if this is the label of the labware
+            series = self.labTypes[labware]
+
+        return series.current
 
     def set_current(self, labware):
         assert isinstance(labware, Labware)
@@ -194,24 +197,26 @@ class WorkTable:
         raise Exception("Labware '" + labw_type.name + "' with label '" + label
                         + "' was not found in worktable: " + self.templateFileName)
 
-    def get_first_pos(self, labw_type_name=None, posstr=None):
+    def set_first_pos(self, labw_type_name=None, posstr=None):
+        """
+        Default to DITI if no labw_type_name is given. chooses a labware by label and set next well or tip to be used.
+        :param labw_type_name:
+        :param posstr:
+        :return:
+        """
 
         if labw_type_name:
-            if labw_type_name not in self.labTypes:
-                raise Exception("Labware '" + labw_type_name + "' was not found in worktable: " + self.templateFileName)
-            labws = self.labTypes[labw_type_name]
+            labw = self.get_current_labware(labw_type_name)
         else:
-            labw_type = self.def_DiTi
-            if labw_type.name not in self.labTypes:
-                raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
-            labws = self.labTypes[labw_type.name]
+            labw = self.get_DITI_series().current
 
         pos = posstr.split('-')
-        if len(pos) == 2:
-            labw = labws[int(pos[0])-1]
-            fpos = pos[1]
+
+        if len(pos) == 2:                       # assume posstr = 'N-w
+            labw = labw.series[int(pos[0])-1]   # were N is the number of the labw in the series
+            fpos = pos[1]                       # and w is the desired position on that labw
         else:
-            labw = labws[0]
+            # labw = labws[0]                   # todo use the current. ? or the first ??
             fpos = pos[0]
 
         return labw, fpos
@@ -234,7 +239,7 @@ class WorkTable:
         self.def_DiTi = tips
         return old
 
-    def get_DITI_series(self, rack):
+    def get_DITI_series(self, rack = None):
 
         if isinstance(rack, DITIrackTypeSeries):  # get the series directly
             return rack
