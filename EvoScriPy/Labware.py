@@ -6,33 +6,6 @@
 __author__ = 'qPCR4vir'
 
 
-def count_tips(TIP_MASK : int) -> int:
-    n = 0
-    while TIP_MASK:
-        n += (TIP_MASK & 1)
-        TIP_MASK = TIP_MASK >> 1
-    return n
-
-
-class Tip:    # OK play with this idea
-    def __init__(self, rack_type):
-        assert isinstance(rack_type, Labware.DITIrackType)
-        self.vol = 0
-        self.type = rack_type
-
-    def __str__(self):
-        return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
-
-
-class usedTip(Tip):
-    def __init__(self, tip : Tip, origin=None):
-        Tip.__init__(self, tip.type)
-        self.vol = tip.vol
-        self.origin = origin
-
-    def __str__(self):
-        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
-
 
 class WorkTable:
     """ Collection of Racks.Types and Labware.Types and pos of instances """
@@ -259,7 +232,6 @@ class WorkTable:
         return self.labTypes[rack]
 
 
-
 class Frezeer (WorkTable):
     def __init__(self):
         pass
@@ -389,6 +361,34 @@ class conectedWell(Well):
 banned_well = object()                                 # Well(None, 0)
 
 
+def count_tips(TIP_MASK : int) -> int:
+    n = 0
+    while TIP_MASK:
+        n += (TIP_MASK & 1)
+        TIP_MASK = TIP_MASK >> 1
+    return n
+
+
+class Tip:    # OK play with this idea
+    def __init__(self, rack_type):
+        assert isinstance(rack_type, Labware.DITIrackType)
+        self.vol = 0
+        self.type = rack_type
+
+    def __str__(self):
+        return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
+
+
+class usedTip(Tip):
+    def __init__(self, tip : Tip, origin=None):
+        Tip.__init__(self, tip.type)
+        self.vol = tip.vol
+        self.origin = origin
+
+    def __str__(self):
+        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
+
+
 class Labware:
 
     # typeName label-string from template worktable file: labwares class-name.
@@ -461,31 +461,6 @@ class Labware:
 
         def create_series(self, labware ):
             return Labware.Type.Series(labware)
-
-
-
-
-
-    class DITIwasteType(Type):
-        def __init__(self, name, capacity=5*96):
-            Labware.Type.__init__(self, name, nRow=capacity)
-
-        def createLabware(self, loc, label):
-            labw = DITIwaste(self, loc, label)
-            return labw
-
-
-    class CuvetteType(Type):
-
-        def __init__(self,   name,
-                             nRow,
-                             maxVol,
-                             nCol=1):
-            Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
-
-        def createLabware(self, loc, label):
-            labw = Cuvette(self, loc, label)
-            return labw
 
 
     class Te_Mag (Type):
@@ -980,6 +955,15 @@ class DITIrack (Labware):
         return tips
 
 
+class DITIwasteType(Type):
+    def __init__(self, name, capacity=5*96):
+        Labware.Type.__init__(self, name, nRow=capacity)
+
+    def createLabware(self, loc, label):
+        labw = DITIwaste(self, loc, label)
+        return labw
+
+
 class DITIwaste(Labware):
     def __init__(self, type, location, label=None, worktable=None):
         assert isinstance(type, Labware.DITIwasteType)
@@ -1002,6 +986,19 @@ class DITIwaste(Labware):
                         del tp.type.preserved_tips[react_well.offset]  # todo could be mounted in another position?
                     else:
                         assert tp is not tip_well.reagent
+
+
+class CuvetteType(Type):
+
+    def __init__(self,   name,
+                         nRow,
+                         maxVol,
+                         nCol=1):
+        Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
+
+    def createLabware(self, loc, label):
+        labw = Cuvette(self, loc, label)
+        return labw
 
 
 class Cuvette(Labware):
