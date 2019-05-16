@@ -426,6 +426,7 @@ class Labware:
         class Series:
 
             def __init__(self, labware):                                # labware: Labware
+                assert (labware, Labware)
                 self.labwares   = []
                 self.labels     = {}
                 self.type       = labware.type
@@ -436,7 +437,7 @@ class Labware:
                 assert self.type is labware.type
                 self.labwares.append(labware)
                 self.labels[ labware.label ] = labware
-                labware.serie                = self
+                labware.series               = self
 
             def __iadd__(self, labware):                                # labware : Labware
                 self.add(labware)
@@ -845,7 +846,8 @@ class DITIrackTypeSeries(Labware.Type.Series):
 
             # we need to find in other rack
             rack, rotated = self.set_next()
-            assert rack is not first
+            if rack is first:
+                print("WARNING !! Using DITI rack agains? Put new ?")   # todo user prompt ???
 
         return tips
 
@@ -860,8 +862,8 @@ class DITIrackType(Labware.Type):
 
         Labware.Type.__init__(self, name, nRow, nCol, maxVol)
 
-        self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
-        self.last_preserved_tips = None              # a tip Well in a DiTi rack
+        self.preserved_tips = {}        # order:well ??? sample order:tip well ??sample offset:tip well todo in series?
+        # self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
     def createLabware(self, loc, label):
         labw = DITIrack(self, loc, label)
@@ -972,7 +974,7 @@ class DITIrack (Labware):
             assert isinstance(tp, usedTip)
             w.reagent = tp
             self.type.preserved_tips[tp.origin.track.offset if tp.origin.track else tp.origin.offset] = w
-            self.type.last_preserved_tips = w
+            self.series.last_preserved_tips = w
 
     def pick_up(self, TIP_MASK) -> [usedTip]:
         """ Low level. Part of the job have been already done: the rack self hat

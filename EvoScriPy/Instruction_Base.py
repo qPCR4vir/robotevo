@@ -209,8 +209,8 @@ class Pipette(Instruction):
         self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
-        self.arg +=  [integer(self.labware.location.grid),
-                      integer(self.labware.location.site),                                      # arg 2, 3
+        self.arg +=  [integer(self.labware.location.grid),                                      # arg 2
+                      integer(self.labware.location.site),                                      # arg 3
                       integer(self.spacing),
                       string1( self.labware.wellSelectionStr()) ]                               # arg 4, 5
         self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6

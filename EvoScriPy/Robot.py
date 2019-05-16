@@ -265,12 +265,15 @@ class Robot:
                 well_tip.labware.selectOnly(well_tip.offset)
         return where
 
-    def where_preserve_tips(self, TIP_MASK) -> list:                     # [Lab.DITIrack]
-        """ Return a list of racks with the tips-wells already selected.
-            Means to set back the tips currently in the arm.
-        :param selection:
+    def where_preserve_tips(self, TIP_MASK) -> list:
+        """ 
+        There are used tips in the arm, and we want to know were to put it back.
+        Return a list of racks with the tips-wells already selected.
+        (to set back the tips currently in the arm)
+        
+        :param TIP_MASK:
         :return:    list of racks with the tips-wells already selected.
-        """                                                              # todo this in Labware??
+        """                                                                         # todo this in Labware??
 
         TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
         types    = []
@@ -278,8 +281,8 @@ class Robot:
         racks    = []
         tips     = []
 
-        for i, tip in enumerate(self.curArm().Tips):
-            if TIP_MASK & (1 << i):                                      # this was selected
+        for i, tip in enumerate(self.curArm().Tips):       # determine the type of tips in Arm to preserve, to set back
+            if TIP_MASK & (1 << i):                                                 # this was selected
                 assert tip, "There are no tip mounted in position " + str(i)
                 tips += [tip]
                 if tip.type in types:
@@ -288,37 +291,45 @@ class Robot:
                     types += [tip.type]
                     t_masks += [(1 << i)]
 
-        assert len(types)==1   # todo temporally assumed only one type of tips
+        assert len(types)==1                                        # todo temporally assumed only one type of tips
         tpe = types[0]
         m = t_masks[0]
 
-        if not self.usePreservedtips:                            # no re-back DiTi for multiple reuse
-            assert isinstance(tpe, Lab.Labware.DITIrackType)
-            if not tpe.last_preserved_tips:
-                tpe.last_preserved_tips = tpe.pick_next_rack.Wells[0] # todo set to first tip used !!!!!
-            w = tpe.last_preserved_tips
-            assert isinstance(w, Lab.Well)
+        if not self.usePreservedtips:                               # no re-back DiTi for multiple reuse  todo ??
+            assert isinstance(tpe, Lab.DITIrackType)
+            series = self.worktable.get_DITI_series(tpe)
+            rack   = series.current
+            ip     = 0
+            if series.last_preserved_tips:
+                w = series.last_preserved_tips
+                assert isinstance(w, Lab.Well)
+                cont = False
+                rack = w.labware  # extract the rack from the last_preserved_tips well
+                assert isinstance(rack, Lab.DITIrack)
+                ip = w.offset
+
             cont = False
-            rack = w.labware
-            assert isinstance(rack, Lab.DITIrack)
-            ip = w.offset
             n = Lab.count_tips(m)
             while n:
                 cont, fw = rack.find_free_wells(n, init_pos=ip)
                 if cont:
-                    racks += [rack]
+                    racks.append(rack)
                     rack.selectOnly([w.offset for w in fw])
                     n -= len(fw)
-                    rack = rack.next_rack(self.worktable)
+                    rack, rotate = rack.series.set_next(rack)
                     ip = 0
+
             return racks
 
-        for tp in tips:
+        for tp in tips:                                             # todo revise   !!
             assert isinstance(tp, Lab.usedTip)
-            react_well = tp.origin.track
+
+            react_well = tp.origin.track  or tp.origin              # ??
             assert react_well.offset in tp.type.preserved_tips, "There are no tip preserved for sample "+str(i)
+
             tip_well = tp.type.preserved_tips[react_well.offset]
             assert isinstance(tip_well, Lab.Well)
+
             if tip_well.labware in racks:
                 tip_well.selFlag = True
             else:

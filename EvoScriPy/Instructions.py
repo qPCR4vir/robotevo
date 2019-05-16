@@ -469,6 +469,7 @@ class pickUp_DITIs(Pipette):
         self.tipMask, tips = self.robot.pick_up_tips(self.tipMask, self.labware)
         assert not tips
 
+
 class pickUp_DITIs2(Pipette):
     """ A.15.4.8 Pick Up DITIs (Worklist: Pick Up_DITI) pag. A-131 and 15-16
                  NOT DOCUMENTED
@@ -505,6 +506,7 @@ class pickUp_DITIs2(Pipette):
         self.tipMask, tips = self.robot.pick_up_tips(self.tipMask, self.labware)
         assert not tips
 
+
 class set_DITIs_Back(Pipette):
     """ A.15.4.9 Set DITIs Back (Worklist: Set_DITIs_Back)
     return used DITIs to specified positions on a DITI rack for later use.
@@ -536,12 +538,14 @@ class set_DITIs_Back(Pipette):
     def actualize_robot_state(self):
         self.tipMask = self.robot.set_tips_back(self.tipMask, self.labware)
 
+
 class pickUp_ZipTip(Pipette): # todo implement !!!
     """ A.15.4.10 Pickup ZipTip (Worklist: PickUp_ZipTip)
     """
     def __init__(self, tipMask = None ):
         Pipette.__init__(self, 'PickUp_ZipTip' )
         assert False, "PickUp_ZipTip not implemented"
+
 
 class detect_Liquid(Pipetting):    # todo get the results !!!
     """ A.15.4.11 Detect Liquid (Worklist: Detect_Liquid)
@@ -578,6 +582,7 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
         if not self.read: return
         #todo introduce some variable and read into it the vols
 
+
 class activate_PMP(Instruction):
     """ A.15.4.12 Activate PMP (Worklist: Activate_PMP)
     """
@@ -593,6 +598,7 @@ class activate_PMP(Instruction):
     def exec(self, mode=None):
         if self.tipMask: Instruction.exec(self, mode)
 
+
 class deactivate_PMP(Instruction):
     """ A.15.4.13 Deactivate PMP (Worklist: Deactivate_PMP)
     """
@@ -607,6 +613,7 @@ class deactivate_PMP(Instruction):
 
     def exec(self, mode=None):
         if self.tipMask: Instruction.exec(self, mode)
+
 
 class moveLiha(Pipette ):
     """ A.15.4.14 Move LiHa (Worklist: MoveLiha   - A - 135)see 15.21 “Move LiHa Command”, 15-33.
@@ -701,6 +708,7 @@ class moveLiha(Pipette ):
                          floating_point (self.offset),
                          floating_point (self.speed)]  # arg 8, 9
         return True
+
 
 class waste(Instruction):
     """ A.15.4.15 Waste (Worklist: Waste)
