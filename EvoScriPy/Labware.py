@@ -85,7 +85,7 @@ class WorkTable:
                                       " but no labware type")
                             continue
                         loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
-                        labw = self.createLabware(lab_t_label, loc, label)
+                        labw = Labware.create(lab_t_label, loc, label)
                         if labw:
                             pass               # self.addLabware(labw)
                         else:
@@ -103,14 +103,6 @@ class WorkTable:
         self.template = templList
         self.templateFileName = templateFile
         return templList
-
-    def createLabware(self, labw_t_name : str, loc : Location, label : str):
-        labw_t = Labware.Types.get(labw_t_name)
-        assert isinstance(labw_t, Labware.Type)
-        if not labw_t:
-            return None
-        labw = labw_t.createLabware(loc, label)
-        return labw
 
     def addLabware(self, labware, loc=None):
         """
@@ -426,7 +418,7 @@ class Labware:
             @staticmethod
             def next(labware):                                          #  ->  (Labware, bool): labware: Labware
                 assert isinstance(labware, Labware)
-                return labware.serie.set_next()
+                return labware.series.set_next()
 
             def show_next(self, labware = None):                        #  ->  (Labware, bool): labware: Labware
                 """
@@ -463,49 +455,58 @@ class Labware:
             return Labware.Type.Series(labware)
 
 
-    class Te_Mag (Type):
-        pass
-
-
-    def __init__(self,
-                 type       : Type,
-                 location   : WorkTable.Location = None,
-                 label      : str                = None,
-                 worktable  : WorkTable          = None) :
-        """
-
-        :param type:
-        :param location:
-        :param label:
-        :param worktable:
-        """
-        self.type       = type
-        self.label      = label
-        self.location   = location
-        self.serie      = None
-        self.Wells      = []
-
-        if not isinstance(worktable, WorkTable):
-            if isinstance(location, WorkTable.Location) and isinstance(location.worktable, WorkTable):
-                worktable = location.worktable
-            else:
-                worktable = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
-
-        if isinstance(worktable, WorkTable):             # ??????????????
-            worktable.addLabware(self, location)
-        if location and location.rack:                   # ??????????????
-            location.rack.addLabware(self, location.rack_site)
-        self.init_wells()
-
-    def init_wells(self):
-        self.Wells = [Well(self, offset) for offset in range(self.type.size())]
-
-
     class Position:
         def __init__(self, row, col=1):
             self.row = row
             self.col = col
 
+
+
+    def __init__(self,
+                 type       : Type,
+                 label: str = None,
+                 location   : WorkTable.Location = None) :
+        """
+
+        :param type:
+        :param label:
+        :param location:
+
+        """
+        worktable = None
+
+        if isinstance(location, WorkTable.Location):    # location take priority
+            worktable = location.worktable
+            if not isinstance(worktable, WorkTable):
+                worktable = WorkTable.curWorkTable
+                if isinstance(worktable, WorkTable):
+                    location.worktable = worktable      # avoid wt.addLabware "moving" new labware
+
+        self.location   = location
+        self.type       = type
+        self.label      = label
+        self.series     = None
+        self.Wells      = []
+
+        if isinstance(worktable, WorkTable):
+            worktable.addLabware(self, location)
+        if location and location.rack:                   # ??????????????
+            location.rack.addLabware(self, location.rack_site)
+        self.init_wells()
+
+    @staticmethod
+    def create(labw_t_name  : str,
+               loc          : WorkTable.Location,
+               label        : str):
+        labw_t = Labware.Types.get(labw_t_name)
+        assert isinstance(labw_t, Labware.Type)
+        if not labw_t:
+            return None
+        labw = labw_t.createLabware(loc, label)
+        return labw
+
+    def init_wells(self):
+        self.Wells = [Well(self, offset) for offset in range(self.type.size())]
 
     def autoselect(self, offset=0, maxTips=1, replys=1):   # OK make this "virtual". Implement cuvette
         """
@@ -890,7 +891,7 @@ class DITIrack (Labware):
         self.pick_next_back = end - 1
 
     def find_new_tips(self, TIP_MASK, lastPos  = False) -> (bool, list):
-        return self.serie.find_tips(TIP_MASK, lastPos)
+        return self.series.find_tips(TIP_MASK, lastPos)
 
     def next_rack(self, worktable = None):
         if worktable is None:
@@ -1027,11 +1028,15 @@ class Cuvette(Labware):
         return maxTips
 
 
+class Te_Mag (Type):
+    pass
+
+
 #  "predefining" common labwares types:
 
-Trough_100ml    = Labware.CuvetteType("Trough 100ml",                8,     maxVol=  100000)
-Trough_25ml_rec = Labware.CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
-Trough_300ml_MCA= Labware.CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)  # \todo test it works OK
+Trough_100ml    = CuvetteType("Trough 100ml",                8,     maxVol=  100000)
+Trough_25ml_rec = CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
+Trough_300ml_MCA= CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)  # \todo test it works OK
 
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
@@ -1070,15 +1075,15 @@ Tip_200maxVol   = 190                   # TODO revise
 
 # Evo100
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
-CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
-WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
-CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
-DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
+CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
+WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
+CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
+DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")
 #Evo75
-CleanerShallow  = Labware.CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
-WasteWash       = Labware.CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
-CleanerDeep     = Labware.CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
-DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
+CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
+WasteWash       = CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
+CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
+DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")
 
 
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
