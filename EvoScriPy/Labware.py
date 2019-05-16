@@ -456,12 +456,14 @@ class Labware:
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
                 :param labware:
                 """
-                labware = labware or self.current
+                if labware is None:
+                    labware = self.current
+
                 idx = self.labwares.index(labware) + 1
                 if idx == len(self.labwares):
-                    return self.current, True
+                    return self.labwares[0], True
                 else:
-                    return self.current, False
+                    return self.labwares[idx], False
 
             def __len__(self):
                 return len(self.labwares)
@@ -807,13 +809,16 @@ class DITIrackTypeSeries(Labware.Type.Series):
         #  return removed tips
 
         tips  = []
-        first = rack = self.current
+        first = self.current
+        rack  = first
         pos   = 0
         while (True):
             #                  begin                   end                   direction
             r = rack.Wells[rack.pick_next : rack.pick_next_back + 1 : -1 if rack.lastPos else 1]
 
             for w in r:
+                if number_tips == len(tips):
+                    return tips
 
                 if rack.lastPos:
                     pos = rack.pick_next_back
@@ -825,13 +830,13 @@ class DITIrackTypeSeries(Labware.Type.Series):
                 if isinstance(w.reagent, Tip):
                     tip = w.reagent
                     assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
-                    tips += [tip]
+                    tips.append(tip)
                     w.reagent    = None
-                    number_tips -= 1
                     print("Pick tip " + str(pos + 1) + " from rack site " + str(rack.location.site + 1)
-                          + " named: " + rack.label)
-                    if number_tips == 0:
-                        return tips
+                          + " named: "   + rack.label
+                          + " have "     + str(len(tips) )
+                          + " but need " + str(number_tips))
+
 
             # we need to find in other rack
             rack, rotated = self.set_next()
