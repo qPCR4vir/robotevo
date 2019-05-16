@@ -16,7 +16,7 @@ def count_tips(TIP_MASK : int) -> int:
 
 class Tip:    # OK play with this idea
     def __init__(self, rack_type):
-        assert isinstance(rack_type, Labware.DITIrackType)
+        assert isinstance(rack_type, DITIrackType)
         self.vol = 0
         self.type = rack_type
 
@@ -153,8 +153,8 @@ class WorkTable:
             loc = labware.location
         labware.location.worktable = self                                 # todo remove from previous worktable ?
 
-        for type_name, labw_list in self.labTypes.items():                # loop lab_types already in worktable
-            for labw in labw_list:                                        # loop labwares in that series
+        for type_name, labw_series in self.labTypes.items():                # loop lab_types already in worktable
+            for labw in labw_series.labwares:                                        # loop labwares in that series
                 if labw is labware:                                       # already there ?? or other ??
                     print("Warning! The worktable template already have this labware. " +
                             labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
@@ -405,7 +405,7 @@ class Labware:
                 self.labwares   = []
                 self.labels     = {}
                 self.type       = labware.type
-                self           += labware
+                self.__iadd__(labware)
                 self.current    = labware
 
             def __iadd__(self, labware):                                # labware : Labware
