@@ -104,18 +104,76 @@ class WorkTable:
         self.templateFileName = templateFile
         return templList
 
-    def addLabware(self, labware, loc=None):
+    def add_new_labware(self, labware, loc : Location = None):
         """
 
         :param labware:
+        :param loc:
+        :return:
         :raise "This WT have only " + len(self.grid) + " grid.":
         """
-        if loc:
-            if loc.grid >= len(self.grid):
-                raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
+
+        assert isinstance(labware, Labware)
+        if isinstance(labware.location, WorkTable.Location):            # remove from previous location ??
+            if not isinstance(labware.location.worktable, WorkTable):
+                labware.location.worktable = self
+            else:
+
+
+        if isinstance(loc, WorkTable.Location):
             labware.location = loc
+
+        assert isinstance(labware.location, WorkTable.Location)
+
+        if labware.location.grid >= len(self.grid):
+            raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
+
+        labware.location.worktable = self                                 # todo remove from previous worktable ?
+
+        for type_name, labw_list in self.labTypes.items():                # loop lab_types already in worktable
+            for labw in labw_list:                                        # loop labwares in that series
+                if labw is labware:                                       # already there ?? or other ??
+                    print("Warning! The worktable template already have this labware. " +
+                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+                    return
+                if labware.location and \
+                   labware.location.grid == labw.location.grid and \
+                   labware.location.site == labw.location.site:
+
+                    print("Warning! Trying to add a labware. The worktable template already have a labware with label '"
+                          + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+
+        if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
+            self.labTypes[labware.type.name] = labware.type.create_series(labware)
         else:
-            loc = labware.location
+            self.labTypes[labware.type.name] += labware
+
+        # todo add to self.grid labware.location.grid dict site, labware
+
+    def addLabware(self, labware, loc : Location = None):
+        """
+
+        :param labware:
+        :param loc:
+        :return:
+        :raise "This WT have only " + len(self.grid) + " grid.":
+        """
+
+        assert isinstance(labware, Labware)
+        if isinstance(labware.location, WorkTable.Location):            # remove from previous location ??
+            if not isinstance(labware.location.worktable, WorkTable):
+                labware.location.worktable = self
+            else:
+
+
+        if isinstance(loc, WorkTable.Location):
+            labware.location = loc
+
+        assert isinstance(labware.location, WorkTable.Location)
+
+        if labware.location.grid >= len(self.grid):
+            raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
+
         labware.location.worktable = self                                 # todo remove from previous worktable ?
 
         for type_name, labw_list in self.labTypes.items():                # loop lab_types already in worktable
@@ -489,7 +547,7 @@ class Labware:
         self.Wells      = []
 
         if isinstance(worktable, WorkTable):
-            worktable.addLabware(self, location)
+            worktable.add_new_labware(self, location)
         if location and location.rack:                   # ??????????????
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
