@@ -286,7 +286,7 @@ class getDITI2(DITIs):
 
         self.DITI_series = self.robot.worktable.get_DITI_series(self.DITI_series)
 
-        self.arg[1:1] = [string1(s.type.name)]                                # arg 2 TODO string1 or expression?
+        self.arg[1:1] = [string1(self.DITI_series.type.name)]                 # arg 2 TODO string1 or expression?
         self.arg += [integer(self.AirgapVolume),
                      integer(self.AirgapSpeed)]                               # arg 5, 6 (3, 4 are grid, site)
 

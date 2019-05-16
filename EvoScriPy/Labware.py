@@ -236,16 +236,16 @@ class WorkTable:
 
     def get_DITI_series(self, rack):
 
-        if isinstance(rack, Lab.Labware.DITIrackType.DITIrackTypeSeries):  # get the series directly
+        if isinstance(rack, DITIrackTypeSeries):  # get the series directly
             return rack
 
-        if isinstance(rack, Lab.DITIrack):
-            return rack.serie
+        if isinstance(rack, DITIrack):
+            return rack.series
 
         if rack is None:
             rack = self.def_DiTi.name
 
-        if isinstance(rack, Lab.Labware.DITIrackType):
+        if isinstance(rack, DITIrackType):
             rack = rack.name
 
         return self.labTypes[rack]
