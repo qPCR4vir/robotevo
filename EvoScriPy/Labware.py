@@ -804,14 +804,14 @@ class DITIrackTypeSeries(Labware.Type.Series):
         return self._remove_tip(number_tips)
 
     def _remove_tip(self, number_tips):
-        #  return removed tips and set it in the arm
+        #  return removed tips
 
         tips  = []
         first = rack = self.current
         pos   = 0
         while (True):
             #                  begin                   end                   direction
-            r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
+            r = rack.Wells[rack.pick_next : rack.pick_next_back + 1 : -1 if rack.lastPos else 1]
 
             for w in r:
 
@@ -826,15 +826,15 @@ class DITIrackTypeSeries(Labware.Type.Series):
                     tip = w.reagent
                     assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
                     tips += [tip]
-                    w.reagent = None
-                    n    -= 1
+                    w.reagent    = None
+                    number_tips -= 1
                     print("Pick tip " + str(pos + 1) + " from rack site " + str(rack.location.site + 1)
                           + " named: " + rack.label)
-                    if n == 0:
+                    if number_tips == 0:
                         return tips
 
             # we need to find in other rack
-            rack, rotated = self.next()
+            rack, rotated = self.set_next()
             assert rack is not first
 
         return tips
@@ -913,8 +913,8 @@ class DITIrack (Labware):
             self.Wells[w].reagent = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
             # self.Wells[w].labware = self    #   hummm ??
 
-        self.pick_next      = beg - 1
-        self.pick_next_back = end - 1
+        self.pick_next      = beg
+        self.pick_next_back = end
 
     def find_new_tips(self, TIP_MASK, lastPos  = False) -> (bool, list):
         return self.series.find_tips(TIP_MASK, lastPos)
