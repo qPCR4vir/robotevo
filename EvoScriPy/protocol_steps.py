@@ -111,7 +111,7 @@ class Protocol (Executable):
     name = ""
     min_s, max_s = 1, 96
 
-    def __init__(self,  nTips                       =4,
+    def __init__(self,  nTips                       = 4,
                         parameters                  = None,
                         NumOfSamples                = max_s,
                         GUI                         = None,
@@ -199,11 +199,13 @@ class Protocol (Executable):
         self.EvoMode.done()
         Executable.done(self)
 
-    def go_first_pos(self, first_tip=None):
+    def go_first_pos(self, first_tip: (int, str) = None):
+
         if first_tip is not None:
-            self.firstTip = first_tip
-        if self.firstTip is not None and self.worktable is not None:
-            rack, firstTip = self.worktable.get_first_pos(posstr=self.firstTip)
+            self.firstTip = first_tip                                       # just keep it
+
+        if self.firstTip is not None and self.worktable is not None:        # set in wt
+            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip)
             Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
 
     def set_dropTips(self, drop=True)->bool:
@@ -687,11 +689,11 @@ class Protocol (Executable):
         return oriSel, dstSel
 
 
-    def waste(self,  from_labware_region : Lab.Labware              = None,
-                     using_liquid_class  : str                      = None,
-                     volume              : float                    = None,     # todo accept a list ??
-                     to_waste_labware    : Lab.Labware.CuvetteType  = None,
-                     optimize            : bool                     = True):    # todo: set default as False ??
+    def waste(self,  from_labware_region : Lab.Labware      = None,
+                     using_liquid_class  : str              = None,
+                     volume              : float            = None,     # todo accept a list ??
+                     to_waste_labware    : Lab.CuvetteType  = None,
+                     optimize            : bool             = True):    # todo: set default as False ??
 
         """
         Use this function as a final step of a `in-well` pellet wash procedure (magnetically or by centrifuge created).

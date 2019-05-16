@@ -6,33 +6,6 @@
 __author__ = 'qPCR4vir'
 
 
-def count_tips(TIP_MASK : int) -> int:
-    n = 0
-    while TIP_MASK:
-        n += (TIP_MASK & 1)
-        TIP_MASK = TIP_MASK >> 1
-    return n
-
-
-class Tip:    # OK play with this idea
-    def __init__(self, rack_type):
-        assert isinstance(rack_type, DITIrackType)
-        self.vol = 0
-        self.type = rack_type
-
-    def __str__(self):
-        return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
-
-
-class usedTip(Tip):
-    def __init__(self, tip : Tip, origin=None):
-        Tip.__init__(self, tip.type)
-        self.vol = tip.vol
-        self.origin = origin
-
-    def __str__(self):
-        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
-
 
 class WorkTable:
     """ Collection of Racks.Types and Labware.Types and pos of instances """
@@ -112,7 +85,7 @@ class WorkTable:
                                       " but no labware type")
                             continue
                         loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
-                        labw = self.createLabware(lab_t_label, loc, label)
+                        labw = Labware.create(lab_t_label, loc, label)
                         if labw:
                             pass               # self.addLabware(labw)
                         else:
@@ -131,57 +104,79 @@ class WorkTable:
         self.templateFileName = templateFile
         return templList
 
-    def createLabware(self, labw_t_name : str, loc : Location, label : str):
-        labw_t = Labware.Types.get(labw_t_name)
-        assert isinstance(labw_t, Labware.Type)
-        if not labw_t:
-            return None
-        labw = labw_t.createLabware(loc, label)
-        return labw
-
-    def addLabware(self, labware, loc=None):
+    def add_new_labware(self, labware, loc: Location = None):
         """
-
+        This will be the first location of this labware. Don't remove from possible old location.
         :param labware:
+        :param loc:
+        :return:
         :raise "This WT have only " + len(self.grid) + " grid.":
         """
-        if loc:
-            if loc.grid >= len(self.grid):
-                raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
+
+        assert isinstance(labware, Labware)
+        if isinstance(loc, WorkTable.Location):                                 # loc take priority
             labware.location = loc
+        assert isinstance(labware.location, WorkTable.Location)
+
+        if not isinstance(labware.location.worktable, WorkTable):
+            labware.location.worktable = self
         else:
-            loc = labware.location
-        labware.location.worktable = self                                 # todo remove from previous worktable ?
+            assert labware.location.worktable is self
+
+        if labware.location.grid >= len(self.grid):
+            raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
 
         for type_name, labw_series in self.labTypes.items():                # loop lab_types already in worktable
-            for labw in labw_series.labwares:                                        # loop labwares in that series
-                if labw is labware:                                       # already there ?? or other ??
+            for labw in labw_series.labwares:                               # loop labwares in that series
+
+                if labw is labware:                                         # already there ??
                     print("Warning! The worktable template already have this labware. " +
-                            labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+                          labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site + 1))
                     return
-                if labware.location and \
-                   labware.location.grid == labw.location.grid and \
-                   labware.location.site == labw.location.site:
+
+                if      labware.location.grid == labw.location.grid and \
+                        labware.location.site == labw.location.site:
 
                     print("Warning! Trying to add a labware. The worktable template already have a labware with label '"
-                          + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site+1))
+                          + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site + 1))
 
-        if labware.type.name not in self.labTypes:   # first time this type of labware is in this worktable
+        if labware.type.name not in self.labTypes:              # first time this type of labware is in this worktable
             self.labTypes[labware.type.name] = labware.type.create_series(labware)
         else:
-            self.labTypes[labware.type.name] += labware
+            self.labTypes[labware.type.name].add(labware)
 
         # todo add to self.grid labware.location.grid dict site, labware
 
-    def get_current(self, labware):
+    def add_labware(self, labware, loc : Location = None):
+        """
 
-        if isinstance(labware, Labware.Type):
-            labware = labware.name
+        :param labware:
+        :param loc:
+        :return:
+        :raise "This WT have only " + len(self.grid) + " grid.":
+        """
+
+        assert isinstance(labware, Labware)
+        if isinstance(labware.location, WorkTable.Location):
+            if isinstance(labware.location.worktable, WorkTable):
+                labware.location.worktable.retireLabware(labware)         # remove from previous location todo tevise
+
+        assert isinstance(loc, WorkTable.Location)
+        self.add_new_labware(labware, loc)
+
+    def get_current_labware(self, labware):
+
+        if isinstance(labware, Labware):
+            series = labware.series
         else:
-            if isinstance(labware, Labware):
-                labware = labware.type.name
+            if isinstance(labware, Labware.Type):
+                labware = labware.name
+            if labware not in self.labTypes:                        # todo  what if this is the label of the labware
+                raise Exception("Labware '" + labware + "' was not found in worktable: " + self.templateFileName)
 
-        return self.labTypes[labware]              # todo  what if this is the label of the labware
+            series = self.labTypes[labware]
+
+        return series.current
 
     def set_current(self, labware):
         assert isinstance(labware, Labware)
@@ -189,37 +184,39 @@ class WorkTable:
         assert isinstance(series, Labware.Type.Series)
         series.current = labware
 
-    def getLabware(self, labw_type , label):
+    def getLabware(self, labw_type , label):                    # todo make labw_type optional
         assert isinstance(labw_type, Labware.Type )
 
         if labw_type.name not in self.labTypes:
             raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
 
-        for labw in self.labTypes[labw_type.name]:
-            if labw.label == label:
-                return labw
+        series = self.labTypes[labw_type.name]
+        if label in series.labels:
+            return series.labels[label]
 
         raise Exception("Labware '" + labw_type.name + "' with label '" + label
                         + "' was not found in worktable: " + self.templateFileName)
 
-    def get_first_pos(self, labw_type_name=None, posstr=None):
+    def set_first_pos(self, labw_type_name=None, posstr=None):
+        """
+        Default to DITI if no labw_type_name is given. chooses a labware by label and set next well or tip to be used.
+        :param labw_type_name:
+        :param posstr:
+        :return:
+        """
 
         if labw_type_name:
-            if labw_type_name not in self.labTypes:
-                raise Exception("Labware '" + labw_type_name + "' was not found in worktable: " + self.templateFileName)
-            labws = self.labTypes[labw_type_name]
+            labw = self.get_current_labware(labw_type_name)
         else:
-            labw_type = self.def_DiTi
-            if labw_type.name not in self.labTypes:
-                raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
-            labws = self.labTypes[labw_type.name]
+            labw = self.get_DITI_series().current
 
         pos = posstr.split('-')
-        if len(pos) == 2:
-            labw = labws[int(pos[0])-1]
-            fpos = pos[1]
+
+        if len(pos) == 2:                       # assume posstr = 'N-w
+            labw = labw.series[int(pos[0])-1]   # were N is the number of the labw in the series
+            fpos = pos[1]                       # and w is the desired position on that labw
         else:
-            labw = labws[0]
+            # labw = labws[0]                   # todo use the current. ? or the first ??
             fpos = pos[0]
 
         return labw, fpos
@@ -242,22 +239,21 @@ class WorkTable:
         self.def_DiTi = tips
         return old
 
-    def get_DITI_series(self, rack):
+    def get_DITI_series(self, rack = None):
 
-        if isinstance(rack, Lab.Labware.DITIrackType.DITIrackTypeSeries):  # get the series directly
+        if isinstance(rack, DITIrackTypeSeries):  # get the series directly
             return rack
 
-        if isinstance(rack, Lab.DITIrack):
-            return rack.serie
+        if isinstance(rack, DITIrack):
+            return rack.series
 
         if rack is None:
             rack = self.def_DiTi.name
 
-        if isinstance(rack, Lab.Labware.DITIrackType):
+        if isinstance(rack, DITIrackType):
             rack = rack.name
 
         return self.labTypes[rack]
-
 
 
 class Frezeer (WorkTable):
@@ -389,6 +385,34 @@ class conectedWell(Well):
 banned_well = object()                                 # Well(None, 0)
 
 
+def count_tips(TIP_MASK : int) -> int:
+    n = 0
+    while TIP_MASK:
+        n += (TIP_MASK & 1)
+        TIP_MASK = TIP_MASK >> 1
+    return n
+
+
+class Tip:    # OK play with this idea
+    def __init__(self, rack_type):
+        assert isinstance(rack_type, DITIrackType)
+        self.vol = 0
+        self.type = rack_type
+
+    def __str__(self):
+        return "tip {type:s} with {vol:.1f} uL".format(type=self.type.name, vol=self.vol)
+
+
+class usedTip(Tip):
+    def __init__(self, tip : Tip, origin=None):
+        Tip.__init__(self, tip.type)
+        self.vol = tip.vol
+        self.origin = origin
+
+    def __str__(self):
+        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
+
+
 class Labware:
 
     # typeName label-string from template worktable file: labwares class-name.
@@ -402,17 +426,21 @@ class Labware:
         class Series:
 
             def __init__(self, labware):                                # labware: Labware
+                assert (labware, Labware)
                 self.labwares   = []
                 self.labels     = {}
                 self.type       = labware.type
-                self.__iadd__(labware)
+                self.add(labware)
                 self.current    = labware
 
-            def __iadd__(self, labware):                                # labware : Labware
+            def add(self, labware):                                    # labware : Labware
                 assert self.type is labware.type
-                self.labwares               += [labware]
+                self.labwares.append(labware)
                 self.labels[ labware.label ] = labware
-                labware.serie                = self
+                labware.series               = self
+
+            def __iadd__(self, labware):                                # labware : Labware
+                self.add(labware)
 
             def set_next(self, labware = None):                          #  ->  (Labware, bool): labware: Labware
                 """
@@ -426,7 +454,7 @@ class Labware:
             @staticmethod
             def next(labware):                                          #  ->  (Labware, bool): labware: Labware
                 assert isinstance(labware, Labware)
-                return labware.serie.set_next()
+                return labware.series.set_next()
 
             def show_next(self, labware = None):                        #  ->  (Labware, bool): labware: Labware
                 """
@@ -434,12 +462,14 @@ class Labware:
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
                 :param labware:
                 """
-                labware = labware or self.current
+                if labware is None:
+                    labware = self.current
+
                 idx = self.labwares.index(labware) + 1
                 if idx == len(self.labwares):
-                    return self.current, True
+                    return self.labwares[0], True
                 else:
-                    return self.current, False
+                    return self.labwares[idx], False
 
             def __len__(self):
                 return len(self.labwares)
@@ -456,74 +486,11 @@ class Labware:
             return self.nRow * self.nCol
 
         def createLabware(self, loc, label):
-            labw = Labware(self, loc, label)
+            labw = Labware(self, label, loc)
             return labw
 
         def create_series(self, labware ):
             return Labware.Type.Series(labware)
-
-
-
-
-
-    class DITIwasteType(Type):
-        def __init__(self, name, capacity=5*96):
-            Labware.Type.__init__(self, name, nRow=capacity)
-
-        def createLabware(self, loc, label):
-            labw = DITIwaste(self, loc, label)
-            return labw
-
-
-    class CuvetteType(Type):
-
-        def __init__(self,   name,
-                             nRow,
-                             maxVol,
-                             nCol=1):
-            Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
-
-        def createLabware(self, loc, label):
-            labw = Cuvette(self, loc, label)
-            return labw
-
-
-    class Te_Mag (Type):
-        pass
-
-
-    def __init__(self,
-                 type       : Type,
-                 location   : WorkTable.Location = None,
-                 label      : str                = None,
-                 worktable  : WorkTable          = None) :
-        """
-
-        :param type:
-        :param location:
-        :param label:
-        :param worktable:
-        """
-        self.type       = type
-        self.label      = label
-        self.location   = location
-        self.serie      = None
-        self.Wells      = []
-
-        if not isinstance(worktable, WorkTable):
-            if isinstance(location, WorkTable.Location) and isinstance(location.worktable, WorkTable):
-                worktable = location.worktable
-            else:
-                worktable = worktable or WorkTable.curWorkTable  # ??? WorkTable.curWorkTable
-
-        if isinstance(worktable, WorkTable):             # ??????????????
-            worktable.addLabware(self, location)
-        if location and location.rack:                   # ??????????????
-            location.rack.addLabware(self, location.rack_site)
-        self.init_wells()
-
-    def init_wells(self):
-        self.Wells = [Well(self, offset) for offset in range(self.type.size())]
 
 
     class Position:
@@ -531,6 +498,53 @@ class Labware:
             self.row = row
             self.col = col
 
+
+
+    def __init__(self,
+                 type       : Type,
+                 label      : str ,
+                 location   : WorkTable.Location    = None) :
+        """
+
+        :param type:
+        :param label:
+        :param location:
+
+        """
+        worktable = None
+
+        if isinstance(location, WorkTable.Location):    # location take priority
+            worktable = location.worktable
+            if not isinstance(worktable, WorkTable):
+                worktable = WorkTable.curWorkTable
+                if isinstance(worktable, WorkTable):
+                    location.worktable = worktable      # avoid wt.addLabware "moving" new labware
+
+        self.location   = location
+        self.type       = type
+        self.label      = label
+        self.series     = None
+        self.Wells      = []
+
+        if isinstance(worktable, WorkTable):
+            worktable.add_new_labware(self, location)
+        if location and location.rack:                   # ??????????????
+            location.rack.addLabware(self, location.rack_site)
+        self.init_wells()
+
+    @staticmethod
+    def create(labw_t_name  : str,
+               loc          : WorkTable.Location,
+               label        : str):
+        labw_t = Labware.Types.get(labw_t_name)
+        assert isinstance(labw_t, Labware.Type)
+        if not labw_t:
+            return None
+        labw = labw_t.createLabware(loc, label)
+        return labw
+
+    def init_wells(self):
+        self.Wells = [Well(self, offset) for offset in range(self.type.size())]
 
     def autoselect(self, offset=0, maxTips=1, replys=1):   # OK make this "virtual". Implement cuvette
         """
@@ -798,16 +812,19 @@ class DITIrackTypeSeries(Labware.Type.Series):
         return self._remove_tip(number_tips)
 
     def _remove_tip(self, number_tips):
-        #  return removed tips and set it in the arm
+        #  return removed tips
 
         tips  = []
-        first = rack = self.current
+        first = self.current
+        rack  = first
         pos   = 0
         while (True):
             #                  begin                   end                   direction
-            r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
+            r = rack.Wells[rack.pick_next : rack.pick_next_back + 1 : -1 if rack.lastPos else 1]
 
             for w in r:
+                if number_tips == len(tips):
+                    return tips
 
                 if rack.lastPos:
                     pos = rack.pick_next_back
@@ -819,17 +836,18 @@ class DITIrackTypeSeries(Labware.Type.Series):
                 if isinstance(w.reagent, Tip):
                     tip = w.reagent
                     assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
-                    tips += [tip]
-                    w.reagent = None
-                    n    -= 1
+                    tips.append(tip)
+                    w.reagent    = None
                     print("Pick tip " + str(pos + 1) + " from rack site " + str(rack.location.site + 1)
-                          + " named: " + rack.label)
-                    if n == 0:
-                        return tips
+                          + " named: "   + rack.label
+                          + " have "     + str(len(tips) )
+                          + " but need " + str(number_tips))
+
 
             # we need to find in other rack
-            rack, rotated = self.next()
-            assert rack is not first
+            rack, rotated = self.set_next()
+            if rack is first:
+                print("WARNING !! Using DITI rack agains? Put new ?")   # todo user prompt ???
 
         return tips
 
@@ -844,8 +862,8 @@ class DITIrackType(Labware.Type):
 
         Labware.Type.__init__(self, name, nRow, nCol, maxVol)
 
-        self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
-        self.last_preserved_tips = None              # a tip Well in a DiTi rack
+        self.preserved_tips = {}        # order:well ??? sample order:tip well ??sample offset:tip well todo in series?
+        # self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
     def createLabware(self, loc, label):
         labw = DITIrack(self, loc, label)
@@ -864,8 +882,7 @@ class DITIrack (Labware):
 
     def __init__(self, type         : DITIrackType,
                        location     : WorkTable.Location,
-                       label        : str                   = None,
-                       worktable    : WorkTable             = None    ):
+                       label        : str           ):
         """
 
         :param type:
@@ -875,10 +892,7 @@ class DITIrack (Labware):
         """
         assert isinstance(type, DITIrackType)
 
-        Labware.__init__(self, type,
-                               location,
-                               label=label,
-                               worktable=worktable  )
+        Labware.__init__(self, type, label=label, location = location)
         self.pick_next      = 0
         self.pick_next_back = type.nRow * type.nCol - 1
         self.lastPos        = False
@@ -911,11 +925,11 @@ class DITIrack (Labware):
             self.Wells[w].reagent = Tip(self.type)   # How we can actualize the "counters"? Using Instructions
             # self.Wells[w].labware = self    #   hummm ??
 
-        self.pick_next      = beg - 1
-        self.pick_next_back = end - 1
+        self.pick_next      = beg
+        self.pick_next_back = end
 
     def find_new_tips(self, TIP_MASK, lastPos  = False) -> (bool, list):
-        return self.serie.find_tips(TIP_MASK, lastPos)
+        return self.series.find_tips(TIP_MASK, lastPos)
 
     def next_rack(self, worktable = None):
         if worktable is None:
@@ -960,7 +974,7 @@ class DITIrack (Labware):
             assert isinstance(tp, usedTip)
             w.reagent = tp
             self.type.preserved_tips[tp.origin.track.offset if tp.origin.track else tp.origin.offset] = w
-            self.type.last_preserved_tips = w
+            self.series.last_preserved_tips = w
 
     def pick_up(self, TIP_MASK) -> [usedTip]:
         """ Low level. Part of the job have been already done: the rack self hat
@@ -980,10 +994,19 @@ class DITIrack (Labware):
         return tips
 
 
+class DITIwasteType(Labware.Type):
+    def __init__(self, name, capacity=5*96):
+        Labware.Type.__init__(self, name, nRow=capacity)
+
+    def createLabware(self, loc, label):
+        labw = DITIwaste(self, loc, label)
+        return labw
+
+
 class DITIwaste(Labware):
-    def __init__(self, type, location, label=None, worktable=None):
-        assert isinstance(type, Labware.DITIwasteType)
-        Labware.__init__(self, type, location, label=label, worktable=worktable)
+    def __init__(self, type, location, label=None):
+        assert isinstance(type, DITIwasteType)
+        Labware.__init__(self, type, label, location)
         self.wasted = 0
 
     def waste(self, tips):
@@ -1004,13 +1027,26 @@ class DITIwaste(Labware):
                         assert tp is not tip_well.reagent
 
 
+class CuvetteType(Labware.Type):
+
+    def __init__(self,   name,
+                         nRow,
+                         maxVol,
+                         nCol=1):
+        Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
+
+    def createLabware(self, loc, label):
+        labw = Cuvette(self, loc, label)
+        return labw
+
+
 class Cuvette(Labware):
-    def __init__(self, type, location, label=None, worktable=None):
-        assert isinstance(type, Labware.CuvetteType)
+    def __init__(self, type, location, label=None):
+        assert isinstance(type, CuvetteType)
         self.vol = 0.0
         self.reactive = None
         self.actions = []
-        Labware.__init__(self, type, location, label=label, worktable=worktable)
+        Labware.__init__(self, type, label, location)
 
     def init_wells(self):
         self.Wells = [conectedWell(self, offset) for offset in range(self.type.size())]
@@ -1030,11 +1066,15 @@ class Cuvette(Labware):
         return maxTips
 
 
+class Te_Mag (Labware.Type):
+    pass
+
+
 #  "predefining" common labwares types:
 
-Trough_100ml    = Labware.CuvetteType("Trough 100ml",                8,     maxVol=  100000)
-Trough_25ml_rec = Labware.CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
-Trough_300ml_MCA= Labware.CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)  # \todo test it works OK
+Trough_100ml    = CuvetteType("Trough 100ml",                8,     maxVol=  100000)
+Trough_25ml_rec = CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
+Trough_300ml_MCA= CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)  # \todo test it works OK
 
 EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
 GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
@@ -1073,15 +1113,15 @@ Tip_200maxVol   = 190                   # TODO revise
 
 # Evo100
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
-CleanerSWS      = Labware.CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
-WasteWS         = Labware.CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
-CleanerLWS      = Labware.CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
-DiTi_Waste      = Labware.DITIwasteType("Washstation 2Grid DiTi Waste")
+CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
+WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
+CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
+DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")
 #Evo75
-CleanerShallow  = Labware.CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
-WasteWash       = Labware.CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
-CleanerDeep     = Labware.CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
-DiTi_Waste_plate= Labware.DITIwasteType("DiTi Nested Waste MCA384")
+CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
+WasteWash       = CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
+CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
+DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")
 
 
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)

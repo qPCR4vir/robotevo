@@ -206,11 +206,11 @@ class Pipette(Instruction):
 
         """
         assert isinstance(self.labware, Lab.Labware)
-        self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
-        self.arg +=  [integer(self.labware.location.grid),
-                      integer(self.labware.location.site),                                      # arg 2, 3
+        self.arg +=  [integer(self.labware.location.grid),                                      # arg 2
+                      integer(self.labware.location.site),                                      # arg 3
                       integer(self.spacing),
                       string1( self.labware.wellSelectionStr()) ]                               # arg 4, 5
         self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6
@@ -218,7 +218,7 @@ class Pipette(Instruction):
             self.arg +=  [string1(op.name),
                           integer(op.action),
                           integer(op.difference) ]                                              # arg 7, 8, 9
-        self.arg +=  [integer(self.arm)]                                                        # arg 10
+        self.arg +=  [integer(self.arm.index)]                                                  # arg 10
 
         return True
 
@@ -282,11 +282,11 @@ class DITIs(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.arm = self.robot.curArm(self.arm)
 
         self.arg  = [integer(self.tipMask)]  # arg 1
         self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
-        self.arg += [integer(self.arm)]      # arg 4
+        self.arg += [integer(self.arm.index)]      # arg 4
         return True
 
     def exec(self, mode=None):
