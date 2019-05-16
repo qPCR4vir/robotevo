@@ -401,20 +401,20 @@ class Labware:
 
         class Series:
 
-            def __init__(self, labware: Labware ):
+            def __init__(self, labware):                                # labware: Labware
                 self.labwares   = []
                 self.labels     = {}
                 self.type       = labware.type
                 self           += labware
                 self.current    = labware
 
-            def __iadd__(self, labware : Labware ):
+            def __iadd__(self, labware):                                # labware : Labware
                 assert self.type is labware.type
                 self.labwares               += [labware]
                 self.labels[ labware.label ] = labware
                 labware.serie                = self
 
-            def set_next(self, labware: Labware = None) ->  (Labware, bool):
+            def set_next(self, labware = None):                          #  ->  (Labware, bool): labware: Labware
                 """
                 Set current to the next
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
@@ -424,11 +424,11 @@ class Labware:
                 return self.current, rotated
 
             @staticmethod
-            def next(labware: Labware) ->  (Labware, bool):
+            def next(labware):                                          #  ->  (Labware, bool): labware: Labware
                 assert isinstance(labware, Labware)
                 return labware.serie.set_next()
 
-            def show_next(self, labware: Labware = None) ->  (Labware, bool):
+            def show_next(self, labware = None):                        #  ->  (Labware, bool): labware: Labware
                 """
                 Set current to the next
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
@@ -459,114 +459,9 @@ class Labware:
             labw = Labware(self, loc, label)
             return labw
 
-        def create_series(self, labware : Labware):
+        def create_series(self, labware ):
             return Labware.Type.Series(labware)
 
-
-    class DITIrackType(Type):
-
-
-        class DITIrackTypeSeries(Labware.Type.Series):
-
-            def __init__(self, labware: Labware ):
-                Labware.Type.Series.__init__(self, labware)
-                self.last_preserved_tips = None              # a tip Well in a DiTi rack
-
-            def find_tips(self, TIP_MASK) -> (bool, list):
-                """
-
-                :param TIP_MASK:
-                :param lastPos:
-                :return:
-                """
-                n           = count_tips(TIP_MASK)
-                tips        = []
-                rack        = self.current
-                continuous  = True
-                while (True):
-                    #                  begin                   end                   direction
-                    r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
-
-                    for w in r:
-                        if isinstance(w.reagent, Tip):
-                            tip = w.reagent
-                            assert tip.type is self.type, "A tip of unexpected type encounetred"    # todo really??
-                            tips += [w]
-                            n    -= 1
-                            if n == 0:
-                                return continuous, tips
-                        else:
-                            continuous = False
-
-                    # we need to find in other rack
-                    rack, rotated = self.show_next(rack)
-                    assert rack is not self.current                                       # todo return incomplete ??
-
-            def remove_tips(self, TIP_MASK):
-                """
-                A response to a getTips: the tips have to be removed from the rack
-                and only after that can appear mounted in the robot arm to pipette.
-                The tips are removed at the "current" position, the position where
-                begin the fresh tips, with is maintained internally by the robot and
-                is unknown to the user
-                """
-                number_tips = count_tips(TIP_MASK)  # todo do we really need a correspondence mask - wells??
-                return self._remove_tip(number_tips)
-
-            def _remove_tip(self, number_tips):
-                #  return removed tips and set it in the arm
-
-                tips  = []
-                first = rack = self.current
-                pos   = 0
-                while (True):
-                    #                  begin                   end                   direction
-                    r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
-
-                    for w in r:
-
-                        if rack.lastPos:
-                            pos = rack.pick_next_back
-                            rack.pick_next_back -= 1
-                         else:
-                            pos = rack.pick_next
-                            rack.pick_next      += 1
-
-                        if isinstance(w.reagent, Tip):
-                            tip = w.reagent
-                            assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
-                            tips += [tip]
-                            w.reagent = None
-                            n    -= 1
-                            print("Pick tip " + str(pos + 1) + " from rack site " + str(rack.location.site + 1)
-                                  + " named: " + rack.label)
-                            if n == 0:
-                                return tips
-
-                    # we need to find in other rack
-                    rack, rotated = self.next()
-                    assert rack is not first
-
-                return tips
-
-
-        def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
-
-            if portrait:
-                nCol, nRow = nRow, nCol                  # todo revise !
-
-            Labware.Type.__init__(self, name, nRow, nCol, maxVol)
-
-            self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
-            self.last_preserved_tips = None              # a tip Well in a DiTi rack
-
-        def createLabware(self, loc, label):
-            labw = DITIrack(self, loc, label)
-            return labw
-
-        def create_series(self, labware : Labware):
-            # assert isinstance(labware.type, DITIrackType)
-            return DITIrackTypeSeries(labware)
 
 
 
@@ -855,13 +750,119 @@ class Labware:
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 
+class DITIrackTypeSeries(Labware.Type.Series):
+
+    def __init__(self, labware: Labware ):
+        Labware.Type.Series.__init__(self, labware)
+        self.last_preserved_tips = None              # a tip Well in a DiTi rack
+
+    def find_tips(self, TIP_MASK) -> (bool, list):
+        """
+
+        :param TIP_MASK:
+        :param lastPos:
+        :return:
+        """
+        n           = count_tips(TIP_MASK)
+        tips        = []
+        rack        = self.current
+        continuous  = True
+        while (True):
+            #                  begin                   end                   direction
+            r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
+
+            for w in r:
+                if isinstance(w.reagent, Tip):
+                    tip = w.reagent
+                    assert tip.type is self.type, "A tip of unexpected type encounetred"    # todo really??
+                    tips += [w]
+                    n    -= 1
+                    if n == 0:
+                        return continuous, tips
+                else:
+                    continuous = False
+
+            # we need to find in other rack
+            rack, rotated = self.show_next(rack)
+            assert rack is not self.current                                       # todo return incomplete ??
+
+    def remove_tips(self, TIP_MASK):
+        """
+        A response to a getTips: the tips have to be removed from the rack
+        and only after that can appear mounted in the robot arm to pipette.
+        The tips are removed at the "current" position, the position where
+        begin the fresh tips, with is maintained internally by the robot and
+        is unknown to the user
+        """
+        number_tips = count_tips(TIP_MASK)  # todo do we really need a correspondence mask - wells??
+        return self._remove_tip(number_tips)
+
+    def _remove_tip(self, number_tips):
+        #  return removed tips and set it in the arm
+
+        tips  = []
+        first = rack = self.current
+        pos   = 0
+        while (True):
+            #                  begin                   end                   direction
+            r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
+
+            for w in r:
+
+                if rack.lastPos:
+                    pos = rack.pick_next_back
+                    rack.pick_next_back -= 1
+                else:
+                    pos = rack.pick_next
+                    rack.pick_next      += 1
+
+                if isinstance(w.reagent, Tip):
+                    tip = w.reagent
+                    assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
+                    tips += [tip]
+                    w.reagent = None
+                    n    -= 1
+                    print("Pick tip " + str(pos + 1) + " from rack site " + str(rack.location.site + 1)
+                          + " named: " + rack.label)
+                    if n == 0:
+                        return tips
+
+            # we need to find in other rack
+            rack, rotated = self.next()
+            assert rack is not first
+
+        return tips
+
+
+class DITIrackType(Labware.Type):
+
+
+    def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
+
+        if portrait:
+            nCol, nRow = nRow, nCol                  # todo revise !
+
+        Labware.Type.__init__(self, name, nRow, nCol, maxVol)
+
+        self.preserved_tips = {}                     # order:well ??? sample order:tip well ??sample offset:tip well
+        self.last_preserved_tips = None              # a tip Well in a DiTi rack
+
+    def createLabware(self, loc, label):
+        labw = DITIrack(self, loc, label)
+        return labw
+
+    def create_series(self, labware : Labware):
+        # assert isinstance(labware.type, DITIrackType)
+        return DITIrackTypeSeries(labware)
+
+
 class DITIrack (Labware):
     """
     Objects of this class represent physical objects (with location) of
     some type Labware.DITIrackType
     """
 
-    def __init__(self, type         : Labware.DITIrackType,
+    def __init__(self, type         : DITIrackType,
                        location     : WorkTable.Location,
                        label        : str                   = None,
                        worktable    : WorkTable             = None    ):
@@ -872,7 +873,7 @@ class DITIrack (Labware):
         :param label:
         :param worktable:
         """
-        assert isinstance(type, Labware.DITIrackType)
+        assert isinstance(type, DITIrackType)
 
         Labware.__init__(self, type,
                                location,
@@ -1057,14 +1058,14 @@ EppRackx16      = Labware.Type("Tube Eppendorf 16 Pos",             16,     maxV
 EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVol=     2000)# todo define in Evoware !!!
 
 
-DiTi_1000ul     = Labware.DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
-DiTi_1000ul_SBS = Labware.DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
-DiTi_200ul_SBS  = Labware.DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
-DiTi_10ul_SBS   = Labware.DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  # 0 9,5 ??
-DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
-DiTi_200ul_MCA96= Labware.DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
+DiTi_1000ul     = DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
+DiTi_1000ul_SBS = DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
+DiTi_200ul_SBS  = DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
+DiTi_10ul_SBS   = DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  # 0 9,5 ??
+DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
+DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
 
-DiTi_0200ul     = Labware.DITIrackType("DiTi 200 ul",                       maxVol=     190)  # ??
+DiTi_0200ul     = DITIrackType("DiTi 200 ul",                       maxVol=     190)  # ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
 # def_DiTi        = DiTi_1000ul

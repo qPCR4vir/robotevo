@@ -261,8 +261,7 @@ class getDITI2(DITIs):
     """
     def __init__(self,
                  tipMask         = None,
-                 DITI_series  :(str, Lab.Labware.DITIrackType, Lab.DITIrack,
-                                Lab.Labware.DITIrackType.DITIrackTypeSeries)     = None,
+                 DITI_series  :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)     = None,
                  options         = 0,
                  arm             = None,
                  AirgapVolume    = 0,
