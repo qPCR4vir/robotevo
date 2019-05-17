@@ -322,14 +322,24 @@ class Robot:
 
             cont = False
             n = Lab.count_tips(m)
+            prev_rack = None
+            rewind = True
             while n:
+                if prev_rack is rack:
+                    assert rewind, "Fatal error: no more free rack wells to preserve used tips"
+                    rewind = False
+                prev_rack = rack
                 cont, fw = rack.find_free_wells(n, init_pos=ip)
                 if cont:
                     racks.append(rack)
-                    rack.selectOnly([w.offset for w in fw])
                     n -= len(fw)
-                    rack, rotate = rack.series.set_current_next_to(rack)
+                    if not rewind:
+                        fw = rack.selected_wells() + fw
+                    rack.selectOnly([w.offset for w in fw])
+                    rack, rotate = rack.series.show_next_to(rack)
                     ip = 0
+                else:
+                    print("WARNING ! todo, use noncontiguos tips well to aet back?")
 
             return racks
 

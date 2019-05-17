@@ -454,16 +454,28 @@ class Labware:
             @staticmethod
             def set_current_next_to(labware):                                          #  ->  (Labware, bool): labware: Labware
                 assert isinstance(labware, Labware)
+                labware.series.current = labware
                 return labware.series.set_next()
 
-            def show_next(self):                           #  ->  (Labware, bool): labware: Labware
+            @staticmethod
+            def show_next_to(labware):                                          #  ->  (Labware, bool): labware: Labware
+                assert isinstance(labware, Labware)
+                return labware.series.show_next(labware)
+
+            def show_next(self, labware = None):                           #  ->  (Labware, bool): labware: Labware
                 """
                 return next to self.current
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
                 :param labware:
                 """
 
-                idx = self.labwares.index(self.current) + 1
+                if labware is None:
+                    labware = self.current
+                print("Showing next to " + labware.label)
+                assert self is labware.series
+
+                idx = self.labwares.index(labware) + 1
+
                 if idx == len(self.labwares):
                     return self.labwares[0], True
                 else:
