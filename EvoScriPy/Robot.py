@@ -316,7 +316,7 @@ class Robot:
                     racks.append(rack)
                     rack.selectOnly([w.offset for w in fw])
                     n -= len(fw)
-                    rack, rotate = rack.series.set_next(rack)
+                    rack, rotate = rack.series.set_current_next_to(rack)
                     ip = 0
 
             return racks

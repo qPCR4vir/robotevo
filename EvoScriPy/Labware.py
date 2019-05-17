@@ -442,30 +442,28 @@ class Labware:
             def __iadd__(self, labware):                                # labware : Labware
                 self.add(labware)
 
-            def set_next(self, labware = None):                          #  ->  (Labware, bool): labware: Labware
+            def set_next(self):                                         #  ->  (Labware, bool): labware: Labware
                 """
-                Set current to the next
+                Set current to the next of self.current
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
                 :param labware:
                 """
-                self.current, rotated = self.show_next(labware)
+                self.current, rotated = self.show_next()
                 return self.current, rotated
 
             @staticmethod
-            def next(labware):                                          #  ->  (Labware, bool): labware: Labware
+            def set_current_next_to(labware):                                          #  ->  (Labware, bool): labware: Labware
                 assert isinstance(labware, Labware)
                 return labware.series.set_next()
 
-            def show_next(self, labware = None):                        #  ->  (Labware, bool): labware: Labware
+            def show_next(self):                           #  ->  (Labware, bool): labware: Labware
                 """
-                Set current to the next
+                return next to self.current
                 :rtype: (Labware, bool) = (the next labware , serie's current has rotated to the first
                 :param labware:
                 """
-                if labware is None:
-                    labware = self.current
 
-                idx = self.labwares.index(labware) + 1
+                idx = self.labwares.index(self.current) + 1
                 if idx == len(self.labwares):
                     return self.labwares[0], True
                 else:
@@ -832,18 +830,19 @@ class DITIrackTypeSeries(Labware.Type.Series):
             # we need to find in other rack
             rack, rotated = self.set_next()
             if rack is first:
-                print("WARNING !! Using DITI rack agains? Put new ?")        # todo refill_next_rack
+                self.refill_next_rack()
+                print("WARNING !! Using DITI rack agains? Put new ?")
 
     def refill_next_rack(self, worktable=None):
-        rack = self.next_rack(worktable)            # the next or the first
-        assert isinstance(rack, DITIrack)
-        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)  # todo ? USER PROMPT: Fill Rack
-        assert self is not rack                   # todo why???
-        rack.fill()
-        tp = self.type
-        tp.pick_next = 0
-        tp.pick_next_back = tp.size() - 1
-        tp.pick_next_rack = rack
+
+        # rack = self.next_rack(worktable)                                      # todo what worktable? another Place ?
+
+        next_rack, rotated = self.set_next()
+        print("WARNING !!!! USER PROMPT: ReFill Rack " + next_rack.label)       # todo ? USER PROMPT: Fill Rack
+        assert isinstance(next_rack, DITIrack)
+        assert self is not next_rack                                            # todo ???   rack empty ??
+        next_rack.fill()                                                        # todo check for tips back !!!!!!
+
 
 class DITIrackType(Labware.Type):
 
