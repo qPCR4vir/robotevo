@@ -205,7 +205,7 @@ class Pipette(Instruction):
         :return:
 
         """
-        assert isinstance(self.labware, Lab.Labware)
+        assert isinstance(self.labware, Lab.Labware)    # todo Lab.DITIrack ??
         self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
@@ -282,6 +282,7 @@ class DITIs(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
+
         self.arm = self.robot.curArm(self.arm)
 
         self.arg  = [integer(self.tipMask)]  # arg 1

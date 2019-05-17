@@ -58,6 +58,7 @@ class aspirate(Pipetting):
     def action():
         return EvoScriPy.Robot.Robot.Arm.Aspire
 
+
 class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
     """
@@ -86,6 +87,7 @@ class dispense(Pipetting):
     @staticmethod
     def action():
         return EvoScriPy.Robot.Robot.Arm.Dispense
+
 
 class mix(Pipetting):
     """ A.15.4.3 Mix (Worklist: Mix)
@@ -123,6 +125,7 @@ class mix(Pipetting):
         self.pipette_on_iRobot(aspirate.action())
         self.pipette_on_iRobot(dispense.action())
         pass
+
 
 class wash_tips(Pipette):                     # TODO revise def values of arg, how to model with iRobot?
     """ A.15.4.4 Wash Tips (Worklist: Wash) pag. A - 128; pag. 15 - 8.
@@ -219,6 +222,7 @@ ensures maximum pipetting accuracy.
                           integer(self.atFrequency)]
         return True
 
+
 class getDITI(DITIs):
     def __init__(self,  tipMask, type, options=0, arm= None):
         """ A.15.4.5 Get DITIs (Worklist: GetDITI) ...
@@ -252,6 +256,7 @@ class getDITI(DITIs):
         DITIs.validateArg(self)
         self.arg[1:1] = [integer(self.type)]     # arg 2 is type -an index-
         return True
+
 
 class getDITI2(DITIs):
     """ A.15.4.5 Get DITIs (Worklist: GetDITI) pag. A - 129
@@ -370,6 +375,7 @@ class set_DITI_Counter(Pipette):            # todo help determining the type,set
         self.posInRack = posInRack
 
     def validateArg(self):
+        assert isinstance(self.labware, Lab.DITIrack)
         self.arg = [integer(self.type),
                     string1(self.labware.location.grid),
                     string1(self.labware.location.site),
@@ -460,6 +466,8 @@ class pickUp_DITIs(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
+        assert isinstance(self.labware, Lab.DITIrack)
+
         self.arg[3:4]   = []
         self.arg[-1:-1] = [integer(self.type)]
         return True
@@ -497,6 +505,8 @@ class pickUp_DITIs2(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
+        assert isinstance(self.labware, Lab.DITIrack)
+
         self.arg[3:4]   = []        # delete arg tip spacing
         self.arg[-1:-1] = [string1(self.labware.type.name)]
         return True
@@ -532,6 +542,8 @@ class set_DITIs_Back(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
+        assert isinstance(self.labware, Lab.DITIrack)
+
         self.arg[3:4] = []
         return True
 
@@ -592,11 +604,12 @@ class activate_PMP(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg= [integer(self.tipMask)]
+        self.arg = [integer(self.tipMask)]
         return True
 
     def exec(self, mode=None):
-        if self.tipMask: Instruction.exec(self, mode)
+        if self.tipMask :
+            Instruction.exec(self, mode)
 
 
 class deactivate_PMP(Instruction):
@@ -608,7 +621,7 @@ class deactivate_PMP(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        self.arg= [integer(self.tipMask)]
+        self.arg = [integer(self.tipMask)]
         return True
 
     def exec(self, mode=None):
@@ -729,6 +742,7 @@ class waste(Instruction):
         self.arg= [integer(self.action)]
         return True
 
+
 class active_Wash(Instruction):
     """ A.15.4.16 Active WashStation (Worklist: Active_Wash)
     """
@@ -743,6 +757,7 @@ class active_Wash(Instruction):
         Instruction.validateArg(self)
         self.arg= [integer(self.wait ),integer(self.time),integer(self.arm)]
         return True
+
 
 class export(Instruction):
     """ A.15.4.17 Export Data (Worklist: Export)
@@ -780,6 +795,7 @@ class export(Instruction):
 
         return True
 
+
 class startTimer(Instruction):
     """ A.15.4.18 Start Timer (Worklist: StartTimer)
     """
@@ -796,6 +812,7 @@ class startTimer(Instruction):
     def validateArg(self):
         Instruction.validateArg(self)
         self.arg= [expression(self.timer)]
+
 
 class waitTimer(Instruction):
     """ A.15.4.19 Wait for Timer (Worklist: WaitTimer)
@@ -815,6 +832,7 @@ class waitTimer(Instruction):
         Instruction.validateArg(self)
         self.arg= [expression(self.timer),expression(self.timeSpan)]
 
+
 class execute(Instruction): # todo declare const
     """ A.15.4.20 Execute Application (Worklist: Execute)
     """
@@ -833,6 +851,7 @@ class execute(Instruction): # todo declare const
         self.arg= [string1(self.application),      integer(self.options),
                    string1(self.responseVariable), integer(self.scope)   ]
 
+
 class comment(Instruction):
     """ A.15.4.21 Comment (Worklist: Comment)
     """
@@ -846,6 +865,7 @@ class comment(Instruction):
         Instruction.validateArg(self)
         self.arg= [string1(self.text)]
         return True
+
 
 class userPrompt(Instruction):    # todo declare const
     """ A.15.4.22 User Prompt (Worklist: UserPrompt)
@@ -862,6 +882,7 @@ class userPrompt(Instruction):    # todo declare const
         Instruction.validateArg(self)
         self.arg= [string1(self.text), integer(self.sound), integer(self.closeTime)]
         return True
+
 
 class variable(Instruction):    # OK declare const
     """ A.15.4.23 Set Variable (Worklist: Variable)
@@ -930,6 +951,7 @@ class variable(Instruction):    # OK declare const
                      integer        (self.QueryAtStart)  ]
         return True
 
+
 class execute_VBscript(Instruction):
     """ A.15.4.24 Execute VB Script (Worklist: Execute_VBscript)
     """
@@ -947,6 +969,7 @@ class execute_VBscript(Instruction):
         Instruction.validateArg(self)
         self.arg= [string1(self.filename), integer(self.action) ]
         return True
+
 
 class notification(Instruction):    # todo declare const
     """ A.15.4.25 Notification (Worklist: Notification)

@@ -410,7 +410,7 @@ class usedTip(Tip):
         self.origin = origin
 
     def __str__(self):
-        return Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
+        return " Used " + Tip.__str__(self)+" of {what:s}".format(what=str(self.origin))
 
 
 class Labware:
@@ -999,13 +999,15 @@ class DITIrack (Labware):
         :param tips:
         """
         n = count_tips(TIP_MASK)
+        assert isinstance(self.type, DITIrackType)
         assert n == len(self.selected()), "Too much or too few wells selected to put tip back"
 
         for i, w in enumerate(self.selected_wells()):
+            tp = tips[i]
 
+            print("Set back " + str(tp) + " in " + str(w) + " of " + self.label)
             assert w.reagent is not Tip, ("Another tip " + w.reagent.type.name + "is already in position "
                                           + str(self.position(i)) + " of " + self.label)
-            tp = tips[i]
             assert isinstance(tp, usedTip)
 
             w.reagent = tp
@@ -1023,9 +1025,11 @@ class DITIrack (Labware):
 
         tips = []
         for w in self.selected_wells():
+            # todo really ? and what if we want to pick up unused tips?
+            print("Pick Up from " + str(w) + " on the DITI rack " + self.label)
 
-            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name + " were found in position "
-                                                    + str(w) + " of DITI rack " + self.label)
+            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name + " were found in position: "
+                                                    + str(w) + " on the DITI rack " + self.label)
 
             tips += [w.reagent]
             w.reagent = None

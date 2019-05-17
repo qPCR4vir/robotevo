@@ -437,11 +437,13 @@ class Robot:
         :param labware:
         """
         # todo what if self.droptips: is False ???
+        assert isinstance(labware_selection, Lab.DITIrack)
+
         TIP_MASK, tips = self.curArm().drop(TIP_MASK)
         labware_selection.set_back(TIP_MASK, tips)
         return TIP_MASK
 
-    def pick_up_tips(self, TIP_MASK, labware_selection) -> int:
+    def pick_up_tips(self, TIP_MASK, labware_selection : Lab.DITIrack) -> int:
         """ The low level instruction have to be generated already with almost all the information needed.
         Here we don't check any more from where we really need to pick the tips
         and assume they are all in the same rack.
@@ -450,6 +452,7 @@ class Robot:
         :param labware_selection:
         :param TIP_MASK:
         """
+        assert isinstance(labware_selection, Lab.DITIrack)
 
         TIP_MASK = self.curArm().getTips_test(TIP_MASK)
         tips = labware_selection.pick_up(TIP_MASK)
