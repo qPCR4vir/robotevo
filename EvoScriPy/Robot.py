@@ -53,11 +53,14 @@ class Robot:
                     :return: the mask that can be used
                     :raise "Tip already in position " + str(i):
                     """
-            if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
+            if tip_mask == -1:
+                tip_mask = tipsMask[self.nTips]
+
             for i, tp in enumerate(self.Tips):
                 if tip_mask & (1 << i):
                     if tp is not None:
                         raise BaseException("A Tip from rack type " + tp.type.name + " is already in position " + str(i))
+
             return tip_mask
 
         def getTips(self, rack_type=None, tip_mask=-1, tips=None) -> (int, list):
@@ -242,21 +245,30 @@ class Robot:
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
     # instruction and even by the final user.
 
-    def where_are_preserved_tips(self, selected_reactive, TIP_MASK, type)->list:  # [Lab.DITIrack]
+    def where_are_preserved_tips(self,
+                                 selected_reagents  : Lab.Labware ,
+                                 TIP_MASK, type) -> list:   # [Lab.DITIrack]
         """
 
+        :param selected_reagents:
         :param TIP_MASK:
-        :param type:
         :return:  Return a list of racks with the tips-wells already selected.
         """
-        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
-        type = type if type else self.worktable.def_DiTi
-        n = Lab.count_tips(TIP_MASK)
-        assert n == len(selected_reactive)
-        where = []
-        for react_offset in selected_reactive:
-            assert react_offset in type.preserved_tips, "There are no tip preserved for sample "+str(react_offset+1)
-            well_tip = type.preserved_tips[react_offset]
+
+        assert isinstance(selected_reagents, Lab.Labware)
+
+        selected_reagents = selected_reagents.selected_wells()
+
+        TIP_MASK        = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
+        type            = type if type else self.worktable.def_DiTi
+        where           = []
+        n               = Lab.count_tips(TIP_MASK)
+
+        assert n == len(selected_reagents)
+
+        for reagent_well in selected_reagents:
+            assert reagent_well in type.preserved_tips, "There are no tip preserved for sample "+str(reagent_well)
+            well_tip = type.preserved_tips[reagent_well]
             assert isinstance(well_tip, Lab.Well)
             if well_tip.labware in where:
                 well_tip.selFlag = True

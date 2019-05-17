@@ -311,7 +311,7 @@ class Well:
         self._vol = 0.0
         self._reagent = None
         self._actions = []
-        self.track = None           # todo use this to check what the tips uses?
+        # self.track = None           # todo use this to check what the tips uses?
 
         self.vol = 0.0
         self.reagent = None
@@ -830,10 +830,10 @@ class DITIrackTypeSeries(Labware.Type.Series):
             # we need to find in other rack
             rack, rotated = self.set_next()
             if rack is first:
-                self.refill_next_rack()
                 print("WARNING !! Using DITI rack agains? Put new ?")
+                rack = self.refill_next_rack()
 
-    def refill_next_rack(self, worktable=None):
+    def refill_next_rack(self, worktable=None):    #  -> DITIrack
 
         # rack = self.next_rack(worktable)                                      # todo what worktable? another Place ?
 
@@ -842,6 +842,7 @@ class DITIrackTypeSeries(Labware.Type.Series):
         assert isinstance(next_rack, DITIrack)
         assert self is not next_rack                                            # todo ???   rack empty ??
         next_rack.fill()                                                        # todo check for tips back !!!!!!
+        return next_rack
 
 
 class DITIrackType(Labware.Type):
@@ -999,13 +1000,16 @@ class DITIrack (Labware):
         """
         n = count_tips(TIP_MASK)
         assert n == len(self.selected()), "Too much or too few wells selected to put tip back"
+
         for i, w in enumerate(self.selected_wells()):
+
             assert w.reagent is not Tip, ("Another tip " + w.reagent.type.name + "is already in position "
                                           + str(self.position(i)) + " of " + self.label)
             tp = tips[i]
             assert isinstance(tp, usedTip)
+
             w.reagent = tp
-            self.type.preserved_tips[tp.origin.track.offset if tp.origin.track else tp.origin.offset] = w
+            self.type.preserved_tips[tp.origin] = w
             self.series.last_preserved_tips = w
 
     def pick_up(self, TIP_MASK) -> [usedTip]:
@@ -1016,10 +1020,13 @@ class DITIrack (Labware):
         """
         n = count_tips(TIP_MASK)
         assert n == len(self.selected()), "Too much or too few wells selected to pick up tips"
+
         tips = []
-        for i, w in enumerate(self.selected_wells()):
-            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name + "were found in position "
-                                                    + str(self.position(i)) + " of " + self.label)
+        for w in self.selected_wells():
+
+            assert isinstance(w.reagent, usedTip), ("No tip " + w.reagent.type.name + " were found in position "
+                                                    + str(w) + " of DITI rack " + self.label)
+
             tips += [w.reagent]
             w.reagent = None
             # self.type.preserved_tips[tp.origin.offset] = w # tp.origin.offset
@@ -1048,13 +1055,13 @@ class DITIwaste(Labware):
             assert self.wasted < self.type.size(), "Too much tips wasted. Empty yours DiTi waste."
 
             if isinstance(tp, usedTip):  # this tip is dropped and cannot be used any more
-                react_well = tp.origin.track or tp.origin
-                if react_well.offset in tp.type.preserved_tips:
-                    tip_well = tp.type.preserved_tips[react_well.offset]
+                react_well = tp.origin
+                if react_well in tp.type.preserved_tips:
+                    tip_well = tp.type.preserved_tips[react_well]
                     assert isinstance(tip_well, Well)
                     if tip_well.reagent is None:
                         tip_well.reagent = banned_well       # don't used this well again (is "contaminated")
-                        del tp.type.preserved_tips[react_well.offset]  # todo could be mounted in another position?
+                        del tp.type.preserved_tips[react_well]  # todo could be mounted in another position?
                     else:
                         assert tp is not tip_well.reagent
 

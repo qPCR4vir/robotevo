@@ -675,10 +675,10 @@ class Protocol (Executable):
                     Asp.liquidClass = sw[0].reagent.defLiqClass
                     Dst.liquidClass = sw[0].reagent.defLiqClass
 
-                with self.tips(Rbt.tipsMask[nt], selected_samples=spl):  # todo what if volume > maxVol_tip ?
-                    Asp.labware.selectOnly(src)
+                Asp.labware.selectOnly(src)
+                Dst.labware.selectOnly(trg)
+                with self.tips(Rbt.tipsMask[nt], selected_samples=Asp.labware):  # todo what if volume > maxVol_tip ?
                     Asp.exec()                                           # <---- low level aspirate
-                    Dst.labware.selectOnly(trg)
                     Dst.exec()                                           # <---- low level dispense
                     for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
                         d.track = s                                     # todo revise !! and .actions []
@@ -775,7 +775,6 @@ class Protocol (Executable):
                     Dst.tipMask = tm
 
                 sel = oriSel[curSample:curSample + nt]      # select the next nt (number of used tips) wells
-                spl = range(curSample, curSample + nt)
                 Asp.labware.selectOnly(sel)
 
                 if volume:                                                  # volume: to be Waste
@@ -790,7 +789,7 @@ class Protocol (Executable):
                     if sel:
                         Dst.liquidClass = Asp.labware.selected_wells()[0].reagent.defLiqClass
 
-                with self.tips(tm, drop=True, preserve=False, selected_samples=spl):
+                with self.tips(tm, drop=True, preserve=False, selected_samples=Asp.labware):
 
                     # aspirate and waste repeatedly with allowed volume until only Rest uL are in wells
                     while r > Rest:                     # don't aspirate Rest with these Liq Class (Liq Detect)
@@ -890,10 +889,9 @@ class Protocol (Executable):
                     mx.tipMask = Rbt.tipsMask[nt]
 
                 sel = oriSel[curSample:curSample + nt]
-                spl = range(curSample, curSample + nt)
-                with self.tips(Rbt.tipsMask[nt], selected_samples=spl):
+                mx.labware.selectOnly(sel)
+                with self.tips(Rbt.tipsMask[nt], selected_samples = mx.labware):
                     mV = self.robot.curArm().Tips[0].type.maxVol * mix_p
-                    mx.labware.selectOnly(sel)
                     if not using_liquid_class:
                         if sel:
                             mx.liquidClass = mx.labware.selected_wells()[0].reagent.defLiqClass
@@ -915,7 +913,7 @@ class Protocol (Executable):
     @contextmanager
     def tips(self,  tipsMask    = None, tip_type     = None,
                     reuse       = None, drop         = None,
-                    preserve    = None, usePreserved = None,  selected_samples   = None,
+                    preserve    = None, usePreserved = None,  selected_samples : Lab.Labware  = None,
                     allow_air   = None, drop_first   = False, drop_last          = False   ):
         '''
 
@@ -931,6 +929,9 @@ class Protocol (Executable):
         :param drop_last    : Drops the tips at THE END of the whole action
         :return:
         '''
+
+        if selected_samples is not None:
+            assert isinstance(selected_samples, Lab.Labware )      # todo set some current?
 
         if drop_first:  self.dropTips()
         if reuse        is not None: reuse_old          = self.reuseTips       (reuse       )
