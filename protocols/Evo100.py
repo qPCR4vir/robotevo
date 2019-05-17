@@ -42,6 +42,8 @@ class Evo100(Protocol):
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste
 
+        Rtv.Reagent("Liquid waste", wt.def_WashWaste)
+
 
 class Evo100_FLI(Evo100):
     """ Using the Evo100_FLI_INNT

@@ -205,7 +205,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             Rtv.Reagent("lysis_{:02d}".format(s + 1),
                         Plate_lysis,
                         initial_vol = InitLysisVol,
-                        pos         = s + 1,
+                        pos         = par[s] + 1,
                         excess      = 0)
 
             Rtv.Reagent("EtOH80p_{:02d}".format(s + 1),
@@ -252,7 +252,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                    volume               = SampleVolume,
                                    using_liquid_class   = (SampleLiqClass, "Serum Disp postMix3"),
                                    optimizeFrom         = False,
-                                   optimizeTo           = False,           # todo Really ??
+                                   optimizeTo           = True,           # todo Really ??
                                    NumSamples           = NumOfSamples)
 
                 Itr.wash_tips(wasteVol=4, FastWash=True).exec()
