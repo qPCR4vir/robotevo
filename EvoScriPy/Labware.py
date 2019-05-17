@@ -770,37 +770,39 @@ class DITIrackTypeSeries(Labware.Type.Series):
         Labware.Type.Series.__init__(self, labware)
         self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
-    def find_tips(self, TIP_MASK) -> (bool, list):
+    def find_new_tips(self, TIP_MASK) -> (bool, [Tip]):
         """
 
         :param TIP_MASK:
         :param lastPos:
         :return:
         """
-        n           = count_tips(TIP_MASK)
-        tips        = []
-        rack        = self.current
-        continuous  = True
-        while (True):
-            #                  begin                   end                   direction
-            r = rack.Wells[rack.pick_next, rack.pick_next_back + 1, -1 if rack.lastPos else 1]
 
-            for w in r:
-                if isinstance(w.reagent, Tip):
-                    tip = w.reagent
-                    assert tip.type is self.type, "A tip of unexpected type encounetred"    # todo really??
-                    tips += [w]
-                    n    -= 1
-                    if n == 0:
-                        return continuous, tips
-                else:
-                    continuous = False
+        number_tips = count_tips(TIP_MASK)
+        tips        = []
+        continuous  = True
+        first       = self.current
+        rack        = first
+
+        assert isinstance(first, DITIrack)
+
+        while (True):
+
+            fcontinuous, ftips = rack.find_new_tips(number_tips-len(tips))
+            tips += ftips
+            if not fcontinuous:
+                continuous = False
+
+            if number_tips == len(tips):
+                    return continuous, tips
+
+            continuous = False
 
             # we need to find in other rack
             rack, rotated = self.show_next(rack)
             assert rack is not self.current                                       # todo return incomplete ??
 
-    def remove_tips(self, TIP_MASK):
+    def retire_new_tips(self, TIP_MASK):
         """
         A response to a getTips: the tips have to be removed from the rack
         and only after that can appear mounted in the robot arm to pipette.
@@ -809,48 +811,39 @@ class DITIrackTypeSeries(Labware.Type.Series):
         is unknown to the user
         """
         number_tips = count_tips(TIP_MASK)  # todo do we really need a correspondence mask - wells??
-        return self._remove_tip(number_tips)
+        return self._retire_new_tips(number_tips)
 
-    def _remove_tip(self, number_tips):
-        #  return removed tips
+    def _retire_new_tips(self, number_tips):
+        """
+        Return removed tips.
+        Low Level !!! To be called only by implementations of low level Instruction.actualize_robot_state
+        as response to getDITI2
+        """
 
         tips  = []
         first = self.current
+        assert isinstance(first, DITIrack)
         rack  = first
-        pos   = 0
         while (True):
-            #                  begin                   end                   direction
-            r = rack.Wells[rack.pick_next : rack.pick_next_back + 1 : -1 if rack.lastPos else 1]
-
-            for w in r:
-                if number_tips == len(tips):
+            tips += rack.retire_new_tips(number_tips-len(tips))
+            if number_tips == len(tips):
                     return tips
-
-                if rack.lastPos:
-                    pos = rack.pick_next_back
-                    rack.pick_next_back -= 1
-                else:
-                    pos = rack.pick_next
-                    rack.pick_next      += 1
-
-                if isinstance(w.reagent, Tip):
-                    tip = w.reagent
-                    assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
-                    tips.append(tip)
-                    w.reagent    = None
-                    print("Pick tip " + str(pos + 1) + " from rack site " + str(rack.location.site + 1)
-                          + " named: "   + rack.label
-                          + " have "     + str(len(tips) )
-                          + " but need " + str(number_tips))
-
 
             # we need to find in other rack
             rack, rotated = self.set_next()
             if rack is first:
-                print("WARNING !! Using DITI rack agains? Put new ?")   # todo user prompt ???
+                print("WARNING !! Using DITI rack agains? Put new ?")        # todo refill_next_rack
 
-        return tips
-
+    def refill_next_rack(self, worktable=None):
+        rack = self.next_rack(worktable)            # the next or the first
+        assert isinstance(rack, DITIrack)
+        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)  # todo ? USER PROMPT: Fill Rack
+        assert self is not rack                   # todo why???
+        rack.fill()
+        tp = self.type
+        tp.pick_next = 0
+        tp.pick_next_back = tp.size() - 1
+        tp.pick_next_rack = rack
 
 class DITIrackType(Labware.Type):
 
@@ -928,33 +921,73 @@ class DITIrack (Labware):
         self.pick_next      = beg
         self.pick_next_back = end
 
-    def find_new_tips(self, TIP_MASK, lastPos  = False) -> (bool, list):
-        return self.series.find_tips(TIP_MASK, lastPos)
+    def find_new_tips(self, number_tips)  -> (bool, [Tip]) :
+        """
+        Return existing tips. May be only partially.
+        Just to know there are tips
+        """
 
-    def next_rack(self, worktable = None):
-        if worktable is None:
-                        worktable = WorkTable.curWorkTable
-        assert isinstance(worktable, WorkTable)
+        tips        = []
+        pos         = self.pick_next_back  if self.lastPos  else  self.pick_next
+        continuous  = True
 
-        racks = worktable.labTypes[self.type.name]  # all the racks of the same type
-        assert isinstance(racks, list)
-        i = racks.index(self)                       # my index
-        i = i+1                                     # point to the next rack of my type
-        if i == len (racks):
-            i = 0                                   # or to the first if I'm the last
+        #                  begin                   end                   direction
+        r = self.Wells[self.pick_next : self.pick_next_back + 1 : -1 if self.lastPos else 1]
 
-        return racks[i]                             # todo if racks[i] is self: return None ???
+        for w in r:
+            if number_tips == len(tips):
+                break
 
-    def set_next_to_next_rack(self, worktable=None):
-        rack = self.next_rack(worktable)            # the next or the first
-        assert isinstance(rack, DITIrack)
-        print ("WARNING !!!! USER PROMPT: Fill Rack " + rack.label)  # todo ? USER PROMPT: Fill Rack
-        assert self is not rack                   # todo why???
-        rack.fill()
-        tp = self.type
-        tp.pick_next = 0
-        tp.pick_next_back = tp.size() - 1
-        tp.pick_next_rack = rack
+            pos += -1 if self.lastPos else 1
+
+            tip = w.reagent
+            if isinstance(tip, Tip) and not isinstance(tip, usedTip):
+                assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
+                tips.append(tip)
+                print("Pick tip " + str(pos + 1) + " from rack site " + str(self.location.site + 1)
+                      + " named: "   + self.label
+                      + " have "     + str(len(tips) )
+                      + " but need " + str(number_tips))
+            else:
+                continuous = False
+
+        return continuous, tips
+
+    def retire_new_tips(self, number_tips)  -> [Tip]:
+        """
+        Return removed tips. May be only partially.
+        Low Level !!! To be called only by implementations of low level Instruction.actualize_robot_state
+        as part of series.retire_new_tips as response to getDITI2
+        """
+
+        tips  = []
+        pos   = 0
+
+        #                  begin                   end                   direction
+        r = self.Wells[self.pick_next : self.pick_next_back + 1 : -1 if self.lastPos else 1]
+
+        for w in r:
+            if number_tips == len(tips):
+                break
+
+            if self.lastPos:
+                pos = self.pick_next_back
+                self.pick_next_back -= 1
+            else:
+                pos = self.pick_next
+                self.pick_next      += 1
+
+            tip = w.reagent
+            if isinstance(tip, Tip) and not isinstance(tip, usedTip):
+                assert tip.type is self.type, "A tip of unexpected type encountered"    # todo really??
+                tips.append(tip)
+                w.reagent    = None
+                print("Pick tip " + str(pos + 1) + " from rack site " + str(self.location.site + 1)
+                      + " named: "   + self.label
+                      + " have "     + str(len(tips) )
+                      + " but need " + str(number_tips))
+
+        return tips
 
     def set_back(self, TIP_MASK, tips):
         """ Low level. Part of the job have been already done: tips is a list of the tips in

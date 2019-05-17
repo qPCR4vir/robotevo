@@ -364,7 +364,7 @@ class Robot:
 
 
         tip_mask = self.getTips_test(rack_series.type, tip_mask)
-        tips = rack_series.remove_tips(tip_mask)
+        tips = rack_series.retire_new_tips(tip_mask)
         return self.curArm().getTips(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
 
     def dropTips(self, TIP_MASK=-1, waste=None):
