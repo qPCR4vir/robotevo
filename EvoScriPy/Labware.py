@@ -207,8 +207,12 @@ class WorkTable:
 
         if labw_type_name:
             labw = self.get_current_labware(labw_type_name)
+            assert labw, "Failed to find first position."
+
         else:
             labw = self.get_DITI_series().current
+            assert labw, "Failed to find first DITI position."
+
 
         pos = posstr.split('-')
 
@@ -253,7 +257,12 @@ class WorkTable:
         if isinstance(rack, DITIrackType):
             rack = rack.name
 
-        return self.labTypes[rack]
+        assert isinstance(rack, str)
+
+        if rack in self.labTypes:
+            return self.labTypes[rack]
+
+        print("WARNING !! No labware type registered with label: " + rack)
 
 
 class Frezeer (WorkTable):
