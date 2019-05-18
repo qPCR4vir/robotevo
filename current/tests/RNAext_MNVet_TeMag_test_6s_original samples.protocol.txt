@@ -1,7 +1,21 @@
-VL-pKmix Inactivatedfor extracting RNA from 6 samples with the MN-Vet kit
+original samplesfor extracting RNA from 6 samples with the MN-Vet kit
 
-Transfer: 414.0 킠 from Proben
-    Transfer: 414.0 킠 from Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+Add pre mix Prot K.
+
+    preMix: 244.8 킠 of ProtK+cRNA+IC-MS2 mix 
+        preMix: 244.8 킠 of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8 in Reactives :  with 0.0 uL of ProtK+cRNA+IC-MS2 mix '] from 3 components:
+           1- 28.8 킠 from grid:5 site:1:['well 14 in Reactives :  with 29.0 uL of Carrier RNA ']
+           2- 144.0 킠 from grid:5 site:1:['well 15 in Reactives :  with 86.0 uL of Proteinase K ', 'well 16 in Reactives :  with 74.0 uL of Proteinase K ']
+           3- 72.0 킠 from grid:5 site:1:['well 13 in Reactives :  with 74.0 uL of IC MS2 phage culture ']
+
+    Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix 
+        Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:5 site:1 ['well 8 in Reactives :  with 244.8 uL of ProtK+cRNA+IC-MS2 mix '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+
+Transfer: 200.0 킠 from Proben
+    Transfer: 200.0 킠 from Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+
+Spread: 180.0 킠 of VL - Lysis Buffer 
+    Spread: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1 in 2-Vl Lysis Buffer :  with 1123.0 uL of VL - Lysis Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Add B-Beads
 
@@ -16,8 +30,8 @@ Wash in TeMag with VEB - Binding Buffer
     Mix: 846.0 킠 of 48PosMagnet
         Mix: 846.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
 
-    Waste: 1448.0 킠 from 48PosMagnet
-        Waste: 1448.0 킠 from 48PosMagnet in [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
+    Waste: 1034.0 킠 from 48PosMagnet
+        Waste: 1034.0 킠 from 48PosMagnet in [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
 
 Wash in TeMag with VEW1 - Wash Buffer 
 

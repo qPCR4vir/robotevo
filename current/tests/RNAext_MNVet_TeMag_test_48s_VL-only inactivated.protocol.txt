@@ -1,7 +1,18 @@
-VL-pKmix Inactivatedfor extracting RNA from 48 samples with the MN-Vet kit
+VL-only inactivatedfor extracting RNA from 48 samples with the MN-Vet kit
 
-Transfer: 414.0 킠 from Proben
-    Transfer: 414.0 킠 from Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
+Add pre mix Prot K.
+
+    preMix: 1958.4 킠 of ProtK+cRNA+IC-MS2 mix 
+        preMix: 1958.4 킠 of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8 in Reactives :  with 0.0 uL of ProtK+cRNA+IC-MS2 mix '] from 3 components:
+           1- 230.4 킠 from grid:5 site:1:['well 14 in Reactives :  with 238.0 uL of Carrier RNA ']
+           2- 1152.0 킠 from grid:5 site:1:['well 15 in Reactives :  with 607.0 uL of Proteinase K ', 'well 16 in Reactives :  with 595.0 uL of Proteinase K ']
+           3- 576.0 킠 from grid:5 site:1:['well 13 in Reactives :  with 595.0 uL of IC MS2 phage culture ']
+
+    Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix 
+        Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (1958.4 킠 total) from [grid:5 site:1 ['well 8 in Reactives :  with 1958.4 uL of ProtK+cRNA+IC-MS2 mix '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
+
+Transfer: 380.0 킠 from Proben
+    Transfer: 380.0 킠 from Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]:
 
 Add B-Beads
 
@@ -16,8 +27,8 @@ Wash in TeMag with VEB - Binding Buffer
     Mix: 846.0 킠 of 48PosMagnet
         Mix: 846.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]
 
-    Waste: 1448.0 킠 from 48PosMagnet
-        Waste: 1448.0 킠 from 48PosMagnet in [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]
+    Waste: 1414.0 킠 from 48PosMagnet
+        Waste: 1414.0 킠 from 48PosMagnet in [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 47, 48, 37, 38, 39, 40, 29, 30, 31, 32, 21, 22, 23, 24, 13, 14, 15, 16, 5, 6, 7, 8]
 
 Wash in TeMag with VEW1 - Wash Buffer 
 

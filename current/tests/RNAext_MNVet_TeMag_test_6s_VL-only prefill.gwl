@@ -1,0 +1,8 @@
+B;Comment("VL-only prefillfor extracting RNA from 6 samples with the MN-Vet kit");
+B;Set_DITI_Counter2("DiTi 1000ul","25","1","1",0);
+B;Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
+B;Comment("Spread: 180.0 µL of VL - Lysis Buffer  (1123.2 µL total) from [grid:20 site:2 ['well 1 in 2-Vl Lysis Buffer :  with 1123.0 uL of VL - Lysis Buffer '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:");
+B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
+B;Aspirate(15,"MN VL","360.00","360.00","180.00","180.00",0,0,0,0,0,0,0,0,20,1,1,"0108l0",0,0);
+B;Dispense(15,"MN VL","180.00","180.00","180.00","180.00",0,0,0,0,0,0,0,0,9,0,1,"0310?000000",0,0);
+B;Dispense(3,"MN VL","180.00","180.00","0","0",0,0,0,0,0,0,0,0,9,0,1,"031000<0000",0,0);

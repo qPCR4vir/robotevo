@@ -250,16 +250,16 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
         if self.do_extraction:
-            Te_MagS_ActivateHeater(50).exec()
+            Te_MagS_ActivateHeater(50).exec()                                     # set incubation temperature at 50°C
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
 
         if self.add_preMix:                                                               #  add  ProtK+cRNA+MS2 mix
-            with self.tips(tipsMask=maxMask, reuse=True, drop=False):
+            with group("Add pre mix Prot K."), self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 self.makePreMix(pK_cRNA_MS2)
                 self.spread  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
 
         if self.do_extraction:                                                            # add samples
-            with self.tips(reuse=True, drop=True, preserve=True):
+            with self.tips(reuse=True, drop=True, preserve=False):
                 self.transfer( from_labware_region  = Samples,
                                to_labware_region    = Lysis,
                                volume               = SampleVolume if self.add_samples else InitLysisVol,
@@ -281,7 +281,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         with incubation(10): pass # if self.add_samples
 
 
-        with group("Beads binding"):
+        with group("Add B-Beads"):
 
             with self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
@@ -289,44 +289,54 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with self.tips(reuse=True, drop=True):
                 self.spread(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
 
-            with self.tips(reuse=True, drop=False, preserve=True, usePreserved=self.add_samples): # usePreserved=True move with the other washes
-                self.wash_in_TeMag(reagent=BindingBuffer, wells=all_samples)
-
         with self.tips(reuse=True, drop=False, preserve=True):
-            self.wash_in_TeMag(reagent=VEW1, wells=all_samples)
-            self.wash_in_TeMag(reagent=VEW2, wells=all_samples)
+            self.wash_in_TeMag(reagent=BindingBuffer,   wells=all_samples)
+            self.wash_in_TeMag(reagent=VEW1,            wells=all_samples)
+            self.wash_in_TeMag(reagent=VEW2,            wells=all_samples)
 
-            with group("Wash in TeMag with " + EtOH80p.name), self.tips():         # move with the other washes
+            with group("Wash in TeMag with " + EtOH80p.name), self.tips():   # Atypical wash. Include incubation at 50°C
+
                 self.spread(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
 
                 with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//self.nTips + 1):
                     self.mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
+
                 with incubation(minutes=0.5):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
+
                 with self.tips(usePreserved=self.preserveingTips()):
                     self.waste( from_labware_region=    TeMag.selectOnly(all_samples))
 
                 with incubation(minutes=4):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
+
                 with incubation(minutes=4):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
 
-            self.spread(reagent=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
-            with incubation(minutes=2):
-                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
+        with group("Elution"):
 
-            Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()  #dont mix or dont reuse tips ???
-            with parallel_execution_of(mix_mag_eluat, repeat=NumOfSamples//self.nTips+1):
-                self.mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
+            with self.tips(reuse=True, drop=False):
 
-            with self.tips(usePreserved=self.preserveingTips(), preserve=False, drop=True):
+                self.spread(reagent=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
+
+                with incubation(minutes=2):
+                    Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
+                Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
+
+            with self.tips(reuse=True, drop=True):
+
+                with parallel_execution_of(mix_mag_eluat, repeat=NumOfSamples//self.nTips+1):
+                    self.mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
+
                 with incubation(minutes=1.0, timer=2):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
+
                 self.transfer(   from_labware_region=   TeMag.selectOnly(all_samples),
                                  to_labware_region=     Eluat.selectOnly(all_samples),
                                  volume=                ElutionBufferVolume,
                                  optimizeTo=            False,
                                  using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
+
         self.dropTips()
         self.done()
 

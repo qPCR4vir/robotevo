@@ -54,6 +54,24 @@ from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit as Prt
 
 p = Prt (NumOfSamples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_48s_VL-only prefill")
+p.use_version('VL-only prefill')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_6s_VL-only prefill")
+p.use_version('VL-only prefill')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 48,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
 p.go_first_pos('A01')
@@ -65,6 +83,23 @@ p = Prt (NumOfSamples    = 6,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+p = Prt (NumOfSamples    = 48,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_48s_VL-only inactivated")
+p.use_version('VL-only inactivated')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_6s_VL-only inactivated")
+p.use_version('VL-only inactivated')
 p.go_first_pos('A01')
 print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
@@ -87,6 +122,23 @@ p.go_first_pos('A01')
 print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
+
+p = Prt (NumOfSamples    = 48,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_48s_original samples")
+p.use_version('original samples')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'RNAext_MNVet_TeMag',
+         run_name        = "_test_6s_original samples")
+p.use_version('original samples')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
 
 #from protocols.Prefill_plate_in_Evo200                import Prefill_plate_in_Evo200
 #from protocols.RNAextractionMN_Mag_Vet                import RNAextr_MN_Vet_Kit
