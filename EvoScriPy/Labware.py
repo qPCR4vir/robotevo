@@ -89,9 +89,9 @@ class WorkTable:
                         if labw:
                             pass               # self.addLabware(labw)
                         else:
-                            print("Warning! The worktable template have a label '" +
+                            print("Warning! The worktable template have a labware labeled '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
-                                  " but non registered labware type '" + lab_t_label + "'")
+                                  " but there is no registered labware type '" + lab_t_label + "'")
                     labwware_types = []
 
                 else:                         # we need to read the types first
@@ -547,9 +547,10 @@ class Labware:
                loc          : WorkTable.Location,
                label        : str):
         labw_t = Labware.Types.get(labw_t_name)
-        assert isinstance(labw_t, Labware.Type)
         if not labw_t:
+            print("WARNING !! There is not labware type defined with label '" + labw_t_name + "'. ")
             return None
+        assert isinstance(labw_t, Labware.Type)
         labw = labw_t.createLabware(loc, label)
         return labw
 
