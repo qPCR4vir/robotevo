@@ -57,7 +57,7 @@ class Executable:
         The "primary initialization" maybe a light one, like defining the list of versions available.
         Here, for example, initialize the list of reactive.
         """
-        print('set def in Protocol')
+        print('set def in Executable')
 
     def options(self):
         """
@@ -111,14 +111,14 @@ class Protocol (Executable):
     name = ""
     min_s, max_s = 1, 96
 
-    def __init__(self,  nTips                       = 4,
-                        parameters                  = None,
-                        NumOfSamples                = max_s,
-                        GUI                         = None,
-                        worktable_template_filename = None,
-                        output_filename             = None,
-                        firstTip                    = None,
-                        run_name                    = None):
+    def __init__(   self,
+                    nTips                       = 4,
+                    NumOfSamples                = max_s,
+                    GUI                         = None,
+                    worktable_template_filename = None,
+                    output_filename             = None,
+                    firstTip                    = None,
+                    run_name                    = None):
 
         self.worktable_template_filename = worktable_template_filename or ""
         self.output_filename             = output_filename or '../current/AWL'
@@ -130,9 +130,34 @@ class Protocol (Executable):
         self.comments_                   = None      # EvoMode.Comments
         self.worktable                   = None
         self.robot                       = None
-        self.NumOfSamples                = int(NumOfSamples)
+        self.NumOfSamples                = int(NumOfSamples or Protocol.max_s)
+
+        Rtv.NumOfSamples = self.NumOfSamples
 
         Executable.__init__(self, GUI=GUI, run_name  = run_name)
+
+    def set_defaults(self):
+        wt = self.worktable
+
+        wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
+
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""                                  )
+        WashWaste       = wt.getLabware(Lab.WasteWS,    ""                                  )
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""                                  )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""                                  )
+
+        wt.def_WashWaste   = WashWaste
+        wt.def_WashCleaner = WashCleanerS
+        wt.def_DiTiWaste   = DiTiWaste
+
+        Rtv.Reagent("Liquid waste", wt.def_WashWaste)
+
+
+    def makePreMix( self, preMix, force_replies=False, NumSamples=None):
+
+        Protocol.makePreMix(self, preMix,
+                                  NumSamples    = NumSamples or self.NumOfSamples,
+                                  force_replies = force_replies                    )
 
     def initialize(self):
         if not self.initialized:

@@ -26,7 +26,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     name = "RNA extraction with the MN_Vet kit"
     min_s, max_s = 1, 48
 
-
     def def_versions(self):
         self.versions = {'VL-only prefill'     : self.ver_fill_inactivation,
                          'VL-pKmix prefill'    : self.ver_fill_preMix_inactivation,
@@ -67,6 +66,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                  NumOfSamples       : int       = None,
                  worktable_template_filename    ='../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
                  output_filename                ='../current/RNAext_MNVet_TeMag',
+                 firstTip                       = None,
                  run_name           : str       = ""):
 
         self.versions_defaults()
@@ -77,6 +77,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             worktable_template_filename
                                                     = worktable_template_filename,
                             output_filename         = output_filename + run_name,
+                            firstTip                = firstTip,
                             run_name                = run_name)
 
     def Run(self):

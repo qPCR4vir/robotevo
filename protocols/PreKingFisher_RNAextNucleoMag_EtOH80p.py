@@ -60,6 +60,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                  NumOfSamples       : int       = None,
                  worktable_template_filename    ='../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
                  output_filename                ='../current/PreKingFisher_RNAextNucleoMag_EtOH80p'  ,
+                 firstTip                       = None,
                  run_name           : str       = ""  ):
 
         self.V_default()
@@ -70,6 +71,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             worktable_template_filename
                                                     =worktable_template_filename,
                             output_filename         = output_filename + run_name,
+                            firstTip                = firstTip,
                             run_name                = run_name)
 
     def Run(self):
