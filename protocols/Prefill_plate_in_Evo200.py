@@ -122,3 +122,12 @@ class Prefill_plate_in_Evo200(Evo200):
                 self.dropTips()
 
         self.done()
+
+
+if __name__ == "__main__":
+    p = Prefill_plate_in_Evo200(NumOfSamples    = 96,
+                                run_name        = "_96s_3 plate")
+
+    p.use_version('3 plate')
+    # p.go_first_pos('A01')
+    p.Run()

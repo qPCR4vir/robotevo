@@ -366,3 +366,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
             with self.tips(usePreserved=self.preserveingTips(), preserve=False, drop=True):
                 self.waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)
+
+
+if __name__ == "__main__":
+
+    p = RNAextr_MN_Vet_Kit( NumOfSamples    = 48,
+                            run_name        = "_48_original samples")
+
+    p.use_version('original samples')
+    p.go_first_pos('A01')
+    p.Run()

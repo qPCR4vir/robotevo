@@ -288,3 +288,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         self.dropTips()
         self.done()
 
+
+if __name__ == "__main__":
+
+    p = PreKingFisher_RNAextNucleoMag_EtOH80p( NumOfSamples    = 96,
+                                               run_name        = "")
+
+    p.use_version('VL-pKmix Inactivated')
+    # p.go_first_pos('A01')
+    p.Run()

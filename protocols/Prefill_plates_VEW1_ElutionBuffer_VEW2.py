@@ -158,3 +158,13 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         self.dropTips()
 
         self.done()
+
+
+if __name__ == "__main__":
+
+    p = Prefill_plates_VEW1_ElutionBuffer_VEW2( NumOfSamples    = 96,
+                                                run_name        = "")
+
+    p.use_version('Standard')
+    # p.go_first_pos('A01')
+    p.Run()
