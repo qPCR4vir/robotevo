@@ -10,7 +10,7 @@ __author__ = 'Ariel'
 from   EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions   as     Itr
 import EvoScriPy.Labware        as     Lab
-import EvoScriPy.Reagent       as     Rtv
+import EvoScriPy.Reagent        as     Rtv
 
 from protocols.Evo200 import Evo200
 
@@ -38,14 +38,22 @@ class Prefill_plate_in_Evo200(Evo200):
     def V_3_plate(self):
         self.num_plates = 3
 
-    def __init__(self, GUI=None, run_name="Prefill plate"):
+    def __init__(self,
+                 GUI                         = None,
+                 NumOfSamples: int           = None,
+                 worktable_template_filename = None,
+                 output_filename             = None,
+                 firstTip                    = None,
+                 run_name: str               = ""):
 
         Evo200.__init__(self,
-                            GUI                     = GUI,
-                            NumOfSamples            = Prefill_plate_in_Evo200.max_s,
-                            worktable_template_filename='../EvoScripts/wt_templates/Prefill_plates_LysisBuffer.ewt',
-                            output_filename         ='../current/pp200' + run_name,
-                            run_name                = run_name)
+                        GUI                         = GUI,
+                        NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
+                        worktable_template_filename = worktable_template_filename or
+                                                      '../EvoScripts/wt_templates/Prefill_plates_LysisBuffer.ewt',
+                        output_filename             = output_filename or '../current/pp200',
+                        firstTip                    = firstTip,
+                        run_name                    = run_name)
 
     def Run(self):
         self.set_EvoMode()   # this add: self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)

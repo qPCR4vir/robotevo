@@ -23,7 +23,6 @@ class Evo100(Protocol):
                     firstTip                    = None,
                     run_name                    = None):
 
-
         Protocol.__init__(  self,
                             GUI                         = GUI,
                             nTips                       = nTips,

@@ -33,6 +33,20 @@ class Evo200 (Protocol):
                             firstTip                    = firstTip,
                             run_name                    = run_name)
 
+    def set_defaults(self):
+        wt = self.worktable
+
+        wt.def_DiTi     = Lab.DiTi_0200ul                   # this is a type, the others are labwares
+
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS,   "Cleaner1"      )
+        WashWaste       = wt.getLabware(Lab.WasteWS,      "Waste"         )
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS,   "Cleaner2"      )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,   "DiTi Waste"    )
+
+        wt.def_WashWaste   = WashWaste
+        wt.def_WashCleaner = WashCleanerS
+        wt.def_DiTiWaste   = DiTiWaste
+
 
 class Evo200_FLI (Evo200):
     """ Using the Evo200_FLI

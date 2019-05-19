@@ -58,8 +58,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     def __init__(self,
                  GUI                            = None,
                  NumOfSamples       : int       = None,
-                 worktable_template_filename    ='../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
-                 output_filename                ='../current/PreKingFisher_RNAextNucleoMag_EtOH80p'  ,
+                 worktable_template_filename    = None,
+                 output_filename                = None,
                  firstTip                       = None,
                  run_name           : str       = ""  ):
 
@@ -69,8 +69,10 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             GUI                     = GUI,
                             NumOfSamples            = NumOfSamples or PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
                             worktable_template_filename
-                                                    =worktable_template_filename,
-                            output_filename         = output_filename + run_name,
+                                                    = worktable_template_filename or
+                                                      '../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
+                            output_filename         = output_filename or
+                                                      '../current/PreKingFisher_RNAextNucleoMag_EtOH80p',
                             firstTip                = firstTip,
                             run_name                = run_name)
 

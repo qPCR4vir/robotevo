@@ -1176,17 +1176,25 @@ Tip_200maxVol   = 190                   # TODO revise
 # def_DiTi        = DiTi_1000ul
 
 
-# Evo100
+# Evo75
+CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
+WasteWash       = CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
+CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
+DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")                           # TipWaste
+
+# Evo100_FLI
 TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
 CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
 WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
 CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
 DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")
-#Evo75
-CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
-WasteWash       = CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
-CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
-DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")
+
+# Evo200_FLI
+# CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)  # Cleaner1
+# WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # Waste       10 L
+# CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)  # Cleaner2
+# DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")                       # DiTi Waste
+
 
 
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)

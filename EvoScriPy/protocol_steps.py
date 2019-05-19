@@ -121,7 +121,7 @@ class Protocol (Executable):
                     run_name                    = None):
 
         self.worktable_template_filename = worktable_template_filename or ""
-        self.output_filename             = output_filename or '../current/AWL'
+        self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
         self.firstTip                    = firstTip
         self.nTips                       = nTips
         self.EvoMode                     = None      # EvoMode.multiple
@@ -141,10 +141,10 @@ class Protocol (Executable):
 
         wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""                                  )
-        WashWaste       = wt.getLabware(Lab.WasteWS,    ""                                  )
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""                                  )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""                                  )
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""     )
+        WashWaste       = wt.getLabware(Lab.WasteWS,    ""     )
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""     )
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""     )
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS

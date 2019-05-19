@@ -64,19 +64,19 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     def __init__(self,
                  GUI                            = None,
                  NumOfSamples       : int       = None,
-                 worktable_template_filename    ='../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
-                 output_filename                ='../current/RNAext_MNVet_TeMag',
+                 worktable_template_filename    = None,
+                 output_filename                = None,
                  firstTip                       = None,
                  run_name           : str       = ""):
 
         self.versions_defaults()
 
         Evo100_FLI.__init__(self,
-                            GUI                     = GUI,
-                            NumOfSamples            = NumOfSamples or RNAextr_MN_Vet_Kit.max_s,
-                            worktable_template_filename
-                                                    = worktable_template_filename,
-                            output_filename         = output_filename + run_name,
+                            GUI                         = GUI,
+                            NumOfSamples                = NumOfSamples or RNAextr_MN_Vet_Kit.max_s,
+                            worktable_template_filename = worktable_template_filename or
+                                                          '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
+                            output_filename         = output_filename or '../current/RNAext_MNVet_TeMag',
                             firstTip                = firstTip,
                             run_name                = run_name)
 

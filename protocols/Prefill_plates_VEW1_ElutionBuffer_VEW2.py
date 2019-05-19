@@ -32,8 +32,8 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     def __init__(self,
                  GUI                            = None,
                  NumOfSamples       : int       = None,
-                 worktable_template_filename    ='../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt',
-                 output_filename                ='../current/Prefill_plates_VEW1_ElutionBuffer_VEW2'  ,
+                 worktable_template_filename    = None,
+                 output_filename                = None,
                  firstTip                       = None,
                  run_name: str                  = ""  ):
 
@@ -41,8 +41,10 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                             GUI                     = GUI,
                             NumOfSamples            = NumOfSamples or Prefill_plates_VEW1_ElutionBuffer_VEW2.max_s,
                             worktable_template_filename
-                                                    =worktable_template_filename,
-                            output_filename         = output_filename + run_name,
+                                                    = worktable_template_filename or
+                                                      '../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt',
+                            output_filename         = output_filename or
+                                                      '../current/Prefill_plates_VEW1_ElutionBuffer_VEW2',
                             firstTip                = firstTip,
                             run_name                = run_name)
 
