@@ -435,7 +435,7 @@ class Labware:
         class Series:
 
             def __init__(self, labware):                                # labware: Labware
-                assert (labware, Labware)
+                assert isinstance(labware, Labware)
                 self.labwares   = []
                 self.labels     = {}
                 self.type       = labware.type
@@ -495,6 +495,7 @@ class Labware:
 
 
         def __init__(self, name, nRow, nCol=1, maxVol=None):
+            assert name not in Labware.Types, "Duplicate labware type name: " + name
             self.name           = name
             self.nRow           = nRow
             self.nCol           = nCol
@@ -516,7 +517,6 @@ class Labware:
         def __init__(self, row, col=1):
             self.row = row
             self.col = col
-
 
 
     def __init__(self,
@@ -1168,26 +1168,22 @@ DiTi_1000ul_SBS = DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     
 DiTi_200ul_SBS  = DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
 DiTi_10ul_SBS   = DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  # 0 9,5 ??
 DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
-DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
-
 DiTi_0200ul     = DITIrackType("DiTi 200 ul",                       maxVol=     190)  # ??
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
-# def_DiTi        = DiTi_1000ul
 
-
-# Evo75
+# Evo75_FLI
 CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
 WasteWash       = CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
 CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
 DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")                           # TipWaste
 
 # Evo100_FLI
-TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",             8, 6,   maxVol=    1500)
 CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
 WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
 CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
 DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")
+TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",          8, 6,   maxVol=    1500)
 
 # Evo200_FLI
 # CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)  # Cleaner1
