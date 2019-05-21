@@ -1329,7 +1329,6 @@ class transfer_rack(Instruction):
                  lid            : Lab.Labware = None,
                  cover          : int         = 0,         # todo revise !!!!
                  romaNo         : int         = None       # 6. number of the RoMa performing the action: 0 = RoMa 1, 1 = RoMa 2
-
                  ):
         """
 
@@ -1339,7 +1338,6 @@ class transfer_rack(Instruction):
         :param lid:
         :param slow:        use slow speed (as defined in RoMa vector)? (else use maximum speed)
         :param cover:       0 = cover at source , 1 = uncover at destination
-        :param lid:
         :param vectorName:  name of RoMa vector to use (as in the Freedom EVOware configuration),
                             choose from one of the following:
                                     Narrow
@@ -1359,7 +1357,6 @@ class transfer_rack(Instruction):
         self.vectorName      = vectorName
         self.romaNo          = romaNo
 
-
         def validateArg(self):
             Instruction.validateArg(self)
             assert isinstance(self.labware,                 Lab.Labware)
@@ -1368,14 +1365,12 @@ class transfer_rack(Instruction):
 
             assert isinstance(self.destination,        Lab.WorkTable.Location)
             assert isinstance(self.destination.rack,   Lab.Carrier)
-            if self.lid is None:
-                lidHandling = 0
-            else:
+
+            if self.lid is not None:
                 assert isinstance(self.lid,      Lab.WorkTable.Location)
                 assert isinstance(self.lid.rack, Lab.Carrier)
-                lidHandling = 1
-                cover = self.cover                  # todo revise !!!!
-            assert cover in [0, 1]
+
+            assert self.cover in [0, 1]
 
             assert self.vectorName in ["Narrow", "DriveIN_Narrow",
                                        "Wide",   "DriveIN_Wide" ],  f"Pased {self.vectorName}"
