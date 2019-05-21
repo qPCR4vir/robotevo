@@ -50,8 +50,8 @@ class Prefill_plate_in_Evo200(Evo200):
                         GUI                         = GUI,
                         NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/Prefill_plates_LysisBuffer.ewt',
-                        output_filename             = output_filename or '../current/pp200',
+                                                      '../EvoScripts/wt_templates/Evo200example.ewt',
+                        output_filename             = output_filename or '../current/pp200n',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -127,6 +127,9 @@ class Prefill_plate_in_Evo200(Evo200):
 if __name__ == "__main__":
     p = Prefill_plate_in_Evo200(NumOfSamples    = 96,
                                 run_name        = "_96s_3 plate")
+
+    # \EvoScripts\scripts\temp/VakuumExtraktion_RL_96_str.esc
+    # \EvoScripts\scripts\temp/Ko_Platte_17_11_2011.esc
 
     p.use_version('3 plate')
     # p.go_first_pos('A01')

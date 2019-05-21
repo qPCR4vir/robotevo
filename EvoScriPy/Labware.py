@@ -1190,8 +1190,13 @@ TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",          8, 6,   maxVol=
 # WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # Waste       10 L
 # CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)  # Cleaner2
 # DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")                       # DiTi Waste
-
-
+AntiCOntamination = CuvetteType("AntiCOntamination",                     8, maxVol=    00) # fake, to fix LiHa position
+Eppendorfrack     = Labware.Type("Sampletubes Eppendorfrack",           16, maxVol=  1500) # = "Tube Eppendorf 16 Pos"
+TubeRack15mL2x6   = Labware.Type("Tube Falcon 15ml 12 Pos",          2,  6, maxVol= 15000) # ?? Tube 16 mm 10 Pos
+MagSeparatPlt8x9  = Labware.Type("96 Well Separation Plate",         8,  9, maxVol=    00) # Magnetic separation 8x9
+Filterplate       = Labware.Type("FilterplateaufElutionplate flach", 8, 12, maxVol=  2000) # Te-VacS
+MP96MachereyNagel = Labware.Type("96 Well Macherey-Nagel Plate",     8, 12, maxVol=  2000) # Te-VacS
+MP96MNflach       = Labware.Type("96 Well 8er Macherey-Nagel flach", 8, 12, maxVol=  2000) # Te-VacS
 
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
 MP96deepwell = Labware.Type("96 Well DeepWell square", 8, 12, maxVol=2000)    # todo define in Evoware !!!
