@@ -1145,7 +1145,6 @@ class RoMa(Instruction):
     def actualize_robot_state(self):
         pass                            # todo  and exec()?
 
-
     def validateArg(self):
         Instruction.validateArg(self)
         assert    0 > self.action   >   3, "RoMa action must be 0,1, 2 or 3, but passed: " + str(self.action)
@@ -1232,7 +1231,7 @@ class vector(Instruction):
     This workaround transfers the barcode but not the pipetting information.
     """
 
-class Transfer(Instruction):
+class transfer_rack(Instruction):
 
     """
     This command is used to transfer labware (e.g. a microplate) from one position to
@@ -1320,6 +1319,90 @@ class Transfer(Instruction):
     for a RoMa”,  9-63.
     """
 
+    #
+    def __init__(self,
+                 labware        : Lab.Labware,
+                 destination    : Lab.WorkTable.Location,
+                 backHome       : bool,
+                 slow           : bool,                    # 5. 0 = maximum speed , 1 = slow speed (as defined in RoMa vector)
+                 vectorName     : str,                     # 10. "Narrow", "DriveIN_Narrow", "Wide", or "DriveIN_Wide"
+                 lid            : Lab.Labware = None,
+                 cover          : int         = 0,         # todo revise !!!!
+                 romaNo         : int         = None       # 6. number of the RoMa performing the action: 0 = RoMa 1, 1 = RoMa 2
+
+                 ):
+        """
+
+        :param labware:
+        :param destination:
+        :param backHome:    move back to home when finished ?
+        :param lid:
+        :param slow:        use slow speed (as defined in RoMa vector)? (else use maximum speed)
+        :param cover:       0 = cover at source , 1 = uncover at destination
+        :param lid:
+        :param vectorName:  name of RoMa vector to use (as in the Freedom EVOware configuration),
+                            choose from one of the following:
+                                    Narrow
+                                    DriveIN_Narrow
+                                    DriveIN_Narrow
+                                    DriveIN_Wide
+        :param romaNo:
+        """
+        Instruction.__init__(self, "Transfer_Rack")
+
+        self.labware         = labware
+        self.destination     = destination
+        self.backHome        = backHome
+        self.slow            = slow
+        self.cover           = cover
+        self.lid             = lid
+        self.vectorName      = vectorName
+        self.romaNo          = romaNo
+
+
+        def validateArg(self):
+            Instruction.validateArg(self)
+            assert isinstance(self.labware,                 Lab.Labware)
+            assert isinstance(self.labware.type,            Lab.Labware.Type)
+            assert isinstance(self.labware.location.rack,   Lab.Carrier)
+
+            assert isinstance(self.destination,        Lab.WorkTable.Location)
+            assert isinstance(self.destination.rack,   Lab.Carrier)
+            if self.lid is None:
+                lidHandling = 0
+            else:
+                assert isinstance(self.lid,      Lab.WorkTable.Location)
+                assert isinstance(self.lid.rack, Lab.Carrier)
+                lidHandling = 1
+                cover = self.cover                  # todo revise !!!!
+            assert cover in [0, 1]
+
+            assert self.vectorName in ["Narrow", "DriveIN_Narrow",
+                                       "Wide",   "DriveIN_Wide" ],  f"Pased {self.vectorName}"
+            if self.romaNo is None:
+                self.romaNo = RoMa.RoMa_1
+            assert self.romaNo in [RoMa.RoMa_1, RoMa.RoMa_2], f"romaNo must be 0 or 1, but passed: {self.romaNo}"
+
+            self.arg = [expression(self.labware.location.grid),  # 1. 1-67, carrier grid position, source                            example: "15"
+                        expression(self.destination.grid),       # 2. 1-67. labware location - carrier grid position,  destination   example: "15"
+                        integer   (1 if self.backHome else 0),   # 3. 1 = move back to home when finished                            example: 0
+                        integer   (1 if self.lid  else 0),       # 4. 0 = no lid handling , 1= lid handling                          example: 1
+                        integer   (1 if self.slow else 0),       # 5. 0 = maximum speed , 1 = slow speed (as defined in RoMa vector) example: 0
+                        integer   (self.romaNo),                 # 6. number of the RoMa : 0 = RoMa 1, 1 = RoMa 2                    example: 0
+                        integer   (self.cover),                  # 7. 0 = cover at source , 1 = uncover at destination               example: 0
+                        expression(self.lid.location.grid if lid else 0),  # 8. 1-67. lid location - carrier grid position     ??    example: "15"
+                        string1   (self.labware.type.name),      # 9. labware type (as in the Freedom EVOware configuration)         example: "96 Well Microplate"
+                        string1   (self.vectorName),             # 10. name of RoMa vector to use (as in the Freedom EVOware configuration), example: "Narrow"
+                        string1   (""),                          # 11. unused                                                        example: ""
+                        string1   (""),                          # 12. unused                                                        example: ""
+                        string1   (self.labware.location.rack.label),  # 13. carrier name, source    ?                               example: "MP 3Pos"
+                        string1   (self.lid.rack.label if lid else ""),  # 14. carrier name, lid     ?                               example: "MP 3Pos"
+                        string1   (self.destination.rack.label),  # 15. carrier name, destination    ?                               example: "MP 3Pos"
+                        string1   (self.labware.location.site),   # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
+                        string1   (self.lid.location.site if lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
+                        string1   (self.destination.site)         # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
+                        ]
+            return True
 
 
 class subroutine(ScriptONLY):
