@@ -1330,12 +1330,12 @@ class transfer_rack(Instruction):
     def __init__(self,
                  labware        : Lab.Labware,
                  destination    : Lab.WorkTable.Location,
-                 backHome       : bool,
-                 slow           : bool,                    # 5. 0 = maximum speed , 1 = slow speed (as defined in RoMa vector)
-                 vectorName     : str,                     # 10. "Narrow", "DriveIN_Narrow", "Wide", or "DriveIN_Wide"
+                 vectorName     : str         = None,
+                 backHome       : bool        = True,
+                 slow           : bool        = True,
                  lid            : Lab.Labware = None,
                  cover          : int         = 0,         # todo revise !!!!
-                 romaNo         : int         = None       # 6. number of the RoMa performing the action: 0 = RoMa 1, 1 = RoMa 2
+                 romaNo         : int         = None
                  ):
         """
 
@@ -1351,7 +1351,7 @@ class transfer_rack(Instruction):
                                     DriveIN_Narrow
                                     DriveIN_Narrow
                                     DriveIN_Wide
-        :param romaNo:
+        :param romaNo:      number of the RoMa performing the action: 0 = RoMa 1, 1 = RoMa 2
         """
         Instruction.__init__(self, "Transfer_Rack")
 
@@ -1379,6 +1379,8 @@ class transfer_rack(Instruction):
 
         assert self.cover in [0, 1]
 
+        if self.vectorName is None:
+            self.vectorName = "Narrow"
         assert self.vectorName in ["Narrow", "DriveIN_Narrow",
                                    "Wide",   "DriveIN_Wide" ],  f"Pased {self.vectorName}"
         if self.romaNo is None:
@@ -1412,7 +1414,7 @@ class transfer_rack(Instruction):
         #     if self.cover:                       # 1 = uncover at destination
         #         self.lid.location
         self.robot.move_labware_executed(self.labware, self.destination)
-        pass
+
 
 
 class subroutine(ScriptONLY):
