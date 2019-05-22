@@ -1392,21 +1392,26 @@ class transfer_rack(Instruction):
                     integer   (1 if self.slow else 0),       # 5. 0 = maximum speed , 1 = slow speed (as defined in RoMa vector) example: 0
                     integer   (self.romaNo),                 # 6. number of the RoMa : 0 = RoMa 1, 1 = RoMa 2                    example: 0
                     integer   (self.cover),                  # 7. 0 = cover at source , 1 = uncover at destination               example: 0
-                    expression(self.lid.location.grid if lid else 0),  # 8. 1-67. lid location - carrier grid position     ??    example: "15"
+                    expression(self.lid.location.grid if self.lid else 0),  # 8. 1-67. lid location - carrier grid position     ??    example: "15"
                     string1   (self.labware.type.name),      # 9. labware type (as in the Freedom EVOware configuration)         example: "96 Well Microplate"
                     string1   (self.vectorName),             # 10. name of RoMa vector to use (as in the Freedom EVOware configuration), example: "Narrow"
                     string1   (""),                          # 11. unused                                                        example: ""
                     string1   (""),                          # 12. unused                                                        example: ""
                     string1   (self.labware.location.rack.label),  # 13. carrier name, source    ?                               example: "MP 3Pos"
-                    string1   (self.lid.rack.label if lid else ""),  # 14. carrier name, lid     ?                               example: "MP 3Pos"
+                    string1   (self.lid.rack.label if self.lid else ""),  # 14. carrier name, lid     ?                               example: "MP 3Pos"
                     string1   (self.destination.rack.label),  # 15. carrier name, destination    ?                               example: "MP 3Pos"
                     string1   (self.labware.location.site),   # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
-                    string1   (self.lid.location.site if lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
+                    string1   (self.lid.location.site if self.lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
                     string1   (self.destination.site)         # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
                     ]
         return True
 
     def actualize_robot_state(self):
+        self.validateArg()
+        # if self.lid:
+        #     if self.cover:                       # 1 = uncover at destination
+        #         self.lid.location
+        self.robot.move_labware_executed(self.labware, self.destination)
         pass
 
 
