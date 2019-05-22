@@ -65,15 +65,12 @@ class Prefill_plate_in_Evo200(Evo200):
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
-        Itr.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'\
+        Itr.comment('Prefill {:d} plates with Buffer Reagent for {:d} samples.'\
                        .format(self.num_plates,
                                NumOfSamples     )).exec()
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
-        BufCuvette = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
-
-
-
+        BufCuvette = wt.getLabware(Lab.Trough_100ml, "RA4")
 
         self.go_first_pos()                                                     #  Set the initial position of the tips
 
@@ -86,10 +83,10 @@ class Prefill_plate_in_Evo200(Evo200):
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        BufferReact = Rtv.Reagent("Buffer ",
+        buffer_reag = Rtv.Reagent("Buffer ",
                                   BufCuvette,
                                   volpersample = BufferVolume,
-                                  defLiqClass  = 'MN VL',
+                                  #defLiqClass  = 'MN VL',
                                   num_of_samples= self.num_plates * NumOfSamples)
 
         # Show the CheckList GUI to the user for possible small changes
@@ -99,38 +96,34 @@ class Prefill_plate_in_Evo200(Evo200):
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        LysPlat = [wt.getLabware(Lab.MP96deepwell, "Plate lysis-"+str(i+1)) for i in range(self.num_plates)]
-
-        par = LysPlat[0].parallelOrder(self.nTips, all_samples)
+        Plat = wt.getLabware(Lab.MP96MachereyNagel, "Filterplatte")
 
         # Define place for temporal reactions
-        for i, LP in enumerate(LysPlat):
-            for s in all_samples:
-                Rtv.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
-                            LP,
-                            initial_vol =0.0,
-                            pos         =s + 1,
-                            excess      =0)
+        for s in all_samples:
+            Rtv.Reagent(f"lysis_{s + 1:02d}",
+                        Plat,
+                        initial_vol =0.0,
+                        pos         =s + 1,
+                        excess      =0)
 
         with group("Prefill plates with BufferReact"):
 
             Itr.userPrompt("Put the plates for BufferReact").exec()
 
-            for LP in LysPlat:
-                with self.tips(reuse=True, drop=False):
-                    self.spread(reagent=BufferReact, to_labware_region=LP.selectOnly(all_samples))
-                self.dropTips()
+            with self.tips(reuse=True, drop=False):
+                self.spread(reagent=buffer_reag, to_labware_region=Plat.selectOnly(all_samples))
+            self.dropTips()
 
         self.done()
 
 
 if __name__ == "__main__":
     p = Prefill_plate_in_Evo200(NumOfSamples    = 96,
-                                run_name        = "_96s_3 plate")
+                                run_name        = "_96s_1 plate")
 
     # \EvoScripts\scripts\temp/VakuumExtraktion_RL_96_str.esc
     # \EvoScripts\scripts\temp/Ko_Platte_17_11_2011.esc
 
-    p.use_version('3 plate')
+    p.use_version('1 plate')
     # p.go_first_pos('A01')
     p.Run()

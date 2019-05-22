@@ -140,7 +140,19 @@ p.go_first_pos('A01')
 print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
-#from protocols.Prefill_plate_in_Evo200                import Prefill_plate_in_Evo200
+
+from protocols.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200 as Prt
+
+p = Prt (NumOfSamples    = 96,
+         output_filename = test_dir + 'Prefill_plate_in_Evo200',
+         run_name        = "_test_96s_1 plate")
+p.use_version('1 plate')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+
 #from protocols.RNAextractionMN_Mag_Vet                import RNAextr_MN_Vet_Kit
 #from protocols.Prefill_plates_LysisBuffer             import Prefill_plates_LysisBuffer
 
