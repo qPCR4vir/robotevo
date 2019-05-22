@@ -147,7 +147,7 @@ class WorkTable:
 
         # todo add to self.grid labware.location.grid dict site, labware
 
-    def add_labware(self, labware, loc : Location = None):
+    def add_labware(self, labware, loc : Location):
         """
 
         :param labware:
@@ -157,12 +157,26 @@ class WorkTable:
         """
 
         assert isinstance(labware, Labware)
+        assert isinstance(loc, WorkTable.Location)
+
         if isinstance(labware.location, WorkTable.Location):
             if isinstance(labware.location.worktable, WorkTable):
-                labware.location.worktable.retireLabware(labware)         # remove from previous location todo tevise
+                if isinstance(loc.worktable, WorkTable):
+                    if labware.location.worktable is loc.worktable:
+                        labware.location = loc                                  # the simplest intention: move it
+                        return
+                    else:
+                        labware.location.worktable.retireLabware(labware)       # remove from previous worktable
+                        return
+                else:                                                           # no new worktable
+                    loc.worktable = labware.location.worktable                  # just move it in current worktable
+                    labware.location = loc
+                    return
 
-        assert isinstance(loc, WorkTable.Location)
-        self.add_new_labware(labware, loc)
+        # assert labware.series is None, "For now we assume labware with no location or worktable have no series"
+
+        self.retireLabware(labware)                                             # remove from previous worktable/series
+        loc.worktable.add_new_labware(labware, loc)                             # add to the new worktable
 
     def get_current_labware(self, labware):
 
@@ -227,8 +241,12 @@ class WorkTable:
 
     def retireLabware(self, labw):
         assert isinstance(labw, Labware )
-        self.getLabware(labw.type, labw.label)
-        self.labTypes[labw.type.name].remove(labw)
+
+        if labw.type.name in self.labTypes:
+            assert labw.series is self.labTypes[labw.type.name]
+
+        if isinstance(labw.series, Labware.Type.Series):
+            labw.series.remove(labw)
         labw.location = None
         return labw
 
@@ -447,6 +465,17 @@ class Labware:
                 self.labwares.append(labware)
                 self.labels[ labware.label ] = labware
                 labware.series               = self
+
+            def remove(self, labware):
+                assert isinstance(labware, Labware)
+                assert self is labware.series
+                if labware is self.current:
+                    self.set_next()
+                    assert self.current is not labware
+
+                del self.labwares[labware]
+                del self.labels[ labware.label ]
+                labware.series = None
 
             def __iadd__(self, labware):                                # labware : Labware
                 self.add(labware)

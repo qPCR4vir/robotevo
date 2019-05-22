@@ -478,6 +478,11 @@ class Robot:
         for i, w in enumerate(labware_selection.selected_wells()):
             self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
 
+    def move_labware_executed(self, labware, destination):
+        # assert isinstance(labware, Lab.Labware)
+        # assert isinstance(destination, Lab.WorkTable.Location)
+        self.worktable.add_labware(labware, destination)
+
 
     # relatively simple "setters" and "getters" of current default options
 
