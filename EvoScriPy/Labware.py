@@ -306,7 +306,7 @@ class Carrier:
     def __init__(self, RackType, grid, label=""):  # , worktable=WorkTable.curWorkTable or Rbt.Robot.current.worktable
         self.site = grid
         self.type = RackType
-        self.labwares = [None] * self.nSite
+        self.labwares = [None] * self.type.nSite
         self.label = label
 
     def addLabware(self, labware, site):
