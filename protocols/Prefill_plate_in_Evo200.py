@@ -98,6 +98,10 @@ class Prefill_plate_in_Evo200(Evo200):
 
         Plat = wt.getLabware(Lab.MP96MachereyNagel, "Filterplatte")
 
+        assert isinstance(Plat, Lab.Labware)
+
+
+
         # Define place for temporal reactions
         for s in all_samples:
             Rtv.Reagent(f"lysis_{s + 1:02d}",
@@ -105,6 +109,12 @@ class Prefill_plate_in_Evo200(Evo200):
                         initial_vol =0.0,
                         pos         =s + 1,
                         excess      =0)
+
+        loc = Plat.location
+        loc.site += 1
+        car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", nSite=3), loc.grid, label = "MP 3Pos")
+        loc.rack = car
+        Itr.transfer_rack(Plat, loc ).exec()
 
         with group("Prefill plates with BufferReact"):
 
