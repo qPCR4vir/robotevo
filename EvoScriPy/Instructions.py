@@ -300,7 +300,7 @@ class getDITI2(DITIs):
     def actualize_robot_state(self):
         self.validateArg()
         maxVol = None
-        self.tipMask, tips = self.robot.getTips(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
+        self.tipMask, tips = self.robot.get_tips_executed(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
 
 
@@ -335,7 +335,7 @@ class dropDITI(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = self.robot.dropTips(self.tipMask, self.labware)
+        self.tipMask = self.robot.drop_tips_executed(self.tipMask, self.labware)
 
 
 class set_DITI_Counter(Pipette):            # todo help determining the type,set other Lab.def_LabW,   deprecated???
@@ -474,7 +474,7 @@ class pickUp_DITIs(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask, tips = self.robot.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = self.robot.pick_up_tips_executed(self.tipMask, self.labware)
         assert not tips
 
 
@@ -513,7 +513,7 @@ class pickUp_DITIs2(Pipette):
 
     def actualize_robot_state(self):
         assert isinstance(self.labware, Lab.DITIrack)
-        self.tipMask, tips = self.robot.pick_up_tips(self.tipMask, self.labware)
+        self.tipMask, tips = self.robot.pick_up_tips_executed(self.tipMask, self.labware)
         assert not tips
 
 
@@ -522,22 +522,25 @@ class set_DITIs_Back(Pipette):
     return used DITIs to specified positions on a DITI rack for later use.
     This command requires the Lower DITI Eject option.
     """
-    def __init__(self , tipMask     ,
-                             labware  : Lab.DITIrack   ,
-                             wellSelection= None,
-                             LoopOptions = def_LoopOp,
-                             arm         = None,
-                             RackName    = None,
-                             Well        = None):
+    def __init__(self,
+                 tipMask,
+                 labware  : Lab.DITIrack,
+                 wellSelection      = None,
+                 LoopOptions        = def_LoopOp,
+                 arm                = None,
+                 RackName           = None,
+                 Well               = None):
+
         assert isinstance(labware, Lab.DITIrack)
+
         Pipette.__init__(self, 'Set_DITIs_Back',
-                             tipMask     = tipMask,
-                             labware     = labware,
-                             wellSelection= wellSelection,
-                             LoopOptions = LoopOptions,
-                             RackName    = RackName,
-                             Well        = Well,
-                             arm         = arm)
+                         tipMask     = tipMask,
+                         labware     = labware,
+                         wellSelection= wellSelection,
+                         LoopOptions = LoopOptions,
+                         RackName    = RackName,
+                         Well        = Well,
+                         arm         = arm)
 
 
     def validateArg(self):
@@ -548,7 +551,7 @@ class set_DITIs_Back(Pipette):
         return True
 
     def actualize_robot_state(self):
-        self.tipMask = self.robot.set_tips_back(self.tipMask, self.labware)
+        self.tipMask = self.robot.set_tips_back_executed(self.tipMask, self.labware)
 
 
 class pickUp_ZipTip(Pipette): # todo implement !!!
@@ -1402,6 +1405,9 @@ class transfer_rack(Instruction):
                     string1   (self.destination.site)         # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
                     ]
         return True
+
+    def actualize_robot_state(self):
+        pass
 
 
 class subroutine(ScriptONLY):

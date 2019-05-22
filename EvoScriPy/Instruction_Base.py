@@ -261,8 +261,8 @@ class Pipetting(Pipette):
         pass
 
     def pipette_on_iRobot(self,action):
-        self.volume, self.tipMask = self.robot.pipette(action, self.volume,
-                                                              self.labware, self.tipMask )
+        self.volume, self.tipMask = self.robot.pipette_executed(action, self.volume,
+                                                                self.labware, self.tipMask)
 
 
 class DITIs(Instruction):
