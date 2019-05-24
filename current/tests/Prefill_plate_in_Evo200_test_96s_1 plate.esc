@@ -1,26 +1,26 @@
-02E47AE8
-20190522_181315 Admin           
+A4BBD844
+20190523_104805 Admin           
                                                                                                                                 
 Administrator                                                                                                                   
 --{ RES }--
 V;200
 --{ CFG }--
 999;217;32;
-14;-1;-1;-1;-1;-1;12;-1;-1;-1;-1;-1;107;43;43;43;43;43;43;-1;104;-1;-1;108;106;-1;-1;-1;-1;-1;-1;-1;-1;-1;35;-1;-1;-1;-1;-1;-1;-1;-1;-1;41;-1;-1;-1;-1;-1;-1;-1;-1;-1;16;16;12;-1;-1;-1;-1;-1;-1;-1;-1;109;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;
+14;-1;-1;-1;-1;-1;12;-1;-1;-1;-1;-1;43;43;43;43;43;43;43;-1;104;-1;-1;108;106;-1;-1;-1;-1;-1;-1;-1;-1;-1;35;-1;-1;-1;-1;-1;-1;-1;-1;-1;41;-1;-1;-1;-1;-1;-1;-1;-1;-1;16;16;12;-1;-1;-1;-1;-1;-1;-1;-1;109;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;
 998;0;
 998;0;
 998;0;
 998;0;
 998;0;
-998;3;;;;
-998;;;;
+998;3;DiTi 1000ul;96 Well Microplate;;
+998;MP s-1 grid 5-10!MP 3Pos;MP96 Orig;;
 998;0;
 998;0;
 998;0;
 998;0;
 998;0;
-998;40;AntiCOntamination;AntiCOntamination;AntiCOntamination;AntiCOntamination;AntiCOntamination;AntiCOntamination;;;;AntiCOntamination;;AntiCOntamination;;;AntiCOntamination;;;;AntiCOntamination;;;;AntiCOntamination;;;;;AntiCOntamination;;;;;;;AntiCOntamination;;;;;;
-998;AntiCon1;AntiCon2;AntiCon3;AntiCon4;AntiCon5;AntiCon6;;;;AntiCon7;;AntiCon8;;;AntiCon9;;;;AntiCon10;;;;AntiCon11;;;;;AntiCon12;;;;;;;AntiCOn13;;;;;;
+998;1;EppendorfCupsSamplerack;
+998;Episx16 on Tube Eppendorf 16 Pos;
 998;1;Sampletubes Eppendorfrack;
 998;Samples1;
 998;1;Sampletubes Eppendorfrack;
@@ -32,7 +32,7 @@ V;200
 998;1;Sampletubes Eppendorfrack;
 998;Samples5;
 998;1;Sampletubes Eppendorfrack;
-998;Samples6;
+998;Samples6on Tube Eppendorf 16 Pos;
 998;0;
 998;8;Washstation 2Grid Cleaner short;Washstation 2Grid Waste;Washstation 2Grid Cleaner long;;Trough 100ml;;Washstation 2Grid DiTi Waste;;
 998;Cleaner1;Waste;Cleaner2;;IC2-RNA;;DiTi Waste;;
@@ -41,7 +41,7 @@ V;200
 998;1;Tube Falcon 15ml 12 Pos;
 998;DNase;
 998;1;96 Well Separation Plate;
-998;AGOWA;
+998;AGOWA-MagGrid23-30;
 998;0;
 998;0;
 998;0;
@@ -52,7 +52,7 @@ V;200
 998;0;
 998;0;
 998;6;96 Well Macherey-Nagel Plate;;;;;;
-998;Filterplatte;;;;;;
+998;FilterplatteVacGrid33-38;;;;;;
 998;0;
 998;0;
 998;0;
@@ -62,8 +62,8 @@ V;200
 998;0;
 998;0;
 998;0;
-998;3;FilterplateaufElutionplate flach;FilterplateaufElutionplate flach;96 Well 8er Macherey-Nagel flach;
-998;Labw fake;Filterplatte auf Elutionsplatte;SQW;
+998;3;DiTi 1000ul;FilterplateaufElutionplate flach;96 Well 8er Macherey-Nagel flach;
+998;DiTi1000/2;Labw fake;SQW;
 998;0;
 998;0;
 998;0;
@@ -77,8 +77,8 @@ V;200
 998;RA4;MDB;Wasser;
 998;3;Trough 100ml;Trough 100ml;Trough 100ml;
 998;RA3/2;RA3/1;RA2;
-998;3;DiTi 1000ul;96 Well Microplate;96 Well Microplate;
-998;DiTi1000/2;MP96 Orig;MP96 fake cretaed by evow;
+998;3;FilterplateaufElutionplate flach;;96 Well Microplate;
+998;Filterplatte auf Elutionsplatte;;MP96 fake cretaed by evow;
 998;0;
 998;0;
 998;0;
@@ -87,8 +87,8 @@ V;200
 998;0;
 998;0;
 998;0;
-998;1;;
-998;;
+998;1;96 Well DeepWell;
+998;MP Grid64-69 on Te-Shake 1Pos;
 998;0;
 998;0;
 998;0;
@@ -124,7 +124,7 @@ V;200
 998;0;
 998;0;
 998;2;
-998;105;1;
+998;105;2;
 998;85;66;
 998;4;
 998;4;0;System;
@@ -132,19 +132,22 @@ V;200
 998;0;0;Shelf 8+6Pos;
 998;0;1;Hotel 5Pos DeepWell;
 998;2;
-998;105;FilterplateaufElutionplate flach;
-998;85;FilterplateaufElutionplate;
+998;105;DiTi 1000ul;
+998;85;96 Well Microplate;
 998;1;
 998;1;
-998;1;
+998;2;
 998;66;
 996;0;0;
 --{ RPG }--
+Transfer_Rack("66","43",1,0,1,0,0,"","96 Well Microplate","Narrow","","","Hotel 5Pos DeepWell","","MP 3Pos Cooled","3","(Not defined)","2");
+UserPrompt("end?",0,-1);
+Transfer_Rack("2","66",1,0,1,0,0,"","","Narrow","","","Shelf 8+6Pos","","Hotel 5Pos DeepWell","8","(Not defined)","4");
+UserPrompt("end?",0,-1);
 Comment("Prefill 1 plates with Buffer Reagent for 96 samples.");
-Set_DITI_Counter2("DiTi 1000ul","55","1","1");
 Wash(255,19,1,19,0,"5",50,"10",50,0,50,100,1,0,1000,0);
-Transfer_Rack("55","55",1,0,1,0,0,"","96 Well Microplate","Narrow","","","MP 3Pos","","MP 3Pos","2","(Not defined)","3");
-Transfer_Rack("43","43",1,0,1,0,0,"","FilterplateaufElutionplate flach","Narrow","","","MP 3Pos Cooled","","MP 3Pos Cooled","2","(Not defined)","1");
+Transfer_Rack("66","43",1,0,1,0,0,"","96 Well Microplate","Narrow","","","Hotel 5Pos DeepWell","","MP 3Pos Cooled","3","(Not defined)","3");
+Transfer_Rack("5","55",1,0,1,0,0,"","96 Well Microplate","Narrow","","","MP 3Pos","","MP 3Pos","2","(Not defined)","3");
 Group("Prefill plates with BufferReact");
 UserPrompt("Put the plates for BufferReact",1,-1);
 Group("Spread: 100.0 µL of Buffer ");
@@ -153,11 +156,11 @@ GetDITI2(254,"DiTi 1000ul",0,0,0,300);
 Aspirate(254,"Water for DITI 1000",0,"300.00","300.00","300.00","300.00","300.00","300.00","300.00",0,0,0,0,53,0,1,"0108Æ1",0,0);
 Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,55,2,1,"0C08Æ1000000000000",0,0);
 Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,55,2,1,"0C080¨300000000000",0,0);
-Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,0,1,"0C0800®70000000000",0,0);
+Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,1,1,"0C0800®70000000000",0,0);
 Aspirate(254,"Water for DITI 1000",0,"300.00","300.00","300.00","300.00","300.00","300.00","300.00",0,0,0,0,53,0,1,"0108Æ1",0,0);
-Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,0,1,"0C080000000000®700",0,0);
-Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,0,1,"0C0800000000000†?0",0,0);
-Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,0,1,"0C08000000000000êO",0,0);
+Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,1,1,"0C080000000000®700",0,0);
+Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,1,1,"0C0800000000000†?0",0,0);
+Dispense(254,"Water",0,"100.00","100.00","100.00","100.00","100.00","100.00","100.00",0,0,0,0,43,1,1,"0C08000000000000êO",0,0);
 GroupEnd();
 DropDITI(255,19,6,0,300,0);
 GroupEnd();
