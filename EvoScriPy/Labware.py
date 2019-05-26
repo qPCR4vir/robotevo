@@ -36,6 +36,56 @@ class WorkTable:
             self.rack_site = rack_site
 
 
+    class File:
+        def __init__(self, input, output, worktable):
+            self.worktable = worktable
+            self.output                     = output
+            self.input                      = input
+            self.check_summa    : str       = None
+            self.date_time      : str       = None
+            self.user           : str       = "Admin           "
+            self.grid_carriers =None
+
+
+
+        def write(self, worktable):
+            lines = [
+                self.check_summa,
+                self.date_time + " " +  self.user,
+                "                                                                                                                                ",
+                "Administrator                                                                                                                   ",
+                "--{ RES }--",
+                "V;200",
+                "--{ CFG }--",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+
+            ]
+            for line in lines:
+                self.output.write(line)
+
+        def grid_carrier_line(self):
+            line = "14;"
+            labw = { }
+
+
+
+
     def __init__(self, templateFile, grids=67, sites=127):
         self.def_WashWaste   = None
         self.def_WashCleaner = None
