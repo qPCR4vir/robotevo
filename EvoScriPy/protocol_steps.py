@@ -131,6 +131,7 @@ class Protocol (Executable):
         self.worktable                   = None
         self.robot                       = None
         self.NumOfSamples                = int(NumOfSamples or Protocol.max_s)
+        self.check_initial_liquid_level  = False
 
         Rtv.NumOfSamples = self.NumOfSamples
 
@@ -219,6 +220,13 @@ class Protocol (Executable):
         if (self.GUI):
             self.GUI.CheckList()
         self.set_EvoMode()
+        if self.check_initial_liquid_level:
+            self.chek_reagents_levels()
+
+    def chek_reagents_levels(self):
+        for reagent in self.worktable.reagents:
+            print(f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}")
+
 
     def done(self):
         self.EvoMode.done()

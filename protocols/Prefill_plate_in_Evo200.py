@@ -61,6 +61,8 @@ class Prefill_plate_in_Evo200(Evo200):
         self.initialize()    # if needed calls Executable.initialize() and set_EvoMode
                              # which calls GUI.update_parameters() and set_defaults() from Evo200
 
+        self.check_initial_liquid_level = True
+
         Rtv.NumOfSamples = self.NumOfSamples
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable

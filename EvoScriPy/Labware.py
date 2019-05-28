@@ -84,8 +84,6 @@ class WorkTable:
             labw = { }
 
 
-
-
     def __init__(self, templateFile, grids=67, sites=127):
         self.def_WashWaste   = None
         self.def_WashCleaner = None

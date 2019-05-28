@@ -566,7 +566,7 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
     """ A.15.4.11 Detect Liquid (Worklist: Detect_Liquid)
     """
     def __init__(self ,      tipMask     = None,
-                             liquidClass = def_liquidClass,
+                             liquidClass = None,
                              labware     = None,
                              spacing     = 1,
                              wellSelection= None,
