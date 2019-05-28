@@ -157,7 +157,7 @@ class Pipette(Instruction):
                  labware      : Lab.Labware = None,
                  spacing                    = 1,           # todo how to use???
                  wellSelection              = None,        # todo how to use???
-                 LoopOptions                = def_LoopOp,  # todo how to model???
+                 LoopOptions                = None,        # todo how to model???
                  RackName                   = None,        # todo I need to this???
                  Well                       = None,        # todo I need to this???
                  arm                        = LiHa1):      # set this as def
@@ -186,6 +186,7 @@ class Pipette(Instruction):
         :param arm:
         """
         Instruction.__init__(self, name)
+
         self.arm                = self.robot.curArm(arm)      # todo revise !!!!!!!!!!!!   set this as def ??!!
         self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.arm.nTips]
         self.labware            = labware
@@ -205,14 +206,22 @@ class Pipette(Instruction):
         :return:
 
         """
+        Instruction.validateArg(self)
+
+        if self.tipMask is None:
+            self.tipMask = Rbt.tipsMask[self.arm.nTips]
+
+        if self.loopOptions is None:
+            self.loopOptions = def_LoopOp
+
         assert isinstance(self.labware, Lab.Labware)    # todo Lab.DITIrack ??
         self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid),                                      # arg 2
                       integer(self.labware.location.site),                                      # arg 3
-                      integer(self.spacing),
-                      string1( self.labware.wellSelectionStr()) ]                               # arg 4, 5
+                      integer(self.spacing),                                                    # arg 4
+                      string1( self.labware.wellSelectionStr()) ]                               # arg 5
         self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6
         for op in self.loopOptions:
             self.arg +=  [string1(op.name),
@@ -229,15 +238,16 @@ class Pipette(Instruction):
 class Pipetting(Pipette):
     def __init__(self, name, tipMask     = None,
                              liquidClass = def_liquidClass,
-                             volume      = def_vol,
+                             volume      = None,
                              labware     = None,                            # todo ??????
                              spacing     = 1,
                              wellSelection= None,
-                             LoopOptions = def_LoopOp,
+                             LoopOptions = None,
                              RackName    = None,
                              Well        = None,
                              arm         = None):
-        Pipette.__init__(self, name, tipMask    ,
+
+        Pipette.__init__(self, name, tipMask,
                              labware     ,
                              spacing    ,
                              wellSelection,
@@ -245,8 +255,9 @@ class Pipetting(Pipette):
                              RackName    ,
                              Well      ,
                              arm       )
-        self.liquidClass=liquidClass
-        self.volume=volume
+
+        self.liquidClass = liquidClass
+        self.volume      = volume if volume is not None else def_vol
 
     def validateArg(self):
         Pipette.validateArg(self)
