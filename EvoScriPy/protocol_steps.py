@@ -505,20 +505,48 @@ class Protocol (Executable):
                 self.mix_reagent(preMix, maxTips=ctips)
 
     def spread(self,
-               volume            = None,
-               reagent           = None,
-               to_labware_region = None,
-               optimize          = True,
-               NumSamples        = None,
-               using_liquid_class= None,
-               TIP_MASK          = None,
-               num_tips          = None):
+               volume            : float        = None,
+               reagent           : Rtv.Reagent  = None,
+               to_labware_region : Lab.Labware  = None,
+               optimize          : bool         = True,
+               NumSamples        : int          = None,
+               using_liquid_class: (str, tuple) = None,
+               TIP_MASK          : int          = None,
+               num_tips          : int          = None):
         """
-        :param NumSamples: Priorized   !!!! If true reset the selection
-        :param reagent: Reagent to spread
+        To spread a reagent into some wells.
+        This is a high level function with works with the concept of "reagent". This a a concept introduced by
+        RobotEvo that don't exist in EVOware and other similar software. It encapsulated the name, wells occupied by
+        each of the aliquots of the reagent, the volume corresponding to one sample (if any) and the current volume
+        in each aliquot. This function can use multiple of those aliquots to spread the reagent to the target
+        wells using multiple tips (the maximum will be used if `num_tips` is not set).
+
+        By default a number of wells equal to the number of samples set in the protocol will be auto selected in the
+        target labware `to_labware_region`, but this selection can be set explicitly (setting `well.selFlag=True`,
+        for example by calling `to_labware_region.selectOnly(self, sel_idx_list)`). If `NumSamples` is set
+        it will rewrite (reset) the selected wells in the target `to_labware_region`.
+
+        Please, carefully indicate whether to use "parallel optimization" in the pipetting order
+        by setting `optimize`. (very important unless you are using a full column
+        pipetting arm). Check that the created script don't have conflicts in
+        the order of the samples and the "geometry" of the labware areas (selection of wells)
+        during each pipetting step. This is ease to "see" in the EVOware visual script editor. The generated
+        .protocol.txt can also be used to check this. RobotEvo will detect
+        some errors, but currently not all, assuming the areas are relatively "regular".
+
+        The same volume will be transfer to each well. It will be dispensed in only one pass: muss fit
+        into the current tips
+        If the liquid classes (LC) to be used are not explicitly passed the default LC of the reagent
+        will be used. The generated .esc and .gwl can also be used to check this.
+
+        A human readable comment will be automatically added to the script with the details of this operation.
+
+        :param NumSamples       : Priorized   !!!! If true reset the selection
+        :param reagent          : Reagent to spread
         :param to_labware_region: Labware in which the destine well are selected
-        :param volume: if not, volume is set from the default of the source reactive
-        :param optimize: minimize zigzag of multi pipetting
+        :param volume           : if not, volume is set from the default of the source reactive
+        :param optimize         : minimize zigzag of multi pipetting
+        :param num_tips         : the number of tips to be used in each cycle of pipetting = all
         """
         assert isinstance(reagent, Rtv.Reagent), 'A Reagent expected in reagent to spread'
         assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
@@ -616,6 +644,8 @@ class Protocol (Executable):
 
         If the liquid classes (LC) to be used are not explicitly passed the default LC in the first well of the current
         pipetting step will be used. The generated .esc and .gwl can also be used to check this.
+
+        A human readable comment will be automatically added to the script with the details of this operation.
 
         Warning: modify the selection of wells in both source and target labware to reflect the wells actually used
 
@@ -744,6 +774,9 @@ class Protocol (Executable):
         Aspirate and waste repeatedly with allowed volume until only an small rest are in wells and then change the LC
         to one without liquid detection - liquid level trace. (this rest depends on the well geometry - todo: make it
         a function parameter?). This avoid collision with the button of the well.
+
+        A human readable comment will be automatically added to the script with the details of this operation.
+
         Warning: modify the selection of wells in both source and target labware
 
         :param from_labware_region: source labware possibly with selected wells
