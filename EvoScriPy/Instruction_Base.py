@@ -232,7 +232,8 @@ class Pipette(Instruction):
         return True
 
     def exec(self, mode=None):
-        if self.tipMask: Instruction.exec(self, mode)
+        if self.tipMask:
+            Instruction.exec(self, mode)
 
 
 class Pipetting(Pipette):
@@ -261,10 +262,10 @@ class Pipetting(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        nTips = self.robot.curArm().nTips                                   # todo FIX arm is arg
-        self.arg[1:1] = [string1(self.liquidClass)] \
-                        + expr(nTips, self.volume).split() \
-                        + [int(0)] * (12 - nTips)                           # arg 2, 3 - 14
+        nTips = self.robot.curArm().nTips                                      # todo FIX arm is arg
+        self.arg[1:1] =  [string1(self.liquidClass)] \
+                        + expr   (nTips, self.volume).split() \
+                        + [int   (0)] * (12 - nTips)                           # arg 2, 3 - 14
         return True
 
     def actualize_robot_state(self):

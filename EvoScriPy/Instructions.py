@@ -564,6 +564,11 @@ class pickUp_ZipTip(Pipette): # todo implement !!!
 
 class detect_Liquid(Pipetting):    # todo get the results !!!
     """ A.15.4.11 Detect Liquid (Worklist: Detect_Liquid)
+    Liquid level detection is one of the options available for aspirating and dispensing
+    and can be individually defined for each liquid class. The Detect Liquid command is
+    used to carry out liquid level detection without pipetting and reports the liquid volume
+    for each of the chosen wells in the labware. The volumes are returned in a set of variables
+    DETECTED_VOLUME_x, where x is the tip number.
     """
     def __init__(self ,      tipMask     = None,
                              liquidClass = None,
@@ -593,9 +598,9 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
         return True
 
     def exec(self, mode=None):
-        Pipetting.exec(self,mode)
+        Pipetting.exec(self, mode)
         if not self.read: return
-        #todo introduce some variable and read into it the vols
+        # todo introduce some variable and read into it the vols
 
 
 class activate_PMP(Instruction):
