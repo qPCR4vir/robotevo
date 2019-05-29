@@ -12,7 +12,6 @@ from EvoScriPy.Instruction_Base import def_liquidClass
 
 def_react_excess =  4
 def_mix_excess   =  8
-NumOfSamples     = None    # TODO revise this !!! Eliminate this GLOBAL ??????
 
 
 class Reagent:
@@ -107,7 +106,7 @@ class Reagent:
         return "{name:s}".format(name=self.name)
 
     def minVol(self, NumSamples=None)->float:
-        NumSamples = NumSamples or NumOfSamples or 0
+        NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples or 0
         return self.volpersample * NumSamples * self.excess
 
     def init_vol(self, NumSamples=None):
@@ -122,7 +121,7 @@ class Reagent:
         :param NumSamples:
         :return:
         """
-        NumSamples = NumSamples or NumOfSamples
+        NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples
         V_per_sample = self.volpersample * self.excess
         replicas=len(self.Replicas)
         for i, w in enumerate(self.Replicas):
@@ -231,7 +230,7 @@ class preMix(Reagent):
         makePreMix(self, NumSamples)
 
     def compVol(self,index, NumSamples=None):
-        NumSamples = NumSamples or NumOfSamples
+        NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples
         return self.components[index].minVol(NumSamples)
 
 

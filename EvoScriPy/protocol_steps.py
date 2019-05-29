@@ -59,12 +59,6 @@ class Executable:
         """
         print('set def in Executable')
 
-    def options(self):
-        """
-        :return: the list of different variants or version of the protocol implemented by this protocol
-        """
-        return self.options_list    # todo revise    versions???
-
     def initialize(self):
         """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
         """
@@ -133,7 +127,7 @@ class Protocol (Executable):
         self.NumOfSamples                = int(NumOfSamples or Protocol.max_s)
         self.check_initial_liquid_level  = False
 
-        Rtv.NumOfSamples = self.NumOfSamples
+        Rtv.Reagent.SetReactiveList(self)
 
         Executable.__init__(self, GUI=GUI, run_name  = run_name)
 
@@ -153,7 +147,6 @@ class Protocol (Executable):
 
         Rtv.Reagent("Liquid waste", wt.def_WashWaste)
 
-
     def makePreMix( self, preMix, force_replies=False, NumSamples=None):
 
         Protocol.makePreMix(self, preMix,
@@ -164,7 +157,7 @@ class Protocol (Executable):
         if not self.initialized:
             Executable.initialize(self)
             self.set_EvoMode()
-        Rtv.NumOfSamples = self.NumOfSamples
+        Rtv.Reagent.SetReactiveList(self)
 
     def set_EvoMode(self):
         if not self.EvoMode:
@@ -172,7 +165,7 @@ class Protocol (Executable):
         else:
             EvoMode.current = self.EvoMode
         self.iRobot.set_as_current()
-        Rtv.NumOfSamples = self.NumOfSamples
+        Rtv.Reagent.SetReactiveList(self)
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
@@ -222,7 +215,7 @@ class Protocol (Executable):
         if (self.GUI):
             self.GUI.CheckList()
         self.set_EvoMode()
-        Rtv.NumOfSamples = self.NumOfSamples
+        Rtv.Reagent.SetReactiveList(self)
         if self.check_initial_liquid_level:
             self.chek_reagents_levels()
 
