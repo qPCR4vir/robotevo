@@ -134,6 +134,7 @@ class Reagent:
 
         return self.labware.autoselect(offset or self.pos, maxTips, len(self.Replicas) if offset is None else 1)
 
+
 class Primer (Reagent):
     IDs ={}
     SEQs={}
@@ -164,7 +165,6 @@ class Primer (Reagent):
         Primer.SEQs.setdefault(seq, []).append(self)
         for kw in KW:
             Primer.KWs.setdefault(kw,[]).append(self)
-
 
 
 class Reaction(Reagent):
@@ -289,13 +289,16 @@ class PCRMasterMix(preMix):
         self.components = components
         #self.init_vol()
 
+
 class PCRMix (preMix):
     pass
+
 
 class PCReaction (Reaction):
     vol = 25
     vol_sample = 5
     pass
+
 
 class PCRexperiment:
     def __init__(self, ID, name):

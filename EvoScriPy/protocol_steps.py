@@ -164,6 +164,7 @@ class Protocol (Executable):
         if not self.initialized:
             Executable.initialize(self)
             self.set_EvoMode()
+        Rtv.NumOfSamples = self.NumOfSamples
 
     def set_EvoMode(self):
         if not self.EvoMode:
@@ -171,6 +172,7 @@ class Protocol (Executable):
         else:
             EvoMode.current = self.EvoMode
         self.iRobot.set_as_current()
+        Rtv.NumOfSamples = self.NumOfSamples
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
@@ -220,13 +222,13 @@ class Protocol (Executable):
         if (self.GUI):
             self.GUI.CheckList()
         self.set_EvoMode()
+        Rtv.NumOfSamples = self.NumOfSamples
         if self.check_initial_liquid_level:
             self.chek_reagents_levels()
 
     def chek_reagents_levels(self):
         for reagent in self.worktable.reagents:
             print(f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}")
-
 
     def done(self):
         self.EvoMode.done()
@@ -431,9 +433,9 @@ class Protocol (Executable):
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
             if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
-    def makePreMix(self,  preMix: Rtv.preMix,
-                          NumSamples: int     = None,
-                          force_replies: bool = False):
+    def makePreMix(self,  preMix        : Rtv.preMix,
+                          NumSamples    : int       = None,
+                          force_replies : bool      = False):
         """
         A preMix is just that: a premix of reactive (aka - components)
         which have been already defined to add some vol per sample.
@@ -798,7 +800,7 @@ class Protocol (Executable):
         nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pipetting
 
         if not oriSel:
-            oriSel = range(Rtv.NumOfSamples)
+            oriSel = range(self.NumOfSamples)
         if optimize:                                    # todo: if None reuse self.optimize (to be created !!)
             oriSel = from_labware_region.parallelOrder(nt, oriSel)
 
@@ -925,7 +927,7 @@ class Protocol (Executable):
         oriSel = in_labware_region.selected()
         nt = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if not oriSel:
-            oriSel = range(Rtv.NumOfSamples)
+            oriSel = range(self.NumOfSamples)
         if optimize:
             oriSel = in_labware_region.parallelOrder( nt, oriSel)
         NumSamples = len(oriSel)

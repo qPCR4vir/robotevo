@@ -63,7 +63,6 @@ class Prefill_plate_in_Evo200(Evo200):
 
         self.check_initial_liquid_level = True
 
-        Rtv.NumOfSamples = self.NumOfSamples
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 

@@ -83,7 +83,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
     def Run(self):
         self.set_EvoMode()
         self.initialize()
-        Rtv.NumOfSamples = self.NumOfSamples
+
         NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
