@@ -328,7 +328,7 @@ class Protocol (Executable):
 
     def aspire(self,  tip, reactive, vol=None, offset = None):
         """
-        Aspire vol with ONE tip from reactive
+        Aspirate vol with ONE tip from reactive
         :param self:
         :param tip:
         :param reactive:
@@ -1089,10 +1089,18 @@ def parallel_execution_of(subroutine, repeat=1):
         Itr.subroutine(subroutine, Itr.subroutine.Waits_previous).exec()
     else:
         # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
-        Itr.variable("repetitions", repeat, queryString="How many time repeat the subroutine?",
-                      type=Itr.variable.Numeric).exec()
-        Itr.variable("subroutine",subroutine, queryString="The subroutine path",
-                      type=Itr.variable.String).exec()
+        Itr.variable("repetitions",
+                     repeat,
+                     queryString="How many time repeat the subroutine?",
+                     type=Itr.variable.Numeric
+                     ).exec()
+
+        Itr.variable("subroutine",
+                     subroutine,
+                     queryString="The subroutine path",
+                     type=Itr.variable.String
+                     ).exec()
+
         Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Continues).exec()
         yield
         Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Waits_previous).exec()

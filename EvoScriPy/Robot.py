@@ -7,10 +7,10 @@
 __author__ = 'qPCR4vir'
 
 import EvoScriPy.Labware as Lab
-rep_sub = None # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
+rep_sub = None      # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding) ??
 
-tipMask = []  # mask for one tip of index ...
-tipsMask = []  # mask for the first tips
+tipMask = []        # mask for one tip of index ...
+tipsMask = []       # mask for all the first tips
 for tip in range(13):
     tipMask += [1 << tip]
     tipsMask += [2 ** tip - 1]
@@ -30,7 +30,8 @@ class Robot:
         DiTi        = 0         # DiTi types
         Fixed       = 1
 
-        Aspire      =  1        # Actions types
+        Aspirate    =  1        # Actions types
+        Detect      =  0
         Dispense    = -1
 
         def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
@@ -432,7 +433,7 @@ class Robot:
                     wells[w].vol -= dv
                     if wells[w].vol < 0:                                   # don't allow air to fake reagent.
                         wells[w].vol = 0
-                    if    action == Robot.Arm.Aspire:
+                    if    action == Robot.Arm.Aspirate:
                         self.curArm().Tips[i] = Lab.usedTip(tp, wells[w])  # todo FIX for already used tips
                         wells[w].log(-dv)
                     elif  action == Robot.Arm.Dispense:

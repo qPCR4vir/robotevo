@@ -19,7 +19,7 @@ class aspirate(Pipetting):
     """ A.15.4.1 Aspirate command (Worklist: Aspirate)  A - 125
     """
     def __init__(self,  tipMask     = None,
-                        liquidClass = def_liquidClass,
+                        liquidClass = None,
                         volume      = def_vol,
                         labware     = None,
                         spacing     = 1,
@@ -43,20 +43,20 @@ class aspirate(Pipetting):
         :param arm:
         """
         Pipetting.__init__(self, 'Aspirate',
-                            tipMask,
-                            liquidClass,
-                            volume,
-                            labware or Lab.def_LabW,
-                            spacing,
-                            wellSelection,
-                            LoopOptions,
-                            RackName,
-                            Well,
-                            arm )
+                            tipMask     = tipMask,
+                            liquidClass = liquidClass,
+                            volume      = volume,
+                            labware     = labware,
+                            spacing     = spacing,
+                            wellSelection= wellSelection,
+                            LoopOptions = LoopOptions,
+                            RackName    = RackName,
+                            Well        = Well,
+                            arm         = arm )
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Robot.Arm.Aspire
+        return EvoScriPy.Robot.Robot.Arm.Aspirate
 
 
 class dispense(Pipetting):
@@ -92,6 +92,12 @@ class dispense(Pipetting):
 class mix(Pipetting):
     """ A.15.4.3 Mix (Worklist: Mix)
     """
+
+    @staticmethod
+    def action():
+        return True
+
+
     def __init__(self,  tipMask     = None,
                         liquidClass = def_liquidClass,
                         volume      = def_vol,
@@ -570,37 +576,32 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
     for each of the chosen wells in the labware. The volumes are returned in a set of variables
     DETECTED_VOLUME_x, where x is the tip number.
     """
-    def __init__(self ,      tipMask     = None,
-                             liquidClass = None,
-                             labware     = None,
-                             spacing     = 1,
-                             wellSelection= None,
-                             LoopOptions = None,
-                             arm         = None,
+
+    @staticmethod
+    def action():
+        return EvoScriPy.Robot.Robot.Arm.Detect
+
+    def __init__(self ,      tipMask     = None,                         # arg 1
+                             liquidClass = None,                         # arg 2
+                             labware     = None,                         # arg 3, 4
+                             spacing     = 1,                            # arg 5
+                             wellSelection= None,                        # arg 6
+                             LoopOptions = None,                         # arg 7, 8, 9, 10
+                             arm         = None,                         # arg 11
                              RackName    = None,
-                             Well        = None,
-                             read        = False):
+                             Well        = None):
+
         Pipetting.__init__(self, 'Detect_Liquid',
-                            tipMask,
-                            liquidClass, 0,
-                            labware,
-                            spacing,
-                            wellSelection,
-                            LoopOptions,
-                            RackName,
-                            Well,
-                            arm )
-        self.read = read
-
-    def validateArg(self):
-        Pipette.validateArg(self)
-        self.arg[2:13] = []
-        return True
-
-    def exec(self, mode=None):
-        Pipetting.exec(self, mode)
-        if not self.read: return
-        # todo introduce some variable and read into it the vols
+                            tipMask        = tipMask,
+                            liquidClass    = liquidClass,
+                            labware        = labware,
+                            volume         = 0,
+                            spacing        = spacing,
+                            wellSelection  = wellSelection,
+                            LoopOptions    = LoopOptions,
+                            RackName       = RackName,
+                            Well           = Well,
+                            arm            = arm )
 
 
 class activate_PMP(Instruction):

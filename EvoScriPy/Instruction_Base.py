@@ -155,8 +155,8 @@ class Pipette(Instruction):
                  name,
                  tipMask                    = None,
                  labware      : Lab.Labware = None,
-                 spacing                    = 1,           # todo how to use???
-                 wellSelection              = None,        # todo how to use???
+                 spacing                    = 1,           # todo how to use in actualize_robot_state, validateArg ?
+                 wellSelection              = None,        # todo    use???
                  LoopOptions                = None,        # todo how to model???
                  RackName                   = None,        # todo I need to this???
                  Well                       = None,        # todo I need to this???
@@ -208,14 +208,17 @@ class Pipette(Instruction):
         """
         Instruction.validateArg(self)
 
+        self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+
+        max_tip_mask = Rbt.tipsMask[self.arm.nTips]
         if self.tipMask is None:
-            self.tipMask = Rbt.tipsMask[self.arm.nTips]
+            self.tipMask = max_tip_mask
+        assert 0 <= self.tipMask <= max_tip_mask; "Invalid tip mask"
 
         if self.loopOptions is None:
             self.loopOptions = def_LoopOp
 
         assert isinstance(self.labware, Lab.Labware)    # todo Lab.DITIrack ??
-        self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid),                                      # arg 2
@@ -237,10 +240,15 @@ class Pipette(Instruction):
 
 
 class Pipetting(Pipette):
+
+    @staticmethod
+    def action():
+        return False
+
     def __init__(self, name, tipMask     = None,
-                             liquidClass = def_liquidClass,
+                             liquidClass = None,
                              volume      = None,
-                             labware     = None,                            # todo ??????
+                             labware     = None,                                # todo ??????
                              spacing     = 1,
                              wellSelection= None,
                              LoopOptions = None,
@@ -248,24 +256,30 @@ class Pipetting(Pipette):
                              Well        = None,
                              arm         = None):
 
-        Pipette.__init__(self, name, tipMask,
-                             labware     ,
-                             spacing    ,
-                             wellSelection,
-                             LoopOptions,
-                             RackName    ,
-                             Well      ,
-                             arm       )
+        Pipette.__init__(self, name,
+                             tipMask     = tipMask,
+                             labware     = labware,
+                             spacing     = spacing,
+                             wellSelection= wellSelection,
+                             LoopOptions = LoopOptions,
+                             RackName    = RackName,
+                             Well        = Well,
+                             arm         = arm       )
 
-        self.liquidClass = liquidClass
+        self.liquidClass = liquidClass or def_liquidClass                       # todo reagent.LC ?
         self.volume      = volume if volume is not None else def_vol
 
     def validateArg(self):
         Pipette.validateArg(self)
-        nTips = self.robot.curArm().nTips                                      # todo FIX arm is arg
-        self.arg[1:1] =  [string1(self.liquidClass)] \
-                        + expr   (nTips, self.volume).split() \
-                        + [int   (0)] * (12 - nTips)                           # arg 2, 3 - 14
+
+        self.liquidClass = self.liquidClass or def_liquidClass
+
+        self.arg[1:1] =   [string1(self.liquidClass)]                              # arg 2
+
+        nTips = self.robot.curArm().nTips
+        if self.action():
+            self.arg[2:2] =  expr   (nTips, self.volume).split()   \
+                           + [int    (0)] * (12 - nTips)                           # arg 3 - 14
         return True
 
     def actualize_robot_state(self):
