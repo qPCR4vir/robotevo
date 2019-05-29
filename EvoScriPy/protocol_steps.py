@@ -63,17 +63,18 @@ class Executable:
         """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
         """
         if not self.initialized:
-            if (self.GUI):
+            if self.GUI:
                 self.GUI.update_parameters()
             self.initialized = True
             self.set_defaults()
 
     def Run(self):
-        '''
+        """
         Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with getLabware()
         :return:
-        '''
+        """
+
         self.initialize()
         self.preCheck()
         self.CheckList()
@@ -154,9 +155,9 @@ class Protocol (Executable):
                                   force_replies = force_replies                    )
 
     def initialize(self):
+        self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)
-            self.set_EvoMode()
         Rtv.Reagent.SetReactiveList(self)
 
     def set_EvoMode(self):
@@ -430,11 +431,11 @@ class Protocol (Executable):
                           NumSamples    : int       = None,
                           force_replies : bool      = False):
         """
-        A preMix is just that: a premix of reactive (aka - components)
+        A preMix is just that: a premix of reagents (aka - components)
         which have been already defined to add some vol per sample.
         Uses one new tip per component.
-        It find and check self the min and max number of replica of the resulting preMix
-        :param preMix: what to make, predefined preMix
+        It calculates and checks self the minimum and maximum number of replica of the resulting preMix
+        :param preMix    : what to make, a predefined preMix
         :param NumSamples:
         :param force_replies: use all the preMix predefined replicas
         :return:

@@ -49,7 +49,6 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                             run_name                = run_name)
 
     def Run(self):
-        self.set_EvoMode()
         self.initialize()                       # set_defaults ??
 
         NumOfSamples = self.NumOfSamples

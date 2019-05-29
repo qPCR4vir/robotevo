@@ -47,7 +47,6 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                             run_name                = run_name)
 
     def Run(self):
-        self.set_EvoMode()
         self.initialize()
 
         NumOfSamples = self.NumOfSamples

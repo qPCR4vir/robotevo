@@ -77,7 +77,6 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             run_name                = run_name)
 
     def Run(self):
-        self.set_EvoMode()
         self.initialize()                       # set_defaults ??
 
         NumOfSamples = self.NumOfSamples

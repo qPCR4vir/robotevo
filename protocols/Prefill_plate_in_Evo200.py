@@ -56,8 +56,6 @@ class Prefill_plate_in_Evo200(Evo200):
                         run_name                    = run_name)
 
     def Run(self):
-        self.set_EvoMode()   # this add: self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
-                             # in which: self.robot = Rbt.Robot(index=index, arms=arms, nTips=nTips)
         self.initialize()    # if needed calls Executable.initialize() and set_EvoMode
                              # which calls GUI.update_parameters() and set_defaults() from Evo200
 

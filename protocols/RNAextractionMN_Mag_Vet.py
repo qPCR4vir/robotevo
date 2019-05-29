@@ -81,7 +81,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             run_name                = run_name)
 
     def Run(self):
-        self.set_EvoMode()
         self.initialize()
 
         NumOfSamples = self.NumOfSamples
