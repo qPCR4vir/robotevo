@@ -127,6 +127,7 @@ class Protocol (Executable):
         self.robot                       = None
         self.NumOfSamples                = int(NumOfSamples or Protocol.max_s)
         self.check_initial_liquid_level  = False
+        self.def_DiTi_check_liquid_level = None
 
         Rtv.Reagent.SetReactiveList(self)
 
@@ -148,17 +149,14 @@ class Protocol (Executable):
 
         Rtv.Reagent("Liquid waste", wt.def_WashWaste)
 
-    def makePreMix( self, preMix, force_replies=False, NumSamples=None):
-
-        Protocol.makePreMix(self, preMix,
-                                  NumSamples    = NumSamples or self.NumOfSamples,
-                                  force_replies = force_replies                    )
-
     def initialize(self):
         self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)
         Rtv.Reagent.SetReactiveList(self)
+        if self.def_DiTi_check_liquid_level is None:
+            self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
+
 
     def set_EvoMode(self):
         if not self.EvoMode:
@@ -218,18 +216,56 @@ class Protocol (Executable):
         self.set_EvoMode()
         Rtv.Reagent.SetReactiveList(self)
         if self.check_initial_liquid_level:
-            self.chek_reagents_levels()
+            self.check_reagents_levels()
 
-    def chek_reagents_levels(self):
+    def check_reagent_level(self, reagent, LiqClass=None):
+        """
+        Select all possible replica of the given reagent and detect the liquid level,
+        contrasting it with the current (expected) vol in EACH well.
+        Use the given liq class or the reagent default.
+        :param reagent:
+        :param LiqClass:
+
+        """
+        assert isinstance(reagent, Rtv.Reagent)
+        LiqClass = LiqClass or reagent.defLiqClass
+
+
+        reagent.autoselect(self.robot.curArm().nTips)       # todo use even more tips?
+        vol = [w.vol for w in reagent.labware.selected_wells()]
+        Itr.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()] ) }").exec()
+
+        with self.tips(tip_type     = self.def_DiTi_check_liquid_level,
+                       reuse        = False,
+                       tipsMask     = Rbt.tipsMask[len(vol)]):
+
+            Itr.detect_Liquid(Rbt.tipsMask[len(vol)],
+                              liquidClass =LiqClass,
+                              labware     =reagent.labware).exec()
+
+        Itr.userPrompt("").exec()
+
+    def check_reagents_levels(self):
+        """
+        Will emit a liquid level detection on every well occupied by all the reagents defined so fort.
+        Will be executed at the end of self.CheckList() but only if self.check_initial_liquid_level is True
+        """
+
         for reagent in self.worktable.reagents:
             print(f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}")
+            self.check_reagent_level(reagent)
 
     def done(self):
         self.EvoMode.done()
         Executable.done(self)
 
     def go_first_pos(self, first_tip: (int, str) = None):
-
+        """
+        Optionally set the Protocol.firstTip, a position in rack, like 42 or 'B06'
+        (optionally including the rack self referenced with a number, like '2-B06', were 2 will be the second
+        rack in the wortable series ofdefault tip type). Currently, for a more precise set, use directly the
+        Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+        """
         if first_tip is not None:
             self.firstTip = first_tip                                       # just keep it
 

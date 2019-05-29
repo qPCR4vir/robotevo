@@ -1,4 +1,5 @@
 Prefill 1 plates with Buffer Reagent for 96 samples.
+Check: ['well 1 in RA4 :  with 9984.0 uL of Buffer ', 'well 2 in RA4 :  with 9984.0 uL of Buffer ', 'well 3 in RA4 :  with 9984.0 uL of Buffer ', 'well 4 in RA4 :  with 9984.0 uL of Buffer ', 'well 5 in RA4 :  with 9984.0 uL of Buffer ', 'well 6 in RA4 :  with 9984.0 uL of Buffer ', 'well 7 in RA4 :  with 9984.0 uL of Buffer ', 'well 8 in RA4 :  with 9984.0 uL of Buffer ']
 
 Prefill plates with BufferReact
 

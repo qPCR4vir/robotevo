@@ -1,5 +1,10 @@
 Comment("Prefill 1 plates with Buffer Reagent for 96 samples.");
 Set_DITI_Counter2("DiTi 1000ul","55","1","1",0);
+Comment("Check: ['well 1 in RA4 :  with 9984.0 uL of Buffer ', 'well 2 in RA4 :  with 9984.0 uL of Buffer ', 'well 3 in RA4 :  with 9984.0 uL of Buffer ', 'well 4 in RA4 :  with 9984.0 uL of Buffer ', 'well 5 in RA4 :  with 9984.0 uL of Buffer ', 'well 6 in RA4 :  with 9984.0 uL of Buffer ', 'well 7 in RA4 :  with 9984.0 uL of Buffer ', 'well 8 in RA4 :  with 9984.0 uL of Buffer ']");
+GetDITI2(255,"DiTi 1000ul",0,0,0,300);
+Detect_Liquid(255,"Water free",53,0,1,"0108¯1",0,0);
+DropDITI(255,19,6,0.00,300,0);
+UserPrompt("",1,-1);
 Wash(255,19,1,19,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
 Transfer_Rack("33","33",1,0,1,0,0,"0","96 Well Macherey-Nagel Plate","Narrow","","","MP 3Pos","","MP 3Pos","1","","1");
 Group("Prefill plates with BufferReact");
