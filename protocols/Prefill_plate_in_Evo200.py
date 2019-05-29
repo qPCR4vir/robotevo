@@ -25,8 +25,8 @@ class Prefill_plate_in_Evo200(Evo200):
 
     # for now just ignore the variants
     def def_versions(self):
-        self.versions = {'3 plate': self.V_3_plate,
-                         '2 plate': self.V_2_plate,
+        self.versions = { # '3 plate': self.V_3_plate,
+                          # '2 plate': self.V_2_plate,
                          '1 plate': self.V_1_plate                         }
 
     def V_1_plate(self):
@@ -109,15 +109,15 @@ class Prefill_plate_in_Evo200(Evo200):
                         pos         =s + 1,
                         excess      =0)
 
-        loc = Plat.location
+        loc = Plat.location               # just showing how to move the plate from one site to the next in the carrier
         loc.site += 1
         car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", nSite=3), loc.grid, label = "MP 3Pos")
         loc.rack = car
-        Itr.transfer_rack(Plat, loc ).exec()
+        Itr.transfer_rack(Plat, loc ).exec()                                              # just showing how RoMa works.
 
-        with group("Prefill plates with BufferReact"):
+        with group("Prefill plates with Buffer "):
 
-            Itr.userPrompt("Put the plates for BufferReact").exec()
+            Itr.userPrompt("Put the plates for Buffer ").exec()
 
             with self.tips(reuse=True, drop=False):
                 self.spread(reagent=buffer_reag, to_labware_region=Plat.selectOnly(all_samples))
