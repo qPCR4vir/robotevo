@@ -231,7 +231,7 @@ class Protocol (Executable):
         LiqClass = LiqClass or reagent.defLiqClass
 
 
-        reagent.autoselect(self.robot.curArm().nTips)       # todo use even more tips?
+        reagent.autoselect(self.robot.curArm().nTips)              # todo use even more tips? see self._aspirate_multi_tips
         vol = [w.vol for w in reagent.labware.selected_wells()]
         Itr.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()] ) }").exec()
 
@@ -428,37 +428,49 @@ class Protocol (Executable):
                          # reactive.defLiqClass,
                          v, w.labware.selectOnly([w.offset])).exec()
 
-    def aspiremultiTips(self,  tips, reactive, vol=None, LiqClass=None):
-            if not isinstance(vol, list):
-                vol = [vol] * tips
-            LiqClass = LiqClass or reactive.defLiqClass
+    def _aspirate_multi_tips(self, tips, reagent, vol=None, LiqClass=None):
+        """
+        Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
+        Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
+        have only 3 replicas (only 3 wells contain the reagent). This call will generate the instructions to
+        fill the tips 3 by 3 with the correct volume.
 
-            mask = Rbt.tipsMask[tips]
-            nTip = reactive.autoselect(tips)
-            asp = Itr.aspirate(mask, LiqClass, vol, reactive.labware)
-            curTip = 0
-            while curTip < tips:
-                nextTip = curTip + nTip
-                nextTip = nextTip if nextTip <= tips else tips
-                mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]
-                                                                     #Rbt.Robot.current.curArm().aspire(vol, mask)  ???
-                asp.tipMask = mask
-                asp.exec()
-                curTip = nextTip
+        :param tips:
+        :param reagent:
+        :param vol:
+        :param LiqClass:
+        """
+        if not isinstance(vol, list):
+            vol = [vol] * tips
+        LiqClass = LiqClass or reagent.defLiqClass
 
-    def dispensemultiwells(self,  tips, liq_class, labware, vol):
-            """ One dispense of multitip in multiwell with different vol
+        mask = Rbt.tipsMask[tips]                                 # as if we could use so many tips
+        n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
+        asp = Itr.aspirate(mask, LiqClass, vol, reagent.labware)
+        curTip = 0
+        while curTip < tips:                                      # todo what to do with used tips?
+            nextTip = curTip + n_wells
+            nextTip = nextTip if nextTip <= tips else tips
+            mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]
 
-            :param tips:
-            :param liq_class:
-            :param labware:
-            :param vol:
-            """
-            if not isinstance(vol, list):
-                vol = [vol] * tips
-            om = Rbt.tipsMask[tips]
-                                                                        # Rbt.Robot.current.curArm().dispense(vol, om)
-            Itr.dispense(om, liq_class, vol, labware).exec()
+            asp.tipMask = mask
+            asp.exec()                                           # will call robot.curArm().aspirated(vol, mask)  ???
+            curTip = nextTip
+
+    def _dispensemultiwells(self, tips : int, liq_class, labware : Lab.Labware, vol : (float, list)):
+        """
+        Intermediate-level function. One dispense from multiple tips in multiple wells with different volume
+
+        :param tips: number of tips to use                        # todo ?
+        :param liq_class:
+        :param labware:
+        :param vol:
+        """
+        if not isinstance(vol, list):
+            vol = [vol] * tips
+        om = Rbt.tipsMask[tips]
+
+        Itr.dispense(om, liq_class, vol, labware).exec()          # will call robot.curArm().dispensed(vol, om)  ??
 
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
             if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
@@ -631,13 +643,13 @@ class Protocol (Executable):
                         vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (num_tips - rst)
                         availableDisp = dsp + bool(rst)
 
-                    self.aspiremultiTips(num_tips, reagent, vol, LiqClass=Asp_liquidClass)
+                    self._aspirate_multi_tips(num_tips, reagent, vol, LiqClass=Asp_liquidClass)
 
                     while availableDisp:
                         if num_tips > SampleCnt: num_tips = SampleCnt
                         curSample = NumSamples - SampleCnt
                         sel = to[curSample: curSample + num_tips]  # todo what if volume > maxVol_tip ?
-                        self.dispensemultiwells(num_tips, Dst_liquidClass, to_labware_region.selectOnly(sel), [volume] * num_tips)
+                        self._dispensemultiwells(num_tips, Dst_liquidClass, to_labware_region.selectOnly(sel), [volume] * num_tips)
                         availableDisp -= 1
                         SampleCnt -= num_tips
 
