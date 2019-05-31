@@ -306,8 +306,16 @@ class Protocol (Executable):
     def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
         pass # Itr.moveLiha
 
-    def getTips(self, TIP_MASK=-1, tip_type=None, selected_samples=None):  # todo TIP_MASK=None
-
+    def getTips(self, TIP_MASK         = -1,
+                      tip_type         = None,
+                      selected_samples = None ):  # todo TIP_MASK=None
+        """
+        It will decide to get new tips or to pick back the preserved tips for the selected samples
+        :param TIP_MASK:
+        :param tip_type:
+        :param selected_samples:
+        :return:
+        """
         mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[self.robot.curArm().nTips]
 
         if self.robot.usePreservedtips:
@@ -335,7 +343,11 @@ class Protocol (Executable):
         return mask                                    # todo REVISE !!   I.tipMask
 
     def dropTips(self, TIP_MASK=-1):
-
+        """
+        It will decide to really drop the tips or to put it back in some DiTi rack
+        :param TIP_MASK:
+        :return:
+        """
         if self.robot.preservetips:
             where = self.robot.where_preserve_tips(TIP_MASK)
             nTips = self.robot.curArm().nTips
@@ -386,23 +398,27 @@ class Protocol (Executable):
         v[tip] = vol
         Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
 
-    def mix_reagent(self, reactive, LiqClass=None, cycles=3, maxTips=1, v_perc=90):
+    def mix_reagent(self,   reagent   : Rtv.Reagent,
+                            LiqClass  : str  = None,
+                            cycles    : int  = 3,
+                            maxTips   : int  = 1,
+                            v_perc    : int  = 90   ):
         """
-        Select all possible replica of the given reactive and mix using the given % of the current vol in EACH well
-        or the max vol for the tip. Use the given liq class or the reactive deff.
-        :param reactive:
+        Select all possible replica of the given reagent and mix using the given % of the current vol in EACH well
+        or the max vol for the tip. Use the given "liquid class" or the reagent default.
+        :param reagent:
         :param LiqClass:
         :param cycles:
         :param maxTips:
-        :param v_perc:
+        :param v_perc:  % of the current vol in EACH well to mix
         :return:
         """
-        assert isinstance(reactive, Rtv.Reagent)
-        LiqClass = LiqClass or reactive.defLiqClass
+        assert isinstance(reagent, Rtv.Reagent)
+        LiqClass = LiqClass or reagent.defLiqClass
         v_perc /= 100.0
         vol = []
-        reactive.autoselect(maxTips)
-        for tip, w in enumerate(reactive.labware.selected_wells()):
+        reagent.autoselect(maxTips)
+        for tip, w in enumerate(reagent.labware.selected_wells()):
             v = w.vol * v_perc
             vm = self.robot.curArm().Tips[tip].type.maxVol * 0.9
             vol += [min(v, vm)]
@@ -410,22 +426,24 @@ class Protocol (Executable):
         Itr.mix(Rbt.tipsMask[len(vol)],
                 liquidClass =LiqClass,
                 volume      =vol,
-                labware     =reactive.labware,
+                labware     =reagent.labware,
                 cycles      =cycles).exec()
 
-    def multidispense_in_replicas(self, tip, reactive, vol):
-        """ Multi-dispense of the content of ONE tip into the reactive replicas
+    def _multidispense_in_replicas(self, tip     : int,
+                                   reagent : Rtv.Reagent,
+                                   vol     : list) :
+        """ Multi-dispense of the content of ONE tip into the reagent replicas
 
         :param tip:
-        :param reactive:
+        :param reagent:
         :param vol:
         """
         assert isinstance(vol, list)
-        re = reactive.Replicas
+        re = reagent.Replicas
         assert len(vol) <= len(re)
-        for v, w in zip(vol, re):                                 # zip continues until the shortest iterable is exhausted
+        for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
             Itr.dispense(Rbt.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
-                         # reactive.defLiqClass,
+                         # reagent.defLiqClass,
                          v, w.labware.selectOnly([w.offset])).exec()
 
     def _aspirate_multi_tips(self, reagent  : Rtv.Reagent,
@@ -560,7 +578,7 @@ class Protocol (Executable):
                             current_comp_repl +=1
                         dV = min (rVol, mV, react.Replicas[current_comp_repl].vol)
                         self.aspire(tip, react, dV, offset=react.Replicas[current_comp_repl].offset)
-                        self.multidispense_in_replicas(ridx, preMix, [sp/NumSamples * dV for sp in samples_per_replicas])
+                        self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
 
@@ -967,10 +985,13 @@ class Protocol (Executable):
         return oriSel
 
 
-    def mix(self,  in_labware_region, using_liquid_class=None, volume=None, optimize=True):
+    def mix(self,  in_labware_region  : Lab.Labware,
+                   using_liquid_class : str        = None,
+                   volume             : float      = None,
+                   optimize           : bool       = True):
 
         """
-        Mix each of the reactive in the selected region of the labware
+        Mix the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
         :param in_labware_region:
         :param using_liquid_class:
         :param volume:
