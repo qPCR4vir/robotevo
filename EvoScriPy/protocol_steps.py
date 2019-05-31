@@ -428,20 +428,36 @@ class Protocol (Executable):
                          # reactive.defLiqClass,
                          v, w.labware.selectOnly([w.offset])).exec()
 
-    def _aspirate_multi_tips(self, tips, reagent, vol=None, LiqClass=None):
+    def _aspirate_multi_tips(self, reagent  : Rtv.Reagent,
+                                   tips     : int           = None,
+                                   vol      : (float, list) = None,
+                                   LiqClass : str           = None):
         """
         Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
         Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
         have only 3 replicas (only 3 wells contain the reagent). This call will generate the instructions to
-        fill the tips 3 by 3 with the correct volume.
+        fill the tips 3 by 3 with the correct volume. Assumes the tips are mounted in the current arm.
 
-        :param tips:
-        :param reagent:
+        :param tips     : number of tips beginning from #1 to use
+        :param reagent  : reagent to aspirate, with some number of wells in use
         :param vol:
         :param LiqClass:
         """
-        if not isinstance(vol, list):
+        max_tips = self.robot.curArm().nTips
+
+        if isinstance(vol, list):
+            if tips is None:
+                tips = len(vol)
+            else:
+                assert tips == len(vol), f"Number of tips {tips} != number of desired volume ({len(vol)})."
+        else:
+            if tips is None:
+                tips =max_tips
+
             vol = [vol] * tips
+
+        assert tips <= max_tips, f"Too many tips selected: {tips}. The maximum is {max_tips}."
+
         LiqClass = LiqClass or reagent.defLiqClass
 
         mask = Rbt.tipsMask[tips]                                 # as if we could use so many tips
@@ -449,9 +465,9 @@ class Protocol (Executable):
         asp = Itr.aspirate(mask, LiqClass, vol, reagent.labware)
         curTip = 0
         while curTip < tips:                                      # todo what to do with used tips?
-            nextTip = curTip + n_wells
-            nextTip = nextTip if nextTip <= tips else tips
-            mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]
+            nextTip = curTip + n_wells                            # add tips, one for each well
+            nextTip = nextTip if nextTip <= tips else tips        # but not too much
+            mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]   # now use only the last tips added
 
             asp.tipMask = mask
             asp.exec()                                           # will call robot.curArm().aspirated(vol, mask)  ???
@@ -643,7 +659,7 @@ class Protocol (Executable):
                         vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (num_tips - rst)
                         availableDisp = dsp + bool(rst)
 
-                    self._aspirate_multi_tips(num_tips, reagent, vol, LiqClass=Asp_liquidClass)
+                    self._aspirate_multi_tips(reagent, num_tips, vol, LiqClass=Asp_liquidClass)
 
                     while availableDisp:
                         if num_tips > SampleCnt: num_tips = SampleCnt
