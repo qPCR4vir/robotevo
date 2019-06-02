@@ -128,6 +128,7 @@ class Protocol (Executable):
         self.NumOfSamples                = int(NumOfSamples or Protocol.max_s)
         self.check_initial_liquid_level  = False
         self.def_DiTi_check_liquid_level = None
+        self.show_runtime_check_list     = False
 
         Rtv.Reagent.SetReactiveList(self)
 
@@ -218,6 +219,8 @@ class Protocol (Executable):
             self.GUI.check_list()
         self.set_EvoMode()
         Rtv.Reagent.SetReactiveList(self)
+        if self.show_runtime_check_list:
+            self.show_check_list()
         if self.check_initial_liquid_level:
             self.check_reagents_levels()
 
@@ -253,10 +256,25 @@ class Protocol (Executable):
         Will emit a liquid level detection on every well occupied by all the reagents defined so fort.
         Will be executed at the end of self.check_list() but only if self.check_initial_liquid_level is True
         """
-
+        prompt_msg = ""
         for reagent in self.worktable.reagents:
-            print(f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}")
+            reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
+            print(reagent_msg)
             self.check_reagent_level(reagent)
+
+    def show_check_list(self):
+        """
+                Will show a user prompt with a check list to set all defined reagents:
+                 Name, position in the worktable, wells and initial volume (on every well occupied by all
+                 the reagents defined so fort.
+                Will be executed at the end of self.check_list() but only if self.show_runtime_check_list is True
+                """
+        prompt_msg = ""
+        for reagent in self.worktable.reagents:
+            reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
+            print(reagent_msg)
+            prompt_msg += reagent_msg + "\n"
+        Itr.userPrompt(prompt_msg).exec()
 
     def done(self):
         self.EvoMode.done()
