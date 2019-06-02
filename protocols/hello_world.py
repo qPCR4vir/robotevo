@@ -10,7 +10,7 @@ class HelloWorld(Protocol):
         Protocol.__init__(self, GUI= GUI, output_filename = '../current/tests/hello_world')
 
     def Run(self):
-        self.CheckList()
+        self.check_list()
         Itr.userPrompt("Hello World!").exec()
         self.done()
 

@@ -124,9 +124,9 @@ class MixPCR(Evo75_FLI):
                                       volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
 
-        # Show the CheckList GUI to the user for possible small changes
+        # Show the check_list GUI to the user for possible small changes
 
-        self.CheckList()
+        self.check_list()
         self.set_EvoMode()
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()

@@ -88,9 +88,9 @@ class Prefill_plate_in_Evo200(Evo200):
                                   #defLiqClass  = 'MN VL',
                                   num_of_samples= self.num_plates * NumOfSamples)
 
-        # Show the CheckList GUI to the user for possible small changes
+        # Show the check_list GUI to the user for possible small changes
 
-        self.CheckList()
+        self.check_list()
         self.set_EvoMode()
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()

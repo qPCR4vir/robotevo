@@ -77,14 +77,14 @@ class Executable:
 
         self.initialize()
         self.preCheck()
-        self.CheckList()
+        self.check_list()
         self.postCheck()
         self.done()
 
     def preCheck(self):
         pass
 
-    def CheckList(self):
+    def check_list(self):
         pass
 
     def postCheck(self):
@@ -201,7 +201,7 @@ class Protocol (Executable):
         self.preCheck()
         self.set_EvoMode()
 
-        self.CheckList()
+        self.check_list()
         self.set_EvoMode()
 
         self.postCheck()
@@ -209,10 +209,13 @@ class Protocol (Executable):
 
         self.done()
 
-    def CheckList(self):
+    def check_list(self):
+        """
+        Tipically
+        """
         self.set_EvoMode()
         if (self.GUI):
-            self.GUI.CheckList()
+            self.GUI.check_list()
         self.set_EvoMode()
         Rtv.Reagent.SetReactiveList(self)
         if self.check_initial_liquid_level:
@@ -221,8 +224,8 @@ class Protocol (Executable):
     def check_reagent_level(self, reagent, LiqClass=None):
         """
         Select all possible replica of the given reagent and detect the liquid level,
-        contrasting it with the current (expected) vol in EACH well.
-        Use the given liq class or the reagent default.
+        contrasting it with the current (expected) volumen in EACH well.
+        Use the given liquid class or the reagent default.
         :param reagent:
         :param LiqClass:
 
@@ -248,7 +251,7 @@ class Protocol (Executable):
     def check_reagents_levels(self):
         """
         Will emit a liquid level detection on every well occupied by all the reagents defined so fort.
-        Will be executed at the end of self.CheckList() but only if self.check_initial_liquid_level is True
+        Will be executed at the end of self.check_list() but only if self.check_initial_liquid_level is True
         """
 
         for reagent in self.worktable.reagents:
@@ -1120,7 +1123,7 @@ class Pipeline (Executable):
         for protocol in self.protocols:
             protocol.pipeline = self
 
-    def CheckList(self):
+    def check_list(self):
         if (self.GUI):
             self.GUI.CheckPipeline(self)
 

@@ -187,11 +187,11 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       volpersample      =EtOH80pVolume,
                                       defLiqClass       =B_liquidClass)
 
-                                                        # Show the CheckList GUI to the user for possible small changes
-        self.CheckList()
+                                                        # Show the check_list GUI to the user for possible small changes
+        self.check_list()
         self.set_EvoMode()
 
-                                                        # Define the Reagents not shown in the CheckList GUI
+                                                        # Define the Reagents not shown in the check_list GUI
                                                         # Define samples and the place for temporal reactions
 
         Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"   )  # Plate 12 x 8 ?

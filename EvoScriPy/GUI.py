@@ -225,7 +225,7 @@ class App(tkinter.Frame):
         """ Implements a GUI for the selected protocol. Each protocol receive a reference to it in .GUI
             Opens in a new window. Has:
             - GUI_init, to review creation parameters,
-            - GUI_parameters for CheckList prior to actually running the protocol,
+            - GUI_parameters for check_list prior to actually running the protocol,
             - Comments that shows the run.
 
             Alternatively, for Pipelines shows the list of protocols for sequential running

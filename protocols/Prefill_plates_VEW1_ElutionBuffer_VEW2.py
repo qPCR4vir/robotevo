@@ -108,9 +108,9 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                                       volpersample  =ElutionBufferVolume,
                                       defLiqClass   =B_liquidClass)
 
-                                                        # Show the CheckList GUI to the user for posible small changes
+                                                        # Show the check_list GUI to the user for posible small changes
 
-        self.CheckList()
+        self.check_list()
         self.set_EvoMode()
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
