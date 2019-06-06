@@ -21,22 +21,14 @@ class Prefill_plate_in_Evo200(Evo200):
     """
 
     name = "Prefill one plate with Buffer."
-    min_s, max_s = 1, 96
+    min_s, max_s = 1, 96/6
 
     # for now just ignore the variants
     def def_versions(self):
-        self.versions = { # '3 plate': self.V_3_plate,
-                          # '2 plate': self.V_2_plate,
-                         '1 plate': self.V_1_plate                         }
+        self.versions = {'No version': self.V_def               }
 
-    def V_1_plate(self):
-        self.num_plates = 1
-
-    def V_2_plate(self):
-        self.num_plates = 2
-
-    def V_3_plate(self):
-        self.num_plates = 3
+    def V_def(self):
+        pass
 
     def __init__(self,
                  GUI                         = None,
@@ -51,7 +43,7 @@ class Prefill_plate_in_Evo200(Evo200):
                         NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/Evo200example.ewt',
-                        output_filename             = output_filename or '../current/pp200n',
+                        output_filename             = output_filename or '../current/two.mixes',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -60,79 +52,150 @@ class Prefill_plate_in_Evo200(Evo200):
                              # which calls GUI.update_parameters() and set_defaults() from Evo200
 
         self.check_initial_liquid_level = True
+        self.show_runtime_check_list    = True
 
         NumOfSamples = self.NumOfSamples
+        assert 1 <= NumOfSamples <= 96/6 , "In this demo we want to set 6x NumOfSamples in a 96 well plate."
         wt           = self.worktable
 
-        Itr.comment('Prefill {:d} plates with Buffer Reagent for {:d} samples.'\
-                       .format(self.num_plates,
-                               NumOfSamples     )).exec()
+        Itr.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'\
+                       .format(NumOfSamples     )).exec()
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
-        BufCuvette = wt.getLabware(Lab.Trough_100ml, "RA4")
+        BufCuvette   = wt.getLabware(Lab.Trough_100ml, "BufferCub")
+        master_mixes_= wt.getLabware(Lab.Eppendorfrack,    "mixes")
+
 
         self.go_first_pos()                                                     #  Set the initial position of the tips
 
                                                                                   # Set volumen / sample
-        BufferVolume   = 100.0       # VL1 or VL
-
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
-                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
+        buf_per_sample =0
+        well_v = 100
+
+        dil_mix1_10 = well_v /10                # to be spread from original mix1 to mix1_10
+        buf_mix1_10 = well_v - dil_mix1_10
+        buf_per_sample += buf_mix1_10
+
+        dil_mix2_10 = well_v / 10               # to be spread from original mix2 to mix2_10
+        buf_mix2_10 = well_v - dil_mix2_10
+        buf_per_sample += buf_mix2_10
+
+        dil_mix1_100 = well_v / 10              # to be transfered from mix1_10 to mix1_100
+        buf_mix1_100 = well_v - dil_mix1_100
+        buf_per_sample += buf_mix1_100
+
+        dil_mix2_100 = well_v / 10              # to be transfered from mix2_10 to mix2_100
+        buf_mix2_100 = well_v - dil_mix2_100
+        buf_per_sample += buf_mix2_100
+
+
+        # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         buffer_reag = Rtv.Reagent("Buffer ",
                                   BufCuvette,
-                                  volpersample = BufferVolume,
-                                  #defLiqClass  = 'MN VL',
-                                  num_of_samples= self.num_plates * NumOfSamples)
+                                  volpersample = buf_per_sample,
+                                  # defLiqClass  = 'MN VL',
+                                  # num_of_samples= NumOfSamples
+                                  )
+
+        mix1 =Rtv.Reagent("mix1",
+                          master_mixes_,
+                          volpersample = dil_mix1_10,
+                          # defLiqClass  = 'MN VL'
+                          )
+
+        mix2 = Rtv.Reagent("mix2",
+                           master_mixes_,
+                           volpersample  = dil_mix2_10,
+                           # defLiqClass  = 'MN VL'
+                           )
 
         # Show the check_list GUI to the user for possible small changes
 
         self.check_list()
-        self.set_EvoMode()
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        Plat = wt.getLabware(Lab.MP96MachereyNagel, "Filterplatte")
-
-        assert isinstance(Plat, Lab.Labware)
-
-
+        Plat1 = wt.getLabware(Lab.MP96MachereyNagel, "plate1")
+        Plat2 = wt.getLabware(Lab.MP96MachereyNagel, "plate2")
 
         # Define place for temporal reactions
-        for s in all_samples:
-            Rtv.Reagent(f"lysis_{s + 1:02d}",
-                        Plat,
-                        initial_vol =0.0,
-                        pos         =s + 1,
-                        excess      =0)
+        mix1_10 = Rtv.Reagent(f"mix1, diluted 1:10",
+                        Plat1,
+                        initial_vol = 0.0,
+                        replicas    = NumOfSamples,
+                        excess      = 0)
 
-        loc = Plat.location               # just showing how to move the plate from one site to the next in the carrier
+        mix2_10 = Rtv.Reagent(f"mix2, diluted 1:10",
+                        Plat1,
+                        initial_vol = 0.0,
+                        replicas    = NumOfSamples,
+                        excess      = 0)
+
+        mix1_100 = Rtv.Reagent(f"mix1, diluted 1:100",
+                              Plat2,
+                              initial_vol=0.0,
+                              replicas=NumOfSamples,
+                              excess=0)
+
+        mix2_100 = Rtv.Reagent(f"mix2, diluted 1:100",
+                              Plat2,
+                              initial_vol=0.0,
+                              replicas=NumOfSamples,
+                              excess=0)
+
+        loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier
         loc.site += 1
         car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", nSite=3), loc.grid, label = "MP 3Pos")
         loc.rack = car
-        Itr.transfer_rack(Plat, loc ).exec()                                              # just showing how RoMa works.
+        Itr.transfer_rack(Plat2, loc ).exec()                                              # just showing how RoMa works.
 
-        with group("Prefill plates with Buffer "):
+        with group("Fill plate with mixes "):
 
             Itr.userPrompt("Put the plates for Buffer ").exec()
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent=buffer_reag, to_labware_region=Plat.selectOnly(all_samples))
+                self.spread(reagent           = mix1,
+                            to_labware_region = mix1_10.select_all())
+
+            with self.tips(reuse=True, drop=False):
+                self.spread(reagent           = mix2,
+                            to_labware_region = mix2_10.select_all())
+
+            with self.tips(reuse=True, drop=False):
+                self.spread(reagent=buffer_reag, to_labware_region=mix1_10.select_all(), volume=buf_mix1_10)
+                self.spread(reagent=buffer_reag, to_labware_region=mix2_10.select_all(), volume=buf_mix2_10)
+
+            with self.tips(reuse=True, drop=False):
+                self.transfer(from_labware_region = mix1_10.select_all(),
+                              to_labware_region   = mix1_100.select_all(),
+                              volume              = dil_mix1_100)
+
+            with self.tips(reuse=True, drop=False):
+                self.transfer(from_labware_region = mix2_10.select_all(),
+                              to_labware_region   = mix2_100.select_all(),
+                              volume              = dil_mix2_100)
+
+            with self.tips(reuse=True, drop=False):
+                self.spread(reagent=buffer_reag, to_labware_region=mix1_100.select_all(), volume=buf_mix1_100)
+                self.spread(reagent=buffer_reag, to_labware_region=mix2_100.select_all(), volume=buf_mix2_100)
+
             self.dropTips()
 
         self.done()
 
 
 if __name__ == "__main__":
-    p = Prefill_plate_in_Evo200(NumOfSamples    = 96,
-                                run_name        = "_96s_1 plate")
+    p = Prefill_plate_in_Evo200(NumOfSamples    = 4,
+                                run_name        = "_4s_mix_1_2")
 
     # \EvoScripts\scripts\temp/VakuumExtraktion_RL_96_str.esc
     # \EvoScripts\scripts\temp/Ko_Platte_17_11_2011.esc
 
-    p.use_version('1 plate')
+    p.use_version('No version')
     # p.go_first_pos('A01')
     p.Run()

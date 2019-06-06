@@ -236,8 +236,8 @@ class Protocol (Executable):
         assert isinstance(reagent, Rtv.Reagent)
         LiqClass = LiqClass or reagent.defLiqClass
 
-
-        reagent.autoselect(self.robot.curArm().nTips)              # todo use even more tips? see self._aspirate_multi_tips
+        tips = 1 if isinstance(reagent.labware, Lab.Cuvette) else self.robot.curArm().nTips
+        reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
         vol = [w.vol for w in reagent.labware.selected_wells()]
         Itr.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()] ) }").exec()
 
@@ -271,7 +271,7 @@ class Protocol (Executable):
                 """
         prompt_msg = ""
         for reagent in self.worktable.reagents:
-            reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
+            reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
             print(reagent_msg)
             prompt_msg += reagent_msg + "\n"
         Itr.userPrompt(prompt_msg).exec()

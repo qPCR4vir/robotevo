@@ -133,6 +133,10 @@ class Reagent:
 
         return self.labware.autoselect(offset or self.pos, maxTips, len(self.Replicas) if offset is None else 1)
 
+    def select_all(self):
+        return self.labware.selectOnly([w.offset for w in self.Replicas])
+
+
 
 class Primer (Reagent):
     IDs ={}
