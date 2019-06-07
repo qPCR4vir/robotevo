@@ -273,7 +273,7 @@ class Protocol (Executable):
         for reagent in self.worktable.reagents:
             reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
             print(reagent_msg)
-            prompt_msg += reagent_msg + "\n"
+            prompt_msg += reagent_msg + "\\n"
         Itr.userPrompt(prompt_msg).exec()
 
     def done(self):

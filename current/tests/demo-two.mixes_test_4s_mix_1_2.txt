@@ -1,9 +1,6 @@
 Comment("Prefill a plate with some dilutions of two master mix and Buffer Reagent for 4 samples.");
 Set_DITI_Counter2("DiTi 1000ul","55","1","1",0);
-UserPrompt("Check Buffer  in ['well 1 in BufferCub :  with 1497.0 uL of Buffer ']
-Check mix1 in ['well 1 in mixes :  with 41.0 uL of mix1']
-Check mix2 in ['well 2 in mixes :  with 41.0 uL of mix2']
-",1,-1);
+UserPrompt("Check Buffer  in ['well 1 in BufferCub :  with 1497.0 uL of Buffer ']\nCheck mix1 in ['well 1 in mixes :  with 41.0 uL of mix1']\nCheck mix2 in ['well 2 in mixes :  with 41.0 uL of mix2']\n",1,-1);
 Comment("Check: ['well 4 in BufferCub :  with 1497.0 uL of Buffer ']");
 GetDITI2(1,"DiTi 1000ul",0,0,0,300);
 Detect_Liquid(1,"Water free",53,0,1,"010880",0,0);
