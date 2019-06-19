@@ -18,13 +18,13 @@ Fill plate with mixes
         Spread: 90.0 킠 of Buffer  (1497.6 킠 total) from [grid:53 site:1 ['well 1 in BufferCub :  with 1137.0 uL of Buffer '] into plate1[grid:33 site:1] in order [5, 6, 7, 8]:
 
     Transfer: 10.0 킠 from plate1
-        Transfer: 10.0 킠 from plate1 [grid:33 site:1] in order [1, 2, 3, 4] into plate2[grid:33 site:3] in order [1, 2, 3, 4]:
+        Transfer: 10.0 킠 from plate1 [grid:33 site:1] in order [1, 2, 3, 4] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:
 
     Transfer: 10.0 킠 from plate1
-        Transfer: 10.0 킠 from plate1 [grid:33 site:1] in order [5, 6, 7, 8] into plate2[grid:33 site:3] in order [5, 6, 7, 8]:
+        Transfer: 10.0 킠 from plate1 [grid:33 site:1] in order [5, 6, 7, 8] into plate2[grid:55 site:2] in order [5, 6, 7, 8]:
 
     Spread: 90.0 킠 of Buffer 
-        Spread: 90.0 킠 of Buffer  (1497.6 킠 total) from [grid:53 site:1 ['well 1 in BufferCub :  with 777.0 uL of Buffer '] into plate2[grid:33 site:3] in order [1, 2, 3, 4]:
+        Spread: 90.0 킠 of Buffer  (1497.6 킠 total) from [grid:53 site:1 ['well 1 in BufferCub :  with 777.0 uL of Buffer '] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:
 
     Spread: 90.0 킠 of Buffer 
-        Spread: 90.0 킠 of Buffer  (1497.6 킠 total) from [grid:53 site:1 ['well 1 in BufferCub :  with 417.0 uL of Buffer '] into plate2[grid:33 site:3] in order [5, 6, 7, 8]:
+        Spread: 90.0 킠 of Buffer  (1497.6 킠 total) from [grid:53 site:1 ['well 1 in BufferCub :  with 417.0 uL of Buffer '] into plate2[grid:55 site:2] in order [5, 6, 7, 8]:

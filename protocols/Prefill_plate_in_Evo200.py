@@ -42,7 +42,7 @@ class Prefill_plate_in_Evo200(Evo200):
                         GUI                         = GUI,
                         NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/Evo200example.ewt',
+                                                      '../EvoScripts/wt_templates/demo-two.mixes.Evo200example.ewt',
                         output_filename             = output_filename or '../current/two.mixes',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
@@ -121,7 +121,7 @@ class Prefill_plate_in_Evo200(Evo200):
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
         Plat1 = wt.getLabware(Lab.MP96MachereyNagel, "plate1")
-        Plat2 = wt.getLabware(Lab.MP96MachereyNagel, "plate2")
+        Plat2 = wt.getLabware(Lab.MP96well,          "plate2")
 
         # Define place for temporal reactions
         mix1_10 = Rtv.Reagent(f"mix1, diluted 1:10",
@@ -149,7 +149,7 @@ class Prefill_plate_in_Evo200(Evo200):
                               excess=0)
 
         loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier
-        loc.site += 1
+        loc.site -= 1
         car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", nSite=3), loc.grid, label = "MP 3Pos")
         loc.rack = car
         Itr.transfer_rack(Plat2, loc ).exec()                                              # just showing how RoMa works.

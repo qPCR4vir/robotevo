@@ -1,6 +1,6 @@
 B;Comment("Prefill a plate with some dilutions of two master mix and Buffer Reagent for 4 samples.");
 B;Set_DITI_Counter2("DiTi 1000ul","55","1","1",0);
-B;UserPrompt("Check Buffer  in ['well 1 in BufferCub :  with 1497.0 uL of Buffer ']\nCheck mix1 in ['well 1 in mixes :  with 41.0 uL of mix1']\nCheck mix2 in ['well 2 in mixes :  with 41.0 uL of mix2']\n",1,-1);
+B;UserPrompt("Check Buffer  in ['well 1 in BufferCub :  with 1497.0 uL of Buffer ']Check mix1 in ['well 1 in mixes :  with 41.0 uL of mix1']Check mix2 in ['well 2 in mixes :  with 41.0 uL of mix2']",1,-1);
 B;Comment("Check: ['well 4 in BufferCub :  with 1497.0 uL of Buffer ']");
 B;GetDITI2(1,"DiTi 1000ul",0,0,0,300);
 B;Detect_Liquid(1,"Water free",53,0,1,"010880",0,0);
@@ -17,7 +17,7 @@ B;Detect_Liquid(1,"Water free",12,0,1,"0110200",0,0);
 B;DropDITI(1,19,6,0.00,300,0);
 B;UserPrompt("",1,-1);
 B;Wash(255,19,1,19,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
-B;Transfer_Rack("33","33",1,0,1,0,0,"0","96 Well Macherey-Nagel Plate","Narrow","","","MP 3Pos","","MP 3Pos","2","","2");
+B;Transfer_Rack("55","55",1,0,1,0,0,"0","96 Well Microplate","Narrow","","","MP 3Pos","","MP 3Pos","1","","1");
 B;UserPrompt("Put the plates for Buffer ",1,-1);
 B;Comment("Spread: 10.0 µL of mix1 (41.6 µL total) from [grid:12 site:1 ['well 1 in mixes :  with 41.0 uL of mix1'] into plate1[grid:33 site:1] in order [1, 2, 3, 4]:");
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
@@ -38,16 +38,16 @@ B;Dispense(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0
 B;Comment("Spread: 90.0 µL of Buffer  (1497.6 µL total) from [grid:53 site:1 ['well 1 in BufferCub :  with 1137.0 uL of Buffer '] into plate1[grid:33 site:1] in order [5, 6, 7, 8]:");
 B;Aspirate(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,53,0,1,"0108l0",0,0);
 B;Dispense(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,33,0,1,"0C08 1000000000000",0,0);
-B;Comment("Transfer: 10.0 µL from plate1 [grid:33 site:1] in order [1, 2, 3, 4] into plate2[grid:33 site:3] in order [1, 2, 3, 4]:");
+B;Comment("Transfer: 10.0 µL from plate1 [grid:33 site:1] in order [1, 2, 3, 4] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:");
 B;Aspirate(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,33,0,1,"0C08?0000000000000",0,0);
-B;Dispense(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,33,2,1,"0C08?0000000000000",0,0);
-B;Comment("Transfer: 10.0 µL from plate1 [grid:33 site:1] in order [5, 6, 7, 8] into plate2[grid:33 site:3] in order [5, 6, 7, 8]:");
+B;Dispense(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,55,1,1,"0C08?0000000000000",0,0);
+B;Comment("Transfer: 10.0 µL from plate1 [grid:33 site:1] in order [5, 6, 7, 8] into plate2[grid:55 site:2] in order [5, 6, 7, 8]:");
 B;Aspirate(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,33,0,1,"0C08 1000000000000",0,0);
-B;Dispense(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,33,2,1,"0C08 1000000000000",0,0);
-B;Comment("Spread: 90.0 µL of Buffer  (1497.6 µL total) from [grid:53 site:1 ['well 1 in BufferCub :  with 777.0 uL of Buffer '] into plate2[grid:33 site:3] in order [1, 2, 3, 4]:");
+B;Dispense(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,55,1,1,"0C08 1000000000000",0,0);
+B;Comment("Spread: 90.0 µL of Buffer  (1497.6 µL total) from [grid:53 site:1 ['well 1 in BufferCub :  with 777.0 uL of Buffer '] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:");
 B;Aspirate(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,53,0,1,"0108l0",0,0);
-B;Dispense(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,33,2,1,"0C08?0000000000000",0,0);
-B;Comment("Spread: 90.0 µL of Buffer  (1497.6 µL total) from [grid:53 site:1 ['well 1 in BufferCub :  with 417.0 uL of Buffer '] into plate2[grid:33 site:3] in order [5, 6, 7, 8]:");
+B;Dispense(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,55,1,1,"0C08?0000000000000",0,0);
+B;Comment("Spread: 90.0 µL of Buffer  (1497.6 µL total) from [grid:53 site:1 ['well 1 in BufferCub :  with 417.0 uL of Buffer '] into plate2[grid:55 site:2] in order [5, 6, 7, 8]:");
 B;Aspirate(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,53,0,1,"0108l0",0,0);
-B;Dispense(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,33,2,1,"0C08 1000000000000",0,0);
+B;Dispense(15,"Water free","90.00","90.00","90.00","90.00","0","0","0","0",0,0,0,0,55,1,1,"0C08 1000000000000",0,0);
 B;DropDITI(15,19,6,0.00,300,0);
