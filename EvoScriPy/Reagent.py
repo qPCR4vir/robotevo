@@ -10,7 +10,7 @@ import EvoScriPy.Labware as Lab
 # from Robot import current
 from EvoScriPy.Instruction_Base import def_liquidClass
 
-def_react_excess =  4
+def_reagent_excess =  4
 def_mix_excess   =  8
 
 
@@ -31,7 +31,7 @@ class Reagent:
                  maxFull: float = None,
                  num_of_samples = None):
         """
-        Put a reactive into labware wells, possible with replicates and set the amount to be used for each sample
+        Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample
 
         :param name: str; Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
         :param labware: Labware;
@@ -53,7 +53,7 @@ class Reagent:
           if (Reagent.current_protocol):
               Reagent.current_protocol.Reactives.append(self) # todo temporal
 
-        ex= def_react_excess if excess is None else excess
+        ex= def_reagent_excess if excess is None else excess
 
         self.labware    = labware
         self.maxFull    = 1.0 if maxFull is None else maxFull/100.0
@@ -84,7 +84,7 @@ class Reagent:
 
         if single_use:                                 # todo revise !!!
             assert not volpersample, str(name) + \
-                            ": this is a single use-reactive. Please, don't set any volume per sample."
+                            ": this is a single use-reagent. Please, don't set any volume per sample."
             assert len(self.Replicas) == 1, "Temporally use only one vial for " + str(name)
             self.volpersample = single_use
             self.init_vol(NumSamples=1)
@@ -95,11 +95,11 @@ class Reagent:
         return int (self.minVol(NumSamples) / (self.labware.type.maxVol*self.maxFull)) +1
 
     @staticmethod
-    def SetReactiveList(protocol):
+    def SetReagentList(protocol):
         Reagent.current_protocol = protocol                    # ??
 
     @staticmethod
-    def StopReactiveList():
+    def StopReagentList():
         Reagent.current_protocol = None
 
     def __str__(self):
@@ -114,7 +114,7 @@ class Reagent:
 
     def put_min_vol(self, NumSamples=None):          # todo create replicas if needed !!!!
         """
-        Force you to put an initial volume of reactive that can be used to spread into samples,
+        Force you to put an initial volume of reagent that can be used to spread into samples,
         aspiring equal number of complete doses for each sample from each replica,
         exept the firsts replicas that can be used to aspire one more dose for the last/rest of samples.
         That is: all replica have equal volumen (number) of doses or the firsts have one more dose

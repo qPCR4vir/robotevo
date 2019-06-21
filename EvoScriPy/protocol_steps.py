@@ -50,12 +50,12 @@ class Executable:
         self.def_versions()
 
         self.version     = next(iter(self.versions))
-        Rtv.Reagent.SetReactiveList(self)  # todo Revise !!!
+        Rtv.Reagent.SetReagentList(self)  # todo Revise !!!
 
     def set_defaults(self):
         """Set initial values that will not be rest during secondary initializations.
         The "primary initialization" maybe a light one, like defining the list of versions available.
-        Here, for example, initialize the list of reactive.
+        Here, for example, initialize the list of reagents.
         """
         print('set def in Executable')
 
@@ -130,7 +130,7 @@ class Protocol (Executable):
         self.def_DiTi_check_liquid_level = None
         self.show_runtime_check_list     = False
 
-        Rtv.Reagent.SetReactiveList(self)
+        Rtv.Reagent.SetReagentList(self)
 
         Executable.__init__(self, GUI=GUI, run_name  = run_name)
 
@@ -154,7 +154,7 @@ class Protocol (Executable):
         self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)
-        Rtv.Reagent.SetReactiveList(self)
+        Rtv.Reagent.SetReagentList(self)
         if self.def_DiTi_check_liquid_level is None:
             self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
 
@@ -165,7 +165,7 @@ class Protocol (Executable):
         else:
             EvoMode.current = self.EvoMode
         self.iRobot.set_as_current()
-        Rtv.Reagent.SetReactiveList(self)
+        Rtv.Reagent.SetReagentList(self)
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
@@ -218,7 +218,7 @@ class Protocol (Executable):
         if (self.GUI):
             self.GUI.check_list()
         self.set_EvoMode()
-        Rtv.Reagent.SetReactiveList(self)
+        Rtv.Reagent.SetReagentList(self)
         if self.show_runtime_check_list:
             self.show_check_list()
         if self.check_initial_liquid_level:
@@ -296,7 +296,7 @@ class Protocol (Executable):
 
     def set_dropTips(self, drop=True)->bool:
         """
-        Drops the tips at THE END of the whole action? like after spread of the reactive into various targets
+        Drops the tips at THE END of the whole action? like after distribution of a reagent into various targets
         :param drop:
         :return:
         """
@@ -391,33 +391,33 @@ class Protocol (Executable):
         Itr.dropDITI(TIP_MASK).exec()
         #return TIP_MASK
 
-    def aspire(self,  tip, reactive, vol=None, offset = None):
+    def aspire(self, tip, reagent, vol=None, offset = None):
         """
-        Aspirate vol with ONE tip from reactive
+        Aspirate vol with ONE tip from reagent
         :param self:
         :param tip:
-        :param reactive:
+        :param reagent:
         :param vol:
         """
-        if vol is None:       vol = reactive.minVol()    # todo: revise !!
+        if vol is None:       vol = reagent.minVol()    # todo: revise !!
 
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
-        reactive.autoselect(offset = offset)                                         # reactive.labware.selectOnly([reactive.pos])
-        Itr.aspirate(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+        reagent.autoselect(offset = offset)                                         # reagent.labware.selectOnly([reagent.pos])
+        Itr.aspirate(Rbt.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
-    def dispense(self,  tip, reactive, vol=None):                     # OK coordinate with robot
+    def dispense(self, tip, reagent, vol=None):                     # OK coordinate with robot
         """
-        Dispense vol with ONE tip to reactive
+        Dispense vol with ONE tip to reagent
         :param tip:
-        :param reactive:
+        :param reagent:
         :param vol:
         """
-        vol = vol or reactive.minVol()                                # really ??   # todo: revise !!
-        reactive.autoselect()                                         # reactive.labware.selectOnly([reactive.pos])
+        vol = vol or reagent.minVol()                                # really ??   # todo: revise !!
+        reagent.autoselect()                                         # reagent.labware.selectOnly([reagent.pos])
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
-        Itr.dispense(Rbt.tipMask[tip], reactive.defLiqClass, v, reactive.labware).exec()
+        Itr.dispense(Rbt.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
     def mix_reagent(self,   reagent   : Rtv.Reagent,
                             LiqClass  : str  = None,
