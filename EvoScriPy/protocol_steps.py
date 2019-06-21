@@ -572,16 +572,16 @@ class Protocol (Executable):
             with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
                 tip = -1
                 ctips = nt
-                for ridx, react in enumerate(preMix.components):       # iterate reactive components
-                    labw = react.labware
-                    sVol = react.volpersample*preMix.excess       # vol we need for each sample
+                for ridx, reagent_component in enumerate(preMix.components):       # iterate reagent components
+                    labw = reagent_component.labware
+                    sVol = reagent_component.volpersample*preMix.excess       # vol we need for each sample
                     rVol = sVol*NumSamples                        # the total vol we need of this reagent component
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
                                 .format( idx = ridx + 1,
                                          v   = rVol,
                                          g   = labw.location.grid,
                                          st  = labw.location.site + 1,
-                                         w   = str([str(well) for well in react.Replicas])   )
+                                         w   = str([str(well) for well in reagent_component.Replicas])   )
                     Itr.comment(msg).exec()
                     tip += 1  # use the next tip
                     if tip >= nt:
@@ -592,13 +592,13 @@ class Protocol (Executable):
                         tip = 0
                     mV = robot.curArm().Tips[tip].type.maxVol
                     # aspire/dispense multiple times if rVol don't fit in the tip (mV)
-                    # but also if there is not sufficient reactive in the current component replica
+                    # but also if there is not sufficient reacgent in the current component replica
                     current_comp_repl = 0
                     while rVol > 0:
-                        while (react.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
+                        while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
                             current_comp_repl +=1
-                        dV = min (rVol, mV, react.Replicas[current_comp_repl].vol)
-                        self.aspire(tip, react, dV, offset=react.Replicas[current_comp_repl].offset)
+                        dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
+                        self.aspire(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
                         self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
@@ -643,7 +643,7 @@ class Protocol (Executable):
         :param NumSamples       : Priorized   !!!! If true reset the selection
         :param reagent          : Reagent to spread
         :param to_labware_region: Labware in which the destine well are selected
-        :param volume           : if not, volume is set from the default of the source reactive
+        :param volume           : if not, volume is set from the default of the source reagent
         :param optimize         : minimize zigzag of multi pipetting
         :param num_tips         : the number of tips to be used in each cycle of pipetting = all
         """
@@ -751,7 +751,7 @@ class Protocol (Executable):
 
         :param from_labware_region  : Labware in which the source wells are located and possibly selected
         :param to_labware_region    : Labware in which the target wells are located and possibly selected
-        :param volume               : if not, volume is set from the default of the source reactive
+        :param volume               : if not, volume is set from the default of the source reagent
         :param using_liquid_class   : LC or tuple (LC to aspirate, LC to dispense)
         :param optimizeFrom         : bool - use from_labware_region.parallelOrder(...) to aspirate
         :param optimizeTo           : bool - use to_labware_region.parallelOrder(...) to aspirate
@@ -1088,7 +1088,7 @@ class Protocol (Executable):
         :param tipsMask     :
         :param reuse        : Reuse the tips or drop it and take new BEFORE each individual action
         :param drop         : Drops the tips AFTER each individual action,
-                              like after one aspiration and spread of the reactive into various target
+                              like after one aspiration and spread of the reagent into various target
         :param preserve     : puts the tip back into a free place in some rackt of the same type
         :param usePreserved : pick the tips from the preserved
         :param selected_samples:
@@ -1227,7 +1227,7 @@ def opening_example(filename):
 # OK  mix well <B-beads
 # OK  Elution buffer to eppis !!!
 # OK  implement accumulated volume
-# OK  implement actualize vol in reactives in pipette
+# OK  implement actualize vol in reagent in pipette
 # OK  comentar las replicas, como 2x b-beads
 # OK  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
 # OK  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass

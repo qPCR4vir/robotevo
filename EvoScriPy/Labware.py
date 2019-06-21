@@ -445,8 +445,8 @@ class conectedWell(Well):
         return self.labware.reagent
 
     @reagent.setter
-    def reagent(self, reactive):
-        self.labware.reagent = reactive
+    def reagent(self, reagent):
+        self.labware.reagent = reagent
 
     @property
     def actions(self):
@@ -690,21 +690,21 @@ class Labware:
                             for i in range(len(free_wells)-1))
         return continuous, free_wells
 
-    def put(self, reactive, pos=None, replicas=None) -> list:
-        """ Put a reactive with replicas in the given wells position of this labware,
+    def put(self, reagent, pos=None, replicas=None) -> list:
+        """ Put a reagent with replicas in the given wells position of this labware,
         and return a list of the wells used
 
-        :param reactive:
+        :param reagent:
         :param pos: [wells]; if int or [int] will be assumed 1-based not 0-based
         :param replicas: number of replicas
         :return:
         """
 
-        replicas = replicas or reactive.minNumRep
+        replicas = replicas or reagent.minNumRep
 
-        if pos is None:                                          # find self where to put the replicas of this reactive
+        if pos is None:                                          # find self where to put the replicas of this reagent
             continuous, pos = self.find_free_wells(replicas)
-            assert replicas == len(pos) , 'putting reactive - ' + str(reactive) + ' - into Labware: ' \
+            assert replicas == len(pos) , 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
                                           + str(self) + ' different replica number ' + str(replicas) \
                                           + ' and number of positions ' \
                                           + str(pos)        # replicas = len(pos)   # todo What to do?
@@ -714,12 +714,12 @@ class Labware:
             if replicas <= len(pos):
                 pass                           # replicas = len(pos)
             else:                              # todo: revise  !!!!!!!!!!!!!!
-                assert (replicas == len(pos)), self.label + ": Can not put " + reactive.name + " in position " \
+                assert (replicas == len(pos)), self.label + ": Can not put " + reagent.name + " in position " \
                                                + str( w.offset + 1) + " already occupied by " + w.reagent.name
 
 
         elif isinstance(pos, Well):                              # put one replica beginning from the given position
-                # assert pos.labware is self, "Trying to put the reactive in another labware?"
+                # assert pos.labware is self, "Trying to put the reagent in another labware?"
                 pos = pos.labware.Wells[pos.offset: pos.offset + replicas]
                 # pos = self.Wells[pos.offset: pos.offset + replicas]
         else:
@@ -728,14 +728,14 @@ class Labware:
                 # pos = self.offset(pos) + 1
                 # pos = range(pos, pos + replicas)
 
-        Replicas = []    # a list of labware-wells, where the replicas for this reactive are.
+        Replicas = []    # a list of labware-wells, where the replicas for this reagent are.
         for w in pos:
             if replicas == 0 :
                 return Replicas
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
-            assert not w.reagent, self.label + ": Can not put " + reactive.name + " in position " + str(
+            assert not w.reagent, self.label + ": Can not put " + reagent.name + " in position " + str(
                 w.offset + 1) + " already occupied by " + w.reagent.name
-            w.reagent = reactive
+            w.reagent = reagent
             # w.labware = self
             Replicas += [w]
             replicas -= 1
@@ -1186,7 +1186,7 @@ class Cuvette(Labware):
     def __init__(self, type, location, label=None):
         assert isinstance(type, CuvetteType)
         self.vol = 0.0
-        self.reactive = None
+        self.reagent = None
         self.actions = []
         Labware.__init__(self, type, label, location)
 

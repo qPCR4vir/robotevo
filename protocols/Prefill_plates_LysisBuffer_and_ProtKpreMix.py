@@ -111,7 +111,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         maxTips     = min  (self.nTips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
-                                                        # Define the reactives in each labware (Cuvette, eppys, etc.)
+                                                        # Define the reagents in each labware (Cuvette, eppys, etc.)
 
         if self.preMix_from_Cuvette or self.preMix_from_LysBuf_pK_Cuvette:
             pK_cRNA_MS2 = Rtv.Reagent(preMixName,
