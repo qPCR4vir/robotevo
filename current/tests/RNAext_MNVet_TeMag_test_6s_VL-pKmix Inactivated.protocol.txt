@@ -6,12 +6,12 @@ Transfer: 414.0 킠 from Proben
 Add B-Beads
 
     Spread: 20.0 킠 of B - Beads 
-        Spread: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1 in Reactives :  with 1200.0 uL of B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1 in labware Reactives:  with 1200.0 uL of reagent B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Wash in TeMag with VEB - Binding Buffer 
 
     Spread: 600.0 킠 of VEB - Binding Buffer 
-        Spread: 600.0 킠 of VEB - Binding Buffer  (3744.0 킠 total) from [grid:20 site:3 ['well 1 in 3-VEB Binding Buffer :  with 3744.0 uL of VEB - Binding Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 600.0 킠 of VEB - Binding Buffer  (3744.0 킠 total) from [grid:20 site:3 ['well 1 in labware 3-VEB Binding Buffer:  with 3744.0 uL of reagent VEB - Binding Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 846.0 킠 of 48PosMagnet
         Mix: 846.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -22,7 +22,7 @@ Wash in TeMag with VEB - Binding Buffer
 Wash in TeMag with VEW1 - Wash Buffer 
 
     Spread: 600.0 킠 of VEW1 - Wash Buffer 
-        Spread: 600.0 킠 of VEW1 - Wash Buffer  (3744.0 킠 total) from [grid:23 site:4 ['well 1 in 4-VEW1 Wash Buffe :  with 3744.0 uL of VEW1 - Wash Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 600.0 킠 of VEW1 - Wash Buffer  (3744.0 킠 total) from [grid:23 site:4 ['well 1 in labware 4-VEW1 Wash Buffe:  with 3744.0 uL of reagent VEW1 - Wash Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 540.0 킠 of 48PosMagnet
         Mix: 540.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -33,7 +33,7 @@ Wash in TeMag with VEW1 - Wash Buffer
 Wash in TeMag with VEW2 - WashBuffer 
 
     Spread: 600.0 킠 of VEW2 - WashBuffer 
-        Spread: 600.0 킠 of VEW2 - WashBuffer  (3744.0 킠 total) from [grid:23 site:5 ['well 1 in 5-VEW2-WashBuffer :  with 3744.0 uL of VEW2 - WashBuffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 600.0 킠 of VEW2 - WashBuffer  (3744.0 킠 total) from [grid:23 site:5 ['well 1 in labware 5-VEW2-WashBuffer:  with 3744.0 uL of reagent VEW2 - WashBuffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 540.0 킠 of 48PosMagnet
         Mix: 540.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -44,7 +44,7 @@ Wash in TeMag with VEW2 - WashBuffer
 Wash in TeMag with Ethanol 80% 
 
     Spread: 600.0 킠 of Ethanol 80% 
-        Spread: 600.0 킠 of Ethanol 80%  (3744.0 킠 total) from [grid:21 site:1 ['well 1 in 7-EtOH80p :  with 3744.0 uL of Ethanol 80% '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 600.0 킠 of Ethanol 80%  (3744.0 킠 total) from [grid:21 site:1 ['well 1 in labware 7-EtOH80p:  with 3744.0 uL of reagent Ethanol 80% '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 540.0 킠 of 48PosMagnet
         Mix: 540.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -55,7 +55,7 @@ Wash in TeMag with Ethanol 80%
 Elution
 
     Spread: 100.0 킠 of Elution Buffer 
-        Spread: 100.0 킠 of Elution Buffer  (624.0 킠 total) from [grid:20 site:1 ['well 1 in 1-VEL-ElutionBuffer :  with 624.0 uL of Elution Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 100.0 킠 of Elution Buffer  (624.0 킠 total) from [grid:20 site:1 ['well 1 in labware 1-VEL-ElutionBuffer:  with 624.0 uL of reagent Elution Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 90.0 킠 of 48PosMagnet
         Mix: 90.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]

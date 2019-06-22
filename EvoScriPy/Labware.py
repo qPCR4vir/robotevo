@@ -393,15 +393,25 @@ class Well:
         self.actions = []           # todo transfer actualize this ? how this works?
 
     def __str__(self):
-        return "well {pos:d} in {lab:s} : {label:s} with {vol:.1f} uL of {what:s}"\
+        return "well {pos:d} in labware {lab:s}: {label:s} with {vol:.1f} uL of reagent {what:s}"\
                 .format(pos  =self.offset+1,
                         lab  =self.labware.label,
                         label=self.label,
                         vol  =self.vol,
                         what =str(self.reagent))
+    
+    class Action:
+        def __init__(self, volume:float, origin=None):
+            self.origin = origin
+            self.volume = volume
+            
+        def __str__(self):
+            strr = "aspirate " if self.volume < 0 else "dispense "
+            strr += str(self.volume) + " µL of " + str(self.origin)
+            return strr
 
     def log(self, vol, origin=None):
-        self.actions += [(vol, (origin if origin else self))]
+        self.actions += [Well.Action(vol, origin if origin else self)]
 
     def select(self, sel=True):
         self.selFlag = sel

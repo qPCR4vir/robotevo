@@ -3,10 +3,10 @@ Prefill plates with VEW1, Elution buffer and VEW2 for 6 samples.
 Prefill plates with VEW1, Elution buffer and VEW2
 
     Spread: 100.0 킠 of Elution Buffer 
-        Spread: 100.0 킠 of Elution Buffer  (624.0 킠 total) from [grid:23 site:5 ['well 1 in 1-VEL-ElutionBuffer :  with 624.0 uL of Elution Buffer '] into Plate ElutB[grid:25 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 100.0 킠 of Elution Buffer  (624.0 킠 total) from [grid:23 site:5 ['well 1 in labware 1-VEL-ElutionBuffer:  with 624.0 uL of reagent Elution Buffer '] into Plate ElutB[grid:25 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Spread: 600.0 킠 of VEW2 - WashBuffer 
-        Spread: 600.0 킠 of VEW2 - WashBuffer  (3744.0 킠 total) from [grid:23 site:6 ['well 1 in 5-VEW2-WashBuffer :  with 3744.0 uL of VEW2 - WashBuffer '] into Plate VEW2[grid:25 site:3] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 600.0 킠 of VEW2 - WashBuffer  (3744.0 킠 total) from [grid:23 site:6 ['well 1 in labware 5-VEW2-WashBuffer:  with 3744.0 uL of reagent VEW2 - WashBuffer '] into Plate VEW2[grid:25 site:3] in order [1, 2, 3, 4, 9, 10]:
 
     Spread: 600.0 킠 of VEW1 - Wash Buffer 
-        Spread: 600.0 킠 of VEW1 - Wash Buffer  (3744.0 킠 total) from [grid:23 site:4 ['well 1 in 4-VEW1 Wash Buffe :  with 3744.0 uL of VEW1 - Wash Buffer '] into Plate VEW1[grid:25 site:1] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 600.0 킠 of VEW1 - Wash Buffer  (3744.0 킠 total) from [grid:23 site:4 ['well 1 in labware 4-VEW1 Wash Buffe:  with 3744.0 uL of reagent VEW1 - Wash Buffer '] into Plate VEW1[grid:25 site:1] in order [1, 2, 3, 4, 9, 10]:

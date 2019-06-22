@@ -1,4 +1,4 @@
 VL-only prefillfor extracting RNA from 6 samples with the MN-Vet kit
 
 Spread: 180.0 킠 of VL - Lysis Buffer 
-    Spread: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1 in 2-Vl Lysis Buffer :  with 1123.0 uL of VL - Lysis Buffer '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:
+    Spread: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1 in labware 2-Vl Lysis Buffer:  with 1123.0 uL of reagent VL - Lysis Buffer '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:
