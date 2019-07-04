@@ -56,7 +56,7 @@ class aspirate(Pipetting):
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Robot.Arm.Aspirate
+        return EvoScriPy.Robot.Arm.Aspirate
 
 
 class dispense(Pipetting):
@@ -86,7 +86,7 @@ class dispense(Pipetting):
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Robot.Arm.Dispense
+        return EvoScriPy.Robot.Arm.Dispense
 
 
 class mix(Pipetting):
@@ -579,7 +579,7 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Robot.Arm.Detect
+        return EvoScriPy.Robot.Arm.Detect
 
     def __init__(self ,      tipMask     = None,                         # arg 1
                              liquidClass = None,                         # arg 2
