@@ -389,7 +389,7 @@ class set_DITI_Counter(Pipette):            # todo help determining the type,set
         return True
 
     def actualize_robot_state(self):
-        # Robot.Robot.current.worktable.labTypes[self.type]
+        # Robot.Robot.current.worktable.labware_series[self.type]
         self.labware.type.pick_next_rack = self.labware
         self.labware.type.pick_next      = self.labware.offset(self.posInRack)
 

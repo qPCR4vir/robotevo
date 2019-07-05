@@ -204,6 +204,7 @@ class Arm:
                 pass # vol[i] = None
         return vol, tip_mask
 
+
 class Robot:
     """ Maintain an intern state.
     Can have more than one arm in a dictionary that map an index with the actual arm.

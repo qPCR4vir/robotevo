@@ -8,9 +8,36 @@ __author__ = 'qPCR4vir'
 
 
 class WorkTable:
-    """ Collection of Racks.Types and Labware.Types and pos of instances """
+    """ Collection of racks.Types and Labware.Types and pos of instances """
 
     curWorkTable = None
+
+    def __init__(self, templateFile, grids=67, sites=127):
+
+        self.labware_series = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
+        self.reagents       = []
+        self.racks          = []
+        self.template       = []
+
+        self.nSites             = sites
+        self.grid               = [None] * grids            # TODO take this from the template file
+        self.templateFileName   = None
+
+        self.def_WashWaste      = None
+        self.def_WashCleaner    = None
+        self.def_DiTiWaste      = None
+        self.def_DiTi           = None
+
+        WorkTable.curWorkTable  = self
+
+        if isinstance(templateFile, list):
+            self.template = templateFile
+            print("Template fileis a list")
+        else:
+            print("Set template file" + templateFile)
+            self.template = self.parseWorTableFile(templateFile)
+            self.templateFileName = templateFile
+
 
     class Location:
         """ One location in a WorkTable """
@@ -84,27 +111,6 @@ class WorkTable:
             labw = { }
 
 
-    def __init__(self, templateFile, grids=67, sites=127):
-        self.def_WashWaste   = None
-        self.def_WashCleaner = None
-        self.def_DiTiWaste   = None
-        self.def_DiTi        = None
-        # assert WorkTable.curWorkTable is None      # TODO revise.
-        WorkTable.curWorkTable = self                # TODO revise
-        self.labTypes = {}  # typeName: Series. For each type mountain a series of labwares (with have self locations)
-        self.reagents = []
-        self.Racks    = []
-        self.nSites   = sites
-        self.grid     = [None] * grids
-        self.templateFileName = None
-        if isinstance(templateFile, list):
-            self.template = templateFile
-            print("Template fileis a list")
-        else:
-            print("Set template file" + templateFile)
-            self.template = self.parseWorTableFile(templateFile)
-            self.templateFileName = templateFile
-
     def parseWorTableFile(self, templateFile):
         if not templateFile:
             return []
@@ -174,7 +180,7 @@ class WorkTable:
         if labware.location.grid >= len(self.grid):
             raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
 
-        for type_name, labw_series in self.labTypes.items():                # loop lab_types already in worktable
+        for type_name, labw_series in self.labware_series.items():                # loop lab_types already in worktable
             for labw in labw_series.labwares:                               # loop labwares in that series
 
                 if labw is labware:                                         # already there ??
@@ -188,10 +194,10 @@ class WorkTable:
                     print("Warning! Trying to add a labware. The worktable template already have a labware with label '"
                           + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site + 1))
 
-        if labware.type.name not in self.labTypes:              # first time this type of labware is in this worktable
-            self.labTypes[labware.type.name] = labware.type.create_series(labware)
+        if labware.type.name not in self.labware_series:              # first time this type of labware is in this worktable
+            self.labware_series[labware.type.name] = labware.type.create_series(labware)
         else:
-            self.labTypes[labware.type.name].add(labware)
+            self.labware_series[labware.type.name].add(labware)
 
         # todo add to self.grid labware.location.grid dict site, labware
 
@@ -233,26 +239,26 @@ class WorkTable:
         else:
             if isinstance(labware, Labware.Type):
                 labware = labware.name
-            if labware not in self.labTypes:                        # todo  what if this is the label of the labware
+            if labware not in self.labware_series:                        # todo  what if this is the label of the labware
                 raise Exception("Labware '" + labware + "' was not found in worktable: " + self.templateFileName)
 
-            series = self.labTypes[labware]
+            series = self.labware_series[labware]
 
         return series.current
 
     def set_current(self, labware):
         assert isinstance(labware, Labware)
-        series = self.labTypes[labware.type.name]
+        series = self.labware_series[labware.type.name]
         assert isinstance(series, Labware.Type.Series)
         series.current = labware
 
     def getLabware(self, labw_type , label):                    # todo make labw_type optional
         assert isinstance(labw_type, Labware.Type )
 
-        if labw_type.name not in self.labTypes:
+        if labw_type.name not in self.labware_series:
             raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
 
-        series = self.labTypes[labw_type.name]
+        series = self.labware_series[labw_type.name]
         if label in series.labels:
             return series.labels[label]
 
@@ -290,8 +296,8 @@ class WorkTable:
     def retireLabware(self, labw):
         assert isinstance(labw, Labware )
 
-        if labw.type.name in self.labTypes:
-            assert labw.series is self.labTypes[labw.type.name]
+        if labw.type.name in self.labware_series:
+            assert labw.series is self.labware_series[labw.type.name]
 
         if isinstance(labw.series, Labware.Type.Series):
             labw.series.remove(labw)
@@ -325,8 +331,8 @@ class WorkTable:
 
         assert isinstance(rack, str)
 
-        if rack in self.labTypes:
-            return self.labTypes[rack]
+        if rack in self.labware_series:
+            return self.labware_series[rack]
 
         print("WARNING !! No labware type registered with label: " + rack)
 
