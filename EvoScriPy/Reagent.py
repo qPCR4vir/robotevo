@@ -116,7 +116,7 @@ class Reagent:
         """
         Force you to put an initial volume of reagent that can be used to spread into samples,
         aspiring equal number of complete doses for each sample from each replica,
-        exept the firsts replicas that can be used to aspire one more dose for the last/rest of samples.
+        exept the firsts replicas that can be used to aspirate one more dose for the last/rest of samples.
         That is: all replica have equal volumen (number) of doses or the firsts have one more dose
         :param NumSamples:
         :return:

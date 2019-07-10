@@ -168,12 +168,12 @@ class Arm:
         return tip_mask, tips
 
     def pipette_executed(self, action, volume, tip_mask=-1) -> (list, int):
-        """ Check and actualize the robot Arm state to aspire [vol]s with a tip mask.
+        """ Check and actualize the robot Arm state to aspirate [vol]s with a tip mask.
         Using the tip mask will check that you are not trying to use an unmounted tip.
         `volume` values for unsettled tip mask are ignored.
 
         :rtype : (list, int)
-        :param action: +1:aspire, -1:dispense
+        :param action: +1:aspirate, -1:dispense
         :param volume: one vol for all tips, or a list of vol
         :param tip_mask: -1:all tips
         :return: a lis of vol to pipette, and the mask

@@ -391,7 +391,7 @@ class Protocol (Executable):
         Itr.dropDITI(TIP_MASK).exec()
         #return TIP_MASK
 
-    def aspire(self, tip, reagent, vol=None, offset = None):
+    def aspirate(self, tip, reagent, vol=None, offset = None):
         """
         Aspirate vol with ONE tip from reagent
         :param self:
@@ -591,14 +591,14 @@ class Protocol (Executable):
                         self.getTips(Rbt.tipsMask[ctips], tipsType)
                         tip = 0
                     mV = robot.curArm().Tips[tip].type.maxVol
-                    # aspire/dispense multiple times if rVol don't fit in the tip (mV)
+                    # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
                     # but also if there is not sufficient reacgent in the current component replica
                     current_comp_repl = 0
                     while rVol > 0:
                         while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
                             current_comp_repl +=1
                         dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
-                        self.aspire(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
+                        self.aspirate(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
                         self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
