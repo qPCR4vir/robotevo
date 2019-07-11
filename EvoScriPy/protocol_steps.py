@@ -391,7 +391,7 @@ class Protocol (Executable):
         Itr.dropDITI(TIP_MASK).exec()
         #return TIP_MASK
 
-    def aspirate(self, tip, reagent, vol=None, offset = None):
+    def aspirate_one(self, tip, reagent, vol=None, offset = None):
         """
         Aspirate vol with ONE tip from reagent
         :param self:
@@ -406,7 +406,7 @@ class Protocol (Executable):
         reagent.autoselect(offset = offset)                                         # reagent.labware.selectOnly([reagent.pos])
         Itr.aspirate(Rbt.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
-    def dispense(self, tip, reagent, vol=None):                     # OK coordinate with robot
+    def dispense_one(self, tip, reagent, vol=None):                     # OK coordinate with robot
         """
         Dispense vol with ONE tip to reagent
         :param tip:
@@ -598,7 +598,7 @@ class Protocol (Executable):
                         while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
                             current_comp_repl +=1
                         dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
-                        self.aspirate(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
+                        self.aspirate_one(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
                         self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
