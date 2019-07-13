@@ -239,7 +239,9 @@ class Pipette(Instruction):
         return True
 
     def exec(self, mode=None):
-        if self.tipMask != 0:
+        if not self.tipMask:
+            self.validateArg()
+        if self.tipMask:
             Instruction.exec(self, mode)
 
 
