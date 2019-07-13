@@ -187,9 +187,10 @@ class Pipette(Instruction):
         """
         Instruction.__init__(self, name)
 
-        self.arm                = self.robot.curArm(arm)      # todo revise !!!!!!!!!!!!   set this as def ??!!
-        self.tipMask            = tipMask if tipMask is not None else Rbt.tipsMask[self.arm.nTips]
+        self.arm                = arm
+        self.tipMask            = tipMask
         self.labware            = labware
+        self.wellSelection      = wellSelection
         self.spacing            = spacing
         self.loopOptions        = LoopOptions
         self.RackName           = RackName
@@ -208,7 +209,7 @@ class Pipette(Instruction):
         """
         Instruction.validateArg(self)
 
-        self.arm = self.robot.curArm(self.arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.arm = self.robot.curArm(self.arm)
 
         max_tip_mask = Rbt.tipsMask[self.arm.nTips]
         if self.tipMask is None:
@@ -217,6 +218,9 @@ class Pipette(Instruction):
 
         if self.loopOptions is None:
             self.loopOptions = def_LoopOp
+
+        # if isinstance(self.wellSelection, list):
+
 
         assert isinstance(self.labware, Lab.Labware)    # todo Lab.DITIrack ??
 

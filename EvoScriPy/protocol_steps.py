@@ -398,12 +398,13 @@ class Protocol (Executable):
                          liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
-        :param arm: Rbt.Arm  # Uses the default Arm (pipette) if None
-        :param TIP_MASK: int # Binary flag to select what tips to use in a multichannel pipette arm.
-                             # If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
-        :param volume:       # one (the same) for each tip or a list specifying the volume for each tip.
-        :param from_wells:   # list of wells to aspirate from.
-        :param liq_class:    # the name of the Liquid class, as it appears in your own EVOware database.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
         """
 
         if arm is None:
