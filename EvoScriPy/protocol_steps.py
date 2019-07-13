@@ -407,21 +407,6 @@ class Protocol (Executable):
                           Itr.def_liquidClass if None
         """
 
-        if arm is None:
-            arm = self.robot.def_arm
-        assert isinstance(arm, Rbt.Arm)
-
-        if TIP_MASK is None:
-            TIP_MASK = Rbt.tipsMask[arm.nTips]
-        assert isinstance(TIP_MASK, int)
-        assert 0 <= TIP_MASK <= Rbt.tipsMask[arm.nTips]
-
-        if not isinstance(volume, float):                    # todo: revise !!
-            assert isinstance(volume, list)
-
-        if liq_class is None:
-            liq_class = Itr.def_liquidClass
-
         Itr.aspirate(tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
 
 

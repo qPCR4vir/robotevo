@@ -20,7 +20,7 @@ class aspirate(Pipetting):
     """
     def __init__(self,  tipMask     = None,
                         liquidClass = None,
-                        volume      = def_vol,
+                        volume      = None,
                         labware     = None,
                         spacing     = 1,
                         wellSelection= None,

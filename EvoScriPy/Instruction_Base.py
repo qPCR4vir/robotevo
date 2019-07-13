@@ -239,7 +239,7 @@ class Pipette(Instruction):
         return True
 
     def exec(self, mode=None):
-        if self.tipMask:
+        if self.tipMask != 0:
             Instruction.exec(self, mode)
 
 
@@ -283,7 +283,7 @@ class Pipetting(Pipette):
         nTips = self.robot.curArm().nTips
         if self.action():
             self.arg[2:2] =  expr   (nTips, self.volume).split()   \
-                           + [int    (0)] * (12 - nTips)                           # arg 3 - 14
+                           + [int    (0)] * (12 - nTips)                           # arg 3 - 14 todo integer(0) ?
         return True
 
     def actualize_robot_state(self):
