@@ -695,7 +695,12 @@ class Labware:
         if isinstance(row, Labware.Position):
             col = row.col
             row = row.row
-        return row - 1 + (col - 1) * self.type.nRow
+
+        if isinstance(row, int):
+            return row - 1 + (col - 1) * self.type.nRow
+
+        assert len(row.replicas) == 1, "Failed to assume a Reagent with only one replica (aliquot)"
+        return self.offset(row)
 
         # assert False, "Unknow row type"
 
