@@ -404,7 +404,7 @@ class Well:
                         lab  =self.labware.label,
                         label=self.label,
                         vol  =self.vol,
-                        what =str(self.reagent))
+                        what = str(self.reagent))
     
     class Action:
         def __init__(self, volume:float, origin=None):
@@ -524,6 +524,9 @@ class Labware:
                 self.add(labware)
                 self.current    = labware
 
+            def __str__(self):
+                return "serie of {n:d} {type:s}".format(n=len(self.labwares), type=self.type.name)
+
             def add(self, labware):                                    # labware : Labware
                 assert self.type is labware.type
                 self.labwares.append(labware)
@@ -595,6 +598,9 @@ class Labware:
             self.maxVol         = maxVol
             Labware.Types[name] = self     # .__getattribute__("__class__")
 
+        def __str__(self):
+            return "{type:s}".format(type=self.type.name)
+
         def size(self) -> int:
             return self.nRow * self.nCol
 
@@ -644,6 +650,9 @@ class Labware:
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
 
+    def __str__(self):
+        return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
+
     @staticmethod
     def create(labw_t_name  : str,
                loc          : WorkTable.Location,
@@ -677,6 +686,7 @@ class Labware:
         if isinstance(row, str):
             assert col == 1, "Please, define the column only in the row string."
             return self.offsetFromName(row)
+
 
         if isinstance(row, Well):
             assert row.labware is self, "This is a well from another labware."

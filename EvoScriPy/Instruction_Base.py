@@ -162,6 +162,7 @@ class Pipette(Instruction):
                  Well                       = None,        # todo I need to this???
                  arm                        = LiHa1):      # set this as def
         """
+        Set labware to match wells.
 
         :param name: str; Instruction name
         :param tipMask: int; selected tips, bit-coded (tip1 = 1, tip8 = 128)
@@ -179,7 +180,7 @@ class Pipette(Instruction):
                                     you should choose tip spacing such that the tips are adjacent to one another
                                     (physical tip spacing 9 mm). Accordingly, for 1536-well microplates you should
                                     set tip spacing to 4 (every fourth well).
-        :param wellSelection: str; bit-coded well selection
+        :param wellSelection: str; list of wells. Converted to bit-coded well selection to be used.
         :param LoopOptions: list; of objects of class LoopOption.
         :param RackName:
         :param Well:
@@ -219,16 +220,34 @@ class Pipette(Instruction):
         if self.loopOptions is None:
             self.loopOptions = def_LoopOp
 
-        # if isinstance(self.wellSelection, list):
+        well_selection_str = None                                      # Set selected wells to match labware selection.
+        if self.wellSelection is None:                                 # only labware selection.
+            assert isinstance(self.labware, Lab.Labware)
+            assert len(self.labware.selected_wells()) > 0, "No well selected for pipetting in " + str(self.labware) + "."
+            well_selection_str = self.labware.wellSelectionStr()       # use them
+        else:
+            if not isinstance(self.wellSelection, list):
+                self.wellSelection = [self.wellSelection]
+            if len(self.wellSelection) == 0:
+                assert isinstance(self.labware, Lab.Labware)
+                assert len(self.labware.selected_wells()) > 0, "No well selected to pipette."
+                well_selection_str = self.labware.wellSelectionStr()
+            else:
+                w0 = self.wellSelection[0]
+                if isinstance(w0, Lab.Well):
+                    if self.labware is None:
+                        self.labware = w0.labware
+                    assert w0.labware is self.labware, "Using a well from another labware"
+                assert isinstance(self.labware, Lab.Labware)
+                well_selection_str = self.labware.wellSelectionStr(self.wellSelection)
 
 
-        assert isinstance(self.labware, Lab.Labware)    # todo Lab.DITIrack ??
 
         self.arg  =  [integer(self.tipMask)]                                                    # arg 1
         self.arg +=  [integer(self.labware.location.grid),                                      # arg 2
                       integer(self.labware.location.site),                                      # arg 3
                       integer(self.spacing),                                                    # arg 4
-                      string1( self.labware.wellSelectionStr()) ]                               # arg 5
+                      string1(well_selection_str) ]                                             # arg 5
         self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6
         for op in self.loopOptions:
             self.arg +=  [string1(op.name),

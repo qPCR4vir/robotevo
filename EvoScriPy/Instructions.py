@@ -193,26 +193,27 @@ ensures maximum pipetting accuracy.
         """
         Pipette.__init__(self, 'Wash',
                             tipMask,
-                            labware=WashWaste,
-                            RackName=RackName,
-                            Well=Well,
-                            arm=arm )
+                            labware     = WashWaste,
+                            RackName    = RackName,
+                            Well        = Well,
+                            arm         = arm )
         if WashWaste is None:
-            self.labware = self.robot.worktable.def_WashWaste
-        self.atFrequency = atFrequency
-        self.lowVolume = lowVolume
-        self.FastWash = FastWash
-        self.retractSpeed = retractSpeed
-        self.airgapSpeed = airgapSpeed
-        self.Airgap = Airgap
-        self.cleanerDelay = cleanerDelay
-        self.cleanerVol = cleanerVol
-        self.wasteDelay = wasteDelay
-        self.wasteVol = wasteVol
-        self.WashCleaner = WashCleaner or self.robot.worktable.def_WashCleaner
+            self.labware    = self.robot.worktable.def_WashWaste
+        self.atFrequency    = atFrequency
+        self.lowVolume      = lowVolume
+        self.FastWash       = FastWash
+        self.retractSpeed   = retractSpeed
+        self.airgapSpeed    = airgapSpeed
+        self.Airgap         = Airgap
+        self.cleanerDelay   = cleanerDelay
+        self.cleanerVol     = cleanerVol
+        self.wasteDelay     = wasteDelay
+        self.wasteVol       = wasteVol
+        self.WashCleaner    = WashCleaner or self.robot.worktable.def_WashCleaner
         #self.WashWaste = WashWaste
 
     def validateArg(self):
+        self.wellSelection = 1
         Pipette.validateArg(self)
         self.arg[3:-1] = [integer(self.WashCleaner.location.grid),   # arg 4
                           integer(self.WashCleaner.location.site),   # arg 5
@@ -336,6 +337,7 @@ class dropDITI(Pipette):
         self.AirgapVolume = AirgapVolume
 
     def validateArg(self):
+        self.wellSelection = 1
         Pipette.validateArg(self)
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
