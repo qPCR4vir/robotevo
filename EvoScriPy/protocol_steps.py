@@ -363,7 +363,7 @@ class Protocol (Executable):
             I.exec()
         return mask                                    # todo REVISE !!   I.tipMask
 
-    def dropTips(self, TIP_MASK=-1):
+    def dropTips(self, TIP_MASK=None):
         """
         It will decide to really drop the tips or to put it back in some DiTi rack
         :param TIP_MASK:
@@ -375,6 +375,8 @@ class Protocol (Executable):
             for tip_rack in where:
                 tipsMask = 0
                 l = len(tip_rack.selected())
+                assert l, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
+                # if not l: continue   #   WORKAROUND  !!!
                 for i in range(nTips):
                     if not l: break
                     b = (1 << i)
