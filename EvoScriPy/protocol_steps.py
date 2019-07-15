@@ -409,7 +409,26 @@ class Protocol (Executable):
                           Itr.def_liquidClass if None
         """
 
-        Itr.aspirate(tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+        Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+
+
+    def dispense(self,   arm        : Rbt.Arm           = None,
+                         TIP_MASK   : int               = None,
+                         volume     : (float, list)     = None,
+                         from_wells : [Lab.Well]        = None,
+                         liq_class  : str               = None):
+        """
+        Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
+        """
+
+        Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
 
 
     def aspirate_one(self, tip, reagent, vol=None, offset = None):
