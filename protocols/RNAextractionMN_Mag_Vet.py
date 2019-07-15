@@ -256,7 +256,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         if self.add_preMix:                                                               #  add  ProtK+cRNA+MS2 mix
             with group("Add pre mix Prot K."), self.tips(tipsMask=maxMask, reuse=True, drop=False):
                 self.makePreMix(pK_cRNA_MS2)
-                self.spread  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
+                self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
 
         if self.do_extraction:                                                            # add samples
             with self.tips(reuse=True, drop=True, preserve=False):
@@ -271,7 +271,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         if self.add_VL:                                                                     # add  LysisBuffer
             with self.tips(reuse=True, drop=False, drop_first=True):
-                self.spread  (reagent=LysisBuffer, to_labware_region= Lysis.selectOnly(all_samples))
+                self.distribute  (reagent=LysisBuffer, to_labware_region= Lysis.selectOnly(all_samples))
 
 
         if not self.do_extraction:
@@ -287,7 +287,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 for p in [40, 50, 60, 65]:
                     self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
             with self.tips(reuse=True, drop=True):
-                self.spread(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
+                self.distribute(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
 
         with self.tips(reuse=True, drop=False, preserve=True):
             self.wash_in_TeMag(reagent=BindingBuffer,   wells=all_samples)
@@ -296,7 +296,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             with group("Wash in TeMag with " + EtOH80p.name), self.tips():   # Atypical wash. Include incubation at 50°C
 
-                self.spread(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
+                self.distribute(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
 
                 with parallel_execution_of(mix_mag_sub, repeat=NumOfSamples//self.nTips + 1):
                     self.mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
@@ -317,7 +317,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             with self.tips(reuse=True, drop=False):
 
-                self.spread(reagent=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
+                self.distribute(reagent=ElutionBuffer, to_labware_region=TeMag.selectOnly(all_samples))
 
                 with incubation(minutes=2):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Incubation).exec()
@@ -356,7 +356,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         with group("Wash in TeMag with " + reagent.name):
 
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
-            self.spread(reagent=reagent, to_labware_region=self.TeMag.selectOnly(wells))
+            self.distribute(reagent=reagent, to_labware_region=self.TeMag.selectOnly(wells))
 
             with parallel_execution_of(mix_mag_sub, repeat=self.NumOfSamples//self.nTips + 1):
                 self.mix(self.TeMag.selectOnly(wells), using_liquid_class, vol)

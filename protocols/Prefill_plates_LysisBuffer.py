@@ -107,7 +107,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
             for LP in LysPlat:
                 with self.tips(reuse=True, drop=False):
-                    self.spread(reagent=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
+                    self.distribute(reagent=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
                 self.dropTips()
 
         self.done()

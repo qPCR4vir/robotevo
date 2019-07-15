@@ -231,7 +231,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         with group("Prefill plate with EtOH80p"):
 
             with self.tips(reuse=True, drop=False, drop_last=True):
-                self.spread(reagent=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
+                self.distribute(reagent=EtOH80p, to_labware_region=Plate_EtOH.selectOnly(all_samples))
 
         with group("Sample Lysis"):
 
@@ -239,12 +239,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
                 with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                     self.makePreMix(pK_cRNA_MS2)
-                    self.spread  (reagent=pK_cRNA_MS2, to_labware_region= Plate_lysis.selectOnly(all_samples))
+                    self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.add_VL:                                             # add  LysisBuffer
 
                 with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                    self.spread  (reagent=LysisBuffer, to_labware_region= Plate_lysis.selectOnly(all_samples))
+                    self.distribute  (reagent=LysisBuffer, to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.add_samples:                                        # add samples
 
@@ -275,12 +275,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                         self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
 
                 with self.tips(reuse=True, drop=False):
-                    self.spread(reagent=B_Beads, to_labware_region=Plate_lysis.selectOnly(all_samples))
+                    self.distribute(reagent=B_Beads, to_labware_region=Plate_lysis.selectOnly(all_samples))
 
                 self.dropTips()
 
                 with self.tips(reuse=True, drop=False):
-                    self.spread(reagent=BindingBuffer, to_labware_region=Plate_lysis.selectOnly(all_samples))
+                    self.distribute(reagent=BindingBuffer, to_labware_region=Plate_lysis.selectOnly(all_samples))
 
                 Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 

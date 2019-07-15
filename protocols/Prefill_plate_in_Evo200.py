@@ -76,11 +76,11 @@ class Prefill_plate_in_Evo200(Evo200):
         buf_per_sample =0
         well_v = 100
 
-        dil_mix1_10 = well_v /10                # to be spread from original mix1 to mix1_10
+        dil_mix1_10 = well_v /10                # to be distribute from original mix1 to mix1_10
         buf_mix1_10 = well_v - dil_mix1_10
         buf_per_sample += buf_mix1_10
 
-        dil_mix2_10 = well_v / 10               # to be spread from original mix2 to mix2_10
+        dil_mix2_10 = well_v / 10               # to be distribute from original mix2 to mix2_10
         buf_mix2_10 = well_v - dil_mix2_10
         buf_per_sample += buf_mix2_10
 
@@ -159,16 +159,16 @@ class Prefill_plate_in_Evo200(Evo200):
             Itr.userPrompt("Put the plates for Buffer ").exec()
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent           = mix1,
-                            to_labware_region = mix1_10.select_all())
+                self.distribute(reagent           = mix1,
+                                to_labware_region = mix1_10.select_all())
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent           = mix2,
-                            to_labware_region = mix2_10.select_all())
+                self.distribute(reagent           = mix2,
+                                to_labware_region = mix2_10.select_all())
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent=buffer_reag, to_labware_region=mix1_10.select_all(), volume=buf_mix1_10)
-                self.spread(reagent=buffer_reag, to_labware_region=mix2_10.select_all(), volume=buf_mix2_10)
+                self.distribute(reagent=buffer_reag, to_labware_region=mix1_10.select_all(), volume=buf_mix1_10)
+                self.distribute(reagent=buffer_reag, to_labware_region=mix2_10.select_all(), volume=buf_mix2_10)
 
             with self.tips(reuse=True, drop=False):
                 self.transfer(from_labware_region = mix1_10.select_all(),
@@ -181,8 +181,8 @@ class Prefill_plate_in_Evo200(Evo200):
                               volume              = dil_mix2_100)
 
             with self.tips(reuse=True, drop=False):
-                self.spread(reagent=buffer_reag, to_labware_region=mix1_100.select_all(), volume=buf_mix1_100)
-                self.spread(reagent=buffer_reag, to_labware_region=mix2_100.select_all(), volume=buf_mix2_100)
+                self.distribute(reagent=buffer_reag, to_labware_region=mix1_100.select_all(), volume=buf_mix1_100)
+                self.distribute(reagent=buffer_reag, to_labware_region=mix2_100.select_all(), volume=buf_mix2_100)
 
             self.dropTips()
 

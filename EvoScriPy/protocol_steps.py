@@ -643,21 +643,21 @@ class Protocol (Executable):
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
 
-    def spread(self,
-               volume            : float        = None,
-               reagent           : Rtv.Reagent  = None,
-               to_labware_region : Lab.Labware  = None,
-               optimize          : bool         = True,
-               NumSamples        : int          = None,
-               using_liquid_class: (str, tuple) = None,
-               TIP_MASK          : int          = None,
-               num_tips          : int          = None):
+    def distribute(self,
+                   volume            : float        = None,
+                   reagent           : Rtv.Reagent  = None,
+                   to_labware_region : Lab.Labware  = None,
+                   optimize          : bool         = True,
+                   NumSamples        : int          = None,
+                   using_liquid_class: (str, tuple) = None,
+                   TIP_MASK          : int          = None,
+                   num_tips          : int          = None):
         """
-        To spread a reagent into some wells.
+        To distribute a reagent into some wells.
         This is a high level function with works with the concept of "reagent". This a a concept introduced by
         RobotEvo that don't exist in EVOware and other similar software. It encapsulated the name, wells occupied by
         each of the aliquots of the reagent, the volume corresponding to one sample (if any) and the current volume
-        in each aliquot. This function can use multiple of those aliquots to spread the reagent to the target
+        in each aliquot. This function can use multiple of those aliquots to distribute the reagent to the target
         wells using multiple tips (the maximum will be used if `num_tips` is not set).
 
         By default a number of wells equal to the number of samples set in the protocol will be auto selected in the
@@ -681,14 +681,14 @@ class Protocol (Executable):
         A human readable comment will be automatically added to the script with the details of this operation.
 
         :param NumSamples       : Priorized   !!!! If true reset the selection
-        :param reagent          : Reagent to spread
+        :param reagent          : Reagent to distribute
         :param to_labware_region: Labware in which the destine well are selected
         :param volume           : if not, volume is set from the default of the source reagent
         :param optimize         : minimize zigzag of multi pipetting
         :param num_tips         : the number of tips to be used in each cycle of pipetting = all
         """
-        assert isinstance(reagent, Rtv.Reagent), 'A Reagent expected in reagent to spread'
-        assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to spread'
+        assert isinstance(reagent, Rtv.Reagent), 'A Reagent expected in reagent to distribute'
+        assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to distribute'
 
         if num_tips is None:
             num_tips = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pipetting = all
@@ -890,6 +890,14 @@ class Protocol (Executable):
         Dst.labware.selectOnly(dstSel)
         return oriSel, dstSel
 
+    def consolidate(self):              # todo
+        """
+        Volumes going to the same destination well are combined within the same tip,
+        so that multiple aspirates can be combined to a single dispense.
+        If there are multiple destination wells, the pipette will never combine their volumes into the same tip.
+        :return:
+        """
+        pass
 
     def waste(self,  from_labware_region : Lab.Labware      = None,
                      using_liquid_class  : str              = None,
@@ -1128,7 +1136,7 @@ class Protocol (Executable):
         :param tipsMask     :
         :param reuse        : Reuse the tips or drop it and take new BEFORE each individual action
         :param drop         : Drops the tips AFTER each individual action,
-                              like after one aspiration and spread of the reagent into various target
+                              like after one aspiration and distribute of the reagent into various target
         :param preserve     : puts the tip back into a free place in some rackt of the same type
         :param usePreserved : pick the tips from the preserved
         :param selected_samples:
@@ -1274,7 +1282,7 @@ def opening_example(filename):
 # OK?  implement use only tips filled
 # TODO  implement Debugger: prompt and or wait
 # OK  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
-# OK  write the total vol to spread.                      - ok ?!
+# OK  write the total vol to distribute.                      - ok ?!
 # OK  actualize liquid classes                            - ok ?!
 # OK  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
 # OK  test no drop                                        - ok ?!

@@ -189,11 +189,11 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
             for LP in LysPlat:
                 with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                    self.spread(reagent=pK_cRNA_MS2, to_labware_region=LP.selectOnly(all_samples))
+                    self.distribute(reagent=pK_cRNA_MS2, to_labware_region=LP.selectOnly(all_samples))
 
                 if not self.preMix_from_LysBuf_pK_Cuvette:
                     with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
-                        self.spread(reagent=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
+                        self.distribute(reagent=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
 
         self.dropTips()
 

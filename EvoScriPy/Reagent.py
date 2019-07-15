@@ -128,7 +128,7 @@ class Reagent:
 
     def put_min_vol(self, NumSamples=None):          # todo create replicas if needed !!!!
         """
-        Force you to put an initial volume of reagent that can be used to spread into samples,
+        Force you to put an initial volume of reagent that can be used to distribute into samples,
         aspiring equal number of complete doses for each sample from each replica,
         exept the firsts replicas that can be used to aspirate one more dose for the last/rest of samples.
         That is: all replica have equal volumen (number) of doses or the firsts have one more dose
