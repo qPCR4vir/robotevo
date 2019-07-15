@@ -404,7 +404,7 @@ class Well:
                         lab  =self.labware.label,
                         label=self.label,
                         vol  =self.vol,
-                        what =str(self.reagent))
+                        what = str(self.reagent))
     
     class Action:
         def __init__(self, volume:float, origin=None):
@@ -524,6 +524,9 @@ class Labware:
                 self.add(labware)
                 self.current    = labware
 
+            def __str__(self):
+                return "serie of {n:d} {type:s}".format(n=len(self.labwares), type=self.type.name)
+
             def add(self, labware):                                    # labware : Labware
                 assert self.type is labware.type
                 self.labwares.append(labware)
@@ -595,6 +598,9 @@ class Labware:
             self.maxVol         = maxVol
             Labware.Types[name] = self     # .__getattribute__("__class__")
 
+        def __str__(self):
+            return "{type:s}".format(type=self.type.name)
+
         def size(self) -> int:
             return self.nRow * self.nCol
 
@@ -644,6 +650,9 @@ class Labware:
             location.rack.addLabware(self, location.rack_site)
         self.init_wells()
 
+    def __str__(self):
+        return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
+
     @staticmethod
     def create(labw_t_name  : str,
                loc          : WorkTable.Location,
@@ -674,12 +683,26 @@ class Labware:
         return maxTips
 
     def offset(self, row, col=1):
+        if isinstance(row, str):
+            assert col == 1, "Please, define the column only in the row string."
+            return self.offsetFromName(row)
+
+
+        if isinstance(row, Well):
+            assert row.labware is self, "This is a well from another labware."
+            return Well.offset
+
         if isinstance(row, Labware.Position):
             col = row.col
             row = row.row
-        if isinstance(row, str):
-            return self.offsetFromName(row)
-        return row - 1 + (col - 1) * self.type.nRow
+
+        if isinstance(row, int):
+            return row - 1 + (col - 1) * self.type.nRow
+
+        assert len(row.replicas) == 1, "Failed to assume a Reagent with only one replica (aliquot)"
+        return self.offset(row)
+
+        # assert False, "Unknow row type"
 
     def offsetFromName(self, wellName):
         row = ord(wellName[0]) - ord('A') + 1
@@ -827,7 +850,7 @@ class Labware:
     def moveParallel(self, pos, offset):  #
         return offset % self.type.nCol + 1, offset // self.type.nCol + 1
 
-    def wellSelectionStr(self):
+    def wellSelectionStr(self, wells : (int, [int], [Well] ) = None):
         """
         :return: See A.15.3, pag. A-122
         file:///C:/Prog/RobotEvo/FreedomEVOwareStandardV2.4SP1-2011.ExtendedDeviceSupportManual.pdf
@@ -864,10 +887,23 @@ class Labware:
         bitMask = 0
         null = 48  # ord('0')
         bit = 0
+
+        pre_selected = True
+        if wells is not None:
+            if not isinstance(wells, list):
+                wells = [wells]
+        if wells is not None:
+            pre_selected = False
+            wells = [self.offset(w) for w in wells]
         for w in self.Wells:
             bit = w.offset % 7
-            if w.selFlag:
+
+            if pre_selected:
+                if w.selFlag:
+                    bitMask |= (1 << bit)
+            elif w.offset in wells:
                 bitMask |= (1 << bit)
+
             if bit == 6:
                 sel.append(null + bitMask)
                 bitMask = 0

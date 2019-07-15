@@ -363,7 +363,7 @@ class Protocol (Executable):
             I.exec()
         return mask                                    # todo REVISE !!   I.tipMask
 
-    def dropTips(self, TIP_MASK=-1):
+    def dropTips(self, TIP_MASK=None):
         """
         It will decide to really drop the tips or to put it back in some DiTi rack
         :param TIP_MASK:
@@ -375,6 +375,8 @@ class Protocol (Executable):
             for tip_rack in where:
                 tipsMask = 0
                 l = len(tip_rack.selected())
+                assert l, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
+                # if not l: continue   #   WORKAROUND  !!!
                 for i in range(nTips):
                     if not l: break
                     b = (1 << i)
@@ -398,30 +400,35 @@ class Protocol (Executable):
                          liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
-        :param arm:         Uses the default Arm (pipette) if None
-        :param TIP_MASK:    Binary flag to select what tips to use in a multichannel pipette arm.
-                            If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
-        :param volume:      one (the same) for each tip or a list specifying the volume for each tip.
-        :param from_wells:  list of wells to aspirate from.
-        :param liq_class:   the name of the Liquid class, as it appears in your own EVOware database.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
         """
 
-        if arm is None:
-            arm = self.robot.def_arm
-        assert isinstance(arm, Rbt.Arm)
+        Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
 
-        if TIP_MASK is None:
-            TIP_MASK = Rbt.tipsMask[arm.nTips]
-        assert isinstance(TIP_MASK, int)
-        assert 0 <= TIP_MASK <= Rbt.tipsMask[arm.nTips]
 
-        if not isinstance(volume, float):                    # todo: revise !!
-            assert isinstance(volume, list)
+    def dispense(self,   arm        : Rbt.Arm           = None,
+                         TIP_MASK   : int               = None,
+                         volume     : (float, list)     = None,
+                         from_wells : [Lab.Well]        = None,
+                         liq_class  : str               = None):
+        """
+        Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
+        """
 
-        if liq_class is None:
-            liq_class = Itr.def_liquidClass
-
-        Itr.aspirate(tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+        Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
 
 
     def aspirate_one(self, tip, reagent, vol=None, offset = None):

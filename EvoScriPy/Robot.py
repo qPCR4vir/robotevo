@@ -292,7 +292,7 @@ class Robot:
         :return:    list of racks with the tips-wells already selected.
         """                                                                         # todo this in Labware??
 
-        TIP_MASK = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
+        TIP_MASK = TIP_MASK if TIP_MASK is not None else tipsMask[self.curArm().nTips]
         types    = []
         t_masks  = []
         racks    = []
@@ -335,16 +335,17 @@ class Robot:
                     rewind = False
                 prev_rack = rack
                 cont, fw = rack.find_free_wells(n, init_pos=ip)
-                if cont:
-                    racks.append(rack)
-                    n -= len(fw)
-                    if not rewind:
-                        fw = rack.selected_wells() + fw
-                    rack.selectOnly([w.offset for w in fw])
-                    rack, rotate = rack.series.show_next_to(rack)
-                    ip = 0
-                else:
-                    print("WARNING ! todo, use noncontiguos tips well to aet back?")
+                if fw:
+                    if cont:
+                        racks.append(rack)
+                        n -= len(fw)
+                        if not rewind:
+                            fw = rack.selected_wells() + fw
+                        rack.selectOnly([w.offset for w in fw])
+                    else:
+                        print("WARNING ! todo, use noncontiguos tips well to aet back?")
+                rack, rotate = rack.series.show_next_to(rack)
+                ip = 0
 
             return racks
 

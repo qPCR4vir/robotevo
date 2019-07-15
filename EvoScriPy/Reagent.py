@@ -15,43 +15,57 @@ def_mix_excess   =  8
 
 
 class Reagent:
+    """
+    A Reagent is a fundamental concept in RobotEvo programming.
+    It makes possible to define a protocol in a natural way, matching what a normal
+    laboratory's protocol indicates. Defines a named homogeneous liquid solution,
+    the wells it occupy, the initial amount needed to run the protocol (auto calculated),
+    and how much is needed per sample, if applicable. It is also used to define samples,
+    intermediate reactions and products. It makes possible a robust tracking
+    of all actions and a logical error detection, while significantly simplifying
+    the programming of non trivial protocols.
+    """
 
     current_protocol = None           # to register a list of reagents todo  ??
 
     def __init__(self,
-                 name,
-                 labware: Lab.Labware,           # ??
-                 volpersample   = 0,
-                 single_use     = None,
-                 pos            = None,
-                 replicas : int = None,
-                 defLiqClass    = None,
-                 excess         = None,
-                 initial_vol    = None,
-                 maxFull: float = None,
+                 name           : str,
+                 labware        : Lab.Labware,
+                 volpersample   : float         = 0,
+                 single_use     : float         = None,
+                 pos            : [Lab.Well]    = None,
+                 replicas       : int           = None,
+                 defLiqClass    : str           = None,
+                 excess         : float         = None,
+                 initial_vol    : float         = None,
+                 maxFull        : float         = None,
                  num_of_samples = None):
         """
-        Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample
+        Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample.
+        This reagent is automatically added to the list of reagents of the worktable were the labware is.
+        The specified excess in % will be calculated/expected. A default excess of 4% will be assumed
+        if not explicitly indicated.
 
-        :param name: str; Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
-        :param labware: Labware;
-        :param volpersample: float; in uL
-        :param pos: [wells] or offset to begging to put replica. If None will try to assign consecutive wells
-        :param replicas: int; def min_num_of_replica(), number of replicas
-        :param defLiqClass: str;
-        :param excess: float; in %
-        :param initial_vol: float; is set for each replica. If default (=None) is calculated als minimum.
+        :param name:            Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
+        :param labware:         Labware;
+        :param volpersample:    in uL
+        :param single_use;      Not a "per sample" multiple use? Set then here the volume for one single use
+        :param pos:             or offset to begging to put replica. If None will try to assign consecutive wells
+        :param replicas;        def min_num_of_replica(), number of replicas
+        :param defLiqClass;
+        :param excess;          in %
+        :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
         """
         assert isinstance(labware, Lab.Labware)             # ??
-
-        assert isinstance(labware.location.worktable, Lab.WorkTable) # todo temporal
+                                                # add self to the list of reagents of the worktable were the labware is.
+        assert isinstance(labware.location.worktable, Lab.WorkTable)                                    # todo temporal
         if (isinstance(labware,                     Lab.Labware) and
             isinstance(labware.location,            Lab.WorkTable.Location) and
             isinstance(labware.location.worktable,  Lab.WorkTable) ):
           labware.location.worktable.reagents.append(self)
         else:
           if (Reagent.current_protocol):
-              Reagent.current_protocol.worktable.reagents.append(self) # todo temporal
+              Reagent.current_protocol.worktable.reagents.append(self)                                 # todo temporal
 
         ex= def_reagent_excess if excess is None else excess
 
