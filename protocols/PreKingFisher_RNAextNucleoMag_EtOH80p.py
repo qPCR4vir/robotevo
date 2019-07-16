@@ -136,19 +136,19 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             ProtK       = Rtv.Reagent("Proteinase K ",
                                       Reagents,
                                       replicas     = 2,
-                                      pos          = [15, 16],
+                                      wells= [15, 16],
                                       volpersample = ProtKVolume,
                                       defLiqClass  = Small_vol_disp)
 
             cRNA        = Rtv.Reagent("Carrier RNA ",
                                       Reagents,
-                                      pos           = 14,
+                                      wells= 14,
                                       volpersample  = cRNAVolume,
                                       defLiqClass   = Small_vol_disp)
 
             IC_MS2      = Rtv.Reagent("IC MS2 phage culture ",
                                       Reagents,
-                                      pos           = 13,
+                                      wells= 13,
                                       volpersample  = IC_MS2Volume,
                                       defLiqClass   = Small_vol_disp)
 
@@ -171,7 +171,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         if self.do_extraction:
             B_Beads         = Rtv.Reagent("B - Beads ",
                                           Reagents,
-                                          pos          = [1, 2],
+                                          wells= [1, 2],
                                           initial_vol  = 1200,
                                           volpersample = B_BeadsVolume,
                                           defLiqClass  = Beads_LC_2,
@@ -208,20 +208,20 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             Rtv.Reagent("lysis_{:02d}".format(s + 1),
                         Plate_lysis,
                         initial_vol = InitLysisVol,
-                        pos         = par[s] + 1,
+                        wells=par[s] + 1,
                         excess      = 0)
 
             Rtv.Reagent("EtOH80p_{:02d}".format(s + 1),
                         Plate_EtOH,
                         initial_vol = 0.0,
-                        pos         = par[s] + 1,               # todo revise order !!!
+                        wells=par[s] + 1,  # todo revise order !!!
                         excess      = 0)
 
             if self.add_samples:
                 Rtv.Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume,
-                            pos         = s + 1,
+                            wells=s + 1,
                             defLiqClass = SampleLiqClass,
                             excess      = 0)
 

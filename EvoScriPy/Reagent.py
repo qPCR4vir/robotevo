@@ -31,13 +31,13 @@ class Reagent:
     def __init__(self,
                  name           : str,
                  labware        : Lab.Labware,
-                 volpersample   : float          = 0,
+                 volpersample   : float          = 0.0,
                  single_use     : float          = None,
-                 pos            : [Lab.Well]     = None,
+                 wells          : (int, [int], [Lab.Well])     = None,
                  replicas       : int            = None,
                  defLiqClass    : (str,(str,str))= None,
                  excess         : float          = None,
-                 initial_vol    : float          = None,
+                 initial_vol    : float          = 0.0,
                  maxFull        : float          = None,
                  num_of_samples : int            = None):
         """
@@ -55,7 +55,7 @@ class Reagent:
         :param labware:         Labware;
         :param volpersample:    how much is needed per sample, if applicable, in uL
         :param single_use;      Not a "per sample" multiple use? Set then here the volume for one single use
-        :param pos:             or offset to begging to put replica. If None will try to assign consecutive wells
+        :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells
         :param replicas;        def min_num_of_replica(), number of replicas
         :param defLiqClass;     the name of the Liquid class, as it appears in your own EVOware database.
                                 Itr.def_liquidClass if None
@@ -84,34 +84,58 @@ class Reagent:
         self.name       = name
         self.volpersample = volpersample
         self.components = []                                                          # todo reserved for future use
-        self.minNumRep  = self.min_num_of_replica (num_of_samples)
-        if isinstance(initial_vol, list):
-            if replicas is None:
-                replicas = len(initial_vol)
-            elif replicas < len(initial_vol):
-                print("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
-                replicas = len(initial_vol)
-            else:
-                print("WARNING !! The provided initial volume list of "+ name + " will be filled only to first replicas")
 
-        self.Replicas   = labware.put(self, pos, replicas)                            # list of the wells used
+        if single_use:
+            assert not volpersample, str(name) + \
+                                     ": this is a single use-reagent. Please, don't set any volume per sample."
+            if num_of_samples is None:
+                num_of_samples = 1
+            assert num_of_samples == 1, "this is a single use-reagent, don't set num_of_samples " + str(num_of_samples)
+
+            self.volpersample = single_use
+        else:
+            if num_of_samples is None:
+                num_of_samples = Reagent.current_protocol.NumOfSamples or 0
+
+        self.minNumRep = self.min_num_of_replica(NumSamples=num_of_samples)
+
+        # minNumRep, wells, replicas, initial_vol
+        if replicas is None:
+            replicas = self.minNumRep
+        assert replicas >= self.minNumRep, ("too few wells (" + str(len(wells)) + ") given for the minimum "
+                                                + "number of replica needed (" + str(self.minNumRep) + " )" )
+
+        if isinstance(wells, list):                         # use len(pos) to correct replicas
+            assert len(wells) >= self.minNumRep, ("too few wells (" + str(len(wells)) + ") given for the minimum "
+                                                + "number of replica needed (" + str(self.minNumRep) + " )" )
+            if replicas < len(wells):
+                print("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
+                replicas = len(wells)
+            assert not replicas > len(wells), ("too few wells (" + str(len(wells)) + ") given for the desired "
+                                                + "number of replicas (" + str(replicas) + " )" )
+            if isinstance(initial_vol, list):
+                assert replicas == len(initial_vol)
+            if replicas > self.minNumRep:                                    # todo revise !! for preMix components
+                print("WARNING !! You may be putting more wells replicas (" + str(len(wells)) + ") of " + name
+                      + " that the minimum you need("  + str(self.minNumRep) + " )")
+
+        if not isinstance(initial_vol, list):
+            initial_vol = [initial_vol]*replicas
+
+        if replicas < len(initial_vol):
+            print("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
+            replicas = len(initial_vol)
+            if replicas > self.minNumRep:                                      # todo revise !! for preMix components
+                print("WARNING !! You may be putting more inital volumens values (" + str(replicas) + ") of " + name
+                      + " that the minimum number of replicas you need("  + str(self.minNumRep) + " )")
+
+        self.Replicas   = labware.put(self, wells, replicas)                            # list of the wells used
         self.pos        = self.Replicas[0].offset                                     # ??
 
-        if isinstance(initial_vol, (int, float)):
-            for w in  self.Replicas:
-                 w.vol += initial_vol   # ?? add initial_vol to each replica
-        elif isinstance(initial_vol, list):
-            for w,v in zip(self.Replicas, ):
-                w.vol += v
+        self.init_vol(NumSamples=num_of_samples)                                    # put the minimal initial volumen ?
 
-        if single_use:                                 # todo revise !!!
-            assert not volpersample, str(name) + \
-                            ": this is a single use-reagent. Please, don't set any volume per sample."
-            assert len(self.Replicas) == 1, "Temporally use only one vial for " + str(name)
-            self.volpersample = single_use
-            self.init_vol(NumSamples=1)
-        else:
-            self.init_vol(num_of_samples)                           # put the minimal initial volumen ?
+        for w,v in zip(self.Replicas, initial_vol):
+                w.vol = max(v, w.vol)                  # todo revise !! put only if needed??
 
     def min_num_of_replica(self, NumSamples: int=None)->int:
         """
@@ -164,7 +188,7 @@ class Reagent:
             assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reagent.name
 
     def autoselect(self, maxTips=1, offset=None, replicas = None):
-
+        # todo revise !!!!!!!!! we know the wells = Replicas
         return self.labware.autoselect(offset or self.pos, maxTips, len(self.Replicas) if offset is None else 1)
 
     def select_all(self):
@@ -175,7 +199,7 @@ class Reaction(Reagent):
     def __init__(self, name, track_sample, labware,
                  pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
         Reagent.__init__(self, name, labware, single_use=0,
-                         pos=pos, replicas=replicas, defLiqClass=defLiqClass, excess=excess, initial_vol=initial_vol)
+                         wells=pos, replicas=replicas, defLiqClass=defLiqClass, excess=excess, initial_vol=initial_vol)
         self.track_sample = track_sample
 
 
@@ -205,7 +229,7 @@ class preMix(Reagent):
         Reagent.__init__(self, name,
                          labware,
                          vol,
-                         pos           = pos,
+                         wells= pos,
                          replicas      = replicas,
                          defLiqClass   = defLiqClass,
                          excess        = ex,

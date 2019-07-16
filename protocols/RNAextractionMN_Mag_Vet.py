@@ -158,19 +158,19 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             ProtK = Rtv.Reagent("Proteinase K ",
                                 Reagents,
                                 replicas            = 2,
-                                pos=[15, 16],                   # only 16 ?  pos=16
+                                wells=[15, 16],  # only 16 ?  pos=16
                                 volpersample        = ProtKVolume,
                                 defLiqClass         = Small_vol_disp)
 
             cRNA   = Rtv.Reagent("Carrier RNA ",
                                  Reagents,
-                                 pos                = 14,
+                                 wells= 14,
                                  volpersample       = cRNAVolume,
                                  defLiqClass        = Small_vol_disp)
 
             IC_MS2 = Rtv.Reagent("IC MS2 phage culture ",
                                  Reagents,
-                                 pos                = 13,
+                                 wells= 13,
                                  volpersample       = IC_MS2Volume,
                                  defLiqClass        = Small_vol_disp)
 
@@ -190,8 +190,8 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         if self.do_extraction:
             B_Beads         = Rtv.Reagent("B - Beads ",
                                           Reagents,
-                                          pos          = [1,2],
-                                          initial_vol  = 1200,
+                                          wells= [1, 2],
+                                          initial_vol  = 1200.0,
                                           volpersample = B_BeadsVolume,
                                           defLiqClass  = Beads_LC_2,
                                           maxFull      = 70)
@@ -229,7 +229,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             Rtv.Reagent("lysis_{:02d}".format(s + 1),
                         Lysis,
                         initial_vol     = InitLysisVol,
-                        pos             = par[s] + 1,
+                        wells=par[s] + 1,
                         defLiqClass     = SampleLiqClass,
                         excess          = 0)
 
@@ -237,14 +237,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 Rtv.Reagent("RNA_{:02d}".format(s + 1),
                             Eluat,
                             initial_vol = 0.0,
-                            pos         = s+1,
+                            wells=s + 1,
                             defLiqClass = def_liquidClass,
                             excess      = 0)
 
                 Rtv.Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume if self.add_samples else InitLysisVol,
-                            pos         = s+1,
+                            wells=s + 1,
                             defLiqClass = SampleLiqClass,
                             excess      = 0)
 

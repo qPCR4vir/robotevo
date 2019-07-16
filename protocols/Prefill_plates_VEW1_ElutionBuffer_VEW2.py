@@ -122,19 +122,19 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
             Rtv.Reagent("VEW1_{:02d}".format(s + 1),
                         Plate_VEW1,
                         initial_vol  = 0.0,
-                        pos          = par[s]+1,
+                        wells=par[s] + 1,
                         excess       = 0)  # todo revise order !!!
 
             Rtv.Reagent("VEW2_{:02d}".format(s + 1),
                         Plate_VEW2,
                         initial_vol = 0.0,
-                        pos         = par[s] + 1,
+                        wells=par[s] + 1,
                         excess      = 0)
 
             Rtv.Reagent("Eluat_{:02d}".format(s + 1),
                         Plate_Eluat,
                         initial_vol = 0.0,
-                        pos         = par[s] + 1,
+                        wells=par[s] + 1,
                         excess      = 0)
 
 

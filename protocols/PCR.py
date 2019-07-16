@@ -140,11 +140,11 @@ class MixPCR(Evo75_FLI):
         par = Plate_lysis.parallelOrder(self.nTips, all_samples)
         for s in all_samples:
             Rtv.Reagent("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
-                        pos=s + 1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reagent("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, pos=par[s] + 1,
+                        wells=s + 1, defLiqClass=SampleLiqClass, excess=0)
+            Rtv.Reagent("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, wells=par[s] + 1,
                         excess=0)  # todo revise order !!!
 
-            Rtv.Reagent("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, pos=par[s] + 1,
+            Rtv.Reagent("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, wells=par[s] + 1,
                         excess=0)  # todo revise order !!!
 
 

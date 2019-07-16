@@ -20,7 +20,7 @@ Spread: 180.0 킠 of VL - Lysis Buffer
 Add B-Beads
 
     Spread: 20.0 킠 of B - Beads 
-        Spread: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1 in labware Reactives:  with 1200.0 uL of reagent B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Spread: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1 in labware Reactives:  with 1200.0 uL of reagent B - Beads ', 'well 2 in labware Reactives:  with 1200.0 uL of reagent B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Wash in TeMag with VEB - Binding Buffer 
 

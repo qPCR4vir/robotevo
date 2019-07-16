@@ -98,7 +98,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                 Rtv.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
                             LP,
                             initial_vol =0.0,
-                            pos         =s + 1,
+                            wells=s + 1,
                             excess      =0)
 
         with group("Prefill plates with LysisBufferReact"):
