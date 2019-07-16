@@ -31,30 +31,38 @@ class Reagent:
     def __init__(self,
                  name           : str,
                  labware        : Lab.Labware,
-                 volpersample   : float         = 0,
-                 single_use     : float         = None,
-                 pos            : [Lab.Well]    = None,
-                 replicas       : int           = None,
-                 defLiqClass    : str           = None,
-                 excess         : float         = None,
-                 initial_vol    : float         = None,
-                 maxFull        : float         = None,
-                 num_of_samples = None):
+                 volpersample   : float          = 0,
+                 single_use     : float          = None,
+                 pos            : [Lab.Well]     = None,
+                 replicas       : int            = None,
+                 defLiqClass    : (str,(str,str))= None,
+                 excess         : float          = None,
+                 initial_vol    : float          = None,
+                 maxFull        : float          = None,
+                 num_of_samples : int            = None):
         """
         Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample.
+        This is a named set of aliquots of an homogeneous solution.
         This reagent is automatically added to the list of reagents of the worktable were the labware is.
         The specified excess in % will be calculated/expected. A default excess of 4% will be assumed
         if not explicitly indicated.
+        A minimal volume will be calculated based on either the number of samples
+        and the volume per sample to use or (todo?) the volume per single use.
+        A minimal number of replicas (wells, aliquots) will be calculated based on the minimal volume,
+        taking into account the maximum allowed volume per well and the excess specified.
 
         :param name:            Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
         :param labware:         Labware;
-        :param volpersample:    in uL
+        :param volpersample:    how much is needed per sample, if applicable, in uL
         :param single_use;      Not a "per sample" multiple use? Set then here the volume for one single use
         :param pos:             or offset to begging to put replica. If None will try to assign consecutive wells
         :param replicas;        def min_num_of_replica(), number of replicas
-        :param defLiqClass;
+        :param defLiqClass;     the name of the Liquid class, as it appears in your own EVOware database.
+                                Itr.def_liquidClass if None
         :param excess;          in %
         :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
+        :param maxFull;         maximo allowed volume in % of the wells capacity
+        :param num_of_samples;  if None, the number of samples of the current protocol will be assumed
         """
         assert isinstance(labware, Lab.Labware)             # ??
                                                 # add self to the list of reagents of the worktable were the labware is.
@@ -75,7 +83,7 @@ class Reagent:
         self.defLiqClass = defLiqClass or def_liquidClass
         self.name       = name
         self.volpersample = volpersample
-        self.components = []
+        self.components = []                                                          # todo reserved for future use
         self.minNumRep  = self.min_num_of_replica (num_of_samples)
         if isinstance(initial_vol, list):
             if replicas is None:
@@ -106,6 +114,12 @@ class Reagent:
             self.init_vol(num_of_samples)                           # put the minimal initial volumen ?
 
     def min_num_of_replica(self, NumSamples: int=None)->int:
+        """
+        A minimal number of replicas (wells, aliquots) will be calculated based on the minimal volume,
+        taking into account the maximum allowed volume per well and the excess specified.
+        :param NumSamples:
+        :return:
+        """
         return int (self.minVol(NumSamples) / (self.labware.type.maxVol*self.maxFull)) +1
 
     @staticmethod
@@ -120,6 +134,12 @@ class Reagent:
         return "{name:s}".format(name=self.name)
 
     def minVol(self, NumSamples=None)->float:
+        """
+        A minimal volume will be calculated based on either the number of samples
+        and the volume per sample to use (todo or the volume per single use.)???
+        :param NumSamples:
+        :return:
+        """
         NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples or 0
         return self.volpersample * NumSamples * self.excess
 

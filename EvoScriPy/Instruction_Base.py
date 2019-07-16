@@ -297,7 +297,7 @@ class Pipetting(Pipette):
     def validateArg(self):
         Pipette.validateArg(self)
 
-        self.liquidClass = self.liquidClass or def_liquidClass
+        self.liquidClass = self.liquidClass or def_liquidClass            # todo use LiqC of the reagents in wells
 
         self.arg[1:1] =   [string1(self.liquidClass)]                              # arg 2
 
@@ -326,7 +326,7 @@ class DITIs(Instruction):
         :param arm:
         """
         Instruction.__init__(self, name)
-        self.arm     = self.robot.curArm(arm)  # todo revise !!!!!!!!!!!!   set this as def ??!!
+        self.arm     = self.robot.curArm(arm)
         self.options = options
         self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
 
