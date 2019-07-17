@@ -31,12 +31,11 @@ class Executable:
     def def_versions(self):
         self.versions = {"none": not_implemented}
 
-    def use_version(self, version : str):
+    def use_version(self, version: str):
         assert version in self.versions, \
             version + " is not a valid version. Valid versions are: " + str(self.versions.keys())
         self.version = version
         self.versions[version]()
-
 
     def __init__(self,  GUI       = None,
                         run_name  = None):
@@ -106,14 +105,14 @@ class Protocol (Executable):
     name = ""
     min_s, max_s = 1, 96
 
-    def __init__(   self,
-                    nTips                       = 4,
-                    NumOfSamples                = max_s,
-                    GUI                         = None,
-                    worktable_template_filename = None,
-                    output_filename             = None,
-                    firstTip                    = None,
-                    run_name                    = None):
+    def __init__(self,
+                 nTips                       = 4,
+                 NumOfSamples                = max_s,
+                 GUI                         = None,
+                 worktable_template_filename = None,
+                 output_filename             = None,
+                 firstTip                    = None,
+                 run_name                    = None):
 
         self.worktable_template_filename = worktable_template_filename or ""
         self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
@@ -132,17 +131,17 @@ class Protocol (Executable):
 
         Rtv.Reagent.SetReagentList(self)
 
-        Executable.__init__(self, GUI=GUI, run_name  = run_name)
+        Executable.__init__(self, GUI=GUI, run_name=run_name)
 
     def set_defaults(self):
         wt = self.worktable
 
         wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, ""     )
-        WashWaste       = wt.getLabware(Lab.WasteWS,    ""     )
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, ""     )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, ""     )
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, "")
+        WashWaste       = wt.getLabware(Lab.WasteWS,    "")
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, "")
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, "")
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS

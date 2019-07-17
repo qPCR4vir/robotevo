@@ -10,8 +10,8 @@ import EvoScriPy.Labware as Lab
 # from Robot import current
 from EvoScriPy.Instruction_Base import def_liquidClass
 
-def_reagent_excess =  4
-def_mix_excess   =  8
+def_reagent_excess = 4
+def_mix_excess = 8
 
 
 class Reagent:
