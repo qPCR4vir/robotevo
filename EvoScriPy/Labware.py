@@ -953,7 +953,7 @@ class DITIrackTypeSeries(Labware.Type.Series):
 
     def retire_new_tips(self, TIP_MASK):
         """
-        A response to a getTips: the tips have to be removed from the rack
+        A response to a get_tips: the tips have to be removed from the rack
         and only after that can appear mounted in the robot arm to pipette.
         The tips are removed at the "current" position, the position where
         begin the fresh tips, with is maintained internally by the robot and

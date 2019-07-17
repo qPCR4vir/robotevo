@@ -166,7 +166,7 @@ class Protocol (Executable):
         if tip_type     is not None: tip_type_old       = self.worktable.set_def_DiTi(tip_type)
 
         if tipsMask     is not None:
-            tipsMask_old     = self.getTips    (tipsMask, selected_samples=selected_samples, tip_type=tip_type)
+            tipsMask_old     = self.get_tips    (tipsMask, selected_samples=selected_samples, tip_type=tip_type)
 
         yield
 
@@ -768,7 +768,7 @@ class Protocol (Executable):
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
                         tipsType = robot.curArm().Tips[0].type    # only the 0 ??
                         self.drop_tips(Rbt.tipsMask[ctips])
-                        self.getTips(Rbt.tipsMask[ctips], tipsType)
+                        self.get_tips(Rbt.tipsMask[ctips], tipsType)
                         tip = 0
                     mV = robot.curArm().Tips[tip].type.maxVol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
@@ -783,9 +783,9 @@ class Protocol (Executable):
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
 
-    def getTips(self, TIP_MASK         = -1,
-                      tip_type         = None,
-                      selected_samples = None ):  # todo TIP_MASK=None
+    def get_tips(self, TIP_MASK         = -1,
+                 tip_type         = None,
+                 selected_samples = None):  # todo TIP_MASK=None
         """
         It will decide to get new tips or to pick back the preserved tips for the selected samples
         :param TIP_MASK:
@@ -1200,28 +1200,6 @@ class Pipeline (Executable):
 
         for protocol in self.protocols:
             print(protocol.name + protocol.run_name)
-
-
-
-Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
-
-SerumLiqClass      = "Serum Asp preMix3"   # or "MN Virus Sample"
-TissueHomLiqClass  = "Serum Asp"
-
-
-B_liquidClass   = "Water free cuvette"
-W_liquidClass   = Water_free      #    or "AVR-Water free DITi 1000"
-Std_liquidClass = Water_free      #    or "Water free dispense DiTi 1000"
-Small_vol_disp  = "Water wet"     #    or "Water free Low Volume"  ??
-Beads_LC_1      = "MixBeads_1"
-Beads_LC_2      = "MixBeads_2"
-
-Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentered
-Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
-Te_Mag_Rest     = "Te-Mag Rest"
-Te_Mag_Force_Centre   = "Te-Mag Force Centre"
-Te_Mag_RestPlus = "Te-Mag RestPlus"
-
 
 
 @contextmanager
