@@ -139,10 +139,7 @@ class Reagent:
         self.Replicas   = labware.put(self, wells, self.minNumRep if self.minimize_aliquots else replicas)
         self.pos        = self.Replicas[0].offset                                   # ??
 
-        self.init_vol(NumSamples=num_of_samples)                                    # put the minimal initial volumen ?
-
-        for w,v in zip(self.Replicas, initial_vol):
-                w.vol = max(v, w.vol)                  # todo revise !! put only if needed??
+        self.init_vol(NumSamples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
 
     def min_num_of_replica(self, NumSamples: int=None)->int:
         """
@@ -174,7 +171,12 @@ class Reagent:
         NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples or 0
         return self.volpersample * NumSamples * self.excess
 
-    def init_vol(self, NumSamples=None):
+    def init_vol(self, NumSamples=None, initial_vol=None):
+        if initial_vol is not None:
+            assert isinstance(initial_vol, list)
+            for w,v in zip(self.Replicas, initial_vol):
+                w.vol = v
+                assert w.labware.type.maxVol >= w.vol, 'Excess initial volume for '+ str(w)
         self.put_min_vol(NumSamples)
 
     def put_min_vol(self, NumSamples=None):          # todo create replicas if needed !!!!
@@ -186,7 +188,10 @@ class Reagent:
         :param NumSamples:
         :return:
         """
-        NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples
+        if NumSamples is None:
+            NumSamples = Reagent.current_protocol.NumOfSamples
+        if not NumSamples:
+            return
         V_per_sample = self.volpersample * self.excess
         replicas=len(self.Replicas)
         for i, w in enumerate(self.Replicas):
@@ -247,11 +252,12 @@ class preMix(Reagent):
         self.components = components
         #self.init_vol()
 
-    def init_vol(self, NumSamples=None):
+    def init_vol(self, NumSamples=None, initial_vol=None):
         if self.components:
             self.volpersample = 0
             for reagent in self.components:
                 self.volpersample += reagent.volpersample
+            Reagent.init_vol(self, NumSamples=0, initial_vol=initial_vol)
         pass
         # put volume in replicas only at the moment of making  !!
         # Reagent.init_vol(self, NumSamples)
