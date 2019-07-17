@@ -1137,6 +1137,32 @@ class Protocol (Executable):
     # These are functions aimed to isolate what a physical robot would make at once:
     # pick some tips, aspirate some liquid, etc. They are simple to understand.
 
+    def pick_up_tip(self, TIP_MASK  : int    = None,
+                          tip_type  :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)= None,
+                          arm             = None,
+                          AirgapVolume    = 0,
+                          AirgapSpeed     = None):
+        """
+        Atomic operation. Get new tips. It take a labware type or name instead of the labware itself (DiTi rack)
+        because the real robot take track of the next position to pick, including the rack and the site (the labware).
+        It only need a labware type (tip type) and it know where to pick the next tip. Example:
+
+            self.pick_up_tip('DiTi 200 ul')  # will pick a 200 ul tip with every tip arm.
+
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param tip_type: if None the worktable default DiTi will be used.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param AirgapSpeed:
+        :param AirgapVolume:
+        :return:
+        """
+
+        # not needed here, just to illustrate how is processed
+        DITI_series = self.robot.worktable.get_DITI_series(tip_type)
+
+        Itr.getDITI2(TIP_MASK, DITI_series, arm=arm, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed).exec()
+
     def aspirate(self,   arm        : Rbt.Arm           = None,
                          TIP_MASK   : int               = None,
                          volume     : (float, list)     = None,

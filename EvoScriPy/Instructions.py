@@ -288,6 +288,9 @@ class getDITI2(DITIs):
                                   mounting the DITIs. Volume in μl
         :param AirgapSpeed: int. Speed for the airgap in μl/s
         """
+        if AirgapSpeed is None:
+            AirgapSpeed = def_AirgapSpeed
+
         DITIs.__init__(self, "GetDITI2", tipMask, options, arm)
         self.DITI_series  = DITI_series                             # to find the rack and the current position to pick.
         self.AirgapSpeed  = AirgapSpeed
@@ -295,7 +298,8 @@ class getDITI2(DITIs):
 
     def validateArg(self):
         DITIs.validateArg(self)
-
+        if self.AirgapSpeed is None:
+            self.AirgapSpeed = def_AirgapSpeed
         self.DITI_series = self.robot.worktable.get_DITI_series(self.DITI_series)
 
         self.arg[1:1] = [string1(self.DITI_series.type.name)]                 # arg 2 TODO string1 or expression?
