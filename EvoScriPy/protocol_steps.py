@@ -133,302 +133,6 @@ class Protocol (Executable):
 
         Executable.__init__(self, GUI=GUI, run_name=run_name)
 
-    def set_defaults(self):
-        wt = self.worktable
-
-        wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
-
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, "")
-        WashWaste       = wt.getLabware(Lab.WasteWS,    "")
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, "")
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, "")
-
-        wt.def_WashWaste   = WashWaste
-        wt.def_WashCleaner = WashCleanerS
-        wt.def_DiTiWaste   = DiTiWaste
-
-        Rtv.Reagent("Liquid waste", wt.def_WashWaste)
-
-    def initialize(self):
-        self.set_EvoMode()
-        if not self.initialized:
-            Executable.initialize(self)
-        Rtv.Reagent.SetReagentList(self)
-        if self.def_DiTi_check_liquid_level is None:
-            self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
-
-    def set_EvoMode(self):
-        if not self.EvoMode:
-            self.init_EvoMode()
-        else:
-            EvoMode.current = self.EvoMode
-        self.iRobot.set_as_current()
-        Rtv.Reagent.SetReagentList(self)
-
-    def init_EvoMode(self):
-        self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
-        self.Script = EvoMode.Script(template=self.worktable_template_filename,
-                                     filename=self.output_filename + '.esc',
-                                     robot=self.iRobot.robot)
-        self.comments_ = EvoMode.Comments(filename=self.output_filename + '.protocol.txt')
-        self.EvoMode = EvoMode.multiple([self.iRobot,
-                                         self.Script,
-                                         EvoMode.AdvancedWorkList(self.output_filename + '.gwl'),
-                                         EvoMode.ScriptBody(self.output_filename + '.txt'),
-                                         EvoMode.StdOut(),
-                                         self.comments_
-                                         ])
-        EvoMode.current = self.EvoMode
-        self.worktable  = self.iRobot.robot.worktable  # shortcut !!
-        self.robot      = self.iRobot.robot
-        assert (self.iRobot.robot.curArm().nTips == self.nTips )
-
-    def comments(self):
-        return self.comments_.comments
-
-    def Run(self):
-        '''
-        Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
-        self.iRobot.worktable from where we can obtain labwares with getLabware()
-        :return:
-        '''
-        self.set_EvoMode()
-
-        self.initialize()
-        self.set_EvoMode()
-
-        self.preCheck()
-        self.set_EvoMode()
-
-        self.check_list()
-        self.set_EvoMode()
-
-        self.postCheck()
-        self.set_EvoMode()
-
-        self.done()
-
-    def check_list(self):
-        """
-        Tipically
-        """
-        self.set_EvoMode()
-        if (self.GUI):
-            self.GUI.check_list()
-        self.set_EvoMode()
-        Rtv.Reagent.SetReagentList(self)
-        if self.show_runtime_check_list:
-            self.show_check_list()
-        if self.check_initial_liquid_level:
-            self.check_reagents_levels()
-
-    def check_reagent_level(self, reagent, LiqClass=None):
-        """
-        Select all possible replica of the given reagent and detect the liquid level,
-        contrasting it with the current (expected) volumen in EACH well.
-        Use the given liquid class or the reagent default.
-        :param reagent:
-        :param LiqClass:
-
-        """
-        assert isinstance(reagent, Rtv.Reagent)
-        LiqClass = LiqClass or reagent.defLiqClass
-
-        tips = 1 if isinstance(reagent.labware, Lab.Cuvette) else self.robot.curArm().nTips
-        reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
-        vol = [w.vol for w in reagent.labware.selected_wells()]
-        Itr.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()] ) }").exec()
-
-        with self.tips(tip_type     = self.def_DiTi_check_liquid_level,
-                       reuse        = False,
-                       tipsMask     = Rbt.tipsMask[len(vol)]):
-
-            Itr.detect_Liquid(Rbt.tipsMask[len(vol)],
-                              liquidClass =LiqClass,
-                              labware     =reagent.labware).exec()
-
-        Itr.userPrompt("").exec()
-
-    def check_reagents_levels(self):
-        """
-        Will emit a liquid level detection on every well occupied by all the reagents defined so fort.
-        Will be executed at the end of self.check_list() but only if self.check_initial_liquid_level is True
-        """
-        prompt_msg = ""
-        for reagent in self.worktable.reagents:
-            reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
-            print(reagent_msg)
-            self.check_reagent_level(reagent)
-
-    def show_check_list(self):
-        """
-                Will show a user prompt with a check list to set all defined reagents:
-                 Name, position in the worktable, wells and initial volume (on every well occupied by all
-                 the reagents defined so fort.
-                Will be executed at the end of self.check_list() but only if self.show_runtime_check_list is True
-                """
-        prompt_msg = ""
-        for reagent in self.worktable.reagents:
-            reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
-            print(reagent_msg)
-            prompt_msg += reagent_msg + ""
-        Itr.userPrompt(prompt_msg).exec()
-
-    def done(self):
-        self.EvoMode.done()
-        Executable.done(self)
-
-    def go_first_pos(self, first_tip: (int, str) = None):
-        """
-        Optionally set the Protocol.firstTip, a position in rack, like 42 or 'B06'
-        (optionally including the rack self referenced with a number, like '2-B06', were 2 will be the second
-        rack in the wortable series ofdefault tip type). Currently, for a more precise set, use directly the
-        Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
-        """
-        if first_tip is not None:
-            self.firstTip = first_tip                                       # just keep it
-
-        if self.firstTip is not None and self.worktable is not None:        # set in wt
-            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip)
-            Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
-
-    # Context-options modifiers ---------------------------------------------------------------------------
-    def set_dropTips(self, drop=True)->bool:
-        """
-        Drops the tips at THE END of the whole action? like after distribution of a reagent into various targets
-        :param drop:
-        :return:
-        """
-        return self.robot.set_dropTips(drop)
-
-    def set_allow_air(self, allow_air=0.0)->float:
-        return self.robot.set_allow_air(allow_air)
-
-    def reuseTips(self, reuse=True)->bool:
-        """     Reuse the tips or drop it and take new after each action?
-        :param reuse:
-        :return:
-        """
-        return self.robot.reuseTips(reuse)
-
-    def reuse_tips_and_drop(self, reuse=True, drop=True)->(bool, bool):
-        return self.set_dropTips(drop), self.reuseTips(reuse)
-
-    def preserveTips(self, preserve=True)->bool:
-        return self.robot.preserveTips(preserve)
-
-    def preserveingTips(self)->bool:
-        return self.robot.preservetips
-
-    def usePreservedTips(self, usePreserved=True)->bool:
-        return self.robot.usePreservedTips(usePreserved)
-
-    def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
-        pass # Itr.moveLiha
-
-    def getTips(self, TIP_MASK         = -1,
-                      tip_type         = None,
-                      selected_samples = None ):  # todo TIP_MASK=None
-        """
-        It will decide to get new tips or to pick back the preserved tips for the selected samples
-        :param TIP_MASK:
-        :param tip_type:
-        :param selected_samples:
-        :return:
-        """
-        mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[self.robot.curArm().nTips]
-
-        if self.robot.usePreservedtips:
-            with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
-                self.dropTips(TIP_MASK)
-            where = self.robot.where_are_preserved_tips(selected_samples, TIP_MASK, tip_type)
-            nTips = self.robot.curArm().nTips
-
-            for tip_rack in where:
-                tipsMask = 0
-                tips_in_rack = len(tip_rack.selected())
-                for idx in range(nTips):
-                    if not tips_in_rack: break
-                    tip = (1 << idx)
-                    if TIP_MASK & tip:
-                        tipsMask |= tip
-                        TIP_MASK ^= tip
-                        tips_in_rack -= 1
-                Itr.pickUp_DITIs2(tipsMask, tip_rack).exec()
-            assert tips_in_rack == 0
-        else:
-            tip_type= tip_type or self.worktable.def_DiTi
-            I = Itr.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm)
-            I.exec()
-        return mask                                    # todo REVISE !!   I.tipMask
-
-    def dropTips(self, TIP_MASK=None):
-        """
-        It will decide to really drop the tips or to put it back in some DiTi rack
-        :param TIP_MASK:
-        :return:
-        """
-        if self.robot.preservetips:
-            where = self.robot.where_preserve_tips(TIP_MASK)
-            nTips = self.robot.curArm().nTips
-            for tip_rack in where:
-                tipsMask = 0
-                l = len(tip_rack.selected())
-                assert l, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
-                # if not l: continue   #   WORKAROUND  !!!
-                for i in range(nTips):
-                    if not l: break
-                    b = (1 << i)
-                    if TIP_MASK & b:
-                        tipsMask |= b
-                        TIP_MASK ^= b
-                        l -= 1
-                Itr.set_DITIs_Back(tipsMask, tip_rack).exec()
-            assert l == 0
-            return
-        #if not Rbt.Robot.current.droptips: return 0
-        #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
-        #if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
-        Itr.dropDITI(TIP_MASK).exec()
-        #return TIP_MASK
-
-    # Atomic API ----------------------------------------------------------------------------------------
-    def aspirate(self,   arm        : Rbt.Arm           = None,
-                         TIP_MASK   : int               = None,
-                         volume     : (float, list)     = None,
-                         from_wells : [Lab.Well]        = None,
-                         liq_class  : str               = None):
-        """
-        Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
-        :param arm:      Uses the default Arm (pipette) if None
-        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
-                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
-        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
-        :param from_wells: list of wells to aspirate from.
-        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
-                          Itr.def_liquidClass if None
-        """
-
-        Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
-
-    def dispense(self,   arm        : Rbt.Arm           = None,
-                         TIP_MASK   : int               = None,
-                         volume     : (float, list)     = None,
-                         from_wells : [Lab.Well]        = None,
-                         liq_class  : str               = None):
-        """
-        Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
-        :param arm:      Uses the default Arm (pipette) if None
-        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
-                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
-        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
-        :param from_wells: list of wells to aspirate from.
-        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
-                          Itr.def_liquidClass if None
-        """
-
-        Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
-
     # High level API -------------------------------------------------------------------------------------
     @contextmanager
     def tips(self,  tipsMask    = None, tip_type     = None,
@@ -749,6 +453,78 @@ class Protocol (Executable):
         v[tip] = vol
         Itr.dispense(Rbt.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
+    def mix(self,  in_labware_region  : Lab.Labware,
+                   using_liquid_class : str        = None,
+                   volume             : float      = None,
+                   optimize           : bool       = True):
+
+        """
+        Mix the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
+        :param in_labware_region:
+        :param using_liquid_class:
+        :param volume:
+        :param optimize:
+        :return:
+        """
+        mix_p = 0.9
+        in_labware_region = in_labware_region or self.worktable.def_WashWaste    # todo ???????????
+        assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
+        if not volume or volume< 0.0 : volume = 0.0
+        assert isinstance(volume, (int, float))
+        oriSel = in_labware_region.selected()
+        nt = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
+        if not oriSel:
+            oriSel = range(self.NumOfSamples)
+        if optimize:
+            oriSel = in_labware_region.parallelOrder( nt, oriSel)
+        NumSamples = len(oriSel)
+        SampleCnt = NumSamples
+        if nt > SampleCnt:
+            nt = SampleCnt
+        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+        mV = self.worktable.def_DiTi.maxVol * mix_p    # What tip tp use !
+        if volume:
+            v = volume
+        else:
+            v = in_labware_region.Wells[oriSel[0]].vol
+        v = v * mix_p
+        v = v if v < mV else mV
+
+        lf = in_labware_region
+        mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
+        msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
+        with group(msg):
+            msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
+                                        + str([i+1 for i in oriSel])
+            Itr.comment(msg).exec()
+            while SampleCnt:
+                curSample = NumSamples - SampleCnt
+                if nt > SampleCnt:
+                    nt = SampleCnt
+                    mx.tipMask = Rbt.tipsMask[nt]
+
+                sel = oriSel[curSample:curSample + nt]
+                mx.labware.selectOnly(sel)
+                with self.tips(Rbt.tipsMask[nt], selected_samples = mx.labware):
+                    mV = self.robot.curArm().Tips[0].type.maxVol * mix_p
+                    if not using_liquid_class:
+                        if sel:
+                            mx.liquidClass = mx.labware.selected_wells()[0].reagent.defLiqClass
+                    if volume:
+                        r = volume   # r: Waste_available yet; volume: to be Waste
+                    else:
+                        vols = [w.vol for w in mx.labware.selected_wells()]
+                        r_min, r_max = min(vols), max(vols)
+                        assert r_min == r_max
+                        r = r_max
+                    r = r * mix_p
+                    r = r if r < mV else mV
+                    mx.volume = r
+                    mx.exec()
+                SampleCnt -= nt
+        mx.labware.selectOnly(oriSel)
+        return oriSel
+
     def mix_reagent(self,   reagent   : Rtv.Reagent,
                             LiqClass  : str  = None,
                             cycles    : int  = 3,
@@ -779,168 +555,6 @@ class Protocol (Executable):
                 volume      =vol,
                 labware     =reagent.labware,
                 cycles      =cycles).exec()
-
-    def _multidispense_in_replicas(self, tip     : int,
-                                   reagent : Rtv.Reagent,
-                                   vol     : list) :
-        """ Multi-dispense of the content of ONE tip into the reagent replicas
-
-        :param tip:
-        :param reagent:
-        :param vol:
-        """
-        assert isinstance(vol, list)
-        re = reagent.Replicas
-        assert len(vol) <= len(re)
-        for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
-            Itr.dispense(Rbt.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
-                         # reagent.defLiqClass,
-                         v, w.labware.selectOnly([w.offset])).exec()
-
-    def _aspirate_multi_tips(self, reagent  : Rtv.Reagent,
-                                   tips     : int           = None,
-                                   vol      : (float, list) = None,
-                                   LiqClass : str           = None):
-        """
-        Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
-        Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
-        have only 3 replicas (only 3 wells contain the reagent). This call will generate the instructions to
-        fill the tips 3 by 3 with the correct volume. Assumes the tips are mounted in the current arm.
-
-        :param tips     : number of tips beginning from #1 to use
-        :param reagent  : reagent to aspirate, with some number of wells in use
-        :param vol:
-        :param LiqClass:
-        """
-        max_tips = self.robot.curArm().nTips
-
-        if isinstance(vol, list):
-            if tips is None:
-                tips = len(vol)
-            else:
-                assert tips == len(vol), f"Number of tips {tips} != number of desired volume ({len(vol)})."
-        else:
-            if tips is None:
-                tips =max_tips
-
-            vol = [vol] * tips
-
-        assert tips <= max_tips, f"Too many tips selected: {tips}. The maximum is {max_tips}."
-
-        LiqClass = LiqClass or reagent.defLiqClass
-
-        mask = Rbt.tipsMask[tips]                                 # as if we could use so many tips
-        n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
-        asp = Itr.aspirate(mask, LiqClass, vol, reagent.labware)
-        curTip = 0
-        while curTip < tips:                                      # todo what to do with used tips?
-            nextTip = curTip + n_wells                            # add tips, one for each well
-            nextTip = nextTip if nextTip <= tips else tips        # but not too much
-            mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]   # now use only the last tips added
-
-            asp.tipMask = mask
-            asp.exec()                                           # will call robot.curArm().aspirated(vol, mask)  ???
-            curTip = nextTip
-
-    def _dispensemultiwells(self, tips : int, liq_class, labware : Lab.Labware, vol : (float, list)):
-        """
-        Intermediate-level function. One dispense from multiple tips in multiple wells with different volume
-
-        :param tips: number of tips to use                        # todo ?
-        :param liq_class:
-        :param labware:
-        :param vol:
-        """
-        if not isinstance(vol, list):
-            vol = [vol] * tips
-        om = Rbt.tipsMask[tips]
-
-        Itr.dispense(om, liq_class, vol, labware).exec()          # will call robot.curArm().dispensed(vol, om)  ??
-
-    def make(self,  what, NumSamples=None): # OK coordinate with protocol
-            if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
-
-    def makePreMix(self,  preMix        : Rtv.preMix,
-                          NumSamples    : int       = None,
-                          force_replies : bool      = False):
-        """
-        A preMix is just that: a premix of reagents (aka - components)
-        which have been already defined to add some vol per sample.
-        Uses one new tip per component.
-        It calculates and checks self the minimum and maximum number of replica of the resulting preMix
-        :param preMix    : what to make, a predefined preMix
-        :param NumSamples:
-        :param force_replies: use all the preMix predefined replicas
-        :return:
-        """
-
-        assert isinstance(preMix, Rtv.preMix)
-        robot       = self.robot
-        mxnTips     = robot.curArm().nTips  # max number of Tips
-        ncomp       = len(preMix.components)
-        nt          = min(mxnTips, ncomp)
-        NumSamples  = NumSamples or self.NumOfSamples
-        labw        = preMix.labware
-        tVol        = preMix.minVol(NumSamples)
-        mxnrepl     = len(preMix.Replicas)                        # max number of replies
-        mnnrepl     = preMix.min_num_of_replica(NumSamples)       # min number of replies
-        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, preMix.name)
-        nrepl       = mxnrepl if force_replies else mnnrepl
-        if nrepl < mxnrepl:
-            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
-            preMix.Replicas = preMix.Replicas[:nrepl]
-
-        msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
-        with group(msg):
-            msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
-                                .format( labw.location.grid,
-                                         labw.location.site + 1,
-                                         str([str(well) for well in preMix.Replicas]) ,
-                                         ncomp                        )
-            Itr.comment(msg).exec()
-            samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
-            with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
-                tip = -1
-                ctips = nt
-                for ridx, reagent_component in enumerate(preMix.components):       # iterate reagent components
-                    labw = reagent_component.labware
-                    sVol = reagent_component.volpersample*preMix.excess       # vol we need for each sample
-                    rVol = sVol*NumSamples                        # the total vol we need of this reagent component
-                    msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
-                                .format( idx = ridx + 1,
-                                         v   = rVol,
-                                         g   = labw.location.grid,
-                                         st  = labw.location.site + 1,
-                                         w   = str([str(well) for well in reagent_component.Replicas])   )
-                    Itr.comment(msg).exec()
-                    tip += 1  # use the next tip
-                    if tip >= nt:
-                        ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
-                        tipsType = robot.curArm().Tips[0].type    # only the 0 ??
-                        self.dropTips(Rbt.tipsMask[ctips])
-                        self.getTips(Rbt.tipsMask[ctips], tipsType)
-                        tip = 0
-                    mV = robot.curArm().Tips[tip].type.maxVol
-                    # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
-                    # but also if there is not sufficient reacgent in the current component replica
-                    current_comp_repl = 0
-                    while rVol > 0:
-                        while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
-                            current_comp_repl +=1
-                        dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
-                        self.aspirate_one(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
-                        self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
-                        rVol -= dV
-                self.mix_reagent(preMix, maxTips=ctips)
-
-    def consolidate(self):              # todo
-        """
-        Volumes going to the same destination well are combined within the same tip,
-        so that multiple aspirates can be combined to a single dispense.
-        If there are multiple destination wells, the pipette will never combine their volumes into the same tip.
-        :return:
-        """
-        pass
 
     def waste(self,  from_labware_region : Lab.Labware      = None,
                      using_liquid_class  : str              = None,
@@ -1096,78 +710,465 @@ class Protocol (Executable):
         Itr.wash_tips(wasteVol=4).exec()
         return oriSel
 
-
-    def mix(self,  in_labware_region  : Lab.Labware,
-                   using_liquid_class : str        = None,
-                   volume             : float      = None,
-                   optimize           : bool       = True):
-
+    def makePreMix(self,  preMix        : Rtv.preMix,
+                          NumSamples    : int       = None,
+                          force_replies : bool      = False):
         """
-        Mix the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
-        :param in_labware_region:
-        :param using_liquid_class:
-        :param volume:
-        :param optimize:
+        A preMix is just that: a premix of reagents (aka - components)
+        which have been already defined to add some vol per sample.
+        Uses one new tip per component.
+        It calculates and checks self the minimum and maximum number of replica of the resulting preMix
+        :param preMix    : what to make, a predefined preMix
+        :param NumSamples:
+        :param force_replies: use all the preMix predefined replicas
         :return:
         """
-        mix_p = 0.9
-        in_labware_region = in_labware_region or self.worktable.def_WashWaste    # todo ???????????
-        assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
-        if not volume or volume< 0.0 : volume = 0.0
-        assert isinstance(volume, (int, float))
-        oriSel = in_labware_region.selected()
-        nt = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
-        if not oriSel:
-            oriSel = range(self.NumOfSamples)
-        if optimize:
-            oriSel = in_labware_region.parallelOrder( nt, oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
-        if nt > SampleCnt:
-            nt = SampleCnt
-        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-        mV = self.worktable.def_DiTi.maxVol * mix_p    # What tip tp use !
-        if volume:
-            v = volume
-        else:
-            v = in_labware_region.Wells[oriSel[0]].vol
-        v = v * mix_p
-        v = v if v < mV else mV
 
-        lf = in_labware_region
-        mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
-        msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
+        assert isinstance(preMix, Rtv.preMix)
+        robot       = self.robot
+        mxnTips     = robot.curArm().nTips  # max number of Tips
+        ncomp       = len(preMix.components)
+        nt          = min(mxnTips, ncomp)
+        NumSamples  = NumSamples or self.NumOfSamples
+        labw        = preMix.labware
+        tVol        = preMix.minVol(NumSamples)
+        mxnrepl     = len(preMix.Replicas)                        # max number of replies
+        mnnrepl     = preMix.min_num_of_replica(NumSamples)       # min number of replies
+        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, preMix.name)
+        nrepl       = mxnrepl if force_replies else mnnrepl
+        if nrepl < mxnrepl:
+            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
+            preMix.Replicas = preMix.Replicas[:nrepl]
+
+        msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
         with group(msg):
-            msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
-                                        + str([i+1 for i in oriSel])
+            msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
+                                .format( labw.location.grid,
+                                         labw.location.site + 1,
+                                         str([str(well) for well in preMix.Replicas]) ,
+                                         ncomp                        )
             Itr.comment(msg).exec()
-            while SampleCnt:
-                curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:
-                    nt = SampleCnt
-                    mx.tipMask = Rbt.tipsMask[nt]
+            samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
+            with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
+                tip = -1
+                ctips = nt
+                for ridx, reagent_component in enumerate(preMix.components):       # iterate reagent components
+                    labw = reagent_component.labware
+                    sVol = reagent_component.volpersample*preMix.excess       # vol we need for each sample
+                    rVol = sVol*NumSamples                        # the total vol we need of this reagent component
+                    msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
+                                .format( idx = ridx + 1,
+                                         v   = rVol,
+                                         g   = labw.location.grid,
+                                         st  = labw.location.site + 1,
+                                         w   = str([str(well) for well in reagent_component.Replicas])   )
+                    Itr.comment(msg).exec()
+                    tip += 1  # use the next tip
+                    if tip >= nt:
+                        ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
+                        tipsType = robot.curArm().Tips[0].type    # only the 0 ??
+                        self.dropTips(Rbt.tipsMask[ctips])
+                        self.getTips(Rbt.tipsMask[ctips], tipsType)
+                        tip = 0
+                    mV = robot.curArm().Tips[tip].type.maxVol
+                    # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
+                    # but also if there is not sufficient reacgent in the current component replica
+                    current_comp_repl = 0
+                    while rVol > 0:
+                        while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
+                            current_comp_repl +=1
+                        dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
+                        self.aspirate_one(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
+                        self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
+                        rVol -= dV
+                self.mix_reagent(preMix, maxTips=ctips)
 
-                sel = oriSel[curSample:curSample + nt]
-                mx.labware.selectOnly(sel)
-                with self.tips(Rbt.tipsMask[nt], selected_samples = mx.labware):
-                    mV = self.robot.curArm().Tips[0].type.maxVol * mix_p
-                    if not using_liquid_class:
-                        if sel:
-                            mx.liquidClass = mx.labware.selected_wells()[0].reagent.defLiqClass
-                    if volume:
-                        r = volume   # r: Waste_available yet; volume: to be Waste
-                    else:
-                        vols = [w.vol for w in mx.labware.selected_wells()]
-                        r_min, r_max = min(vols), max(vols)
-                        assert r_min == r_max
-                        r = r_max
-                    r = r * mix_p
-                    r = r if r < mV else mV
-                    mx.volume = r
-                    mx.exec()
-                SampleCnt -= nt
-        mx.labware.selectOnly(oriSel)
-        return oriSel
+    def getTips(self, TIP_MASK         = -1,
+                      tip_type         = None,
+                      selected_samples = None ):  # todo TIP_MASK=None
+        """
+        It will decide to get new tips or to pick back the preserved tips for the selected samples
+        :param TIP_MASK:
+        :param tip_type:
+        :param selected_samples:
+        :return:
+        """
+        mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[self.robot.curArm().nTips]
+
+        if self.robot.usePreservedtips:
+            with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
+                self.dropTips(TIP_MASK)
+            where = self.robot.where_are_preserved_tips(selected_samples, TIP_MASK, tip_type)
+            nTips = self.robot.curArm().nTips
+
+            for tip_rack in where:
+                tipsMask = 0
+                tips_in_rack = len(tip_rack.selected())
+                for idx in range(nTips):
+                    if not tips_in_rack: break
+                    tip = (1 << idx)
+                    if TIP_MASK & tip:
+                        tipsMask |= tip
+                        TIP_MASK ^= tip
+                        tips_in_rack -= 1
+                Itr.pickUp_DITIs2(tipsMask, tip_rack).exec()
+            assert tips_in_rack == 0
+        else:
+            tip_type= tip_type or self.worktable.def_DiTi
+            I = Itr.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm)
+            I.exec()
+        return mask                                    # todo REVISE !!   I.tipMask
+
+    def dropTips(self, TIP_MASK=None):
+        """
+        It will decide to really drop the tips or to put it back in some DiTi rack
+        :param TIP_MASK:
+        :return:
+        """
+        if self.robot.preservetips:
+            where = self.robot.where_preserve_tips(TIP_MASK)
+            nTips = self.robot.curArm().nTips
+            for tip_rack in where:
+                tipsMask = 0
+                l = len(tip_rack.selected())
+                assert l, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
+                # if not l: continue   #   WORKAROUND  !!!
+                for i in range(nTips):
+                    if not l: break
+                    b = (1 << i)
+                    if TIP_MASK & b:
+                        tipsMask |= b
+                        TIP_MASK ^= b
+                        l -= 1
+                Itr.set_DITIs_Back(tipsMask, tip_rack).exec()
+            assert l == 0
+            return
+        #if not Rbt.Robot.current.droptips: return 0
+        #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
+        #if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
+        Itr.dropDITI(TIP_MASK).exec()
+        #return TIP_MASK
+
+    def go_first_pos(self, first_tip: (int, str) = None):
+        """
+        Optionally set the Protocol.firstTip, a position in rack, like 42 or 'B06'
+        (optionally including the rack self referenced with a number, like '2-B06', were 2 will be the second
+        rack in the wortable series ofdefault tip type). Currently, for a more precise set, use directly the
+        Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+        """
+        if first_tip is not None:
+            self.firstTip = first_tip                                       # just keep it
+
+        if self.firstTip is not None and self.worktable is not None:        # set in wt
+            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip)
+            Itr.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+
+    def consolidate(self):              # todo
+        """
+        Volumes going to the same destination well are combined within the same tip,
+        so that multiple aspirates can be combined to a single dispense.
+        If there are multiple destination wells, the pipette will never combine their volumes into the same tip.
+        :return:
+        """
+        pass
+
+    # App-Structure API ---------------------------------------------------------------------------------------
+    def Run(self):
+        '''
+        Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
+        self.iRobot.worktable from where we can obtain labwares with getLabware()
+        :return:
+        '''
+        self.set_EvoMode()
+
+        self.initialize()
+        self.set_EvoMode()
+
+        self.preCheck()
+        self.set_EvoMode()
+
+        self.check_list()
+        self.set_EvoMode()
+
+        self.postCheck()
+        self.set_EvoMode()
+
+        self.done()
+
+    def check_list(self):
+        """
+        Tipically
+        """
+        self.set_EvoMode()
+        if (self.GUI):
+            self.GUI.check_list()
+        self.set_EvoMode()
+        Rtv.Reagent.SetReagentList(self)
+        if self.show_runtime_check_list:
+            self.show_check_list()
+        if self.check_initial_liquid_level:
+            self.check_reagents_levels()
+
+    def check_reagent_level(self, reagent, LiqClass=None):
+        """
+        Select all possible replica of the given reagent and detect the liquid level,
+        contrasting it with the current (expected) volumen in EACH well.
+        Use the given liquid class or the reagent default.
+        :param reagent:
+        :param LiqClass:
+
+        """
+        assert isinstance(reagent, Rtv.Reagent)
+        LiqClass = LiqClass or reagent.defLiqClass
+
+        tips = 1 if isinstance(reagent.labware, Lab.Cuvette) else self.robot.curArm().nTips
+        reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
+        vol = [w.vol for w in reagent.labware.selected_wells()]
+        Itr.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()] ) }").exec()
+
+        with self.tips(tip_type     = self.def_DiTi_check_liquid_level,
+                       reuse        = False,
+                       tipsMask     = Rbt.tipsMask[len(vol)]):
+
+            Itr.detect_Liquid(Rbt.tipsMask[len(vol)],
+                              liquidClass =LiqClass,
+                              labware     =reagent.labware).exec()
+
+        Itr.userPrompt("").exec()
+
+    def check_reagents_levels(self):
+        """
+        Will emit a liquid level detection on every well occupied by all the reagents defined so fort.
+        Will be executed at the end of self.check_list() but only if self.check_initial_liquid_level is True
+        """
+        prompt_msg = ""
+        for reagent in self.worktable.reagents:
+            reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
+            print(reagent_msg)
+            self.check_reagent_level(reagent)
+
+    def show_check_list(self):
+        """
+                Will show a user prompt with a check list to set all defined reagents:
+                 Name, position in the worktable, wells and initial volume (on every well occupied by all
+                 the reagents defined so fort.
+                Will be executed at the end of self.check_list() but only if self.show_runtime_check_list is True
+                """
+        prompt_msg = ""
+        for reagent in self.worktable.reagents:
+            reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
+            print(reagent_msg)
+            prompt_msg += reagent_msg + ""
+        Itr.userPrompt(prompt_msg).exec()
+
+    def done(self):
+        self.EvoMode.done()
+        Executable.done(self)
+
+    def set_defaults(self):
+        wt = self.worktable
+
+        wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
+
+        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, "")
+        WashWaste       = wt.getLabware(Lab.WasteWS,    "")
+        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, "")
+        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, "")
+
+        wt.def_WashWaste   = WashWaste
+        wt.def_WashCleaner = WashCleanerS
+        wt.def_DiTiWaste   = DiTiWaste
+
+        Rtv.Reagent("Liquid waste", wt.def_WashWaste)
+
+    def initialize(self):
+        self.set_EvoMode()
+        if not self.initialized:
+            Executable.initialize(self)
+        Rtv.Reagent.SetReagentList(self)
+        if self.def_DiTi_check_liquid_level is None:
+            self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
+
+    def set_EvoMode(self):
+        if not self.EvoMode:
+            self.init_EvoMode()
+        else:
+            EvoMode.current = self.EvoMode
+        self.iRobot.set_as_current()
+        Rtv.Reagent.SetReagentList(self)
+
+    def init_EvoMode(self):
+        self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
+        self.Script = EvoMode.Script(template=self.worktable_template_filename,
+                                     filename=self.output_filename + '.esc',
+                                     robot=self.iRobot.robot)
+        self.comments_ = EvoMode.Comments(filename=self.output_filename + '.protocol.txt')
+        self.EvoMode = EvoMode.multiple([self.iRobot,
+                                         self.Script,
+                                         EvoMode.AdvancedWorkList(self.output_filename + '.gwl'),
+                                         EvoMode.ScriptBody(self.output_filename + '.txt'),
+                                         EvoMode.StdOut(),
+                                         self.comments_
+                                         ])
+        EvoMode.current = self.EvoMode
+        self.worktable  = self.iRobot.robot.worktable  # shortcut !!
+        self.robot      = self.iRobot.robot
+        assert (self.iRobot.robot.curArm().nTips == self.nTips )
+
+    def comments(self):
+        return self.comments_.comments
+
+    # Context-options modifiers ---------------------------------------------------------------------------
+    def set_dropTips(self, drop=True)->bool:
+        """
+        Drops the tips at THE END of the whole action? like after distribution of a reagent into various targets
+        :param drop:
+        :return:
+        """
+        return self.robot.set_dropTips(drop)
+
+    def set_allow_air(self, allow_air=0.0)->float:
+        return self.robot.set_allow_air(allow_air)
+
+    def reuseTips(self, reuse=True)->bool:
+        """     Reuse the tips or drop it and take new after each action?
+        :param reuse:
+        :return:
+        """
+        return self.robot.reuseTips(reuse)
+
+    def reuse_tips_and_drop(self, reuse=True, drop=True)->(bool, bool):
+        return self.set_dropTips(drop), self.reuseTips(reuse)
+
+    def preserveTips(self, preserve=True)->bool:
+        return self.robot.preserveTips(preserve)
+
+    def preserveingTips(self)->bool:
+        return self.robot.preservetips
+
+    def usePreservedTips(self, usePreserved=True)->bool:
+        return self.robot.usePreservedTips(usePreserved)
+
+    def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
+        pass # Itr.moveLiha
+
+    # Atomic API ----------------------------------------------------------------------------------------
+    def aspirate(self,   arm        : Rbt.Arm           = None,
+                         TIP_MASK   : int               = None,
+                         volume     : (float, list)     = None,
+                         from_wells : [Lab.Well]        = None,
+                         liq_class  : str               = None):
+        """
+        Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
+        """
+
+        Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+
+    def dispense(self,   arm        : Rbt.Arm           = None,
+                         TIP_MASK   : int               = None,
+                         volume     : (float, list)     = None,
+                         from_wells : [Lab.Well]        = None,
+                         liq_class  : str               = None):
+        """
+        Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
+        """
+
+        Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+
+    # Lower lever API & "private" functions -------------------------------------------------------------
+    def _multidispense_in_replicas(self, tip     : int,
+                                   reagent : Rtv.Reagent,
+                                   vol     : list) :
+        """ Multi-dispense of the content of ONE tip into the reagent replicas
+
+        :param tip:
+        :param reagent:
+        :param vol:
+        """
+        assert isinstance(vol, list)
+        re = reagent.Replicas
+        assert len(vol) <= len(re)
+        for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
+            Itr.dispense(Rbt.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
+                         # reagent.defLiqClass,
+                         v, w.labware.selectOnly([w.offset])).exec()
+
+    def _aspirate_multi_tips(self, reagent  : Rtv.Reagent,
+                                   tips     : int           = None,
+                                   vol      : (float, list) = None,
+                                   LiqClass : str           = None):
+        """
+        Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
+        Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
+        have only 3 replicas (only 3 wells contain the reagent). This call will generate the instructions to
+        fill the tips 3 by 3 with the correct volume. Assumes the tips are mounted in the current arm.
+
+        :param tips     : number of tips beginning from #1 to use
+        :param reagent  : reagent to aspirate, with some number of wells in use
+        :param vol:
+        :param LiqClass:
+        """
+        max_tips = self.robot.curArm().nTips
+
+        if isinstance(vol, list):
+            if tips is None:
+                tips = len(vol)
+            else:
+                assert tips == len(vol), f"Number of tips {tips} != number of desired volume ({len(vol)})."
+        else:
+            if tips is None:
+                tips =max_tips
+
+            vol = [vol] * tips
+
+        assert tips <= max_tips, f"Too many tips selected: {tips}. The maximum is {max_tips}."
+
+        LiqClass = LiqClass or reagent.defLiqClass
+
+        mask = Rbt.tipsMask[tips]                                 # as if we could use so many tips
+        n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
+        asp = Itr.aspirate(mask, LiqClass, vol, reagent.labware)
+        curTip = 0
+        while curTip < tips:                                      # todo what to do with used tips?
+            nextTip = curTip + n_wells                            # add tips, one for each well
+            nextTip = nextTip if nextTip <= tips else tips        # but not too much
+            mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]   # now use only the last tips added
+
+            asp.tipMask = mask
+            asp.exec()                                           # will call robot.curArm().aspirated(vol, mask)  ???
+            curTip = nextTip
+
+    def _dispensemultiwells(self, tips : int, liq_class, labware : Lab.Labware, vol : (float, list)):
+        """
+        Intermediate-level function. One dispense from multiple tips in multiple wells with different volume
+
+        :param tips: number of tips to use                        # todo ?
+        :param liq_class:
+        :param labware:
+        :param vol:
+        """
+        if not isinstance(vol, list):
+            vol = [vol] * tips
+        om = Rbt.tipsMask[tips]
+
+        Itr.dispense(om, liq_class, vol, labware).exec()          # will call robot.curArm().dispensed(vol, om)  ??
+
+    def make(self,  what, NumSamples=None): # OK coordinate with protocol
+            if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
 
 
 class Pipeline (Executable):
