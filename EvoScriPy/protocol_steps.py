@@ -1264,15 +1264,25 @@ def incubation(minutes, timer=1):
     yield
     Itr.waitTimer(timer=timer, timeSpan= minutes*60).exec()
 
+# Some commons Liquid Class names  -----------------------------------------------------------------------
+Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
 
-@contextmanager
-def opening_example(filename):
-    f = open(filename) # IOError is untouched by GeneratorContext
-    try:
-        yield f
-    finally:
-        f.close() # Ditto for errors here (however unlikely)
+SerumLiqClass      = "Serum Asp preMix3"   # or "MN Virus Sample"
+TissueHomLiqClass  = "Serum Asp"
 
+
+B_liquidClass   = "Water free cuvette"
+W_liquidClass   = Water_free      #    or "AVR-Water free DITi 1000"
+Std_liquidClass = Water_free      #    or "Water free dispense DiTi 1000"
+Small_vol_disp  = "Water wet"     #    or "Water free Low Volume"  ??
+Beads_LC_1      = "MixBeads_1"
+Beads_LC_2      = "MixBeads_2"
+
+Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentered
+Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
+Te_Mag_Rest     = "Te-Mag Rest"
+Te_Mag_Force_Centre   = "Te-Mag Force Centre"
+Te_Mag_RestPlus = "Te-Mag RestPlus"
 
 # TODO  implement Debugger: prompt and or wait
 
