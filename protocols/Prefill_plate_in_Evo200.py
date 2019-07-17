@@ -185,7 +185,7 @@ class Prefill_plate_in_Evo200(Evo200):
                 self.distribute(reagent=buffer_reag, to_labware_region=mix1_100.select_all(), volume=buf_mix1_100)
                 self.distribute(reagent=buffer_reag, to_labware_region=mix2_100.select_all(), volume=buf_mix2_100)
 
-            self.dropTips()
+            self.drop_tips()
 
         self.done()
 

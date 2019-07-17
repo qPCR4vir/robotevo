@@ -154,7 +154,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                 self.distribute(reagent             =VEW1,
                                 to_labware_region   =Plate_VEW1.selectOnly(all_samples))      # , optimize=False
 
-        self.dropTips()
+        self.drop_tips()
 
         self.done()
 

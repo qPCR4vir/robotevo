@@ -195,6 +195,6 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                     with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
                         self.distribute(reagent=LysisBufferReact, to_labware_region=LP.selectOnly(all_samples))
 
-        self.dropTips()
+        self.drop_tips()
 
         self.done()

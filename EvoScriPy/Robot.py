@@ -369,7 +369,7 @@ class Robot:
         if self.reusetips:
             tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
         else:
-            # self.dropTips(tip_mask)  # todo REVISE  here ???
+            # self.drop_tips(tip_mask)  # todo REVISE  here ???
             tip_mask = self.curArm().getTips_test(tip_mask)
         return tip_mask
 
@@ -448,7 +448,7 @@ class Robot:
         """ The low level instruction have to be generated already with almost all the information needed.
         Here we don't check any more where we really need to put the tips.
         Be careful by manual creation of low level instructions: they are safe if they are generated
-        by protocol instructions (dropTips(), and preserve and usePreserved were previously set).
+        by protocol instructions (drop_tips(), and preserve and usePreserved were previously set).
         :param TIP_MASK:
         :param labware:
         """
@@ -464,7 +464,7 @@ class Robot:
         Here we don't check any more from where we really need to pick the tips
         and assume they are all in the same rack.
         Be careful by manual creation of low level instructions: they are safe if they are generated
-        by protocol instructions (dropTips(), and preserve and usePreserved were previously set).
+        by protocol instructions (drop_tips(), and preserve and usePreserved were previously set).
         :param labware_selection:
         :param TIP_MASK:
         """

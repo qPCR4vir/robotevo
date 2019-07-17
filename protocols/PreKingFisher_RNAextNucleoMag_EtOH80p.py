@@ -278,14 +278,14 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                 with self.tips(reuse=True, drop=False):
                     self.distribute(reagent=B_Beads, to_labware_region=Plate_lysis.selectOnly(all_samples))
 
-                self.dropTips()
+                self.drop_tips()
 
                 with self.tips(reuse=True, drop=False):
                     self.distribute(reagent=BindingBuffer, to_labware_region=Plate_lysis.selectOnly(all_samples))
 
                 Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
 
-        self.dropTips()
+        self.drop_tips()
         self.done()
 
 

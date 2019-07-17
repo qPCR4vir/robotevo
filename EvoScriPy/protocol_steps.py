@@ -157,7 +157,7 @@ class Protocol (Executable):
         if selected_samples is not None:
             assert isinstance(selected_samples, Lab.Labware )      # todo set some current?
 
-        if drop_first:  self.dropTips()
+        if drop_first:  self.drop_tips()
         if reuse        is not None: reuse_old          = self.reuseTips       (reuse       )
         if drop         is not None: drop_old           = self.set_dropTips    (drop        )
         if preserve     is not None: preserve_old       = self.preserveTips    (preserve    )
@@ -170,14 +170,14 @@ class Protocol (Executable):
 
         yield
 
-        if tipsMask     is not None: tipsMask     = self.dropTips        (tipsMask_old)
+        if tipsMask     is not None: tipsMask     = self.drop_tips        (tipsMask_old)
         if tip_type     is not None: tip_type     = self.worktable.set_def_DiTi(tip_type_old)
         if reuse        is not None: reuse        = self.reuseTips       (reuse_old       )
         if drop         is not None: drop         = self.set_dropTips    (drop_old        )
         if preserve     is not None: preserve     = self.preserveTips    (preserve_old    )
         if usePreserved is not None: usePreserved = self.usePreservedTips(usePreserved_old)
         if allow_air    is not None: allow_air    = self.set_allow_air   (allow_air_old   )
-        if drop_last:   self.dropTips()
+        if drop_last:   self.drop_tips()
 
     def distribute(self,
                    volume            : float        = None,
@@ -767,7 +767,7 @@ class Protocol (Executable):
                     if tip >= nt:
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
                         tipsType = robot.curArm().Tips[0].type    # only the 0 ??
-                        self.dropTips(Rbt.tipsMask[ctips])
+                        self.drop_tips(Rbt.tipsMask[ctips])
                         self.getTips(Rbt.tipsMask[ctips], tipsType)
                         tip = 0
                     mV = robot.curArm().Tips[tip].type.maxVol
@@ -797,7 +797,7 @@ class Protocol (Executable):
 
         if self.robot.usePreservedtips:
             with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
-                self.dropTips(TIP_MASK)
+                self.drop_tips(TIP_MASK)
             where = self.robot.where_are_preserved_tips(selected_samples, TIP_MASK, tip_type)
             nTips = self.robot.curArm().nTips
 
@@ -819,7 +819,7 @@ class Protocol (Executable):
             I.exec()
         return mask                                    # todo REVISE !!   I.tipMask
 
-    def dropTips(self, TIP_MASK=None):
+    def drop_tips(self, TIP_MASK=None):
         """
         It will decide to really drop the tips or to put it back in some DiTi rack
         :param TIP_MASK:
