@@ -1052,43 +1052,6 @@ class Protocol (Executable):
     def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
         pass # Itr.moveLiha
 
-    # Atomic API ----------------------------------------------------------------------------------------
-    def aspirate(self,   arm        : Rbt.Arm           = None,
-                         TIP_MASK   : int               = None,
-                         volume     : (float, list)     = None,
-                         from_wells : [Lab.Well]        = None,
-                         liq_class  : str               = None):
-        """
-        Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
-        :param arm:      Uses the default Arm (pipette) if None
-        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
-                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
-        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
-        :param from_wells: list of wells to aspirate from.
-        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
-                          Itr.def_liquidClass if None
-        """
-
-        Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
-
-    def dispense(self,   arm        : Rbt.Arm           = None,
-                         TIP_MASK   : int               = None,
-                         volume     : (float, list)     = None,
-                         from_wells : [Lab.Well]        = None,
-                         liq_class  : str               = None):
-        """
-        Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
-        :param arm:      Uses the default Arm (pipette) if None
-        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
-                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
-        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
-        :param from_wells: list of wells to aspirate from.
-        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
-                          Itr.def_liquidClass if None
-        """
-
-        Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
-
     # Lower lever API & "private" functions -------------------------------------------------------------
     def _multidispense_in_replicas(self, tip     : int,
                                    reagent : Rgt.Reagent,
@@ -1170,6 +1133,47 @@ class Protocol (Executable):
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
             if isinstance(what, Rgt.preMix): self.makePreMix(what, NumSamples)
 
+    # Atomic API ----------------------------------------------------------------------------------------
+    # These are functions aimed to isolate what a physical robot would make at once:
+    # pick some tips, aspirate some liquid, etc. They are simple to understand.
+
+    def aspirate(self,   arm        : Rbt.Arm           = None,
+                         TIP_MASK   : int               = None,
+                         volume     : (float, list)     = None,
+                         from_wells : [Lab.Well]        = None,
+                         liq_class  : str               = None):
+        """
+        Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
+        """
+
+        Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+
+    def dispense(self,   arm        : Rbt.Arm           = None,
+                         TIP_MASK   : int               = None,
+                         volume     : (float, list)     = None,
+                         from_wells : [Lab.Well]        = None,
+                         liq_class  : str               = None):
+        """
+        Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
+        :param arm:      Uses the default Arm (pipette) if None
+        :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                         If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param volume:   One (the same) for each tip or a list specifying the volume for each tip.
+        :param from_wells: list of wells to aspirate from.
+        :param liq_class: the name of the Liquid class, as it appears in your own EVOware database.
+                          Itr.def_liquidClass if None
+        """
+
+        Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
+
+
 
 class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
@@ -1227,7 +1231,6 @@ def group(titel, mode=None):
     Itr.group_end().exec(mode)
 
 
-
 @contextmanager
 def parallel_execution_of(subroutine, repeat=1):
     # todo improve this idea: execute repeatably one after other and only at end wait.
@@ -1254,6 +1257,7 @@ def parallel_execution_of(subroutine, repeat=1):
         yield
         Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Waits_previous).exec()
 
+
 @contextmanager
 def incubation(minutes, timer=1):
     Itr.startTimer(timer).exec()
@@ -1269,22 +1273,8 @@ def opening_example(filename):
     finally:
         f.close() # Ditto for errors here (however unlikely)
 
-# OK  autom create replicates when preMix > Well.maxVol, and vol > tip.maxVol ? NumCompon > nTips ?
-# OK  implement preserveTips and usePreservedTips !!
-# OK  mix well <B-beads
-# OK  Elution buffer to eppis !!!
-# OK  implement accumulated volume
-# OK  implement actualize vol in reagent in pipette
-# OK  comentar las replicas, como 2x b-beads
-# OK  parse WorkTable. Create "temporal" list of grid/rack/labware, and check with created or create
-# OK  parse WorkTable from the real backup! Create real abjects list (carrie and labware types, and LiqClass
-# OK?  implement use only tips filled
+
 # TODO  implement Debugger: prompt and or wait
-# OK  implement with drop(true or false): with reuse and drop(): etc. to restore previous settings   - ok ?!
-# OK  write the total vol to distribute.                      - ok ?!
-# OK  actualize liquid classes                            - ok ?!
-# OK  poner IC MS2 mas cerca (intercambiar con b-beads)   - ok ?!
-# OK  test no drop                                        - ok ?!
-# OK  reimplementar rest... for waste                     - ok ?!
+
 
 
