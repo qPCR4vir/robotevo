@@ -10,7 +10,7 @@ __author__ = 'Ariel'
 from   EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions   as     Itr
 import EvoScriPy.Labware        as     Lab
-import EvoScriPy.Reagent        as     Rtv
+import EvoScriPy.Reagent        as     Rgt
 
 from protocols.Evo200 import Evo200
 
@@ -95,20 +95,20 @@ class Prefill_plate_in_Evo200(Evo200):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        buffer_reag = Rtv.Reagent("Buffer ",
+        buffer_reag = Rgt.Reagent("Buffer ",
                                   BufCuvette,
                                   volpersample = buf_per_sample,
                                   # defLiqClass  = 'MN VL',
                                   # num_of_samples= NumOfSamples
                                   )
 
-        mix1 =Rtv.Reagent("mix1",
+        mix1 =Rgt.Reagent("mix1",
                           master_mixes_,
                           volpersample = dil_mix1_10,
                           # defLiqClass  = 'MN VL'
                           )
 
-        mix2 = Rtv.Reagent("mix2",
+        mix2 = Rgt.Reagent("mix2",
                            master_mixes_,
                            volpersample  = dil_mix2_10,
                            # defLiqClass  = 'MN VL'
@@ -124,26 +124,26 @@ class Prefill_plate_in_Evo200(Evo200):
         Plat2 = wt.getLabware(Lab.MP96well,          "plate2")
 
         # Define place for temporal reactions
-        Rtv.Reagent.use_minimal_number_of_aliquots = False
-        mix1_10 = Rtv.Reagent(f"mix1, diluted 1:10",
+        Rgt.Reagent.use_minimal_number_of_aliquots = False
+        mix1_10 = Rgt.Reagent(f"mix1, diluted 1:10",
                         Plat1,
                         initial_vol = 0.0,
                         replicas    = NumOfSamples,
                         excess      = 0)
 
-        mix2_10 = Rtv.Reagent(f"mix2, diluted 1:10",
+        mix2_10 = Rgt.Reagent(f"mix2, diluted 1:10",
                         Plat1,
                         initial_vol = 0.0,
                         replicas    = NumOfSamples,
                         excess      = 0)
 
-        mix1_100 = Rtv.Reagent(f"mix1, diluted 1:100",
+        mix1_100 = Rgt.Reagent(f"mix1, diluted 1:100",
                               Plat2,
                               initial_vol=0.0,
                               replicas=NumOfSamples,
                               excess=0)
 
-        mix2_100 = Rtv.Reagent(f"mix2, diluted 1:100",
+        mix2_100 = Rgt.Reagent(f"mix2, diluted 1:100",
                               Plat2,
                               initial_vol=0.0,
                               replicas=NumOfSamples,

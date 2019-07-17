@@ -10,7 +10,7 @@ __author__ = 'qPCR4vir'
 from contextlib import contextmanager
 import EvoScriPy.Robot as Rbt
 import EvoScriPy.Instructions as Itr
-import EvoScriPy.Reagent as Rtv
+import EvoScriPy.Reagent as Rgt
 import EvoScriPy.Labware as Lab
 import EvoScriPy.EvoMode as EvoMode
 
@@ -49,7 +49,7 @@ class Executable:
         self.def_versions()
 
         self.version     = next(iter(self.versions))
-        Rtv.Reagent.SetReagentList(self)  # todo Revise !!!
+        Rgt.Reagent.SetReagentList(self)  # todo Revise !!!
 
     def set_defaults(self):
         """Set initial values that will not be rest during secondary initializations.
@@ -129,7 +129,7 @@ class Protocol (Executable):
         self.def_DiTi_check_liquid_level = None
         self.show_runtime_check_list     = False
 
-        Rtv.Reagent.SetReagentList(self)
+        Rgt.Reagent.SetReagentList(self)
 
         Executable.__init__(self, GUI=GUI, run_name=run_name)
 
@@ -181,7 +181,7 @@ class Protocol (Executable):
 
     def distribute(self,
                    volume            : float        = None,
-                   reagent           : Rtv.Reagent  = None,
+                   reagent           : Rgt.Reagent  = None,
                    to_labware_region : Lab.Labware  = None,
                    optimize          : bool         = True,
                    NumSamples        : int          = None,
@@ -223,7 +223,7 @@ class Protocol (Executable):
         :param optimize         : minimize zigzag of multi pipetting
         :param num_tips         : the number of tips to be used in each cycle of pipetting = all
         """
-        assert isinstance(reagent, Rtv.Reagent), 'A Reagent expected in reagent to distribute'
+        assert isinstance(reagent, Rgt.Reagent), 'A Reagent expected in reagent to distribute'
         assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to distribute'
 
         if num_tips is None:
@@ -525,11 +525,11 @@ class Protocol (Executable):
         mx.labware.selectOnly(oriSel)
         return oriSel
 
-    def mix_reagent(self,   reagent   : Rtv.Reagent,
-                            LiqClass  : str  = None,
-                            cycles    : int  = 3,
-                            maxTips   : int  = 1,
-                            v_perc    : int  = 90   ):
+    def mix_reagent(self, reagent   : Rgt.Reagent,
+                    LiqClass  : str  = None,
+                    cycles    : int  = 3,
+                    maxTips   : int  = 1,
+                    v_perc    : int  = 90):
         """
         Select all possible replica of the given reagent and mix using the given % of the current vol in EACH well
         or the max vol for the tip. Use the given "liquid class" or the reagent default.
@@ -540,7 +540,7 @@ class Protocol (Executable):
         :param v_perc:  % of the current vol in EACH well to mix
         :return:
         """
-        assert isinstance(reagent, Rtv.Reagent)
+        assert isinstance(reagent, Rgt.Reagent)
         LiqClass = LiqClass or reagent.defLiqClass
         v_perc /= 100.0
         vol = []
@@ -710,9 +710,9 @@ class Protocol (Executable):
         Itr.wash_tips(wasteVol=4).exec()
         return oriSel
 
-    def makePreMix(self,  preMix        : Rtv.preMix,
-                          NumSamples    : int       = None,
-                          force_replies : bool      = False):
+    def makePreMix(self, preMix        : Rgt.preMix,
+                   NumSamples    : int       = None,
+                   force_replies : bool      = False):
         """
         A preMix is just that: a premix of reagents (aka - components)
         which have been already defined to add some vol per sample.
@@ -724,7 +724,7 @@ class Protocol (Executable):
         :return:
         """
 
-        assert isinstance(preMix, Rtv.preMix)
+        assert isinstance(preMix, Rgt.preMix)
         robot       = self.robot
         mxnTips     = robot.curArm().nTips  # max number of Tips
         ncomp       = len(preMix.components)
@@ -903,7 +903,7 @@ class Protocol (Executable):
         if (self.GUI):
             self.GUI.check_list()
         self.set_EvoMode()
-        Rtv.Reagent.SetReagentList(self)
+        Rgt.Reagent.SetReagentList(self)
         if self.show_runtime_check_list:
             self.show_check_list()
         if self.check_initial_liquid_level:
@@ -918,7 +918,7 @@ class Protocol (Executable):
         :param LiqClass:
 
         """
-        assert isinstance(reagent, Rtv.Reagent)
+        assert isinstance(reagent, Rgt.Reagent)
         LiqClass = LiqClass or reagent.defLiqClass
 
         tips = 1 if isinstance(reagent.labware, Lab.Cuvette) else self.robot.curArm().nTips
@@ -979,13 +979,13 @@ class Protocol (Executable):
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste
 
-        Rtv.Reagent("Liquid waste", wt.def_WashWaste)
+        Rgt.Reagent("Liquid waste", wt.def_WashWaste)
 
     def initialize(self):
         self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)
-        Rtv.Reagent.SetReagentList(self)
+        Rgt.Reagent.SetReagentList(self)
         if self.def_DiTi_check_liquid_level is None:
             self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
 
@@ -995,7 +995,7 @@ class Protocol (Executable):
         else:
             EvoMode.current = self.EvoMode
         self.iRobot.set_as_current()
-        Rtv.Reagent.SetReagentList(self)
+        Rgt.Reagent.SetReagentList(self)
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
@@ -1091,7 +1091,7 @@ class Protocol (Executable):
 
     # Lower lever API & "private" functions -------------------------------------------------------------
     def _multidispense_in_replicas(self, tip     : int,
-                                   reagent : Rtv.Reagent,
+                                   reagent : Rgt.Reagent,
                                    vol     : list) :
         """ Multi-dispense of the content of ONE tip into the reagent replicas
 
@@ -1107,10 +1107,10 @@ class Protocol (Executable):
                          # reagent.defLiqClass,
                          v, w.labware.selectOnly([w.offset])).exec()
 
-    def _aspirate_multi_tips(self, reagent  : Rtv.Reagent,
-                                   tips     : int           = None,
-                                   vol      : (float, list) = None,
-                                   LiqClass : str           = None):
+    def _aspirate_multi_tips(self, reagent  : Rgt.Reagent,
+                             tips     : int           = None,
+                             vol      : (float, list) = None,
+                             LiqClass : str           = None):
         """
         Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
         Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
@@ -1168,7 +1168,7 @@ class Protocol (Executable):
         Itr.dispense(om, liq_class, vol, labware).exec()          # will call robot.curArm().dispensed(vol, om)  ??
 
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
-            if isinstance(what, Rtv.preMix): self.makePreMix(what, NumSamples)
+            if isinstance(what, Rgt.preMix): self.makePreMix(what, NumSamples)
 
 
 class Pipeline (Executable):

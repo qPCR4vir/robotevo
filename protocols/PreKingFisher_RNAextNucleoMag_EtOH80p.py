@@ -10,7 +10,7 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100 import Evo100_FLI
-import EvoScriPy.Reagent as Rtv
+import EvoScriPy.Reagent as Rgt
 
 
 class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
@@ -133,7 +133,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         if self.add_preMix:                             # we need to add ProtK+cRNA+MS2 mix
-            ProtK       = Rtv.Reagent("Proteinase K ",
+            ProtK       = Rgt.Reagent("Proteinase K ",
                                       Reagents,
                                       replicas     = 2,
                                       minimize_aliquots=False,
@@ -141,22 +141,22 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       volpersample = ProtKVolume,
                                       defLiqClass  = Small_vol_disp)
 
-            cRNA        = Rtv.Reagent("Carrier RNA ",
+            cRNA        = Rgt.Reagent("Carrier RNA ",
                                       Reagents,
                                       wells= 14,
                                       volpersample  = cRNAVolume,
                                       defLiqClass   = Small_vol_disp)
 
-            IC_MS2      = Rtv.Reagent("IC MS2 phage culture ",
+            IC_MS2      = Rgt.Reagent("IC MS2 phage culture ",
                                       Reagents,
                                       wells= 13,
                                       volpersample  = IC_MS2Volume,
                                       defLiqClass   = Small_vol_disp)
 
-            # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
+            # IC2         = Rgt.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
             #                           volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
-            pK_cRNA_MS2 = Rtv.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
+            pK_cRNA_MS2 = Rgt.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
                                        Reagents,
                                        pos          = 8,
                                        components   = [cRNA, ProtK, IC_MS2] ,
@@ -164,13 +164,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                        excess       = 20)
 
         if self.add_VL:
-            LysisBuffer = Rtv.Reagent("VL - Lysis Buffer ",
+            LysisBuffer = Rgt.Reagent("VL - Lysis Buffer ",
                                       LysBuf,
                                       volpersample  = LysisBufferVolume,
                                       defLiqClass   = 'MN VL')
 
         if self.do_extraction:
-            B_Beads         = Rtv.Reagent("B - Beads ",
+            B_Beads         = Rgt.Reagent("B - Beads ",
                                           Reagents,
                                           wells= [1, 2],
                                           initial_vol  = 1200,
@@ -178,12 +178,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                           defLiqClass  = Beads_LC_2,
                                           maxFull      = 70)
 
-            BindingBuffer   = Rtv.Reagent("VEB - Binding Buffer ",
+            BindingBuffer   = Rgt.Reagent("VEB - Binding Buffer ",
                                           BindBuf,
                                           volpersample  = BindingBufferVolume,
                                           defLiqClass   = B_liquidClass)
 
-        EtOH80p         = Rtv.Reagent("Ethanol 80% ",
+        EtOH80p         = Rgt.Reagent("Ethanol 80% ",
                                       wt.getLabware(Lab.Trough_100ml, "7-EtOH80p"),
                                       volpersample      =EtOH80pVolume,
                                       defLiqClass       =B_liquidClass)
@@ -206,20 +206,20 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         for s in all_samples:
 
-            Rtv.Reagent("lysis_{:02d}".format(s + 1),
+            Rgt.Reagent("lysis_{:02d}".format(s + 1),
                         Plate_lysis,
                         initial_vol = InitLysisVol,
                         wells=par[s] + 1,
                         excess      = 0)
 
-            Rtv.Reagent("EtOH80p_{:02d}".format(s + 1),
+            Rgt.Reagent("EtOH80p_{:02d}".format(s + 1),
                         Plate_EtOH,
                         initial_vol = 0.0,
                         wells=par[s] + 1,  # todo revise order !!!
                         excess      = 0)
 
             if self.add_samples:
-                Rtv.Reagent("probe_{:02d}".format(s + 1),
+                Rgt.Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume,
                             wells=s + 1,

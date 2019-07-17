@@ -9,7 +9,7 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 # import EvoScriPy.Labware as Lab
 from protocols.Evo100 import Evo100_FLI
-import EvoScriPy.Reagent as Rtv
+import EvoScriPy.Reagent as Rgt
 from EvoScriPy.Instructions_Te_MagS import *
 
 
@@ -151,11 +151,11 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
                                                         # Define the Reagents in each labware (Cuvette, eppys, etc.)
 
-        # IC2         = Rtv.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
+        # IC2         = Rgt.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
         #                            volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
         if self.add_preMix:
-            ProtK = Rtv.Reagent("Proteinase K ",
+            ProtK = Rgt.Reagent("Proteinase K ",
                                 Reagents,
                                 replicas            = 2,
                                 minimize_aliquots   = False,
@@ -163,19 +163,19 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                 volpersample        = ProtKVolume,
                                 defLiqClass         = Small_vol_disp)
 
-            cRNA   = Rtv.Reagent("Carrier RNA ",
+            cRNA   = Rgt.Reagent("Carrier RNA ",
                                  Reagents,
                                  wells= 14,
                                  volpersample       = cRNAVolume,
                                  defLiqClass        = Small_vol_disp)
 
-            IC_MS2 = Rtv.Reagent("IC MS2 phage culture ",
+            IC_MS2 = Rgt.Reagent("IC MS2 phage culture ",
                                  Reagents,
                                  wells= 13,
                                  volpersample       = IC_MS2Volume,
                                  defLiqClass        = Small_vol_disp)
 
-            pK_cRNA_MS2 = Rtv.preMix("ProtK+cRNA+IC-MS2 mix ",
+            pK_cRNA_MS2 = Rgt.preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents,
                                      pos            = 8,
                                      components     = [cRNA, ProtK, IC_MS2],
@@ -183,13 +183,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                      excess         = 20)
 
         if self.add_VL:
-            LysisBuffer = Rtv.Reagent("VL - Lysis Buffer ",
+            LysisBuffer = Rgt.Reagent("VL - Lysis Buffer ",
                                       LysBuf,
                                       volpersample  =LysisBufferVolume,
                                       defLiqClass   ='MN VL')
 
         if self.do_extraction:
-            B_Beads         = Rtv.Reagent("B - Beads ",
+            B_Beads         = Rgt.Reagent("B - Beads ",
                                           Reagents,
                                           wells= [1, 2],
                                           initial_vol  = 1200.0,
@@ -197,26 +197,26 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           defLiqClass  = Beads_LC_2,
                                           maxFull      = 70)
 
-            BindingBuffer   = Rtv.Reagent("VEB - Binding Buffer ",
+            BindingBuffer   = Rgt.Reagent("VEB - Binding Buffer ",
                                           BindBuf,
                                           volpersample  = BindingBufferVolume,
                                           defLiqClass   = B_liquidClass)
 
-            VEW1            = Rtv.Reagent("VEW1 - Wash Buffer ",
+            VEW1            = Rgt.Reagent("VEW1 - Wash Buffer ",
                                           wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
                                           volpersample  = VEW1Volume,
                                           defLiqClass   = B_liquidClass)
 
-            VEW2            = Rtv.Reagent("VEW2 - WashBuffer ",
+            VEW2            = Rgt.Reagent("VEW2 - WashBuffer ",
                                           wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
                                           volpersample  =VEW2Volume,
                                           defLiqClass   =B_liquidClass)
 
-            EtOH80p         = Rtv.Reagent("Ethanol 80% ",
+            EtOH80p         = Rgt.Reagent("Ethanol 80% ",
                                           Lab.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
                                           volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
-            ElutionBuffer   = Rtv.Reagent("Elution Buffer ",
+            ElutionBuffer   = Rgt.Reagent("Elution Buffer ",
                                           ElutBuf,
                                           volpersample  =ElutionBufferVolume,
                                           defLiqClass   =B_liquidClass)            # defLiqClass="Eluat"   ??
@@ -227,7 +227,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                         # Define the Reagents not shown in the check_list GUI
                                                         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rtv.Reagent("lysis_{:02d}".format(s + 1),
+            Rgt.Reagent("lysis_{:02d}".format(s + 1),
                         Lysis,
                         initial_vol     = InitLysisVol,
                         wells=par[s] + 1,
@@ -235,14 +235,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                         excess          = 0)
 
             if self.do_extraction:
-                Rtv.Reagent("RNA_{:02d}".format(s + 1),
+                Rgt.Reagent("RNA_{:02d}".format(s + 1),
                             Eluat,
                             initial_vol = 0.0,
                             wells=s + 1,
                             defLiqClass = def_liquidClass,
                             excess      = 0)
 
-                Rtv.Reagent("probe_{:02d}".format(s + 1),
+                Rgt.Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume if self.add_samples else InitLysisVol,
                             wells=s + 1,

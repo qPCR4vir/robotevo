@@ -10,7 +10,7 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100 import Evo100_FLI
-import EvoScriPy.Reagent as Rtv
+import EvoScriPy.Reagent as Rgt
 
 
 class Prefill_plates_LysisBuffer(Evo100_FLI):
@@ -75,7 +75,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        LysisBufferReact = Rtv.Reagent("VL - Lysis Buffer ",
+        LysisBufferReact = Rgt.Reagent("VL - Lysis Buffer ",
                                        LysBufCuvette,
                                        volpersample = LysisBufferVolume,
                                        defLiqClass  = 'MN VL',
@@ -95,7 +95,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         # Define place for temporal reactions
         for i, LP in enumerate(LysPlat):
             for s in all_samples:
-                Rtv.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
+                Rgt.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
                             LP,
                             initial_vol =0.0,
                             wells=s + 1,

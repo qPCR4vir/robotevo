@@ -7,7 +7,7 @@
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Labware as Lab
-import EvoScriPy.Reagent as Rtv      # ??
+import EvoScriPy.Reagent as Rgt      # ??
 #from protocols.Evo75_FLI import Evo75_FLI
 from protocols.Evo100 import Evo100_FLI
 
@@ -117,9 +117,9 @@ class MixPCR(Evo75_FLI):
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
 
-        VEB             = Rtv.Reagent("VEB - Binding Buffer ",
+        VEB             = Rgt.Reagent("VEB - Binding Buffer ",
                                       BindBuf, volpersample=BindingBufferVolume, defLiqClass=B_liquidClass)
-        EtOH80p         = Rtv.Reagent("Ethanol 80% ",
+        EtOH80p         = Rgt.Reagent("Ethanol 80% ",
                                       wt.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
                                       volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
@@ -139,12 +139,12 @@ class MixPCR(Evo75_FLI):
         # Define samples and the place for temporal reactions
         par = Plate_lysis.parallelOrder(self.nTips, all_samples)
         for s in all_samples:
-            Rtv.Reagent("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
+            Rgt.Reagent("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
                         wells=s + 1, defLiqClass=SampleLiqClass, excess=0)
-            Rtv.Reagent("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, wells=par[s] + 1,
+            Rgt.Reagent("lysis_{:02d}".format(s + 1), Plate_lysis, initial_vol=0.0, wells=par[s] + 1,
                         excess=0)  # todo revise order !!!
 
-            Rtv.Reagent("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, wells=par[s] + 1,
+            Rgt.Reagent("EtOH80p_{:02d}".format(s + 1), Plate_EtOH, initial_vol=0.0, wells=par[s] + 1,
                         excess=0)  # todo revise order !!!
 
 
