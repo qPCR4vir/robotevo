@@ -337,12 +337,17 @@ class dropDITI(Pipette):
         if self.labware is None:
             self.labware = self.robot.worktable.def_DiTiWaste
 #        self.conditional = conditional
+        if AirgapSpeed is None:
+            AirgapSpeed = def_AirgapSpeed
         self.AirgapSpeed = AirgapSpeed
+
         self.AirgapVolume = AirgapVolume
 
     def validateArg(self):
         self.wellSelection = 1
         Pipette.validateArg(self)
+        if self.AirgapSpeed is None:
+            self.AirgapSpeed = def_AirgapSpeed
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
 

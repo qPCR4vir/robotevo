@@ -1054,8 +1054,8 @@ class Protocol (Executable):
 
     # Lower lever API & "private" functions -------------------------------------------------------------
     def _multidispense_in_replicas(self, tip     : int,
-                                   reagent : Rgt.Reagent,
-                                   vol     : list) :
+                                         reagent : Rgt.Reagent,
+                                         vol     : list) :
         """ Multi-dispense of the content of ONE tip into the reagent replicas
 
         :param tip:
@@ -1071,9 +1071,9 @@ class Protocol (Executable):
                          v, w.labware.selectOnly([w.offset])).exec()
 
     def _aspirate_multi_tips(self, reagent  : Rgt.Reagent,
-                             tips     : int           = None,
-                             vol      : (float, list) = None,
-                             LiqClass : str           = None):
+                                   tips     : int           = None,
+                                   vol      : (float, list) = None,
+                                   LiqClass : str           = None):
         """
         Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
         Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
@@ -1137,11 +1137,11 @@ class Protocol (Executable):
     # These are functions aimed to isolate what a physical robot would make at once:
     # pick some tips, aspirate some liquid, etc. They are simple to understand.
 
-    def pick_up_tip(self, TIP_MASK  : int    = None,
-                          tip_type  :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)= None,
-                          arm             = None,
-                          AirgapVolume    = 0,
-                          AirgapSpeed     = None):
+    def pick_up_tip(self, TIP_MASK    : int        = None,
+                          tip_type    :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)= None,
+                          arm         : Rbt.Arm    = None,
+                          AirgapVolume: float      = 0,
+                          AirgapSpeed : int        = None):
         """
         Atomic operation. Get new tips. It take a labware type or name instead of the labware itself (DiTi rack)
         because the real robot take track of the next position to pick, including the rack and the site (the labware).
@@ -1153,8 +1153,8 @@ class Protocol (Executable):
                          If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
         :param tip_type: if None the worktable default DiTi will be used.
         :param arm:      Uses the default Arm (pipette) if None
-        :param AirgapSpeed:
-        :param AirgapVolume:
+        :param AirgapSpeed:  int 1-1000. Speed for the airgap in μl/s
+        :param AirgapVolume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
         :return:
         """
 
@@ -1162,6 +1162,22 @@ class Protocol (Executable):
         DITI_series = self.robot.worktable.get_DITI_series(tip_type)
 
         Itr.getDITI2(TIP_MASK, DITI_series, arm=arm, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed).exec()
+
+    def drop_tip(self,  TIP_MASK    : int         = None,
+                        DITI_waste  : Lab.Labware = None,
+                        arm         : Rbt.Arm     = None,
+                        AirgapVolume: float       = 0,
+                        AirgapSpeed : int         = None):
+        """
+        :param TIP_MASK:     Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
+                             If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
+        :param DITI_waste:   Specify the worktable position for the DITI waste you want to use.
+                             You must first put a DITI waste in the Worktable at the required position.
+        :param arm:          Uses the default Arm (pipette) if None
+        :param AirgapSpeed:  int 1-1000. Speed for the airgap in μl/s
+        :param AirgapVolume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
+        """
+        Itr.dropDITI(TIP_MASK, labware=DITI_waste, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed, arm=arm).exec()
 
     def aspirate(self,   arm        : Rbt.Arm           = None,
                          TIP_MASK   : int               = None,
@@ -1199,6 +1215,11 @@ class Protocol (Executable):
 
         Itr.dispense(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
 
+    def atomic_mix(self):       # todo
+        pass
+
+    def delay(self):            # todo
+        pass
 
 
 class Pipeline (Executable):
