@@ -136,6 +136,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             ProtK       = Rtv.Reagent("Proteinase K ",
                                       Reagents,
                                       replicas     = 2,
+                                      minimize_aliquots=False,
                                       wells= [15, 16],
                                       volpersample = ProtKVolume,
                                       defLiqClass  = Small_vol_disp)

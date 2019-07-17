@@ -158,7 +158,8 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             ProtK = Rtv.Reagent("Proteinase K ",
                                 Reagents,
                                 replicas            = 2,
-                                wells=[15, 16],  # only 16 ?  pos=16
+                                minimize_aliquots   = False,
+                                wells               = [15, 16],  # only 16 ?  pos=16
                                 volpersample        = ProtKVolume,
                                 defLiqClass         = Small_vol_disp)
 

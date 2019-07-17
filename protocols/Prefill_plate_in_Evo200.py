@@ -124,6 +124,7 @@ class Prefill_plate_in_Evo200(Evo200):
         Plat2 = wt.getLabware(Lab.MP96well,          "plate2")
 
         # Define place for temporal reactions
+        Rtv.Reagent.use_minimal_number_of_aliquots = False
         mix1_10 = Rtv.Reagent(f"mix1, diluted 1:10",
                         Plat1,
                         initial_vol = 0.0,

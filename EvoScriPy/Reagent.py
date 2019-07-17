@@ -26,7 +26,8 @@ class Reagent:
     the programming of non trivial protocols.
     """
 
-    current_protocol = None           # to register a list of reagents todo  ??
+    current_protocol = None                                               # to (auto)register a list of reagents
+    use_minimal_number_of_aliquots = True
 
     def __init__(self,
                  name           : str,
@@ -39,7 +40,8 @@ class Reagent:
                  excess         : float          = None,
                  initial_vol    : float          = 0.0,
                  maxFull        : float          = None,
-                 num_of_samples : int            = None):
+                 num_of_samples : int            = None,
+                 minimize_aliquots : bool        = None):
         """
         Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample.
         This is a named set of aliquots of an homogeneous solution.
@@ -63,6 +65,8 @@ class Reagent:
         :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
         :param maxFull;         maximo allowed volume in % of the wells capacity
         :param num_of_samples;  if None, the number of samples of the current protocol will be assumed
+        :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
+                                   This default value can be temporally change by setting that global.
         """
         assert isinstance(labware, Lab.Labware)             # ??
                                                 # add self to the list of reagents of the worktable were the labware is.
@@ -83,8 +87,11 @@ class Reagent:
         self.defLiqClass = defLiqClass or def_liquidClass
         self.name       = name
         self.volpersample = volpersample
-        self.components = []                                                          # todo reserved for future use
-
+        self.components = []                                                            # todo reserved for future use
+        if minimize_aliquots is not None:
+            self.minimize_aliquots = minimize_aliquots
+        else:
+            self.minimize_aliquots = Reagent.use_minimal_number_of_aliquots
         if single_use:
             assert not volpersample, str(name) + \
                                      ": this is a single use-reagent. Please, don't set any volume per sample."
@@ -99,7 +106,7 @@ class Reagent:
 
         self.minNumRep = self.min_num_of_replica(NumSamples=num_of_samples)
 
-        # minNumRep, wells, replicas, initial_vol
+        # coordinate: minNumRep, wells, replicas, initial_vol. todo fine-tune warnings.
         if replicas is None:
             replicas = self.minNumRep
         assert replicas >= self.minNumRep, ("too few wells (" + str(len(wells)) + ") given for the minimum "
@@ -129,8 +136,8 @@ class Reagent:
                 print("WARNING !! You may be putting more inital volumens values (" + str(replicas) + ") of " + name
                       + " that the minimum number of replicas you need("  + str(self.minNumRep) + " )")
 
-        self.Replicas   = labware.put(self, wells, replicas)                            # list of the wells used
-        self.pos        = self.Replicas[0].offset                                     # ??
+        self.Replicas   = labware.put(self, wells, self.minNumRep if self.minimize_aliquots else replicas)
+        self.pos        = self.Replicas[0].offset                                   # ??
 
         self.init_vol(NumSamples=num_of_samples)                                    # put the minimal initial volumen ?
 
