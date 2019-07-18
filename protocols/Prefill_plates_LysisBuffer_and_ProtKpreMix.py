@@ -80,14 +80,14 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        preMixProtKCuvette = wt.getLabware(Lab.Trough_100ml, "8-preMix ProtK"   )
-        LysBufCuvette      = wt.getLabware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+        preMixProtKCuvette = wt.get_labware(Lab.Trough_100ml, "8-preMix ProtK")
+        LysBufCuvette      = wt.get_labware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
 
-        DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
-        DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
-        DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
+        DiTi1000_1  = wt.get_labware(Lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2  = wt.get_labware(Lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3  = wt.get_labware(Lab.DiTi_1000ul, "1000-3")
 
-        Reagents_TubeRack   = wt.getLabware(Lab.GreinRack16_2mL, "Reactives" )
+        Reagents_TubeRack   = wt.get_labware(Lab.GreinRack16_2mL, "Reactives")
 
 
         self.go_first_pos()                                 #  Set the initial position of the tips
@@ -165,7 +165,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        LysPlat = [wt.getLabware(Lab.MP96deepwell, "Plate lysis-"+str(i+1)) for i in range(self.num_plates)]
+        LysPlat = [wt.get_labware(Lab.MP96deepwell, "Plate lysis-" + str(i + 1)) for i in range(self.num_plates)]
 
         par = LysPlat[0].parallelOrder(self.nTips, all_samples)
 

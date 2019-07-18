@@ -252,18 +252,42 @@ class WorkTable:
         assert isinstance(series, Labware.Type.Series)
         series.current = labware
 
-    def getLabware(self, labw_type , label):                    # todo make labw_type optional
-        assert isinstance(labw_type, Labware.Type )
+    def get_labware(self, labw_type=None, label:(str, int)=None):
+        """
+        Return a `Labware` already created manually or after the worktable template was scanned.
+        The labware type is optional (if you provide a label), but it makes the search more robust.
+        It is mandatory if you provide no label or an index (no label will return the labware with index `0` in the
+        series of labware of the desired type). The type may be a label or a predefined `Labware.Type`
+        :type labw_type: (str, Labware.Type)
+        :param label:
+        :return Labware
+        """
+        labware = None
+        if labw_type is None:
+            assert isinstance(label, str), "Please get at least the labware type or label"
+            for series in self.labware_series:
+                if label in series.labels:
+                    assert labware is None, ("ERROR: two labware have the label '"  + label
+                                            + "' : please indicate the labware type to disambiguate")
+                    labware = series.labels[label]
+            assert labware is not None, ("ERROR: no labware with the label '" + label
+                                         + "' was found in worktable: " + self.templateFileName)
 
-        if labw_type.name not in self.labware_series:
-            raise Exception("Labware '" + labw_type.name + "' was not found in worktable: " + self.templateFileName)
+        if isinstance(labw_type, Labware.Type ):
+            labw_type = labw_type.name
+        assert isinstance(labw_type,str)
+        series = self.labware_series[labw_type]
 
-        series = self.labware_series[labw_type.name]
-        if label in series.labels:
-            return series.labels[label]
+        if isinstance(label, str):
+            if label in series.labels:
+                return series.labels[label]
+            raise Exception("ERROR: no labware '" + labw_type + "' with the label '" + label
+                            + "' was found in worktable: " + self.templateFileName)
 
-        raise Exception("Labware '" + labw_type.name + "' with label '" + label
-                        + "' was not found in worktable: " + self.templateFileName)
+        if label is None:
+            label = 0
+        assert isinstance(label, int), "ERROR: wrong label type"
+        return series.labwares[label]
 
     def set_first_pos(self, labw_type_name=None, posstr=None):
         """
@@ -315,8 +339,11 @@ class WorkTable:
         self.def_DiTi = tips
         return old
 
-    def get_DITI_series(self, rack = None):
+    def get_DITI_series(self, rack =None):
+        """
 
+        :type rack:(str, DITIrackType, DITIrack, DITIrackTypeSeries)
+        """
         if isinstance(rack, DITIrackTypeSeries):  # get the series directly
             return rack
 
@@ -1338,4 +1365,4 @@ Box10x10     = Labware.Type("Box 10x10"              ,10, 10, maxVol= 2000)
 
 def getLabware(labw_type, label, worktable=None):
     worktable = worktable or WorkTable.curWorkTable
-    return worktable.getLabware(labw_type, label)
+    return worktable.get_labware(labw_type, label)

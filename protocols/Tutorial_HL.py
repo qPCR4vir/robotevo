@@ -61,8 +61,8 @@ class Tutorial_HL(Evo200):
                        .format(NumOfSamples     )).exec()
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
-        BufCuvette   = wt.getLabware(Lab.Trough_100ml, "BufferCub")
-        master_mixes_= wt.getLabware(Lab.Eppendorfrack,    "mixes")
+        BufCuvette   = wt.get_labware(Lab.Trough_100ml, "BufferCub")
+        master_mixes_= wt.get_labware(Lab.Eppendorfrack, "mixes")
 
 
         self.go_first_pos()                                                     #  Set the initial position of the tips
@@ -119,8 +119,8 @@ class Tutorial_HL(Evo200):
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        Plat1 = wt.getLabware(Lab.MP96MachereyNagel, "plate1")
-        Plat2 = wt.getLabware(Lab.MP96well,          "plate2")
+        Plat1 = wt.get_labware(Lab.MP96MachereyNagel, "plate1")
+        Plat2 = wt.get_labware(Lab.MP96well, "plate2")
 
         # Define place for temporal reactions
         Rgt.Reagent.use_minimal_number_of_aliquots = False

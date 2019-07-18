@@ -38,10 +38,10 @@ class Evo200 (Protocol):
 
         wt.def_DiTi     = Lab.DiTi_1000ul  # DiTi_0200ul  # this is a type, the others are labwares
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS,   "Cleaner1"      )
-        WashWaste       = wt.getLabware(Lab.WasteWS,      "Waste"         )
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS,   "Cleaner2"      )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste,   "DiTi Waste"    )
+        WashCleanerS    = wt.get_labware(Lab.CleanerSWS, "Cleaner1")
+        WashWaste       = wt.get_labware(Lab.WasteWS, "Waste")
+        WashCleanerL    = wt.get_labware(Lab.CleanerLWS, "Cleaner2")
+        DiTiWaste       = wt.get_labware(Lab.DiTi_Waste, "DiTi Waste")
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
