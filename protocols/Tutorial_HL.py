@@ -17,11 +17,28 @@ from protocols.Evo200 import Evo200
 
 class Tutorial_HL(Evo200):
     """
-    Prefill one plate with Buffer.
+    Created n wells with 100 uL of mix1 diluted 1:10 and another n diluted 1:100. A diluent is provided.
+    A reagent "mix1" is diluted (distributed) in n wells 1:10. This is used to create n more wells diluted 1:10
+    (mix1 1:100). The final volume of every dilution is vf=100 uL.
+
+    There are many ways to achieve that. Here is one:
+    - Calculate how much of one Dil_10, we need to `transfer` to prepare one Dil_100: v_10 = vf / 10 and how much
+    to distribute from the diluent, vd_10.
+    - Calculate how much to distribute from mix1 to each Dil_10. v= (vf+v_10)/10 and from diluent vd.
+    - Create a reagent mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
+    - Create a reagent diluent in an cubette 100 mL for vd_10+vd uL per "sample".
+    - Generate check list
+    - Create n Dil_10_i reagents ( 1 from 0 to n-1 )
+    - Create n Dil_100_i reagents ( 1 from 0 to n-1 )
+    - Distribute diluent
+    - Distribute mix1
+    - Mix and transfer, Dil_10 to Dil_100
+
+
     """
 
-    name = "Tutorial_HL Prefill one plate with Buffer."
-    min_s, max_s = 1, 96/6
+    name = "Tutorial_HL. Dilutions."
+    min_s, max_s = 1, 96/2   # all dilutions in one 96 well plate
 
     # for now just ignore the variants
     def def_versions(self):
@@ -32,7 +49,7 @@ class Tutorial_HL(Evo200):
 
     def __init__(self,
                  GUI                         = None,
-                 NumOfSamples: int           = None,
+                 NumOfSamples: int           = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -40,10 +57,10 @@ class Tutorial_HL(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
+                        NumOfSamples                = NumOfSamples or Tutorial_HL.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/demo-two.mixes.Evo200example.ewt',
-                        output_filename             = output_filename or '../current/two.mixes',
+                        output_filename             = output_filename or '../current/dilutions_HL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -53,27 +70,30 @@ class Tutorial_HL(Evo200):
 
         self.show_runtime_check_list    = True
 
-        NumOfSamples = self.NumOfSamples
-        assert 1 <= NumOfSamples <= 96/6 , "In this demo we want to set 6x NumOfSamples in a 96 well plate."
+        n = self.NumOfSamples
+        assert 1 <= n <= Tutorial_HL.max_s , "In this demo we want to set 2x NumOfSamples in a 96 well plate."
         wt           = self.worktable
 
-        Itr.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'\
-                       .format(NumOfSamples     )).exec()
+        Itr.comment('Dilute a mix 1:10 and 1:100 in {:d} wells each dilution.'.format(n)).exec()
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
-        BufCuvette   = wt.getLabware(Lab.Trough_100ml, "BufferCub")
-        master_mixes_= wt.getLabware(Lab.Eppendorfrack,    "mixes")
+        diluent_cuvette   = wt.getLabware(Lab.Trough_100ml, "BufferCub")
+        mixes             = wt.getLabware(Lab.Eppendorfrack,    "mixes")
 
 
-        self.go_first_pos()                                                     #  Set the initial position of the tips
+        self.go_first_pos()                                             #  Set the initial position of the tips ??
 
                                                                                   # Set volumen / sample
-        all_samples = range(NumOfSamples)
-        maxTips     = min  (self.nTips, NumOfSamples)
+        dilutions = range(n)
+        maxTips     = min  (self.nTips, n)
         maxMask     = Rbt.tipsMask[maxTips]
 
         buf_per_sample =0
-        well_v = 100
+        vf = 100                  # The final volume of every dilution, uL
+
+        dil_mix1_100 = well_v / 10              # to be transfered from mix1_10 to mix1_100
+        buf_mix1_100 = well_v - dil_mix1_100
+        buf_per_sample += buf_mix1_100
 
         dil_mix1_10 = well_v /10                # to be distribute from original mix1 to mix1_10
         buf_mix1_10 = well_v - dil_mix1_10
@@ -83,13 +103,6 @@ class Tutorial_HL(Evo200):
         buf_mix2_10 = well_v - dil_mix2_10
         buf_per_sample += buf_mix2_10
 
-        dil_mix1_100 = well_v / 10              # to be transfered from mix1_10 to mix1_100
-        buf_mix1_100 = well_v - dil_mix1_100
-        buf_per_sample += buf_mix1_100
-
-        dil_mix2_100 = well_v / 10              # to be transfered from mix2_10 to mix2_100
-        buf_mix2_100 = well_v - dil_mix2_100
-        buf_per_sample += buf_mix2_100
 
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
