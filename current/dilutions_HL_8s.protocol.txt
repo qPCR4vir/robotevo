@@ -4,3 +4,6 @@ Fill dilutions
 
     Spread: 10.0 킠 of mix1
         Spread: 10.0 킠 of mix1 (83.2 킠 total) from [grid:12 site:1 ['well 1 in labware mixes:  with 83.0 uL of reagent mix1'] into plate1[grid:33 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8]:
+
+    Spread: 90.0 킠 of Diluent
+        Spread: 90.0 킠 of Diluent (748.8 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 748.0 uL of reagent Diluent'] into plate1[grid:33 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8]:
