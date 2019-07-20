@@ -130,8 +130,8 @@ class Tutorial_HL(Evo200):
 
 
 if __name__ == "__main__":
-    p = Tutorial_HL(NumOfSamples    = 8,
-                                run_name        = "_8s")
+    p = Tutorial_HL(NumOfSamples    = 42,
+                                run_name        = "_42s")
 
     p.use_version('No version')
     # p.go_first_pos('A01')
