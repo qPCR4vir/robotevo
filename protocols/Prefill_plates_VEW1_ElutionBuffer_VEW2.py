@@ -60,15 +60,15 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        ElutBuf     = wt.getLabware(Lab.Trough_100ml,   "1-VEL-ElutionBuffer"   )
+        ElutBuf     = wt.get_labware(Lab.Trough_100ml, "1-VEL-ElutionBuffer")
 
-        DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
-        DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
-        DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
+        DiTi1000_1  = wt.get_labware(Lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2  = wt.get_labware(Lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3  = wt.get_labware(Lab.DiTi_1000ul, "1000-3")
 
-        Plate_VEW1  = wt.getLabware(Lab.MP96deepwell,   "Plate VEW1"    )  # Plate 12 x 8 ?
-        Plate_VEW2  = wt.getLabware(Lab.MP96deepwell,   "Plate VEW2"    )  # Plate 12 x 8 ?
-        Plate_Eluat = wt.getLabware(Lab.MP96well,       "Plate ElutB"   )  # Plate 12 x 8 ? MP96well !!
+        Plate_VEW1  = wt.get_labware(Lab.MP96deepwell, "Plate VEW1")  # Plate 12 x 8 ?
+        Plate_VEW2  = wt.get_labware(Lab.MP96deepwell, "Plate VEW2")  # Plate 12 x 8 ?
+        Plate_Eluat = wt.get_labware(Lab.MP96well, "Plate ElutB")  # Plate 12 x 8 ? MP96well !!
 
 
                                                             # Set the initial position of the tips
@@ -94,12 +94,12 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         VEW1            = Rgt.Reagent("VEW1 - Wash Buffer ",
-                                      wt.getLabware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
+                                      wt.get_labware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
                                       volpersample  = VEW1Volume,
                                       defLiqClass   = B_liquidClass)
 
         VEW2            = Rgt.Reagent("VEW2 - WashBuffer ",
-                                      wt.getLabware(Lab.Trough_100ml,  "5-VEW2-WashBuffer" ),
+                                      wt.get_labware(Lab.Trough_100ml, "5-VEW2-WashBuffer"),
                                       volpersample  =VEW2Volume,
                                       defLiqClass   =B_liquidClass)
 

@@ -47,19 +47,21 @@ class Executable:
         self.reagents    = []
         self.versions    = {"none": not_implemented}
         self.def_versions()
-
         self.version     = next(iter(self.versions))
-        Rgt.Reagent.SetReagentList(self)  # todo Revise !!!
+
+        Rgt.Reagent.SetReagentList(self)                                                      # todo Revise !!!
 
     def set_defaults(self):
-        """Set initial values that will not be rest during secondary initializations.
+        """
+        Set initial values that will not be rest during secondary initializations.
         The "primary initialization" maybe a light one, like defining the list of versions available.
         Here, for example, initialize the list of reagents.
         """
         print('set def in Executable')
 
     def initialize(self):
-        """It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
+        """
+        It is called "just in case" to ensure we don't go uninitialized in lazy initializing scenarios.
         """
         if not self.initialized:
             if self.GUI:
@@ -70,7 +72,9 @@ class Executable:
     def Run(self):
         """
         Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
-        self.iRobot.worktable from where we can obtain labwares with getLabware()
+        self.iRobot.worktable from where we can obtain labwares with get_labware().
+        Overwrite this function and dont call this basic function. This basic function is provided only as an example
+        of "boiled-plate" code
         :return:
         """
 
@@ -100,6 +104,15 @@ class Protocol (Executable):
     generic type robot like Evo200 or from an even more especially adapted like Evo100_FLI.
     Each newly derived protocol have to optionally override some of the following functions,
     especially .Run().
+
+    - High level API:
+    - App-Structure API:
+    - Context-options modifiers:
+    - Lower lever API & "private" functions:
+
+    - Atomic API:
+    These are functions aimed to isolate what a physical robot would make at once:
+    pick some tips, aspirate some liquid, etc. They are simple to understand.
 
     """
     name = ""
@@ -186,7 +199,7 @@ class Protocol (Executable):
                    optimize          : bool         = True,
                    NumSamples        : int          = None,
                    using_liquid_class: (str, tuple) = None,
-                   TIP_MASK          : int          = None,
+                   TIP_MASK          : int          = None,        # todo ?? introduce use of this.
                    num_tips          : int          = None):
         """
         To distribute a reagent into some wells.
@@ -244,7 +257,6 @@ class Protocol (Executable):
 
         Asp_liquidClass, Dst_liquidClass = (reagent.defLiqClass, reagent.defLiqClass) if using_liquid_class is None else \
                                            (using_liquid_class[0] or reagent.defLiqClass, using_liquid_class[1] or reagent.defLiqClass)
-
 
         lf = reagent.labware
         lt = to_labware_region
@@ -876,7 +888,7 @@ class Protocol (Executable):
     def Run(self):
         '''
         Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
-        self.iRobot.worktable from where we can obtain labwares with getLabware()
+        self.iRobot.worktable from where we can obtain labwares with get_labware()
         :return:
         '''
         self.set_EvoMode()
@@ -970,10 +982,10 @@ class Protocol (Executable):
 
         wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerSWS, "")
-        WashWaste       = wt.getLabware(Lab.WasteWS,    "")
-        WashCleanerL    = wt.getLabware(Lab.CleanerLWS, "")
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste, "")
+        WashCleanerS    = wt.get_labware(Lab.CleanerSWS, "")
+        WashWaste       = wt.get_labware(Lab.WasteWS, "")
+        WashCleanerL    = wt.get_labware(Lab.CleanerLWS, "")
+        DiTiWaste       = wt.get_labware(Lab.DiTi_Waste, "")
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
@@ -1134,9 +1146,6 @@ class Protocol (Executable):
             if isinstance(what, Rgt.preMix): self.makePreMix(what, NumSamples)
 
     # Atomic API ----------------------------------------------------------------------------------------
-    # These are functions aimed to isolate what a physical robot would make at once:
-    # pick some tips, aspirate some liquid, etc. They are simple to understand.
-
     def pick_up_tip(self, TIP_MASK    : int        = None,
                           tip_type    :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)= None,
                           arm         : Rbt.Arm    = None,

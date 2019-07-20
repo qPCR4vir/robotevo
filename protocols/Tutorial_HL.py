@@ -72,8 +72,8 @@ class Tutorial_HL(Evo200):
         Itr.comment('Dilute1:10  a mix in {:d} wells.'.format(n)).exec()
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
-        diluent_cuvette   = wt.getLabware(Lab.Trough_100ml, "BufferCub")
-        mixes             = wt.getLabware(Lab.Eppendorfrack,    "mixes")
+        diluent_cuvette   = wt.get_labware(Lab.Trough_100ml, "BufferCub")
+        mixes             = wt.get_labware(Lab.Eppendorfrack, "mixes")
 
 
         self.go_first_pos()                                             #  Set the initial position of the tips ??
@@ -104,7 +104,7 @@ class Tutorial_HL(Evo200):
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        plate = wt.getLabware(Lab.MP96MachereyNagel, "plate1")
+        plate = wt.get_labware(Lab.MP96MachereyNagel, "plate1")
 
         # Define place for temporal reactions
         dilution = Rgt.Reagent("mix1, diluted 1:10",

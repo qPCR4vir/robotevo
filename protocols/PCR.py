@@ -57,10 +57,10 @@ class Evo75_FLI(Protocol):
 
         wt.def_DiTi     = Lab.DiTi_0200ul   # todo revise, this is a type, the others are labwares
 
-        WashCleanerS    = wt.getLabware(Lab.CleanerShallow, ""                             )
-        WashWaste       = wt.getLabware(Lab.WasteWash,   ""                                )
-        WashCleanerL    = wt.getLabware(Lab.CleanerDeep, ""                                )
-        DiTiWaste       = wt.getLabware(Lab.DiTi_Waste_plate, "TipWaste"                   )
+        WashCleanerS    = wt.get_labware(Lab.CleanerShallow, "")
+        WashWaste       = wt.get_labware(Lab.WasteWash, "")
+        WashCleanerL    = wt.get_labware(Lab.CleanerDeep, "")
+        DiTiWaste       = wt.get_labware(Lab.DiTi_Waste_plate, "TipWaste")
 
         # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
         wt.def_WashWaste   = WashWaste
@@ -90,11 +90,11 @@ class MixPCR(Evo75_FLI):
 
         #  Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        DiTi1000_1  = wt.getLabware(Lab.DiTi_1000ul,    "1000-1")
-        DiTi1000_2  = wt.getLabware(Lab.DiTi_1000ul,    "1000-2")
-        DiTi1000_3  = wt.getLabware(Lab.DiTi_1000ul,    "1000-3")
+        DiTi1000_1  = wt.get_labware(Lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2  = wt.get_labware(Lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3  = wt.get_labware(Lab.DiTi_1000ul, "1000-3")
 
-        Reactives   = wt.getLabware(Lab.GreinRack16_2mL,"Reagents" )
+        Reactives   = wt.get_labware(Lab.GreinRack16_2mL, "Reagents")
 
         #  Set the initial position of the tips
 
@@ -120,7 +120,7 @@ class MixPCR(Evo75_FLI):
         VEB             = Rgt.Reagent("VEB - Binding Buffer ",
                                       BindBuf, volpersample=BindingBufferVolume, defLiqClass=B_liquidClass)
         EtOH80p         = Rgt.Reagent("Ethanol 80% ",
-                                      wt.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
+                                      wt.get_labware(Lab.Trough_100ml, "7-EtOH80p"),
                                       volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
 
@@ -131,9 +131,9 @@ class MixPCR(Evo75_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
-        Plate_lysis = wt.getLabware(Lab.MP96deepwell,   "Plate lysis"   )  # Plate 12 x 8 ?
-        Plate_EtOH  = wt.getLabware(Lab.MP96deepwell,   "Plate EtOH"    )  # Plate 12 x 8 ? MP96well !!
-        Samples     = wt.getLabware(Lab.EppRack6x16,    "Proben"        )  # 6x16 = 12 x 8 ?
+        Plate_lysis = wt.get_labware(Lab.MP96deepwell, "Plate lysis")  # Plate 12 x 8 ?
+        Plate_EtOH  = wt.get_labware(Lab.MP96deepwell, "Plate EtOH")  # Plate 12 x 8 ? MP96well !!
+        Samples     = wt.get_labware(Lab.EppRack6x16, "Proben")  # 6x16 = 12 x 8 ?
 
 
         # Define samples and the place for temporal reactions
