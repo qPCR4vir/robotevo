@@ -834,8 +834,12 @@ class Labware:
     def select(self, sel_idx_list):
         if isinstance(sel_idx_list, int):
             sel_idx_list = [sel_idx_list]
-        for i in sel_idx_list:
-            self.Wells[i].selFlag = True
+        for w in sel_idx_list:
+            if not isinstance(w, Well):
+                w = self.Wells[w]
+            else:
+                assert w.labware is self
+            w.selFlag = True
         return self
 
     def newOffset(self, pos, offset):
