@@ -73,7 +73,10 @@ class Tutorial_LL(Evo200):
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
         diluent_cuvette   = wt.get_labware(Lab.Trough_100ml, "BufferCub")
+        assert isinstance(diluent_cuvette, Lab.Cuvette)
+
         mixes             = wt.get_labware(Lab.Eppendorfrack, "mixes")
+        assert isinstance(mixes, Lab.Labware)
 
 
         self.go_first_pos()                                             #  Set the initial position of the tips ??
@@ -87,30 +90,32 @@ class Tutorial_LL(Evo200):
 
         v  = vf /10                             # to be distribute from original mix1 to each Dil_10
         vd = vf - v
+        excess = 1.04   # 4%
 
         # Define the wells in each labware (Cuvette, eppys, etc.)
 
         diluent = diluent_cuvette.Wells[0:7]
+        diluent[0].vol = vd * n * excess
 
         mix1    = mixes.Wells[0]
+        mix1.vol = v * n * excess
 
         # Show the check_list
 
-        self.check_list()
+        Itr.userPrompt("Put diluent in "+str(diluent[0]) ).exec()
+        Itr.userPrompt("Put mix1 in " + str(mix1)).exec()
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
         plate = wt.get_labware(Lab.MP96MachereyNagel, "plate1")
+        assert isinstance(plate, Lab.Labware)
 
         # Define place for temporal reactions
-        dilution = Rgt.Reagent("mix1, diluted 1:10",
-                        plate,
-                        replicas         = n,
-                        minimize_aliquots= False)
+        dilution = plate.Wells[:n]
 
         with group("Fill dilutions"):
 
-            Itr.userPrompt("Put the plate for dilutions ").exec()
+            Itr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
 
             with self.tips(tip_type="DiTi 200 ul", reuse=True, drop=False, drop_last=True):
                 self.distribute(reagent           = mix1,
