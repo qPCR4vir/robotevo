@@ -76,7 +76,7 @@ class dispense(Pipetting):
                             tipMask,
                             liquidClass,
                             volume,
-                            labware or Lab.def_LabW,
+                            labware,
                             spacing,
                             wellSelection,
                             LoopOptions,

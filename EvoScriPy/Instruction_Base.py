@@ -239,6 +239,7 @@ class Pipette(Instruction):
                         self.labware = w0.labware
                     assert w0.labware is self.labware, "Using a well from another labware"
                 assert isinstance(self.labware, Lab.Labware)
+                self.labware.selectOnly(self.wellSelection)
                 well_selection_str = self.labware.wellSelectionStr(self.wellSelection)
 
 
