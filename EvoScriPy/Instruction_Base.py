@@ -309,6 +309,7 @@ class Pipetting(Pipette):
         return True
 
     def actualize_robot_state(self):
+        self.validateArg()
         self.pipette_on_iRobot(self.action())
         pass
 
