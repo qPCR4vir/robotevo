@@ -62,6 +62,8 @@ class WorkTable:
             self.site = site
             self.rack_site = rack_site
 
+        def __str__(self):
+            return "grid:{grid:d}, site:{site:d}".format(grid=self.grid, site=self.site + 1)
 
     class File:
         def __init__(self, input, output, worktable):
