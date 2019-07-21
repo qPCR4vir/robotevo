@@ -717,7 +717,7 @@ class Labware:
 
         if isinstance(row, Well):
             assert row.labware is self, "This is a well from another labware."
-            return Well.offset
+            return row.offset
 
         if isinstance(row, Labware.Position):
             col = row.col
