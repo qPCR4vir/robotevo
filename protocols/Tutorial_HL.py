@@ -88,7 +88,7 @@ class Tutorial_HL(Evo200):
         v  = vf /10                             # to be distribute from original mix1 to each Dil_10
         vd = vf - v
 
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
+        # Define the reagents in each labware (Cuvette, eppys, etc.)
 
         diluent = Rgt.Reagent("Diluent",
                               diluent_cuvette,

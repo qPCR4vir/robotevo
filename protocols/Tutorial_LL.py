@@ -94,7 +94,7 @@ class Tutorial_LL(Evo200):
 
         # Define the wells in each labware (Cuvette, eppys, etc.)
 
-        diluent = diluent_cuvette.Wells[0:7]
+        diluent = diluent_cuvette.Wells[0:8]
         diluent[0].vol = vd * n * excess
 
         mix1    = mixes.Wells[0]
@@ -117,13 +117,73 @@ class Tutorial_LL(Evo200):
 
             Itr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
 
-            with self.tips(tip_type="DiTi 200 ul", reuse=True, drop=False, drop_last=True):
-                self.distribute(reagent           = mix1,
-                                to_labware_region = dilution.select_all())
+            arm = self.robot.curArm(Itr.Pipette.LiHa1)
+            m_tips = arm.nTips
 
-            with self.tips(tip_type="DiTi 1000ul", reuse=True, drop=False, drop_last=True):
-                self.distribute(reagent           = diluent,
-                                to_labware_region = dilution.select_all())
+            n_tips = min(n, m_tips)                                             # distribute mix1
+            self.pick_up_tip(TIP_MASK = Rbt.tipsMask[n_tips],
+                             tip_type = "DiTi 200 ul",
+                             arm      = arm)
+
+            dil_left = n
+            while dil_left:
+                n_tips = min(dil_left, m_tips)
+                maxMultiDisp_N = arm.Tips[0].type.maxVol // v
+                dsp, rst = divmod(dil_left, n_tips)
+                if dsp >= maxMultiDisp_N:
+                    dsp = maxMultiDisp_N
+                    vol = [v * dsp] * n_tips       # equal volume with each tips
+                    availableDisp = dsp
+                else:
+                    vol = [v * (dsp + 1)] * rst + [v * dsp] * (n_tips - rst)
+                    availableDisp = dsp + bool(rst)
+
+                for tip in range(n_tips):
+                    self.aspirate(arm=arm,TIP_MASK=Rbt.tipMask[tip],volume=vol, from_wells=mix1)
+
+                while availableDisp:
+                    n_tips = min(n_tips, dil_left)
+                    curSample = n - dil_left
+                    sel = dilution[curSample: curSample + n_tips]
+                    self.dispense(arm      = arm,
+                                  TIP_MASK = Rbt.tipsMask[n_tips],
+                                  volume   = v,
+                                  to_wells = sel)
+                    availableDisp -= 1
+                    dil_left -= n_tips
+
+            self.drop_tip()
+
+            n_tips = min(n, m_tips, len(diluent))                                             # distribute diluent
+            self.pick_up_tip(TIP_MASK = Rbt.tipsMask[n_tips],
+                             tip_type = "DiTi 1000ul",
+                             arm      = arm)
+
+            dil_left = n
+            while dil_left:
+                n_tips = min(dil_left, m_tips, len(diluent))
+                maxMultiDisp_N = arm.Tips[0].type.maxVol // vd
+                dsp, rst = divmod(dil_left, n_tips)
+                if dsp >= maxMultiDisp_N:
+                    dsp = maxMultiDisp_N
+                    vol = [vd * dsp] * n_tips       # equal volume with each tips
+                    availableDisp = dsp
+                else:
+                    vol = [vd * (dsp + 1)] * rst + [vd * dsp] * (n_tips - rst)
+                    availableDisp = dsp + bool(rst)
+
+                self.aspirate(arm=arm,TIP_MASK=Rbt.tipsMask[n_tips],volume=vol, from_wells=diluent)
+
+                while availableDisp:
+                    n_tips = min(n_tips, dil_left)
+                    curSample = n - dil_left
+                    sel = dilution[curSample: curSample + n_tips]
+                    self.dispense(arm      = arm,
+                                  TIP_MASK = Rbt.tipsMask[n_tips],
+                                  volume   = vd,
+                                  to_wells = sel)
+                    availableDisp -= 1
+                    dil_left -= n_tips
 
             self.drop_tips()
 
