@@ -431,7 +431,7 @@ class Well:
                         lab  =self.labware.label,
                         label=self.label,
                         vol  =self.vol,
-                        what = str(self.reagent))
+                        what = str(self.reagent or ''))
     
     class Action:
         def __init__(self, volume:float, origin=None):
