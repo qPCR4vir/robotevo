@@ -15,7 +15,7 @@ import EvoScriPy.Reagent        as     Rgt
 from protocols.Evo200 import Evo200
 
 
-class Tutorial_HL(Evo200):
+class Tutorial_LL(Evo200):
     """
     Created n wells with 100 uL of mix1 diluted 1:10. A diluent is provided.
     A reagent "mix1" is diluted (distributed) in n wells 1:10.
@@ -23,16 +23,16 @@ class Tutorial_HL(Evo200):
 
     There are many ways to achieve that. Here is one:
     - Calculate how much to distribute from mix1 to each Dil_10. v= vf/10 and from diluent vd.
-    - Create a reagent mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
-    - Create a reagent diluent in an cubette 100 mL for vd uL per "sample".
+    - Create well mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
+    - Create wells diluent in a cubette 100 mL for vd uL per "sample".
     - Generate check list
-    - Create n Dil_10_i reagents ( 1 from 0 to n-1 )
+    - Create n Dil_10_i wells ( 1 from 0 to n-1 )
     - Distribute mix1
     - Distribute diluent
 
     """
 
-    name = "Tutorial_HL. Dilutions."
+    name = "Tutorial_LL. Dilutions."
     min_s, max_s = 1, 96   # all dilutions in one 96 well plate
 
     # for now just ignore the variants
@@ -52,10 +52,10 @@ class Tutorial_HL(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        NumOfSamples                = NumOfSamples or Tutorial_HL.max_s,
+                        NumOfSamples                = NumOfSamples or Tutorial_LL.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or '../current/dilutions_HL',
+                        output_filename             = output_filename or '../current/dilutions_LL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -66,7 +66,7 @@ class Tutorial_HL(Evo200):
         self.show_runtime_check_list    = True
 
         n = self.NumOfSamples
-        assert 1 <= n <= Tutorial_HL.max_s , "In this demo we want to set dilutions in a 96 well plate."
+        assert 1 <= n <= Tutorial_LL.max_s , "In this demo we want to set dilutions in a 96 well plate."
         wt           = self.worktable
 
         Itr.comment('Dilute1:10  a mix in {:d} wells.'.format(n)).exec()
@@ -88,15 +88,11 @@ class Tutorial_HL(Evo200):
         v  = vf /10                             # to be distribute from original mix1 to each Dil_10
         vd = vf - v
 
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
+        # Define the wells in each labware (Cuvette, eppys, etc.)
 
-        diluent = Rgt.Reagent("Diluent",
-                              diluent_cuvette,
-                              volpersample = vd )
+        diluent = diluent_cuvette.Wells[0:7]
 
-        mix1    = Rgt.Reagent("mix1",
-                              mixes,
-                              volpersample = v)
+        mix1    = mixes.Wells[0]
 
         # Show the check_list
 
@@ -130,7 +126,7 @@ class Tutorial_HL(Evo200):
 
 
 if __name__ == "__main__":
-    p = Tutorial_HL(NumOfSamples    = 42,
+    p = Tutorial_LL(NumOfSamples    = 42,
                                 run_name        = "_42s")
 
     p.use_version('No version')
