@@ -5,13 +5,11 @@
 # 2019-2019
 __author__ = 'Ariel'
 
-# Tutorial, generic Evo200
+# Tutorial
 
 from   EvoScriPy.protocol_steps import *
 import EvoScriPy.Instructions   as     Itr
 import EvoScriPy.Labware        as     Lab
-import EvoScriPy.Reagent        as     Rgt
-
 from protocols.Evo200 import Evo200
 
 
@@ -26,17 +24,16 @@ class Tutorial_LL(Evo200):
     - Create well mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
     - Create wells diluent in a cubette 100 mL for vd uL per "sample".
     - Generate check list
-    - Create n Dil_10_i wells ( 1 from 0 to n-1 )
+    - Create n Dil_10_i wells ( i from 0 to n-1 )
     - Distribute mix1
     - Distribute diluent
 
     """
 
     name = "Tutorial_LL. Dilutions."
-    min_s, max_s = 1, 96   # all dilutions in one 96 well plate
+    min_s, max_s = 1, 96                  # all dilutions in one 96 well plate
 
-    # for now just ignore the variants
-    def def_versions(self):
+    def def_versions(self):               # for now just ignore the variants
         self.versions = {'No version': self.V_def               }
 
     def V_def(self):
@@ -60,58 +57,45 @@ class Tutorial_LL(Evo200):
                         run_name                    = run_name)
 
     def Run(self):
-        self.initialize()    # if needed calls Executable.initialize() and set_EvoMode
-                             # which calls GUI.update_parameters() and set_defaults() from Evo200
+        self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
+                                    # which calls GUI.update_parameters() and set_defaults() from Evo200
 
         self.show_runtime_check_list    = True
 
         n = self.NumOfSamples
         assert 1 <= n <= Tutorial_LL.max_s , "In this demo we want to set dilutions in a 96 well plate."
-        wt           = self.worktable
+        wt = self.worktable
 
-        Itr.comment('Dilute1:10  a mix in {:d} wells.'.format(n)).exec()
+        Itr.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
 
-                                                            # Get Labwares (Cuvette, eppys, etc.) from the work table
+        # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
         diluent_cuvette   = wt.get_labware(Lab.Trough_100ml, "BufferCub")
         assert isinstance(diluent_cuvette, Lab.Cuvette)
 
         mixes             = wt.get_labware(Lab.Eppendorfrack, "mixes")
         assert isinstance(mixes, Lab.Labware)
 
+        vf = 100                                      # The final volume of every dilution, uL
+        v  = vf /10                                   # uL to be distribute from original mix1 to each Dil_10
+        vd = vf - v                                   # uL to be distribute from diluent to each Dil_10
+        excess = 1.04                                 # 4%
 
-        self.go_first_pos()                                             #  Set the initial position of the tips ??
+        diluent = diluent_cuvette.Wells[0:8]          # Define the wells in each labware (Cuvette, eppys, etc.) ---
+        diluent[0].vol = vd * n * excess              # set the initial volume needed - connected wells
 
-                                                                                  # Set volumen / sample
-        dilutions = range(n)
-        maxTips     = min  (self.nTips, n)
-        maxMask     = Rbt.tipsMask[maxTips]
-
-        vf = 100                                # The final volume of every dilution, uL
-
-        v  = vf /10                             # to be distribute from original mix1 to each Dil_10
-        vd = vf - v
-        excess = 1.04   # 4%
-
-        # Define the wells in each labware (Cuvette, eppys, etc.)
-
-        diluent = diluent_cuvette.Wells[0:8]
-        diluent[0].vol = vd * n * excess
-
-        mix1    = mixes.Wells[0]
+        mix1     = mixes.Wells[0]                     # just one 1,5 mL tube
         mix1.vol = v * n * excess
 
-        # Show the check_list
 
-        Itr.userPrompt("Put diluent in "+str(diluent[0]) ).exec()
+        Itr.userPrompt("Put diluent in "+str(diluent[0]) ).exec()  # Show the check_list   -------------------------
         Itr.userPrompt("Put mix1 in " + str(mix1)).exec()
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        plate = wt.get_labware(Lab.MP96MachereyNagel, "plate1")
+        plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
         assert isinstance(plate, Lab.Labware)
 
-        # Define place for temporal reactions
-        dilution = plate.Wells[:n]
+        dilution = plate.Wells[:n]                                 # Define place for temporal reactions  ----------
 
         with group("Fill dilutions"):
 
@@ -120,8 +104,8 @@ class Tutorial_LL(Evo200):
             arm = self.robot.curArm(Itr.Pipette.LiHa1)
             m_tips = arm.nTips
 
-            n_tips = min(n, m_tips)                                             # distribute mix1
-            self.pick_up_tip(TIP_MASK = Rbt.tipsMask[n_tips],
+            n_tips = min(n, m_tips)                                                 # distribute mix1 --------------
+            self.pick_up_tip(TIP_MASK = Rbt.tipsMask[n_tips],                       # using 200 uL tips
                              tip_type = "DiTi 200 ul",
                              arm      = arm)
 
@@ -132,14 +116,14 @@ class Tutorial_LL(Evo200):
                 dsp, rst = divmod(dil_left, n_tips)
                 if dsp >= maxMultiDisp_N:
                     dsp = maxMultiDisp_N
-                    vol = [v * dsp] * n_tips       # equal volume with each tips
+                    vol = [v * dsp] * n_tips                                        # equal volume with each tips
                     availableDisp = dsp
                 else:
                     vol = [v * (dsp + 1)] * rst + [v * dsp] * (n_tips - rst)
                     availableDisp = dsp + bool(rst)
 
                 for tip in range(n_tips):
-                    self.aspirate(arm=arm,TIP_MASK=Rbt.tipMask[tip],volume=vol, from_wells=mix1)
+                    self.aspirate(arm=arm, TIP_MASK=Rbt.tipMask[tip], volume=vol, from_wells=mix1)
 
                 while availableDisp:
                     n_tips = min(n_tips, dil_left)
@@ -154,8 +138,8 @@ class Tutorial_LL(Evo200):
 
             self.drop_tip()
 
-            n_tips = min(n, m_tips, len(diluent))                                             # distribute diluent
-            self.pick_up_tip(TIP_MASK = Rbt.tipsMask[n_tips],
+            n_tips = min(n, m_tips, len(diluent))                                    # distribute diluent ----------
+            self.pick_up_tip(TIP_MASK = Rbt.tipsMask[n_tips],                        # using 1000 uL tips
                              tip_type = "DiTi 1000ul",
                              arm      = arm)
 
@@ -172,7 +156,7 @@ class Tutorial_LL(Evo200):
                     vol = [vd * (dsp + 1)] * rst + [vd * dsp] * (n_tips - rst)
                     availableDisp = dsp + bool(rst)
 
-                self.aspirate(arm=arm,TIP_MASK=Rbt.tipsMask[n_tips],volume=vol, from_wells=diluent)
+                self.aspirate(arm=arm, TIP_MASK=Rbt.tipsMask[n_tips], volume=vol, from_wells=diluent)
 
                 while availableDisp:
                     n_tips = min(n_tips, dil_left)
@@ -185,15 +169,14 @@ class Tutorial_LL(Evo200):
                     availableDisp -= 1
                     dil_left -= n_tips
 
-            self.drop_tips()
+            self.drop_tip()
 
         self.done()
 
 
 if __name__ == "__main__":
     p = Tutorial_LL(NumOfSamples    = 42,
-                                run_name        = "_42s")
+                    run_name        = "_42s")
 
     p.use_version('No version')
-    # p.go_first_pos('A01')
     p.Run()

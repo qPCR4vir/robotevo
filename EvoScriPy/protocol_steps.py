@@ -260,7 +260,7 @@ class Protocol (Executable):
 
         lf = reagent.labware
         lt = to_labware_region
-        msg = "Spread: {v:.1f} µL of {n:s}".format(v=volume, n=reagent.name)
+        msg = "Distribute: {v:.1f} µL of {n:s}".format(v=volume, n=reagent.name)
         with group(msg):
             msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} {fw:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                         .format(v  = reagent.minVol(),
