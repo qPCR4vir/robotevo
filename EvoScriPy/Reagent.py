@@ -31,30 +31,31 @@ class Reagent:
 
     def __init__(self,
                  name           : str,
-                 labware        : Lab.Labware,
-                 volpersample   : float          = 0.0,
-                 single_use     : float          = None,
-                 wells          : (int, [int], [Lab.Well])     = None,
-                 replicas       : int            = None,
-                 defLiqClass    : (str,(str,str))= None,
-                 excess         : float          = None,
-                 initial_vol    : float          = 0.0,
-                 maxFull        : float          = None,
-                 num_of_samples : int            = None,
-                 minimize_aliquots : bool        = None):
+                 labware        : (Lab.Labware, str)        = None,
+                 volpersample   : float                     = 0.0,
+                 single_use     : float                     = None,
+                 wells          : (int, [int], [Lab.Well])  = None,
+                 replicas       : int                       = None,
+                 defLiqClass    : (str,(str,str))           = None,
+                 excess         : float                     = None,
+                 initial_vol    : float                     = 0.0,
+                 maxFull        : float                     = None,
+                 num_of_samples : int                       = None,
+                 minimize_aliquots : bool                   = None):
         """
-        Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample.
         This is a named set of aliquots of an homogeneous solution.
+        Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample,
+        if applicable.
         This reagent is automatically added to the list of reagents of the worktable were the labware is.
         The specified excess in % will be calculated/expected. A default excess of 4% will be assumed
         if not explicitly indicated.
         A minimal volume will be calculated based on either the number of samples
-        and the volume per sample to use or (todo?) the volume per single use.
+        and the volume per sample to use or the volume per single use.
         A minimal number of replicas (wells, aliquots) will be calculated based on the minimal volume,
         taking into account the maximum allowed volume per well and the excess specified.
 
         :param name:            Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
-        :param labware:         Labware;
+        :param labware:         Labware or his label in the worktable; if None will be deduced from `wells`.
         :param volpersample:    how much is needed per sample, if applicable, in uL
         :param single_use;      Not a "per sample" multiple use? Set then here the volume for one single use
         :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells
@@ -68,9 +69,17 @@ class Reagent:
         :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
         """
-        assert isinstance(labware, Lab.Labware)             # ??
-                                                # add self to the list of reagents of the worktable were the labware is.
-        assert isinstance(labware.location.worktable, Lab.WorkTable)                                    # todo temporal
+        if labware is None:
+            if isinstance(wells, Lab.Well):
+                labware = wells.labware
+            elif isinstance(wells, list) and isinstance(wells[0], Lab.Well):
+                labware = wells[0].labware
+        if isinstance(labware, str):
+            labware = Reagent.current_protocol.worktable.get_labware(label=labware)
+        assert isinstance(labware, Lab.Labware), "No labware defined for Reagent " + name
+
+        # add self to the list of reagents of the worktable were the labware is.
+        assert isinstance(labware.location.worktable, Lab.WorkTable)                                   # todo temporal
         if (isinstance(labware,                     Lab.Labware) and
             isinstance(labware.location,            Lab.WorkTable.Location) and
             isinstance(labware.location.worktable,  Lab.WorkTable) ):
