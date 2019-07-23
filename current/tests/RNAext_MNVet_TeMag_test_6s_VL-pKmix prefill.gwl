@@ -15,7 +15,7 @@ B;Comment("   3- 72.0 킠 from grid:5 site:1:['well 13 in labware Reactives:  wit
 B;Aspirate(4,"Water wet","0","0","72.00","0",0,0,0,0,0,0,0,0,5,0,1,"01100P0",0,0);
 B;Dispense(4,"Water wet","72.00","72.00","72.00","72.00",0,0,0,0,0,0,0,0,5,0,1,"0110010",0,0);
 B;Mix(1,"Water free","220.32","0","0","0",0,0,0,0,0,0,0,0,5,0,1,"0110010",3,0,0);
-B;Comment("Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:5 site:1 ['well 8 in labware Reactives:  with 244.8 uL of reagent ProtK+cRNA+IC-MS2 mix '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:");
+B;Comment("Distribute: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:5 site:1 ['well 8 in labware Reactives:  with 244.8 uL of reagent ProtK+cRNA+IC-MS2 mix '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:");
 B;Aspirate(1,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,5,0,1,"0110010",0,0);
 B;Aspirate(2,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,5,0,1,"0110010",0,0);
 B;Aspirate(4,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,5,0,1,"0110010",0,0);
@@ -23,7 +23,7 @@ B;Aspirate(8,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,5,0,1,
 B;Dispense(15,"Water free","34.00","34.00","34.00","34.00",0,0,0,0,0,0,0,0,9,0,1,"0310?000000",0,0);
 B;Dispense(3,"Water free","34.00","34.00","0","0",0,0,0,0,0,0,0,0,9,0,1,"031000<0000",0,0);
 B;DropDITI(15,23,6,0.00,300,0);
-B;Comment("Spread: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1 in labware 2-Vl Lysis Buffer:  with 1123.0 uL of reagent VL - Lysis Buffer '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:");
+B;Comment("Distribute: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1 in labware 2-Vl Lysis Buffer:  with 1123.0 uL of reagent VL - Lysis Buffer '] into Proben[grid:9 site:1] in order [1, 2, 3, 4, 17, 18]:");
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
 B;Aspirate(15,"MN VL","360.00","360.00","180.00","180.00",0,0,0,0,0,0,0,0,20,1,1,"0108l0",0,0);
 B;Dispense(15,"MN VL","180.00","180.00","180.00","180.00",0,0,0,0,0,0,0,0,9,0,1,"0310?000000",0,0);

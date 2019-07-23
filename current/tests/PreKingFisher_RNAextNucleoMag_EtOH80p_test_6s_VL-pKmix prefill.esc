@@ -126,8 +126,8 @@ V;200
 Comment("VL-pKmix prefillfor extracting RNA from 6 samples with the MN-Vet kit");
 Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
 Group("Prefill plate with EtOH80p");
-Group("Spread: 600.0 킠 of Ethanol 80% ");
-Comment("Spread: 600.0 킠 of Ethanol 80%  (3744.0 킠 total) from [grid:23 site:6 ['well 1 in labware 7-EtOH80p:  with 3744.0 uL of reagent Ethanol 80% '] into Plate EtOH[grid:25 site:3] in order [1, 2, 3, 4, 9, 10]:");
+Group("Distribute: 600.0 킠 of Ethanol 80% ");
+Comment("Distribute: 600.0 킠 of Ethanol 80%  (3744.0 킠 total) from [grid:23 site:6 ['well 1 in labware 7-EtOH80p:  with 3744.0 uL of reagent Ethanol 80% '] into Plate EtOH[grid:25 site:3] in order [1, 2, 3, 4, 9, 10]:");
 GetDITI2(15,"DiTi 1000ul",0,0,0,300);
 Aspirate(15,"Water free cuvette","600.00","600.00","600.00","600.00",0,0,0,0,0,0,0,0,23,5,1,"0108l0",0,0);
 Dispense(15,"Water free cuvette","600.00","600.00","600.00","600.00",0,0,0,0,0,0,0,0,25,2,1,"0C08?0000000000000",0,0);
@@ -153,8 +153,8 @@ Aspirate(4,"Water wet","0","0","72.00","0",0,0,0,0,0,0,0,0,19,0,1,"01100P0",0,0)
 Dispense(4,"Water wet","72.00","72.00","72.00","72.00",0,0,0,0,0,0,0,0,19,0,1,"0110010",0,0);
 Mix(1,"Water free","220.32","0","0","0",0,0,0,0,0,0,0,0,19,0,1,"0110010",3,0,0);
 GroupEnd();
-Group("Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix ");
-Comment("Spread: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:19 site:1 ['well 8 in labware Reactives:  with 244.8 uL of reagent ProtK+cRNA+IC-MS2 mix '] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10]:");
+Group("Distribute: 34.0 킠 of ProtK+cRNA+IC-MS2 mix ");
+Comment("Distribute: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:19 site:1 ['well 8 in labware Reactives:  with 244.8 uL of reagent ProtK+cRNA+IC-MS2 mix '] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10]:");
 Aspirate(1,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,19,0,1,"0110010",0,0);
 Aspirate(2,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,19,0,1,"0110010",0,0);
 Aspirate(4,"Water free","68.00","68.00","34.00","34.00",0,0,0,0,0,0,0,0,19,0,1,"0110010",0,0);
@@ -164,8 +164,8 @@ Dispense(3,"Water free","34.00","34.00","0","0",0,0,0,0,0,0,0,0,25,0,1,"0C080600
 GroupEnd();
 DropDITI(15,23,6,0.00,300,0);
 GetDITI2(15,"DiTi 1000ul",0,0,0,300);
-Group("Spread: 100.0 킠 of VL - Lysis Buffer ");
-Comment("Spread: 100.0 킠 of VL - Lysis Buffer  (624.0 킠 total) from [grid:23 site:5 ['well 1 in labware 2-Vl Lysis Buffer:  with 624.0 uL of reagent VL - Lysis Buffer '] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10]:");
+Group("Distribute: 100.0 킠 of VL - Lysis Buffer ");
+Comment("Distribute: 100.0 킠 of VL - Lysis Buffer  (624.0 킠 total) from [grid:23 site:5 ['well 1 in labware 2-Vl Lysis Buffer:  with 624.0 uL of reagent VL - Lysis Buffer '] into Plate lysis[grid:25 site:1] in order [1, 2, 3, 4, 9, 10]:");
 Aspirate(15,"MN VL","200.00","200.00","100.00","100.00",0,0,0,0,0,0,0,0,23,4,1,"0108l0",0,0);
 Dispense(15,"MN VL","100.00","100.00","100.00","100.00",0,0,0,0,0,0,0,0,25,0,1,"0C08?0000000000000",0,0);
 Dispense(3,"MN VL","100.00","100.00","0","0",0,0,0,0,0,0,0,0,25,0,1,"0C0806000000000000",0,0);
