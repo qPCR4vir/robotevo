@@ -152,11 +152,51 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
+from protocols.Tutorial_HL import Tutorial_HL as Prt
 
-#from protocols.RNAextractionMN_Mag_Vet                import RNAextr_MN_Vet_Kit
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'Tutorial_HLevel',
+         run_name        = "_6s")
+p.use_version('No version')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+from protocols.Tutorial_HL import Tutorial_HL as Prt
+
+p = Prt (NumOfSamples    = 46,
+         output_filename = test_dir + 'Tutorial_HLevel',
+         run_name        = "_46s")
+p.use_version('No version')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+from protocols.Tutorial_LL import Tutorial_LL as Prt
+
+p = Prt (NumOfSamples    = 6,
+         output_filename = test_dir + 'Tutorial_LLevel_atomic',
+         run_name        = "_6s")
+p.use_version('No version')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
+from protocols.Tutorial_HL import Tutorial_HL as Prt
+
+p = Prt (NumOfSamples    = 46,
+         output_filename = test_dir + 'Tutorial_LLevel_atomic',
+         run_name        = "_46s")
+p.use_version('No version')
+p.go_first_pos('A01')
+print("\n\n************ " + p.output_filename + " **************\n")
+p.Run()
+
+
 #from protocols.Prefill_plates_LysisBuffer             import Prefill_plates_LysisBuffer
-
 #from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates_LysisBuffer_and_ProtKpreMix
 #from EvoScriPy.protocol_steps                         import Pipeline
-#from protocols.PCR                                    import PCRexperiment
 
