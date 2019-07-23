@@ -81,8 +81,8 @@ class WorkTable:
             lines = [
                 self.check_summa,
                 self.date_time + " " +  self.user,
-                "                                                                                                                                ",
-                "Administrator                                                                                                                   ",
+                " "*128,
+                "Administrator" + " "*115,
                 "--{ RES }--",
                 "V;200",
                 "--{ CFG }--",
