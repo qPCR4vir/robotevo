@@ -17,14 +17,14 @@ p.Run()
 
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2 as Prt
 
-p = Prt (NumOfSamples    = 96,
+p = Prt (num_of_samples    = 96,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_96s")
 print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_6s")
 print("\n\n************ " + p.output_filename + " **************\n")
@@ -34,7 +34,7 @@ p.Run()
 
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p as Prt
 
-p = Prt (NumOfSamples    = 96,
+p = Prt (num_of_samples    = 96,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
          run_name        = "_test_96s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
@@ -42,7 +42,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
@@ -52,7 +52,7 @@ p.Run()
 
 from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit as Prt
 
-p = Prt (NumOfSamples    = 48,
+p = Prt (num_of_samples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-only prefill")
 p.use_version('VL-only prefill')
@@ -61,7 +61,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-only prefill")
 p.use_version('VL-only prefill')
@@ -70,7 +70,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 48,
+p = Prt (num_of_samples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
@@ -79,7 +79,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
@@ -87,7 +87,7 @@ p.go_first_pos('A01')
 print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
-p = Prt (NumOfSamples    = 48,
+p = Prt (num_of_samples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-only inactivated")
 p.use_version('VL-only inactivated')
@@ -96,7 +96,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-only inactivated")
 p.use_version('VL-only inactivated')
@@ -105,7 +105,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 48,
+p = Prt (num_of_samples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-pKmix Inactivated")
 p.use_version('VL-pKmix Inactivated')
@@ -114,7 +114,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-pKmix Inactivated")
 p.use_version('VL-pKmix Inactivated')
@@ -123,7 +123,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 48,
+p = Prt (num_of_samples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_original samples")
 p.use_version('original samples')
@@ -132,7 +132,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_original samples")
 p.use_version('original samples')
@@ -143,7 +143,7 @@ p.Run()
 
 from protocols.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200 as Prt
 
-p = Prt (NumOfSamples    = 4,
+p = Prt (num_of_samples    = 4,
          output_filename = test_dir + 'demo-two.mixes',
          run_name        = "_test_4s_mix_1_2")
 p.use_version('No version')
@@ -154,7 +154,7 @@ p.Run()
 
 from protocols.Tutorial_HL import Tutorial_HL as Prt
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'Tutorial_HLevel',
          run_name        = "_6s")
 p.use_version('No version')
@@ -165,7 +165,7 @@ p.Run()
 
 from protocols.Tutorial_HL import Tutorial_HL as Prt
 
-p = Prt (NumOfSamples    = 46,
+p = Prt (num_of_samples    = 46,
          output_filename = test_dir + 'Tutorial_HLevel',
          run_name        = "_46s")
 p.use_version('No version')
@@ -176,7 +176,7 @@ p.Run()
 
 from protocols.Tutorial_LL import Tutorial_LL as Prt
 
-p = Prt (NumOfSamples    = 6,
+p = Prt (num_of_samples    = 6,
          output_filename = test_dir + 'Tutorial_LLevel_atomic',
          run_name        = "_6s")
 p.use_version('No version')
@@ -187,7 +187,7 @@ p.Run()
 
 from protocols.Tutorial_HL import Tutorial_HL as Prt
 
-p = Prt (NumOfSamples    = 46,
+p = Prt (num_of_samples    = 46,
          output_filename = test_dir + 'Tutorial_LLevel_atomic',
          run_name        = "_46s")
 p.use_version('No version')

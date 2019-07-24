@@ -41,7 +41,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
-                            NumOfSamples            = Prefill_plates_LysisBuffer.max_s,
+                            num_of_samples= Prefill_plates_LysisBuffer.max_s,
                             worktable_template_filename='../EvoScripts/wt_templates/Prefill_plates_LysisBuffer.ewt',
                             output_filename         ='../current/' + run_name,
                             run_name                = run_name)

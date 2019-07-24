@@ -160,7 +160,7 @@ class Reagent:
         return int (self.minVol(NumSamples) / (self.labware.type.maxVol*self.maxFull)) +1
 
     @staticmethod
-    def SetReagentList(protocol):
+    def set_reagent_list(protocol):
         Reagent.current_protocol = protocol                    # ??
 
     @staticmethod

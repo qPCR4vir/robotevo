@@ -42,7 +42,7 @@ class Tutorial_HL(Evo200):
 
     def __init__(self,
                  GUI                         = None,
-                 NumOfSamples: int           = 8,
+                 num_of_samples: int           = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -50,7 +50,7 @@ class Tutorial_HL(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        NumOfSamples                = NumOfSamples or Tutorial_HL.max_s,
+                        num_of_samples=num_of_samples or Tutorial_HL.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
                         output_filename             = output_filename or '../current/dilutions_HL',
@@ -116,7 +116,7 @@ class Tutorial_HL(Evo200):
 
 
 if __name__ == "__main__":
-    p = Tutorial_HL(NumOfSamples    = 42,
+    p = Tutorial_HL(num_of_samples= 42,
                     run_name        = "_42s")
 
     p.use_version('No version')

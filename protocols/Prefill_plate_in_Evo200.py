@@ -32,7 +32,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
     def __init__(self,
                  GUI                         = None,
-                 NumOfSamples: int           = None,
+                 num_of_samples: int           = None,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -40,7 +40,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
+                        num_of_samples=num_of_samples or Prefill_plate_in_Evo200.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/demo-two.mixes.Evo200example.ewt',
                         output_filename             = output_filename or '../current/two.mixes',
@@ -191,7 +191,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
 
 if __name__ == "__main__":
-    p = Prefill_plate_in_Evo200(NumOfSamples    = 4,
+    p = Prefill_plate_in_Evo200(num_of_samples= 4,
                                 run_name        = "_4s_mix_1_2")
 
     # \EvoScripts\scripts\temp/VakuumExtraktion_RL_96_str.esc

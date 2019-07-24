@@ -57,17 +57,17 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
     def __init__(self,
                  GUI                            = None,
-                 NumOfSamples       : int       = None,
+                 num_of_samples       : int       = None,
                  worktable_template_filename    = None,
                  output_filename                = None,
                  firstTip                       = None,
-                 run_name           : str       = ""  ):
+                 run_name           : str       = ""):
 
         self.V_default()
 
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
-                            NumOfSamples            = NumOfSamples or PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
+                            num_of_samples=num_of_samples or PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
                             worktable_template_filename
                                                     = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
@@ -291,8 +291,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
 if __name__ == "__main__":
 
-    p = PreKingFisher_RNAextNucleoMag_EtOH80p( NumOfSamples    = 96,
-                                               run_name        = "")
+    p = PreKingFisher_RNAextNucleoMag_EtOH80p(num_of_samples= 96,
+                                              run_name        = "")
 
     p.use_version('VL-pKmix Inactivated')
     # p.go_first_pos('A01')

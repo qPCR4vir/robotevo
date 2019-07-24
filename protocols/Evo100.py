@@ -16,7 +16,7 @@ class Evo100(Protocol):
 
     def __init__(self,
                  n_tips                       = 4,
-                 NumOfSamples                = None,
+                 num_of_samples                = None,
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
@@ -26,7 +26,7 @@ class Evo100(Protocol):
         Protocol.__init__(self,
                           GUI                         = GUI,
                           n_tips= n_tips,
-                          NumOfSamples                = NumOfSamples,
+                          num_of_samples= num_of_samples,
                           worktable_template_filename = worktable_template_filename,
                           output_filename             = output_filename,
                           firstTip                    = firstTip,
@@ -38,19 +38,19 @@ class Evo100_FLI(Evo100):
     """
     min_s, max_s = 1, 48
 
-    def __init__(   self,
-                    NumOfSamples                = None,
-                    GUI                         = None,
-                    worktable_template_filename = None,
-                    output_filename             = None,
-                    firstTip                    = None,
-                    run_name                    = None):
+    def __init__(self,
+                 num_of_samples                = None,
+                 GUI                         = None,
+                 worktable_template_filename = None,
+                 output_filename             = None,
+                 firstTip                    = None,
+                 run_name                    = None):
 
 
         Evo100.__init__(self,
                         GUI                         = GUI,
                         n_tips= 4,
-                        NumOfSamples                = NumOfSamples or Evo100_FLI.max_s,
+                        num_of_samples=num_of_samples or Evo100_FLI.max_s,
                         worktable_template_filename = worktable_template_filename,
                         output_filename             = output_filename,
                         firstTip                    = firstTip,

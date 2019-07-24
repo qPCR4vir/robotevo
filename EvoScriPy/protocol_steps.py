@@ -49,7 +49,7 @@ class Executable:
         self.def_versions()
         self.version     = next(iter(self.versions))
 
-        Rgt.Reagent.SetReagentList(self)                                                      # todo Revise !!!
+        Rgt.Reagent.set_reagent_list(self)                                                      # todo Revise !!!
 
     def set_defaults(self):
         """
@@ -79,18 +79,18 @@ class Executable:
         """
 
         self.initialize()
-        self.preCheck()
+        self.pre_check()
         self.check_list()
-        self.postCheck()
+        self.post_check()
         self.done()
 
-    def preCheck(self):
+    def pre_check(self):
         pass
 
     def check_list(self):
         pass
 
-    def postCheck(self):
+    def post_check(self):
         pass
 
     def done(self):
@@ -120,7 +120,7 @@ class Protocol (Executable):
 
     def __init__(self,
                  n_tips                      = 4,
-                 NumOfSamples                = max_s,
+                 num_of_samples                = max_s,
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
@@ -137,12 +137,12 @@ class Protocol (Executable):
         self.comments_                   = None      # EvoMode.Comments
         self.worktable                   = None
         self.robot                       = None
-        self.NumOfSamples                = int(NumOfSamples or Protocol.max_s)
+        self.NumOfSamples                = int(num_of_samples or Protocol.max_s)
         self.check_initial_liquid_level  = False
         self.def_DiTi_check_liquid_level = None
         self.show_runtime_check_list     = False
 
-        Rgt.Reagent.SetReagentList(self)
+        Rgt.Reagent.set_reagent_list(self)
 
         Executable.__init__(self, GUI=GUI, run_name=run_name)
 
@@ -896,13 +896,13 @@ class Protocol (Executable):
         self.initialize()
         self.set_EvoMode()
 
-        self.preCheck()
+        self.pre_check()
         self.set_EvoMode()
 
         self.check_list()
         self.set_EvoMode()
 
-        self.postCheck()
+        self.post_check()
         self.set_EvoMode()
 
         self.done()
@@ -915,7 +915,7 @@ class Protocol (Executable):
         if (self.GUI):
             self.GUI.check_list()
         self.set_EvoMode()
-        Rgt.Reagent.SetReagentList(self)
+        Rgt.Reagent.set_reagent_list(self)
         if self.show_runtime_check_list:
             self.show_check_list()
         if self.check_initial_liquid_level:
@@ -997,7 +997,7 @@ class Protocol (Executable):
         self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)
-        Rgt.Reagent.SetReagentList(self)
+        Rgt.Reagent.set_reagent_list(self)
         if self.def_DiTi_check_liquid_level is None:
             self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
 
@@ -1007,7 +1007,7 @@ class Protocol (Executable):
         else:
             EvoMode.current = self.EvoMode
         self.iRobot.set_as_current()
-        Rgt.Reagent.SetReagentList(self)
+        Rgt.Reagent.set_reagent_list(self)
 
     def init_EvoMode(self):
         self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.n_tips)
