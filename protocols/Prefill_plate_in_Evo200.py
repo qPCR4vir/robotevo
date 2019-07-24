@@ -70,7 +70,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
                                                                                   # Set volumen / sample
         all_samples = range(NumOfSamples)
-        maxTips     = min  (self.nTips, NumOfSamples)
+        maxTips     = min  (self.n_tips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
         buf_per_sample =0

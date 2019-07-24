@@ -88,7 +88,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (self.nTips, NumOfSamples)
+        maxTips     = min  (self.n_tips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
@@ -115,7 +115,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         Itr.wash_tips(wasteVol=30, FastWash=True).exec()
 
-        par = Plate_VEW1.parallelOrder(self.nTips, all_samples)
+        par = Plate_VEW1.parallelOrder(self.n_tips, all_samples)
 
         # Define samples and the place for temporal reactions
         for s in all_samples:

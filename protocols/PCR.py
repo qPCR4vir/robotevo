@@ -46,10 +46,10 @@ class Evo75_FLI(Protocol):
                         run_name            = None):
 
         Protocol.__init__(self, GUI                         = GUI,
-                                nTips                       = 1,
-                                worktable_template_filename = worktable_template_filename,
-                                output_filename             = output_filename,
-                                run_name                    = run_name)
+                          n_tips= 1,
+                          worktable_template_filename = worktable_template_filename,
+                          output_filename             = output_filename,
+                          run_name                    = run_name)
 
 
     def set_defaults(self):
@@ -110,7 +110,7 @@ class MixPCR(Evo75_FLI):
         SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (self.nTips, NumOfSamples)
+        maxTips     = min  (self.n_tips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
 
@@ -137,7 +137,7 @@ class MixPCR(Evo75_FLI):
 
 
         # Define samples and the place for temporal reactions
-        par = Plate_lysis.parallelOrder(self.nTips, all_samples)
+        par = Plate_lysis.parallelOrder(self.n_tips, all_samples)
         for s in all_samples:
             Rgt.Reagent("probe_{:02d}".format(s + 1), Samples, single_use=SampleVolume,
                         wells=s + 1, defLiqClass=SampleLiqClass, excess=0)

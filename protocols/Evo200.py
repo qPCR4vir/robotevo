@@ -16,7 +16,7 @@ class Evo200 (Protocol):
     """
 
     def __init__(self,
-                 nTips                          = 8,
+                 n_tips                          = 8,
                  NumOfSamples                   = None,
                  GUI                            = None,
                  worktable_template_filename    = None,
@@ -24,14 +24,14 @@ class Evo200 (Protocol):
                  firstTip                       = None,
                  run_name                       = None):
 
-        Protocol.__init__(  self,
-                            GUI                         = GUI,
-                            nTips                       = nTips,
-                            NumOfSamples                = NumOfSamples,
-                            worktable_template_filename = worktable_template_filename,
-                            output_filename             = output_filename,
-                            firstTip                    = firstTip,
-                            run_name                    = run_name)
+        Protocol.__init__(self,
+                          GUI                         = GUI,
+                          n_tips= n_tips,
+                          NumOfSamples                = NumOfSamples,
+                          worktable_template_filename = worktable_template_filename,
+                          output_filename             = output_filename,
+                          firstTip                    = firstTip,
+                          run_name                    = run_name)
 
     def set_defaults(self):
         wt = self.worktable
@@ -63,7 +63,7 @@ class Evo200_FLI (Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        nTips                       = 8,
+                        n_tips= 8,
                         NumOfSamples                = NumOfSamples,
                         worktable_template_filename = worktable_template_filename,
                         output_filename             = output_filename,

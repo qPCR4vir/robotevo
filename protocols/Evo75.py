@@ -13,23 +13,23 @@ class Evo75(Protocol):
     """ Using the Evo75
     """
 
-    def __init__(   self,
-                    nTips                       = 1,
-                    NumOfSamples                = None,
-                    GUI                         = None,
-                    worktable_template_filename = None,
-                    output_filename             = None,
-                    firstTip                    = None,
-                    run_name                    = None):
+    def __init__(self,
+                 n_tips                       = 1,
+                 NumOfSamples                = None,
+                 GUI                         = None,
+                 worktable_template_filename = None,
+                 output_filename             = None,
+                 firstTip                    = None,
+                 run_name                    = None):
 
-        Protocol.__init__(  self,
-                            GUI                         = GUI,
-                            nTips                       = nTips,
-                            NumOfSamples                = NumOfSamples,
-                            worktable_template_filename = worktable_template_filename,
-                            output_filename             = output_filename,
-                            firstTip                    = firstTip,
-                            run_name                    = run_name)
+        Protocol.__init__(self,
+                          GUI                         = GUI,
+                          n_tips= n_tips,
+                          NumOfSamples                = NumOfSamples,
+                          worktable_template_filename = worktable_template_filename,
+                          output_filename             = output_filename,
+                          firstTip                    = firstTip,
+                          run_name                    = run_name)
 
     def set_defaults(self):
         wt = self.worktable

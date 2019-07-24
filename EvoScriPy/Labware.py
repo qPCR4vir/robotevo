@@ -6,7 +6,6 @@
 __author__ = 'qPCR4vir'
 
 
-
 class WorkTable:
     """ Collection of racks.Types and Labware.Types and pos of instances """
 
@@ -37,7 +36,6 @@ class WorkTable:
             print("Set template file" + templateFile)
             self.template = self.parseWorTableFile(templateFile)
             self.templateFileName = templateFile
-
 
     class Location:
         """ One location in a WorkTable """

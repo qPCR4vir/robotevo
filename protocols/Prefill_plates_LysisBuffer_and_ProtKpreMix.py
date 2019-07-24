@@ -108,7 +108,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                                         # Others liquidClass names are defined in "protocol_steps.py"
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (self.nTips, NumOfSamples)
+        maxTips     = min  (self.n_tips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
                                                         # Define the reagents in each labware (Cuvette, eppys, etc.)
@@ -167,7 +167,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         LysPlat = [wt.get_labware(Lab.MP96deepwell, "Plate lysis-" + str(i + 1)) for i in range(self.num_plates)]
 
-        par = LysPlat[0].parallelOrder(self.nTips, all_samples)
+        par = LysPlat[0].parallelOrder(self.n_tips, all_samples)
 
         # Define place for temporal "reactions"
         for i, LP in enumerate(LysPlat):

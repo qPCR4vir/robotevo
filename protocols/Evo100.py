@@ -14,23 +14,23 @@ class Evo100(Protocol):
     """ Using the Evo100
     """
 
-    def __init__(   self,
-                    nTips                       = 4,
-                    NumOfSamples                = None,
-                    GUI                         = None,
-                    worktable_template_filename = None,
-                    output_filename             = None,
-                    firstTip                    = None,
-                    run_name                    = None):
+    def __init__(self,
+                 n_tips                       = 4,
+                 NumOfSamples                = None,
+                 GUI                         = None,
+                 worktable_template_filename = None,
+                 output_filename             = None,
+                 firstTip                    = None,
+                 run_name                    = None):
 
-        Protocol.__init__(  self,
-                            GUI                         = GUI,
-                            nTips                       = nTips,
-                            NumOfSamples                = NumOfSamples,
-                            worktable_template_filename = worktable_template_filename,
-                            output_filename             = output_filename,
-                            firstTip                    = firstTip,
-                            run_name                    = run_name)
+        Protocol.__init__(self,
+                          GUI                         = GUI,
+                          n_tips= n_tips,
+                          NumOfSamples                = NumOfSamples,
+                          worktable_template_filename = worktable_template_filename,
+                          output_filename             = output_filename,
+                          firstTip                    = firstTip,
+                          run_name                    = run_name)
 
 
 class Evo100_FLI(Evo100):
@@ -49,7 +49,7 @@ class Evo100_FLI(Evo100):
 
         Evo100.__init__(self,
                         GUI                         = GUI,
-                        nTips                       = 4,
+                        n_tips= 4,
                         NumOfSamples                = NumOfSamples or Evo100_FLI.max_s,
                         worktable_template_filename = worktable_template_filename,
                         output_filename             = output_filename,

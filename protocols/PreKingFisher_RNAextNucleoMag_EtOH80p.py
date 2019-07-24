@@ -127,7 +127,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         SampleLiqClass = "Serum Asp"
 
         all_samples = range(NumOfSamples)
-        maxTips     = min  (self.nTips, NumOfSamples)
+        maxTips     = min  (self.n_tips, NumOfSamples)
         maxMask     = Rbt.tipsMask[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
@@ -202,7 +202,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
            Samples  = wt.get_labware(Lab.EppRack6x16, "Proben")  # 6x16 = 12 x 8 ?
 
 
-        par = Plate_lysis.parallelOrder(self.nTips, all_samples)
+        par = Plate_lysis.parallelOrder(self.n_tips, all_samples)
 
         for s in all_samples:
 

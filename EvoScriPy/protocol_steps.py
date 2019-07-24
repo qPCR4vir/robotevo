@@ -119,7 +119,7 @@ class Protocol (Executable):
     min_s, max_s = 1, 96
 
     def __init__(self,
-                 nTips                       = 4,
+                 n_tips                      = 4,
                  NumOfSamples                = max_s,
                  GUI                         = None,
                  worktable_template_filename = None,
@@ -130,7 +130,7 @@ class Protocol (Executable):
         self.worktable_template_filename = worktable_template_filename or ""
         self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
         self.firstTip                    = firstTip
-        self.nTips                       = nTips
+        self.n_tips                       = n_tips
         self.EvoMode                     = None      # EvoMode.multiple
         self.iRobot                      = None      # EvoMode.iRobot
         self.Script                      = None      # EvoMode.Script
@@ -1010,7 +1010,7 @@ class Protocol (Executable):
         Rgt.Reagent.SetReagentList(self)
 
     def init_EvoMode(self):
-        self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.nTips)
+        self.iRobot = EvoMode.iRobot(Itr.Pipette.LiHa1, nTips=self.n_tips)
         self.Script = EvoMode.Script(template=self.worktable_template_filename,
                                      filename=self.output_filename + '.esc',
                                      robot=self.iRobot.robot)
@@ -1025,7 +1025,7 @@ class Protocol (Executable):
         EvoMode.current = self.EvoMode
         self.worktable  = self.iRobot.robot.worktable  # shortcut !!
         self.robot      = self.iRobot.robot
-        assert (self.iRobot.robot.curArm().nTips == self.nTips )
+        assert (self.iRobot.robot.curArm().nTips == self.n_tips)
 
     def comments(self):
         return self.comments_.comments

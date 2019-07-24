@@ -81,10 +81,6 @@ class Tutorial_HL_Roma(Evo200):
 
         self.check_list()                                          # Show the check_list   -------------------------
 
-        mix1    = Rgt.Reagent("mix1",
-                              mixes,
-                              volpersample = v)
-
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")

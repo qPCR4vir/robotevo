@@ -1058,7 +1058,7 @@ class Te_MO_Aspirate(Instruction):
         """
         Instruction.__init__(self, 'Aspirate')
         self.robot.curArm(arm)
-        self.tipMask        = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.tipMask        = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().n_tips]
         self.labware        =labware
         self.spacing        = spacing
         self.loopOptions    = LoopOptions
