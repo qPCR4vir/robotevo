@@ -16,24 +16,22 @@ from protocols.Evo200 import Evo200
 
 class Tutorial_HL_Roma(Evo200):
     """
-    Starting with 2 plates (one on some plate pedestal) move plate 2 into a different location;
-    then transfer 50µL of aqueous buffer from column A of plate 1 to column B of plate 2.
+    Starting with 2 plates (A amd B, B on some plate pedestal - hotel) move plate B into a different location;
+    then transfer 50µL of aqueous buffer from column 1 of plate A to column 2 of plate B.
 
     There are different ways to achieve that. Here is one:
-    - Calculate how much to distribute from mix1 to each Dil_10. v= vf/10 and from diluent vd.
-    - Create a reagent mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
-    - Create a reagent diluent in an cubette 100 mL for vd uL per "sample".
+    - Create a reagent buffer_A in column 1 of plate A, with 100 uL per well.
     - Generate check list
-    - Create n Dil_10_i reagents ( i from 0 to n-1 )
-    - Distribute mix1
-    - Distribute diluent
+    - Transfer plate B from the hotel to the worktable
+    - Create a reagent buffer_B in column 2 of plate B.
+    - Transfer 50µL of buffer_A to buffer_B.
 
     """
 
     name = "Tutorial_HL. Dilutions."
-    min_s, max_s = 1, 96                    # all dilutions in one 96 well plate
+    min_s, max_s = 1, 96                                            # 96 well plate ??
 
-    def def_versions(self):                 # for now just ignore the variants
+    def def_versions(self):                                         # for now just ignore the variants
         self.versions = {'No version': self.V_def               }
 
     def V_def(self):
@@ -49,10 +47,10 @@ class Tutorial_HL_Roma(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        NumOfSamples                = NumOfSamples or Tutorial_HL.max_s,
+                        NumOfSamples                = NumOfSamples or Tutorial_HL_Roma.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or '../current/dilutions_HL',
+                        output_filename             = output_filename or '../current/RoMa_HL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -63,30 +61,29 @@ class Tutorial_HL_Roma(Evo200):
         self.show_runtime_check_list    = True
 
         n = self.NumOfSamples
-        assert 1 <= n <= Tutorial_HL_Roma.max_s , "In this demo we want to set dilutions in a 96 well plate."
+        assert 1 <= n <= Tutorial_HL_Roma.max_s , "Using 96 well plates."
         wt = self.worktable
 
-        Itr.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
+        Itr.comment('Transfer 5 uL to a moved plate.').exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
-        diluent_cuvette = wt.get_labware(Lab.Trough_100ml, "BufferCub")
-        mixes           = wt.get_labware(Lab.Eppendorfrack, "mixes")
+        plate_A = wt.get_labware("plate")
+        plate_A = wt.get_labware("plate")
 
-        vf = 100                                      # The final volume of every dilution, uL
-        v  = vf /10                                   # uL to be distribute from original mix1 to each Dil_10
-        vd = vf - v                                   # uL to be distribute from diluent to each Dil_10
+        v  = 50                                       # uL to be distribute
 
 
+        buffer_A = Rgt.Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
+                               labware      = plate_A,
+                               wells        = "A1",
+                               replicas     = 8,
+                               volpersample = v )
 
-        diluent = Rgt.Reagent("Diluent",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
-                              diluent_cuvette,
-                              volpersample = vd )
+        self.check_list()                                          # Show the check_list   -------------------------
 
         mix1    = Rgt.Reagent("mix1",
                               mixes,
                               volpersample = v)
-
-        self.check_list()                                          # Show the check_list   -------------------------
 
         Itr.wash_tips(wasteVol=5, FastWash=True).exec()
 
