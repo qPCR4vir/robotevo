@@ -82,7 +82,9 @@ class inFile(toString):
     """ (Base class) For modes with uses a file for output
     """
 
-    def __init__(self, filename = None):
+    def __init__(self, filename = None, immediate=None):
+        self.immediate = immediate
+        self.lines = []
         self.f = None
         self.filename = None
         self.set_file(filename)
@@ -90,11 +92,17 @@ class inFile(toString):
     def exec(self, instr):
         s = toString.exec(self, instr) + "\n"  # \r
         if self.f is not None:
-            self.f.write(s)  # .encode('Latin-1')
+            if self.immediate:
+                self.lines += [s]
+            else:
+                self.f.write(s)  # .encode('Latin-1')
         return s  # or f ?
 
     def done(self):
         if self.f is not None:
+            if self.immediate:
+                for s in self.lines:
+                    self.f.write(s)
             self.f.close()
             self.f = None
             # print(self.filename + " done")
