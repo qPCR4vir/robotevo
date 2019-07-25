@@ -34,7 +34,7 @@ class WorkTable:
             print("Template fileis a list")
         else:
             print("Set template file" + templateFile)
-            self.template = self.parseWorTableFile(templateFile)
+            self.template = self.parse_worktable_file(templateFile)
             self.templateFileName = templateFile
 
     class Location:
@@ -110,34 +110,33 @@ class WorkTable:
             line = "14;"
             labw = { }
 
-
-    def parseWorTableFile(self, templateFile):
+    def parse_worktable_file(self, templateFile):
         if not templateFile:
-            return []
-        templList = []                                                        # a grid-line first list the types
+            return []                                                             # RETURN
+        template_list = []                                                        # a grid-line first list the types
         with open(templateFile, 'r', encoding='Latin-1') as tmpl:
             # parsing_grid=False
             grid_num       = -1
-            labwware_types = []
+            labware_types = []
             for line in tmpl:
-                templList += [line]
+                template_list += [line]
                 if line.startswith("--{ RPG }--"):                            # end of the worktable description
-                                            break
+                    break                                                     # BREAK
                 line = line.split(';')
 
                 if line[0] != "998":
-                                            continue                         # TODO possible error msg ??
+                    continue                                                  # CONTINUE
                 if grid_num >= len(self.grid):
-                                            continue                   # ignore lines between this and  "--{ RPG }--"
+                    continue                                   # CONTINUE: ignore lines between this and  "--{ RPG }--"
 
-                if labwware_types:                      # we have read the types first, now we need to read the labels
-                    for site, (lab_t_label, label) in enumerate(zip(labwware_types, line[1:-1])):
+                if labware_types:                      # we have read the types first, now we need to read the labels
+                    for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
                         if not lab_t_label:
-                            if label:
+                            if label:                                         # todo raise Warning
                                 print("Warning! The worktable template have a label '" +
                                       label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                       " but no labware type")
-                            continue
+                            continue                                          # CONTINUE:
                         loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
                         labw = Labware.create(lab_t_label, loc, label)
                         if labw:
@@ -146,17 +145,17 @@ class WorkTable:
                             print("Warning! The worktable template have a labware labeled '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                   " but there is no registered labware type '" + lab_t_label + "'")
-                    labwware_types = []
+                    labware_types = []
 
                 else:                         # we need to read the types first
                     grid_num      += 1
-                    labwware_types = line[2:-1]
-                    assert int(line[1]) == len(labwware_types)  # TODO error msg
+                    labware_types = line[2:-1]
+                    assert int(line[1]) == len(labware_types)  # TODO error msg
 
 
-        self.template = templList
+        self.template = template_list
         self.templateFileName = templateFile
-        return templList
+        return template_list
 
     def add_new_labware(self, labware, loc: Location = None):
         """
