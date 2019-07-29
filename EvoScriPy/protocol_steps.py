@@ -11,7 +11,7 @@ from contextlib import contextmanager
 import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instr
 import EvoScriPy.reagent as rgnt
-import EvoScriPy.labware as Lab
+import EvoScriPy.labware as lab
 import EvoScriPy.EvoMode as EvoMode
 
 
@@ -150,7 +150,7 @@ class Protocol (Executable):
     @contextmanager
     def tips(self,  tipsMask    = None, tip_type     = None,
                     reuse       = None, drop         = None,
-                    preserve    = None, usePreserved = None,  selected_samples : Lab.Labware  = None,
+                    preserve    = None, usePreserved = None,  selected_samples : lab.Labware  = None,
                     allow_air   = None, drop_first   = False, drop_last          = False   ):
         """
 
@@ -169,7 +169,7 @@ class Protocol (Executable):
         """
 
         if selected_samples is not None:
-            assert isinstance(selected_samples, Lab.Labware )      # todo set some current?
+            assert isinstance(selected_samples, lab.Labware)      # todo set some current?
 
         if drop_first:  self.drop_tips()
         if reuse        is not None: reuse_old          = self.reuseTips       (reuse       )
@@ -196,7 +196,7 @@ class Protocol (Executable):
     def distribute(self,
                    volume            : float        = None,
                    reagent           : rgnt.Reagent  = None,
-                   to_labware_region : Lab.Labware  = None,
+                   to_labware_region : lab.Labware  = None,
                    optimize          : bool         = True,
                    NumSamples        : int          = None,
                    using_liquid_class: (str, tuple) = None,
@@ -238,7 +238,7 @@ class Protocol (Executable):
         :param num_tips         : the number of tips to be used in each cycle of pipetting = all
         """
         assert isinstance(reagent, rgnt.Reagent), 'A Reagent expected in reagent to distribute'
-        assert isinstance(to_labware_region, Lab.Labware), 'A Labware expected in to_labware_region to distribute'
+        assert isinstance(to_labware_region, lab.Labware), 'A Labware expected in to_labware_region to distribute'
 
         if num_tips is None:
             num_tips = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pipetting = all
@@ -298,8 +298,8 @@ class Protocol (Executable):
                         SampleCnt -= num_tips
 
     def transfer(self,
-                 from_labware_region: Lab.Labware,
-                 to_labware_region  : Lab.Labware,
+                 from_labware_region: lab.Labware,
+                 to_labware_region  : lab.Labware,
                  volume             : (int, float),
                  using_liquid_class : (str,tuple)   = None,
                  optimizeFrom       : bool          = True,
@@ -346,8 +346,8 @@ class Protocol (Executable):
         :param NumSamples           : Prioritized. If used reset the well selection
         :return:
         """
-        assert isinstance(from_labware_region, Lab.Labware), 'Labware expected in from_labware_region to transfer'
-        assert isinstance(to_labware_region,   Lab.Labware), 'Labware expected in to_labware_region to transfer'
+        assert isinstance(from_labware_region, lab.Labware), 'Labware expected in from_labware_region to transfer'
+        assert isinstance(to_labware_region,   lab.Labware), 'Labware expected in to_labware_region to transfer'
         # assert isinstance(using_liquid_class, tuple)
         nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pippeting
 
@@ -466,7 +466,7 @@ class Protocol (Executable):
         v[tip] = vol
         instr.dispense(robot.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
-    def mix(self,  in_labware_region  : Lab.Labware,
+    def mix(self,  in_labware_region  : lab.Labware,
                    using_liquid_class : str        = None,
                    volume             : float      = None,
                    optimize           : bool       = True):
@@ -481,7 +481,7 @@ class Protocol (Executable):
         """
         mix_p = 0.9
         in_labware_region = in_labware_region or self.worktable.def_WashWaste    # todo ???????????
-        assert isinstance(in_labware_region, Lab.Labware), 'A Labware expected in in_labware_region to be mixed'
+        assert isinstance(in_labware_region, lab.Labware), 'A Labware expected in in_labware_region to be mixed'
         if not volume or volume< 0.0 : volume = 0.0
         assert isinstance(volume, (int, float))
         oriSel = in_labware_region.selected()
@@ -569,10 +569,10 @@ class Protocol (Executable):
                 labware     =reagent.labware,
                 cycles      =cycles).exec()
 
-    def waste(self,  from_labware_region : Lab.Labware      = None,
+    def waste(self,  from_labware_region : lab.Labware      = None,
                      using_liquid_class  : str              = None,
                      volume              : float            = None,     # todo accept a list ??
-                     to_waste_labware    : Lab.CuvetteType  = None,
+                     to_waste_labware    : lab.CuvetteType  = None,
                      optimize            : bool             = True):    # todo: set default as False ??
 
         """
@@ -604,7 +604,7 @@ class Protocol (Executable):
         """
 
         to_waste_labware = to_waste_labware or self.worktable.def_WashWaste
-        assert isinstance(from_labware_region, Lab.Labware), \
+        assert isinstance(from_labware_region, lab.Labware), \
           'A Labware is expected in from_labware_region to waste from, but "' + str(from_labware_region) + '" was used.'
 
         if not volume or volume < 0.0 :
@@ -933,7 +933,7 @@ class Protocol (Executable):
         assert isinstance(reagent, rgnt.Reagent)
         LiqClass = LiqClass or reagent.defLiqClass
 
-        tips = 1 if isinstance(reagent.labware, Lab.Cuvette) else self.robot.curArm().nTips
+        tips = 1 if isinstance(reagent.labware, lab.Cuvette) else self.robot.curArm().nTips
         reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
         vol = [w.vol for w in reagent.labware.selected_wells()]
         instr.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()]) }").exec()
@@ -980,12 +980,12 @@ class Protocol (Executable):
     def set_defaults(self):
         wt = self.worktable
 
-        wt.def_DiTi       = Lab.DiTi_1000ul                 # this is a type, the others are labwares
+        wt.def_DiTi       = lab.DiTi_1000ul                 # this is a type, the others are labwares
 
-        WashCleanerS    = wt.get_labware(Lab.CleanerSWS, "")
-        WashWaste       = wt.get_labware(Lab.WasteWS, "")
-        WashCleanerL    = wt.get_labware(Lab.CleanerLWS, "")
-        DiTiWaste       = wt.get_labware(Lab.DiTi_Waste, "")
+        WashCleanerS    = wt.get_labware(lab.CleanerSWS, "")
+        WashWaste       = wt.get_labware(lab.WasteWS, "")
+        WashCleanerL    = wt.get_labware(lab.CleanerLWS, "")
+        DiTiWaste       = wt.get_labware(lab.DiTi_Waste, "")
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
@@ -1127,7 +1127,7 @@ class Protocol (Executable):
             asp.exec()                                           # will call robot.curArm().aspirated(vol, mask)  ???
             curTip = nextTip
 
-    def _dispensemultiwells(self, tips : int, liq_class, labware : Lab.Labware, vol : (float, list)):
+    def _dispensemultiwells(self, tips : int, liq_class, labware : lab.Labware, vol : (float, list)):
         """
         Intermediate-level function. One dispense from multiple tips in multiple wells with different volume
 
@@ -1147,7 +1147,7 @@ class Protocol (Executable):
 
     # Atomic API ----------------------------------------------------------------------------------------
     def pick_up_tip(self, TIP_MASK    : int        = None,
-                          tip_type    :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)= None,
+                          tip_type    :(str, lab.DITIrackType, lab.DITIrack, lab.DITIrackTypeSeries)= None,
                           arm         : robot.Arm    = None,
                           AirgapVolume: float      = 0,
                           AirgapSpeed : int        = None):
@@ -1173,7 +1173,7 @@ class Protocol (Executable):
         instr.getDITI2(TIP_MASK, DITI_series, arm=arm, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed).exec()
 
     def drop_tip(self,  TIP_MASK    : int         = None,
-                        DITI_waste  : Lab.Labware = None,
+                        DITI_waste  : lab.Labware = None,
                         arm         : robot.Arm     = None,
                         AirgapVolume: float       = 0,
                         AirgapSpeed : int         = None):
@@ -1191,7 +1191,7 @@ class Protocol (Executable):
     def aspirate(self,   arm        : robot.Arm           = None,
                          TIP_MASK   : int               = None,
                          volume     : (float, list)     = None,
-                         from_wells : [Lab.Well]        = None,
+                         from_wells : [lab.Well]        = None,
                          liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
@@ -1209,7 +1209,7 @@ class Protocol (Executable):
     def dispense(self, arm        : robot.Arm           = None,
                  TIP_MASK   : int               = None,
                  volume     : (float, list)     = None,
-                 to_wells   : [Lab.Well]        = None,
+                 to_wells   : [lab.Well]        = None,
                  liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.

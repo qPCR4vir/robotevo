@@ -62,7 +62,7 @@ class Evo75_FLI(Protocol):
         WashCleanerL    = wt.get_labware(Lab.CleanerDeep, "")
         DiTiWaste       = wt.get_labware(Lab.DiTi_Waste_plate, "TipWaste")
 
-        # Lab.def_LabW        = Lab.Labware(type=Lab.MP96well,location=Lab.WorkTable.Location(1,2))
+        # lab.def_LabW        = lab.Labware(type=lab.MP96well,location=lab.WorkTable.Location(1,2))
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste

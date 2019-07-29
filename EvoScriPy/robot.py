@@ -99,7 +99,7 @@ class Arm:
                                 " and we need " + rack_type.name
                     tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                 else:
-                    pass # self.Tips[i] = Lab.Tip(rack_type)
+                    pass # self.Tips[i] = lab.Tip(rack_type)
         return tip_mask
 
     def mount_more_tips_executed(self, rack_type, tip_mask=-1, tips=None) ->(int, list):
@@ -243,7 +243,7 @@ class Robot:
         self.allow_air      = 0.2
         self.set_as_current()
         # self.preservedtips = {} # order:well
-        # self.last_preserved_tips = None # Lab.DITIrack, offset
+        # self.last_preserved_tips = None # lab.DITIrack, offset
 
 
     # Functions to observe the iRobot status (intern-physical status, or user status with are modificators of future
@@ -252,7 +252,7 @@ class Robot:
 
     def where_are_preserved_tips(self,
                                  selected_reagents  : Lab.Labware ,
-                                 TIP_MASK, type) -> list:   # [Lab.DITIrack]
+                                 TIP_MASK, type) -> list:   # [lab.DITIrack]
         """
 
         :param selected_reagents:
@@ -379,7 +379,7 @@ class Robot:
     # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method instr.actualize_robot_state(self):
 
 
-    def get_tips_executed(self, rack_series, tip_mask=-1) -> (int, list):   # (int, [Lab.Tip])
+    def get_tips_executed(self, rack_series, tip_mask=-1) -> (int, list):   # (int, [lab.Tip])
 
         """ To be call from instr.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
@@ -388,7 +388,7 @@ class Robot:
 
         :param tip_mask:
         :param rack_series: the series of this king of tips.
-        :return: (int, [Lab.Tip])
+        :return: (int, [lab.Tip])
         """
 
         tip_mask = self.getTips_test(rack_series.type, tip_mask)
@@ -483,8 +483,8 @@ class Robot:
             self.curArm().Tips[tips[i]] = Lab.usedTip(self.curArm().Tips[tips[i]], w)
 
     def move_labware_executed(self, labware, destination):
-        # assert isinstance(labware, Lab.Labware)
-        # assert isinstance(destination, Lab.WorkTable.Location)
+        # assert isinstance(labware, lab.Labware)
+        # assert isinstance(destination, lab.WorkTable.Location)
         self.worktable.add_labware(labware, destination)
 
 
@@ -492,7 +492,7 @@ class Robot:
 
 
     def set_worktable(self,templateFile):
-        # w = Lab.WorkTable.curWorkTable
+        # w = lab.WorkTable.curWorkTable
         if templateFile is None: return
         if isinstance(self.worktable, Lab.WorkTable):  # todo temp? really to set
             assert self.worktable.templateFileName == templateFile, 'Attemp to reset wortable from '\
