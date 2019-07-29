@@ -8,7 +8,7 @@ __author__ = 'Ariel'
 # just testing a new, generic Evo200
 
 from   EvoScriPy.protocol_steps import *
-import EvoScriPy.Instructions as Itr
+import EvoScriPy.instructions as Itr
 import EvoScriPy.Labware      as Lab
 import EvoScriPy.Reagent      as Rgt
 

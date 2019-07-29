@@ -61,7 +61,7 @@ class Reagent:
         :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells
         :param replicas;        def min_num_of_replica(), number of replicas
         :param defLiqClass;     the name of the Liquid class, as it appears in your own EVOware database.
-                                Itr.def_liquidClass if None
+                                instr.def_liquidClass if None
         :param excess;          in %
         :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
         :param maxFull;         maximo allowed volume in % of the wells capacity

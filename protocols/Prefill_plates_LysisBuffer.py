@@ -7,7 +7,7 @@ __author__ = 'Ariel'
 # todo: deprecate, this is now one version in Prefill_plates_LysisBuffer_and_ProtKpreMix
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.Instructions as Itr
+import EvoScriPy.instructions as Itr
 import EvoScriPy.Labware as Lab
 from protocols.Evo100 import Evo100_FLI
 import EvoScriPy.Reagent as Rgt

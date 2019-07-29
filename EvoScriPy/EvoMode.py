@@ -136,7 +136,7 @@ class Comments(inFile):
 
 
     def exec(self, instr):
-        from EvoScriPy.Instructions import comment, group, group_end
+        from EvoScriPy.instructions import comment, group, group_end
 
         if isinstance(instr, comment) or isinstance(instr, group):
             identation = self.identation_char * self.identattion_length * self.current_identation

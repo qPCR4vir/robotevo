@@ -1,6 +1,6 @@
 
 from EvoScriPy.protocol_steps import Protocol
-import EvoScriPy.Instructions as Itr
+import EvoScriPy.instructions as Itr
 
 class HelloWorld(Protocol):
 

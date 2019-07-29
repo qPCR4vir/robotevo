@@ -8,7 +8,7 @@ __author__ = 'Ariel'
 # Tutorial
 
 from   EvoScriPy.protocol_steps import *
-import EvoScriPy.Instructions   as     Itr
+import EvoScriPy.instructions   as     Itr
 import EvoScriPy.Labware        as     Lab
 from protocols.Evo200 import Evo200
 
