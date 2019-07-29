@@ -151,7 +151,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
                                                         # Define the Reagents in each labware (Cuvette, eppys, etc.)
 
-        # IC2         = Rgt.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
+        # IC2         = rgnt.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
         #                            volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
         if self.add_preMix:

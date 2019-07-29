@@ -153,7 +153,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       volpersample  = IC_MS2Volume,
                                       defLiqClass   = Small_vol_disp)
 
-            # IC2         = Rgt.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
+            # IC2         = rgnt.Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
             #                           volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
             pK_cRNA_MS2 = Rgt.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
