@@ -10,7 +10,7 @@ __author__ = 'qPCR4vir'
 from contextlib import contextmanager
 import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instr
-import EvoScriPy.Reagent as Rgt
+import EvoScriPy.reagent as Rgt
 import EvoScriPy.Labware as Lab
 import EvoScriPy.EvoMode as EvoMode
 

@@ -7,7 +7,7 @@
 __author__ = 'qPCR4vir'
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.Reagent as Rgt
+import EvoScriPy.reagent as Rgt
 
 
 class Evo100(Protocol):

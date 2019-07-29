@@ -9,7 +9,7 @@ from EvoScriPy.protocol_steps import *
 import EvoScriPy.instructions as Itr
 # import EvoScriPy.Labware as Lab
 from protocols.Evo100 import Evo100_FLI
-import EvoScriPy.Reagent as Rgt
+import EvoScriPy.reagent as Rgt
 from EvoScriPy.Instructions_Te_MagS import *
 
 
