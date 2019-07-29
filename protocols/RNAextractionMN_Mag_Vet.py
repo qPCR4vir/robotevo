@@ -10,7 +10,7 @@ import EvoScriPy.instructions as Itr
 # import EvoScriPy.Labware as lab
 from protocols.Evo100 import Evo100_FLI
 import EvoScriPy.reagent as Rgt
-from EvoScriPy.Instructions_Te_MagS import *
+from EvoScriPy.instructions_Te_MagS import *
 
 
 mix_mag_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix.esc" .decode(EvoScriPy.evo_mode.Mode.encoding)
