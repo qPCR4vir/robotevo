@@ -738,8 +738,7 @@ class Protocol (Executable):
         """
 
         assert isinstance(preMix, Rgt.preMix)
-        robot       = self.robot
-        mxnTips     = robot.curArm().nTips  # max number of Tips
+        mxnTips     = self.robot.curArm().nTips  # max number of Tips
         ncomp       = len(preMix.components)
         nt          = min(mxnTips, ncomp)
         NumSamples  = NumSamples or self.NumOfSamples
@@ -779,11 +778,11 @@ class Protocol (Executable):
                     tip += 1  # use the next tip
                     if tip >= nt:
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
-                        tipsType = robot.curArm().Tips[0].type    # only the 0 ??
+                        tipsType = self.robot.curArm().Tips[0].type    # only the 0 ??
                         self.drop_tips(robot.tipsMask[ctips])
                         self.get_tips(robot.tipsMask[ctips], tipsType)
                         tip = 0
-                    mV = robot.curArm().Tips[tip].type.maxVol
+                    mV = self.robot.curArm().Tips[tip].type.maxVol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
                     # but also if there is not sufficient reacgent in the current component replica
                     current_comp_repl = 0
