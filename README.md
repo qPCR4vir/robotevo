@@ -41,12 +41,17 @@ Author Ariel Vina-Rodriguez (qPCR4vir)
  Users that decide to public here user-protocols (for example if they are planing to publish it in a scientific journal) agree to accept distribution under the RobotEvo licensing.
  
 ---------
-**Code style**: the main goal is to make the code as readable as possible to humans. 
+**Code style**: the main goal is to make the code as readable as possible **to humans** (not to tools). 
+
 Good names are the first priority. 
-You may help to choose better names in some cases (English is not our first language). 
+You may help to choose better names in many cases (English is not our first language). 
+
 Python is well known for the fact that it is probably the only popular general programming 
 language that enforce by "law" readability through vertical formatting. We continue that idea, 
 and use vertical formatting wherever it improve readability, 
-particularly in definitions and calls of functions with many arguments. 
+particularly in definitions and calls of functions with many arguments, `if` with many conditions and 
+series of assignments. 
+
 We will adhere to the PEP8 rules of code style when it does not significantly dismantle 
-readability by preventing vertical formatting. 
+readability by preventing vertical formatting. The lines are 130 character length, 
+which is optimal for reading two scripts in parallel in a HD monitor (landscape) or one long portrait.
