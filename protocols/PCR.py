@@ -6,7 +6,7 @@
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.instructions as Itr
-import EvoScriPy.Labware as Lab
+import EvoScriPy.labware as Lab
 import EvoScriPy.reagent as Rgt      # ??
 #from protocols.Evo75_FLI import Evo75_FLI
 from protocols.Evo100 import Evo100_FLI

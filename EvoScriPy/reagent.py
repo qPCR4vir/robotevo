@@ -6,7 +6,7 @@
 __author__ = 'qPCR4vir'
 
 
-import EvoScriPy.Labware as Lab
+import EvoScriPy.labware as Lab
 # from Robot import current
 from EvoScriPy.Instruction_Base import def_liquidClass
 

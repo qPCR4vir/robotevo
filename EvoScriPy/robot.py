@@ -6,7 +6,7 @@
 
 __author__ = 'qPCR4vir'
 
-import EvoScriPy.Labware as Lab
+import EvoScriPy.labware as Lab
 rep_sub = None      # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding) ??
 
 tipMask = []        # mask for one tip of index ...

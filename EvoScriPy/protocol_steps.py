@@ -11,7 +11,7 @@ from contextlib import contextmanager
 import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instr
 import EvoScriPy.reagent as rgnt
-import EvoScriPy.Labware as Lab
+import EvoScriPy.labware as Lab
 import EvoScriPy.EvoMode as EvoMode
 
 

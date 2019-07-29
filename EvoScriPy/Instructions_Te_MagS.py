@@ -8,7 +8,7 @@ __author__ = 'Ariel'
 """ A.15.10 Advanced Worklist Commands for the Te-MagS """
 
 import EvoScriPy.EvoMode
-import EvoScriPy.Labware
+import EvoScriPy.labware
 from EvoScriPy.Instruction_Base import *
 
 
