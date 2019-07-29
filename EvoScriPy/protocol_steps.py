@@ -152,8 +152,9 @@ class Protocol (Executable):
                     reuse       = None, drop         = None,
                     preserve    = None, usePreserved = None,  selected_samples : Lab.Labware  = None,
                     allow_air   = None, drop_first   = False, drop_last          = False   ):
-        '''
+        """
 
+        :param tip_type     :
         :param tipsMask     :
         :param reuse        : Reuse the tips or drop it and take new BEFORE each individual action
         :param drop         : Drops the tips AFTER each individual action,
@@ -165,7 +166,7 @@ class Protocol (Executable):
         :param drop_first   : Reuse the tips or drop it and take new once BEFORE the whole action
         :param drop_last    : Drops the tips at THE END of the whole action
         :return:
-        '''
+        """
 
         if selected_samples is not None:
             assert isinstance(selected_samples, Lab.Labware )      # todo set some current?
@@ -795,9 +796,9 @@ class Protocol (Executable):
                         rVol -= dV
                 self.mix_reagent(preMix, maxTips=ctips)
 
-    def get_tips(self, TIP_MASK         = -1,
-                 tip_type         = None,
-                 selected_samples = None):  # todo TIP_MASK=None
+    def get_tips(self, TIP_MASK         = None,
+                       tip_type         = None,
+                       selected_samples = None):  # todo TIP_MASK=None
         """
         It will decide to get new tips or to pick back the preserved tips for the selected samples
         :param TIP_MASK:
@@ -805,7 +806,7 @@ class Protocol (Executable):
         :param selected_samples:
         :return:
         """
-        mask = TIP_MASK = TIP_MASK if TIP_MASK != -1 else Rbt.tipsMask[self.robot.curArm().nTips]
+        mask = TIP_MASK = TIP_MASK if TIP_MASK is not None else Rbt.tipsMask[self.robot.curArm().nTips]
 
         if self.robot.usePreservedtips:
             with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
@@ -855,11 +856,11 @@ class Protocol (Executable):
                 Itr.set_DITIs_Back(tipsMask, tip_rack).exec()
             assert l == 0
             return
-        #if not Rbt.Robot.current.droptips: return 0
-        #TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
-        #if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
+        # if not Rbt.Robot.current.droptips: return 0
+        # TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
+        # if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
         Itr.dropDITI(TIP_MASK).exec()
-        #return TIP_MASK
+        # return TIP_MASK
 
     def go_first_pos(self, first_tip: (int, str) = None):
         """

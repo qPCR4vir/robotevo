@@ -141,7 +141,6 @@ V;200
 996;0;0;
 --{ RPG }--
 Comment("Prefill a plate with some dilutions of two master mix and Buffer Reagent for 4 samples.");
-Set_DITI_Counter2("DiTi 1000ul","55","1","1",0);
 UserPrompt("Check Buffer  in ['well 1 in labware BufferCub:  with 1497.0 uL of reagent Buffer ']Check mix1 in ['well 1 in labware mixes:  with 41.0 uL of reagent mix1']Check mix2 in ['well 2 in labware mixes:  with 41.0 uL of reagent mix2']",1,-1);
 Comment("Check: ['well 4 in labware BufferCub:  with 1497.0 uL of reagent Buffer ']");
 GetDITI2(1,"DiTi 1000ul",0,0,0,300);

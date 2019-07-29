@@ -8,9 +8,9 @@ __author__ = 'Ariel'
 # just testing a new, generic Evo200
 
 from   EvoScriPy.protocol_steps import *
-import EvoScriPy.Instructions   as     Itr
-import EvoScriPy.Labware        as     Lab
-import EvoScriPy.Reagent        as     Rgt
+import EvoScriPy.Instructions as Itr
+import EvoScriPy.Labware      as Lab
+import EvoScriPy.Reagent      as Rgt
 
 from protocols.Evo200 import Evo200
 
@@ -32,7 +32,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
     def __init__(self,
                  GUI                         = None,
-                 num_of_samples: int           = None,
+                 num_of_samples: int         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -48,8 +48,7 @@ class Prefill_plate_in_Evo200(Evo200):
                         run_name                    = run_name)
 
     def Run(self):
-        self.initialize()    # if needed calls Executable.initialize() and set_EvoMode
-                             # which calls GUI.update_parameters() and set_defaults() from Evo200
+        self.initialize()                                               # set_EvoMode and set_defaults() from Evo200
 
         self.check_initial_liquid_level = True
         self.show_runtime_check_list    = True
@@ -58,37 +57,31 @@ class Prefill_plate_in_Evo200(Evo200):
         assert 1 <= NumOfSamples <= 96/6 , "In this demo we want to set 6x NumOfSamples in a 96 well plate."
         wt           = self.worktable
 
-        Itr.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'\
+        Itr.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'
                        .format(NumOfSamples     )).exec()
 
-                                                            # Get Labwares (Cuvette, eppys, etc.) from the work table
-        BufCuvette   = wt.get_labware(Lab.Trough_100ml, "BufferCub")
-        master_mixes_= wt.get_labware(Lab.Eppendorfrack, "mixes")
 
+        BufCuvette    = wt.get_labware(Lab.Trough_100ml, "BufferCub")           # Get Labwares from the work table
+        master_mixes_ = wt.get_labware(Lab.Eppendorfrack, "mixes")
 
-        self.go_first_pos()                                                     #  Set the initial position of the tips
-
-                                                                                  # Set volumen / sample
-        all_samples = range(NumOfSamples)
-        maxTips     = min  (self.n_tips, NumOfSamples)
-        maxMask     = Rbt.tipsMask[maxTips]
+        maxTips       = min  (self.n_tips, NumOfSamples)
 
         buf_per_sample =0
         well_v = 100
 
-        dil_mix1_10 = well_v /10                # to be distribute from original mix1 to mix1_10
+        dil_mix1_10 = well_v /10                     # to be distribute from original mix1 to mix1_10
         buf_mix1_10 = well_v - dil_mix1_10
         buf_per_sample += buf_mix1_10
 
-        dil_mix2_10 = well_v / 10               # to be distribute from original mix2 to mix2_10
+        dil_mix2_10 = well_v / 10                    # to be distribute from original mix2 to mix2_10
         buf_mix2_10 = well_v - dil_mix2_10
         buf_per_sample += buf_mix2_10
 
-        dil_mix1_100 = well_v / 10              # to be transfered from mix1_10 to mix1_100
+        dil_mix1_100 = well_v / 10                   # to be transfered from mix1_10 to mix1_100
         buf_mix1_100 = well_v - dil_mix1_100
         buf_per_sample += buf_mix1_100
 
-        dil_mix2_100 = well_v / 10              # to be transfered from mix2_10 to mix2_100
+        dil_mix2_100 = well_v / 10                   # to be transfered from mix2_10 to mix2_100
         buf_mix2_100 = well_v - dil_mix2_100
         buf_per_sample += buf_mix2_100
 
@@ -153,7 +146,7 @@ class Prefill_plate_in_Evo200(Evo200):
         loc.site -= 1
         car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", nSite=3), loc.grid, label = "MP 3Pos")
         loc.rack = car
-        Itr.transfer_rack(Plat2, loc ).exec()                                              # just showing how RoMa works.
+        Itr.transfer_rack(Plat2, loc ).exec()                                            # just showing how RoMa works.
 
         with group("Fill plate with mixes "):
 
