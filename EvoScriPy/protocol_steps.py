@@ -12,7 +12,7 @@ import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instr
 import EvoScriPy.reagent as rgnt
 import EvoScriPy.labware as lab
-import EvoScriPy.evo_mode as EvoMode
+import EvoScriPy.evo_mode as mode
 
 
 def not_implemented():
@@ -131,10 +131,10 @@ class Protocol (Executable):
         self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
         self.firstTip                    = firstTip
         self.n_tips                       = n_tips
-        self.EvoMode                     = None      # EvoMode.multiple
-        self.iRobot                      = None      # EvoMode.iRobot
-        self.Script                      = None      # EvoMode.Script
-        self.comments_                   = None      # EvoMode.Comments
+        self.EvoMode                     = None      # mode.multiple
+        self.iRobot                      = None      # mode.iRobot
+        self.Script                      = None      # mode.Script
+        self.comments_                   = None      # mode.Comments
         self.worktable                   = None
         self.robot                       = None
         self.NumOfSamples                = int(num_of_samples or Protocol.max_s)
@@ -1005,24 +1005,24 @@ class Protocol (Executable):
         if not self.EvoMode:
             self.init_EvoMode()
         else:
-            EvoMode.current = self.EvoMode
+            mode.current = self.EvoMode
         self.iRobot.set_as_current()
         rgnt.Reagent.set_reagent_list(self)
 
     def init_EvoMode(self):
-        self.iRobot = EvoMode.iRobot(instr.Pipette.LiHa1, nTips=self.n_tips)
-        self.Script = EvoMode.Script(template=self.worktable_template_filename,
+        self.iRobot = mode.iRobot(instr.Pipette.LiHa1, nTips=self.n_tips)
+        self.Script = mode.Script(template=self.worktable_template_filename,
                                      filename=self.output_filename + '.esc',
                                      robot=self.iRobot.robot)
-        self.comments_ = EvoMode.Comments(filename=self.output_filename + '.protocol.txt')
-        self.EvoMode = EvoMode.multiple([self.iRobot,
+        self.comments_ = mode.Comments(filename=self.output_filename + '.protocol.txt')
+        self.EvoMode = mode.multiple([self.iRobot,
                                          self.Script,
-                                         EvoMode.AdvancedWorkList(self.output_filename + '.gwl'),
-                                         EvoMode.ScriptBody(self.output_filename + '.txt'),
-                                         EvoMode.StdOut(),
+                                         mode.AdvancedWorkList(self.output_filename + '.gwl'),
+                                         mode.ScriptBody(self.output_filename + '.txt'),
+                                         mode.StdOut(),
                                          self.comments_
                                          ])
-        EvoMode.current = self.EvoMode
+        mode.current = self.EvoMode
         self.worktable  = self.iRobot.robot.worktable  # shortcut !!
         self.robot      = self.iRobot.robot
         assert (self.iRobot.robot.curArm().nTips == self.n_tips)
@@ -1274,7 +1274,7 @@ def parallel_execution_of(subroutine, repeat=1):
         yield
         instr.subroutine(subroutine, instr.subroutine.Waits_previous).exec()
     else:
-        # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
+        # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(mode.Mode.encoding)
         instr.variable("repetitions",
                      repeat,
                      queryString="How many time repeat the subroutine?",

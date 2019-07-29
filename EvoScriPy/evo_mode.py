@@ -219,4 +219,4 @@ class iRobot(Mode):
         self.robot.set_as_current()
 
 
-current = None   # Intended to be the principal EvoMode of the current protocol. Mostly mulitiple
+current = None   # Intended to be the principal mode of the current protocol. Mostly mulitiple
