@@ -13,7 +13,7 @@ Implement the
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoScriPy.EvoMode
 import EvoScriPy.Labware as Lab
-import EvoScriPy.Robot as Rbt
+import EvoScriPy.robot as Rbt
 
 supportVirtualRobot = True  # OK explore this idea ! (problems with "asynchronous" and multiple mode)
 

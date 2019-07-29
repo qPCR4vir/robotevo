@@ -11,7 +11,7 @@ __author__ = 'qPCR4vir'
 # http://sydney.edu.au/medicine/bosch/facilities/molecular-biology/automation/Manual%20Freedom%20EVOware%202.3%20Research%20Use%20Only.pdf
 
 from EvoScriPy.Instruction_Base import *
-import EvoScriPy.Robot
+import EvoScriPy.robot
 #todo organize the arg in each instruction according to the more common use
 #todo implement all the instruction, from all the devices, and from script only (not documented-inverse engineering) !!
 
@@ -56,7 +56,7 @@ class aspirate(Pipetting):
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Arm.Aspirate
+        return EvoScriPy.robot.Arm.Aspirate
 
 
 class dispense(Pipetting):
@@ -86,7 +86,7 @@ class dispense(Pipetting):
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Arm.Dispense
+        return EvoScriPy.robot.Arm.Dispense
 
 
 class mix(Pipetting):
@@ -590,7 +590,7 @@ class detect_Liquid(Pipetting):    # todo get the results !!!
 
     @staticmethod
     def action():
-        return EvoScriPy.Robot.Arm.Detect
+        return EvoScriPy.robot.Arm.Detect
 
     def __init__(self ,      tipMask     = None,                         # arg 1
                              liquidClass = None,                         # arg 2
@@ -1058,7 +1058,7 @@ class Te_MO_Aspirate(Instruction):
         """
         Instruction.__init__(self, 'Aspirate')
         self.robot.curArm(arm)
-        self.tipMask        = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().n_tips]
+        self.tipMask        = tipMask if tipMask is not None else robot.tipsMask[self.robot.curArm().n_tips]
         self.labware        =labware
         self.spacing        = spacing
         self.loopOptions    = LoopOptions

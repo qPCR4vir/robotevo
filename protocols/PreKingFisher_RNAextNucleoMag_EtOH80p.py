@@ -128,7 +128,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.n_tips, NumOfSamples)
-        maxMask     = Rbt.tipsMask[maxTips]
+        maxMask     = robot.tipsMask[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 

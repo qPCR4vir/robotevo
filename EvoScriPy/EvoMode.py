@@ -12,7 +12,7 @@ type of "output".
 """
 
 
-import EvoScriPy.Robot as Rbt
+import EvoScriPy.robot as Rbt
 
 encoding = 'Latin-1'      # ISO/IEC 8859-1
 

@@ -383,7 +383,7 @@ class Carrier:
             self.allowedLabwaresTypes   = []
             self.name                   = name
 
-    def __init__(self, RackType, grid, label=""):  # , worktable=WorkTable.curWorkTable or Rbt.Robot.current.worktable
+    def __init__(self, RackType, grid, label=""):  # , worktable=WorkTable.curWorkTable or robot.Robot.current.worktable
         self.site = grid
         self.type = RackType
         self.labwares = [None] * self.type.nSite

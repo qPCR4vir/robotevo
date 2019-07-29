@@ -8,7 +8,7 @@ __author__ = 'qPCR4vir'
 
 
 from contextlib import contextmanager
-import EvoScriPy.Robot as Rbt
+import EvoScriPy.robot as robot
 import EvoScriPy.Instructions as Itr
 import EvoScriPy.Reagent as Rgt
 import EvoScriPy.Labware as Lab
@@ -276,7 +276,7 @@ class Protocol (Executable):
             availableDisp = 0
             while SampleCnt:
                 if num_tips > SampleCnt: num_tips = SampleCnt
-                with self.tips(Rbt.tipsMask[num_tips], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
+                with self.tips(robot.tipsMask[num_tips], usePreserved=False, preserve=False):  # OK want to use preserved ?? selected=??
                     maxMultiDisp_N = self.robot.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
                     dsp, rst = divmod(SampleCnt, num_tips)
                     if dsp >= maxMultiDisp_N:
@@ -385,8 +385,8 @@ class Protocol (Executable):
         lf = from_labware_region
         lt = to_labware_region
 
-        Asp = Itr.aspirate(Rbt.tipsMask[nt], volume=volume, labware=from_labware_region)
-        Dst = Itr.dispense(Rbt.tipsMask[nt], volume=volume, labware=to_labware_region)
+        Asp = Itr.aspirate(robot.tipsMask[nt], volume=volume, labware=from_labware_region)
+        Dst = Itr.dispense(robot.tipsMask[nt], volume=volume, labware=to_labware_region)
         msg = "Transfer: {v:.1f} µL from {n:s}".format(v=volume, n=lf.label)
         with group(msg):
             msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
@@ -402,7 +402,7 @@ class Protocol (Executable):
                 curSample = NumSamples - SampleCnt
                 if nt > SampleCnt:                          # only a few samples left
                     nt = SampleCnt                          # don't use all tips
-                    tm = Rbt.tipsMask[nt]                   # todo count for broken tips
+                    tm = robot.tipsMask[nt]                   # todo count for broken tips
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 
@@ -427,7 +427,7 @@ class Protocol (Executable):
 
                 Asp.labware.selectOnly(src)
                 Dst.labware.selectOnly(trg)
-                with self.tips(Rbt.tipsMask[nt], selected_samples=Asp.labware):  # todo what if volume > maxVol_tip ?
+                with self.tips(robot.tipsMask[nt], selected_samples=Asp.labware):  # todo what if volume > maxVol_tip ?
                     Asp.exec()                                           # <---- low level aspirate
                     Dst.exec()                                           # <---- low level dispense
                     for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
@@ -451,7 +451,7 @@ class Protocol (Executable):
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
         reagent.autoselect(offset = offset)                                         # reagent.labware.selectOnly([reagent.pos])
-        Itr.aspirate(Rbt.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
+        Itr.aspirate(robot.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
     def dispense_one(self, tip, reagent, vol=None):                     # OK coordinate with robot
         """
@@ -464,7 +464,7 @@ class Protocol (Executable):
         reagent.autoselect()                                         # reagent.labware.selectOnly([reagent.pos])
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
-        Itr.dispense(Rbt.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
+        Itr.dispense(robot.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
 
     def mix(self,  in_labware_region  : Lab.Labware,
                    using_liquid_class : str        = None,
@@ -494,7 +494,7 @@ class Protocol (Executable):
         SampleCnt = NumSamples
         if nt > SampleCnt:
             nt = SampleCnt
-        # mV = Rbt.Robot.current.curArm().Tips[0].type.maxVol * 0.8
+        # mV = robot.Robot.current.curArm().Tips[0].type.maxVol * 0.8
         mV = self.worktable.def_DiTi.maxVol * mix_p    # What tip tp use !
         if volume:
             v = volume
@@ -504,7 +504,7 @@ class Protocol (Executable):
         v = v if v < mV else mV
 
         lf = in_labware_region
-        mx = Itr.mix(Rbt.tipsMask[nt], using_liquid_class, volume, in_labware_region)
+        mx = Itr.mix(robot.tipsMask[nt], using_liquid_class, volume, in_labware_region)
         msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
         with group(msg):
             msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
@@ -514,11 +514,11 @@ class Protocol (Executable):
                 curSample = NumSamples - SampleCnt
                 if nt > SampleCnt:
                     nt = SampleCnt
-                    mx.tipMask = Rbt.tipsMask[nt]
+                    mx.tipMask = robot.tipsMask[nt]
 
                 sel = oriSel[curSample:curSample + nt]
                 mx.labware.selectOnly(sel)
-                with self.tips(Rbt.tipsMask[nt], selected_samples = mx.labware):
+                with self.tips(robot.tipsMask[nt], selected_samples = mx.labware):
                     mV = self.robot.curArm().Tips[0].type.maxVol * mix_p
                     if not using_liquid_class:
                         if sel:
@@ -563,7 +563,7 @@ class Protocol (Executable):
             vm = self.robot.curArm().Tips[tip].type.maxVol * 0.9
             vol += [min(v, vm)]
 
-        Itr.mix(Rbt.tipsMask[len(vol)],
+        Itr.mix(robot.tipsMask[len(vol)],
                 liquidClass =LiqClass,
                 volume      =vol,
                 labware     =reagent.labware,
@@ -624,7 +624,7 @@ class Protocol (Executable):
 
         if nt > SampleCnt:                              # very few wells selected (less than tips)
             nt = SampleCnt
-        tm = Rbt.tipsMask[nt]                           # todo: count for 'broken' tips
+        tm = robot.tipsMask[nt]                           # todo: count for 'broken' tips
         nt = to_waste_labware.autoselect(maxTips=nt)
         mV = self.worktable.def_DiTi.maxVol
 
@@ -653,7 +653,7 @@ class Protocol (Executable):
                 curSample = NumSamples - SampleCnt
                 if nt > SampleCnt:                          # only a few samples left
                     nt = SampleCnt                          # don't use all tips
-                    tm = Rbt.tipsMask[nt]
+                    tm = robot.tipsMask[nt]
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 
@@ -762,7 +762,7 @@ class Protocol (Executable):
                                          ncomp                        )
             Itr.comment(msg).exec()
             samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
-            with self.tips(Rbt.tipsMask[nt]):   #  want to use preserved ?? selected=??
+            with self.tips(robot.tipsMask[nt]):   #  want to use preserved ?? selected=??
                 tip = -1
                 ctips = nt
                 for ridx, reagent_component in enumerate(preMix.components):       # iterate reagent components
@@ -780,8 +780,8 @@ class Protocol (Executable):
                     if tip >= nt:
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
                         tipsType = robot.curArm().Tips[0].type    # only the 0 ??
-                        self.drop_tips(Rbt.tipsMask[ctips])
-                        self.get_tips(Rbt.tipsMask[ctips], tipsType)
+                        self.drop_tips(robot.tipsMask[ctips])
+                        self.get_tips(robot.tipsMask[ctips], tipsType)
                         tip = 0
                     mV = robot.curArm().Tips[tip].type.maxVol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
@@ -806,7 +806,7 @@ class Protocol (Executable):
         :param selected_samples:
         :return:
         """
-        mask = TIP_MASK = TIP_MASK if TIP_MASK is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        mask = TIP_MASK = TIP_MASK if TIP_MASK is not None else robot.tipsMask[self.robot.curArm().nTips]
 
         if self.robot.usePreservedtips:
             with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
@@ -856,8 +856,8 @@ class Protocol (Executable):
                 Itr.set_DITIs_Back(tipsMask, tip_rack).exec()
             assert l == 0
             return
-        # if not Rbt.Robot.current.droptips: return 0
-        # TIP_MASK = Rbt.Robot.current.curArm().drop(TIP_MASK)
+        # if not robot.Robot.current.droptips: return 0
+        # TIP_MASK = robot.Robot.current.curArm().drop(TIP_MASK)
         # if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
         Itr.dropDITI(TIP_MASK).exec()
         # return TIP_MASK
@@ -941,9 +941,9 @@ class Protocol (Executable):
 
         with self.tips(tip_type     = self.def_DiTi_check_liquid_level,
                        reuse        = False,
-                       tipsMask     = Rbt.tipsMask[len(vol)]):
+                       tipsMask     = robot.tipsMask[len(vol)]):
 
-            Itr.detect_Liquid(Rbt.tipsMask[len(vol)],
+            Itr.detect_Liquid(robot.tipsMask[len(vol)],
                               liquidClass =LiqClass,
                               labware     =reagent.labware).exec()
 
@@ -1079,7 +1079,7 @@ class Protocol (Executable):
         re = reagent.Replicas
         assert len(vol) <= len(re)
         for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
-            Itr.dispense(Rbt.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
+            Itr.dispense(robot.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
                          # reagent.defLiqClass,
                          v, w.labware.selectOnly([w.offset])).exec()
 
@@ -1115,14 +1115,14 @@ class Protocol (Executable):
 
         LiqClass = LiqClass or reagent.defLiqClass
 
-        mask = Rbt.tipsMask[tips]                                 # as if we could use so many tips
+        mask = robot.tipsMask[tips]                                 # as if we could use so many tips
         n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
         asp = Itr.aspirate(mask, LiqClass, vol, reagent.labware)
         curTip = 0
         while curTip < tips:                                      # todo what to do with used tips?
             nextTip = curTip + n_wells                            # add tips, one for each well
             nextTip = nextTip if nextTip <= tips else tips        # but not too much
-            mask = Rbt.tipsMask[curTip] ^ Rbt.tipsMask[nextTip]   # now use only the last tips added
+            mask = robot.tipsMask[curTip] ^ robot.tipsMask[nextTip]   # now use only the last tips added
 
             asp.tipMask = mask
             asp.exec()                                           # will call robot.curArm().aspirated(vol, mask)  ???
@@ -1139,7 +1139,7 @@ class Protocol (Executable):
         """
         if not isinstance(vol, list):
             vol = [vol] * tips
-        om = Rbt.tipsMask[tips]
+        om = robot.tipsMask[tips]
 
         Itr.dispense(om, liq_class, vol, labware).exec()          # will call robot.curArm().dispensed(vol, om)  ??
 
@@ -1149,7 +1149,7 @@ class Protocol (Executable):
     # Atomic API ----------------------------------------------------------------------------------------
     def pick_up_tip(self, TIP_MASK    : int        = None,
                           tip_type    :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)= None,
-                          arm         : Rbt.Arm    = None,
+                          arm         : robot.Arm    = None,
                           AirgapVolume: float      = 0,
                           AirgapSpeed : int        = None):
         """
@@ -1175,7 +1175,7 @@ class Protocol (Executable):
 
     def drop_tip(self,  TIP_MASK    : int         = None,
                         DITI_waste  : Lab.Labware = None,
-                        arm         : Rbt.Arm     = None,
+                        arm         : robot.Arm     = None,
                         AirgapVolume: float       = 0,
                         AirgapSpeed : int         = None):
         """
@@ -1189,7 +1189,7 @@ class Protocol (Executable):
         """
         Itr.dropDITI(TIP_MASK, labware=DITI_waste, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed, arm=arm).exec()
 
-    def aspirate(self,   arm        : Rbt.Arm           = None,
+    def aspirate(self,   arm        : robot.Arm           = None,
                          TIP_MASK   : int               = None,
                          volume     : (float, list)     = None,
                          from_wells : [Lab.Well]        = None,
@@ -1207,7 +1207,7 @@ class Protocol (Executable):
 
         Itr.aspirate(arm=arm, tipMask=TIP_MASK, liquidClass=liq_class, volume=volume, wellSelection=from_wells).exec()
 
-    def dispense(self, arm        : Rbt.Arm           = None,
+    def dispense(self, arm        : robot.Arm           = None,
                  TIP_MASK   : int               = None,
                  volume     : (float, list)     = None,
                  to_wells   : [Lab.Well]        = None,
@@ -1288,9 +1288,9 @@ def parallel_execution_of(subroutine, repeat=1):
                      type=Itr.variable.String
                      ).exec()
 
-        Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Continues).exec()
+        Itr.subroutine(robot.rep_sub, Itr.subroutine.Continues).exec()
         yield
-        Itr.subroutine(Rbt.rep_sub, Itr.subroutine.Waits_previous).exec()
+        Itr.subroutine(robot.rep_sub, Itr.subroutine.Waits_previous).exec()
 
 
 @contextmanager

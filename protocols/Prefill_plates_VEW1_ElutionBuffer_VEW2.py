@@ -89,7 +89,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         all_samples = range(NumOfSamples)
         maxTips     = min  (self.n_tips, NumOfSamples)
-        maxMask     = Rbt.tipsMask[maxTips]
+        maxMask     = robot.tipsMask[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
