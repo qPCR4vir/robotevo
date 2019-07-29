@@ -13,10 +13,10 @@ import EvoScriPy.reagent as Rgt
 from EvoScriPy.Instructions_Te_MagS import *
 
 
-mix_mag_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix.esc" .decode(EvoScriPy.EvoMode.Mode.encoding)
-mix_mag_eluat = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix_Eluat.esc".decode(EvoScriPy.EvoMode.Mode.encoding)
+mix_mag_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix.esc" .decode(EvoScriPy.evo_mode.Mode.encoding)
+mix_mag_eluat = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix_Eluat.esc".decode(EvoScriPy.evo_mode.Mode.encoding)
 # robot.rep_sub = br"repeat_subroutine.esc" .decode(EvoMode.Mode.encoding)
-Rbt.rep_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\repeat_subroutine.esc".decode(EvoScriPy.EvoMode.Mode.encoding)
+Rbt.rep_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\repeat_subroutine.esc".decode(EvoScriPy.evo_mode.Mode.encoding)
 
 
 class RNAextr_MN_Vet_Kit(Evo100_FLI):

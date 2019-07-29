@@ -12,7 +12,7 @@ import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instr
 import EvoScriPy.reagent as rgnt
 import EvoScriPy.labware as lab
-import EvoScriPy.EvoMode as EvoMode
+import EvoScriPy.evo_mode as EvoMode
 
 
 def not_implemented():

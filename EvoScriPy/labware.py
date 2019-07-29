@@ -939,7 +939,7 @@ class Labware:
                 bitMask = 0
         if bit != 6:
             sel.append(null + bitMask)
-        from EvoScriPy.EvoMode import encoding
+        from EvoScriPy.evo_mode import encoding
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
 
 

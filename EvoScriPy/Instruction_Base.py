@@ -11,7 +11,7 @@ Implement the
 """
 
 # todo Revise def values: the binding take place at the moment of first import ???
-import EvoScriPy.EvoMode
+import EvoScriPy.evo_mode
 import EvoScriPy.labware as Lab
 import EvoScriPy.robot as Rbt
 
@@ -99,7 +99,7 @@ class Instruction:
         pass
 
     def exec(self, mode=None):
-        if mode is None: mode = EvoScriPy.EvoMode.current  # todo revise
+        if mode is None: mode = EvoScriPy.evo_mode.current  # todo revise
         if not self.allowed(mode):
             return
         mode.exec(self)
@@ -112,7 +112,7 @@ class Instruction:
 
 class ScriptONLY(Instruction):
     def allowed(self, mode):
-        return not isinstance(mode, EvoScriPy.EvoMode.AdvancedWorkList)
+        return not isinstance(mode, EvoScriPy.evo_mode.AdvancedWorkList)
 
 
 class Device(Instruction):

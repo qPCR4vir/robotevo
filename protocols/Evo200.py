@@ -12,12 +12,11 @@ import EvoScriPy.reagent as Rgt
 
 
 class Evo200 (Protocol):
-    """ Using the Evo200
-    """
+    """Using the Evo200"""
 
     def __init__(self,
-                 n_tips                          = 8,
-                 num_of_samples                   = None,
+                 n_tips                         = 8,
+                 num_of_samples                 = None,
                  GUI                            = None,
                  worktable_template_filename    = None,
                  output_filename                = None,
@@ -26,8 +25,8 @@ class Evo200 (Protocol):
 
         Protocol.__init__(self,
                           GUI                         = GUI,
-                          n_tips= n_tips,
-                          num_of_samples= num_of_samples,
+                          n_tips                      = n_tips,
+                          num_of_samples              = num_of_samples,
                           worktable_template_filename = worktable_template_filename,
                           output_filename             = output_filename,
                           firstTip                    = firstTip,
@@ -39,7 +38,7 @@ class Evo200 (Protocol):
         wt.def_DiTi     = lab.DiTi_1000ul  # DiTi_0200ul  # this is a type, the others are labwares
 
         WashCleanerS    = wt.get_labware(lab.CleanerSWS, "Cleaner1")
-        WashWaste       = wt.get_labware(lab.WasteWS, "Waste")
+        WashWaste       = wt.get_labware(lab.WasteWS,    "Waste")
         WashCleanerL    = wt.get_labware(lab.CleanerLWS, "Cleaner2")
         DiTiWaste       = wt.get_labware(lab.DiTi_Waste, "DiTi Waste")
 
@@ -49,11 +48,10 @@ class Evo200 (Protocol):
 
 
 class Evo200_FLI (Evo200):
-    """ Using the Evo200_FLI
-    """
+    """Using the Evo200_FLI"""
 
     def __init__(self,
-                 num_of_samples                = None,
+                 num_of_samples              = None,
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
@@ -63,8 +61,8 @@ class Evo200_FLI (Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        n_tips= 8,
-                        num_of_samples= num_of_samples,
+                        n_tips                      = 8,
+                        num_of_samples              = num_of_samples,
                         worktable_template_filename = worktable_template_filename,
                         output_filename             = output_filename,
                         firstTip                    = firstTip,
