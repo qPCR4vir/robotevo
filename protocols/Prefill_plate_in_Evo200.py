@@ -53,18 +53,18 @@ class Prefill_plate_in_Evo200(Evo200):
         self.check_initial_liquid_level = True
         self.show_runtime_check_list    = True
 
-        NumOfSamples = self.NumOfSamples
-        assert 1 <= NumOfSamples <= 96/6 , "In this demo we want to set 6x NumOfSamples in a 96 well plate."
+        num_of_samples = self.num_of_samples
+        assert 1 <= num_of_samples <= 96/6 , "In this demo we want to set 6x num_of_samples in a 96 well plate."
         wt           = self.worktable
 
         Itr.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'
-                       .format(NumOfSamples     )).exec()
+                       .format(num_of_samples     )).exec()
 
 
         BufCuvette    = wt.get_labware(Lab.Trough_100ml, "BufferCub")           # Get Labwares from the work table
         master_mixes_ = wt.get_labware(Lab.Eppendorfrack, "mixes")
 
-        maxTips       = min  (self.n_tips, NumOfSamples)
+        maxTips       = min  (self.n_tips, num_of_samples)
 
         buf_per_sample =0
         well_v = 100
@@ -92,7 +92,7 @@ class Prefill_plate_in_Evo200(Evo200):
                                   BufCuvette,
                                   volpersample = buf_per_sample,
                                   # defLiqClass  = 'MN VL',
-                                  # num_of_samples= NumOfSamples
+                                  # num_of_samples= num_of_samples
                                   )
 
         mix1 =Rgt.Reagent("mix1",
@@ -121,25 +121,25 @@ class Prefill_plate_in_Evo200(Evo200):
         mix1_10 = Rgt.Reagent(f"mix1, diluted 1:10",
                         Plat1,
                         initial_vol = 0.0,
-                        replicas    = NumOfSamples,
+                        replicas    = num_of_samples,
                         excess      = 0)
 
         mix2_10 = Rgt.Reagent(f"mix2, diluted 1:10",
                         Plat1,
                         initial_vol = 0.0,
-                        replicas    = NumOfSamples,
+                        replicas    = num_of_samples,
                         excess      = 0)
 
         mix1_100 = Rgt.Reagent(f"mix1, diluted 1:100",
                               Plat2,
                               initial_vol=0.0,
-                              replicas=NumOfSamples,
+                              replicas=num_of_samples,
                               excess=0)
 
         mix2_100 = Rgt.Reagent(f"mix2, diluted 1:100",
                               Plat2,
                               initial_vol=0.0,
-                              replicas=NumOfSamples,
+                              replicas=num_of_samples,
                               excess=0)
 
         loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier

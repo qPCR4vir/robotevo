@@ -51,11 +51,11 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     def Run(self):
         self.initialize()                       # set_defaults ??
 
-        NumOfSamples = self.NumOfSamples
+        num_of_samples = self.num_of_samples
         wt           = self.worktable
 
         Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'
-                                                            .format(str(NumOfSamples))).exec()
+                                                            .format(str(num_of_samples))).exec()
 
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
@@ -87,8 +87,8 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         # SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
 
-        all_samples = range(NumOfSamples)
-        maxTips     = min  (self.n_tips, NumOfSamples)
+        all_samples = range(num_of_samples)
+        maxTips     = min  (self.n_tips, num_of_samples)
         maxMask     = robot.tipsMask[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)

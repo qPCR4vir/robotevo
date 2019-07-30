@@ -7,10 +7,10 @@ __author__ = 'Ariel'
 
 # Tutorial
 
-from   EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions   as     Itr
-import EvoScriPy.labware        as     Lab
-import EvoScriPy.reagent        as     Rgt
+from EvoScriPy.protocol_steps import *
+import EvoScriPy.instructions as instr
+import EvoScriPy.labware as lab
+import EvoScriPy.reagent as rgnt
 from protocols.Evo200 import Evo200
 
 
@@ -32,14 +32,14 @@ class Tutorial_HL_Roma(Evo200):
     min_s, max_s = 1, 96                                            # 96 well plate ??
 
     def def_versions(self):                                         # for now just ignore the variants
-        self.versions = {'No version': self.V_def               }
+        self.versions = {'No version': self.no_versions}
 
-    def V_def(self):
+    def no_versions(self):
         pass
 
     def __init__(self,
                  GUI                         = None,
-                 num_of_samples: int           = 8,
+                 num_of_samples: int         = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -60,11 +60,11 @@ class Tutorial_HL_Roma(Evo200):
 
         self.show_runtime_check_list    = True
 
-        n = self.NumOfSamples
-        assert 1 <= n <= Tutorial_HL_Roma.max_s , "Using 96 well plates."
+        n = self.num_of_samples
+        assert 1 <= n <= Tutorial_HL_Roma.max_s, "Using 96 well plates."
         wt = self.worktable
 
-        Itr.comment('Transfer 5 uL to a moved plate.').exec()
+        instr.comment('Transfer 50 uL to a moved plate.').exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
         plate_A = wt.get_labware("plate")
@@ -73,7 +73,7 @@ class Tutorial_HL_Roma(Evo200):
         v  = 50                                       # uL to be distribute
 
 
-        buffer_A = Rgt.Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
+        buffer_A = rgnt.Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
                                labware      = plate_A,
                                wells        = "A1",
                                replicas     = 8,
@@ -81,18 +81,18 @@ class Tutorial_HL_Roma(Evo200):
 
         self.check_list()                                          # Show the check_list   -------------------------
 
-        Itr.wash_tips(wasteVol=5, FastWash=True).exec()
+        instr.wash_tips(wasteVol=5, FastWash=True).exec()
 
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
 
-        dilution = Rgt.Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
+        dilution = rgnt.Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
                                 plate,
                                 replicas         = n,
                                 minimize_aliquots= False)
 
         with group("Fill dilutions"):
 
-            Itr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
+            instr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
 
             with self.tips(tip_type="DiTi 200 ul", reuse=True, drop=False, drop_last=True):
                 self.distribute(reagent           = mix1,

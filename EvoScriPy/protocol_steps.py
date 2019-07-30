@@ -120,7 +120,7 @@ class Protocol (Executable):
 
     def __init__(self,
                  n_tips                      = 4,
-                 num_of_samples                = max_s,
+                 num_of_samples              = max_s,
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
@@ -130,14 +130,14 @@ class Protocol (Executable):
         self.worktable_template_filename = worktable_template_filename or ""
         self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
         self.firstTip                    = firstTip
-        self.n_tips                       = n_tips
+        self.n_tips                      = n_tips
         self.EvoMode                     = None      # mode.multiple
         self.iRobot                      = None      # mode.iRobot
         self.Script                      = None      # mode.Script
         self.comments_                   = None      # mode.Comments
         self.worktable                   = None
         self.robot                       = None
-        self.NumOfSamples                = int(num_of_samples or Protocol.max_s)
+        self.num_of_samples              = int(num_of_samples or Protocol.max_s)
         self.check_initial_liquid_level  = False
         self.def_DiTi_check_liquid_level = None
         self.show_runtime_check_list     = False
@@ -150,8 +150,8 @@ class Protocol (Executable):
     @contextmanager
     def tips(self,  tipsMask    = None, tip_type     = None,
                     reuse       = None, drop         = None,
-                    preserve    = None, usePreserved = None,  selected_samples : lab.Labware  = None,
-                    allow_air   = None, drop_first   = False, drop_last          = False   ):
+                    preserve    = None, usePreserved = None,  selected_samples: lab.Labware  = None,
+                    allow_air   = None, drop_first   = False, drop_last          = False):
         """
 
         :param tip_type     :
@@ -247,7 +247,7 @@ class Protocol (Executable):
             to_labware_region.selectOnly(range(NumSamples))
         else:
             if not to_labware_region.selected():
-                to_labware_region.selectOnly(range(self.NumOfSamples))
+                to_labware_region.selectOnly(range(self.num_of_samples))
 
         to = to_labware_region.selected()        # list of offset of selected wells
         if optimize: to = to_labware_region.parallelOrder(num_tips, to)
@@ -315,7 +315,7 @@ class Protocol (Executable):
         first well of the labware. Alternatively the wells in the source or target or in both may be
         previously directly "selected" (setting `well.selFlag=True`, for example by calling
         `from_labware_region.selectOnly(self, sel_idx_list)`), in which case transfer the minimum length selected.
-        If no source wells are selected this function will auto select the protocol's `self.NumOfSamples` number
+        If no source wells are selected this function will auto select the protocol's `self.num_of_samples` number
         of wells in the source and target labwares.
         Please, carefully indicate whether to use "parallel optimization" in the pipetting order for both source and
         target by setting `optimizeFrom` and `optimizeTo`. (very important unless you are using a full column
@@ -360,8 +360,8 @@ class Protocol (Executable):
 
             if not dstSel:
                 if not oriSel:
-                    oriSel = range(self.NumOfSamples)
-                    dstSel = range(self.NumOfSamples)
+                    oriSel = range(self.num_of_samples)
+                    dstSel = range(self.num_of_samples)
                 else:
                     dstSel = oriSel
             else:
@@ -487,7 +487,7 @@ class Protocol (Executable):
         oriSel = in_labware_region.selected()
         nt = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pippeting
         if not oriSel:
-            oriSel = range(self.NumOfSamples)
+            oriSel = range(self.num_of_samples)
         if optimize:
             oriSel = in_labware_region.parallelOrder( nt, oriSel)
         NumSamples = len(oriSel)
@@ -580,7 +580,7 @@ class Protocol (Executable):
         Waste a `volume` from each of the selected wells `from_labware_region` (source labware wells)
         `to_waste_labware` using the current LiHa arm with maximum number of tips (of type: `self.worktable.def_DiTi`,
         which can be set `with self.tips(tip_type = myTipsRackType)`). # todo: count for 'broken' tips
-        If no source wells are selected this function will auto select a `self.NumOfSamples` number
+        If no source wells are selected this function will auto select a `self.num_of_samples` number
         of wells in the source labware.
         If no destination is indicated, `self.worktable.def_WashWaste` will be used.
         The same volume will be wasted from each well (todo: revise this, waste all from EACH well?).
@@ -615,7 +615,7 @@ class Protocol (Executable):
         nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pipetting
 
         if not oriSel:
-            oriSel = range(self.NumOfSamples)
+            oriSel = range(self.num_of_samples)
         if optimize:                                    # todo: if None reuse self.optimize (to be created !!)
             oriSel = from_labware_region.parallelOrder(nt, oriSel)
 
@@ -741,7 +741,7 @@ class Protocol (Executable):
         mxnTips     = self.robot.curArm().nTips  # max number of Tips
         ncomp       = len(preMix.components)
         nt          = min(mxnTips, ncomp)
-        NumSamples  = NumSamples or self.NumOfSamples
+        NumSamples  = NumSamples or self.num_of_samples
         labw        = preMix.labware
         tVol        = preMix.minVol(NumSamples)
         mxnrepl     = len(preMix.Replicas)                        # max number of replies

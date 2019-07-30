@@ -79,11 +79,10 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
     def Run(self):
         self.initialize()                       # set_defaults ??
 
-        NumOfSamples = self.NumOfSamples
         wt           = self.worktable
 
         Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit')
-                                             .format(str(NumOfSamples))).exec()
+                                             .format(str(self.num_of_samples))).exec()
 
                                                         # Get Labwares (Cuvette, eppys, etc.) from the work table
 
@@ -126,8 +125,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         SampleLiqClass = "Serum Asp"
 
-        all_samples = range(NumOfSamples)
-        maxTips     = min  (self.n_tips, NumOfSamples)
+        all_samples = range(self.num_of_samples)
+        maxTips     = min  (self.n_tips, self.num_of_samples)
         maxMask     = robot.tipsMask[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
@@ -257,7 +256,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                    using_liquid_class   = (SampleLiqClass, "Serum Disp postMix3"),
                                    optimizeFrom         = False,
                                    optimizeTo           = True,           # todo Really ??
-                                   NumSamples           = NumOfSamples)
+                                   NumSamples           = num_of_samples)
 
                 Itr.wash_tips(wasteVol=4, FastWash=True).exec()
 

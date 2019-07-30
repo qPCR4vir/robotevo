@@ -85,7 +85,7 @@ class MixPCR(Evo75_FLI):
         self.initialize()                       #  set_defaults ??
         wt           = self.worktable
 
-        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(NumOfSamples))).exec()
+        Itr.comment('Extracting RNA from {:s} samples with the MN-Vet kit'.format(str(num_of_samples))).exec()
 
 
         #  Get Labwares (Cuvette, eppys, etc.) from the work table
@@ -109,8 +109,8 @@ class MixPCR(Evo75_FLI):
 
         SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
-        all_samples = range(NumOfSamples)
-        maxTips     = min  (self.n_tips, NumOfSamples)
+        all_samples = range(num_of_samples)
+        maxTips     = min  (self.n_tips, num_of_samples)
         maxMask     = Rbt.tipsMask[maxTips]
 
 

@@ -62,7 +62,7 @@ class Tutorial_LL(Evo200):
 
         self.show_runtime_check_list    = True
 
-        n = self.NumOfSamples
+        n = self.num_of_samples
         assert 1 <= n <= Tutorial_LL.max_s , "In this demo we want to set dilutions in a 96 well plate."
         wt = self.worktable
 

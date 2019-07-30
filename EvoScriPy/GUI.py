@@ -45,7 +45,7 @@ class App(tkinter.Frame):
 
          GUI_init_parameters:
          - WorkTable and Output file, First tip
-         GUI_init_RNAext_parameters: add NumOfSamples
+         GUI_init_RNAext_parameters: add num_of_samples
 
          GUI_init_pipeline:
          - self.ProtcolFrames = list of ProtocolFrame(prot)
@@ -184,21 +184,21 @@ class App(tkinter.Frame):
             tkinter.Label(self.protocol.GUI.GUI_parameters, text=label).grid(row=2, column=3, columnspan=2,
                                                                                    sticky=tkinter.N + tkinter.W)
 
-            self.NumOfSamples = tkinter.IntVar(self.protocol.GUI.GUI_parameters)
-            self.NumOfSamples.set(self.protocol.NumOfSamples)
-            self.sample_num = tkinter.Spinbox(self.protocol.GUI.GUI_parameters, textvariable=self.NumOfSamples,
+            self.num_of_samples = tkinter.IntVar(self.protocol.GUI.GUI_parameters)
+            self.num_of_samples.set(self.protocol.num_of_samples)
+            self.sample_num = tkinter.Spinbox(self.protocol.GUI.GUI_parameters, textvariable=self.num_of_samples,
                                               from_=protocol.min_s, to=protocol.max_s, increment=1,
-                                              command=self.read_NumOfSamples)
+                                              command=self.read_num_of_samples)
             self.sample_num.grid(row=2, column=5, columnspan=1)
 
 
-        def read_NumOfSamples(self, *args):
-            self.protocol.NumOfSamples = self.NumOfSamples.get()
-            print(" --- NumOfSamples set to: %d" % (self.protocol.NumOfSamples))
+        def read_num_of_samples(self, *args):
+            self.protocol.num_of_samples = self.num_of_samples.get()
+            print(" --- num_of_samples set to: %d" % (self.protocol.num_of_samples))
 
         def update_parameters(self):
             App.GUI_init_parameters.update_parameters(self)
-            self.read_NumOfSamples()
+            self.read_num_of_samples()
 
     from protocols.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
     GUI4parameters[Prefill_plate_in_Evo200.name] = GUI_init_RNAext_parameters

@@ -111,7 +111,7 @@ class Reagent:
             self.volpersample = single_use
         else:
             if num_of_samples is None:
-                num_of_samples = Reagent.current_protocol.NumOfSamples or 0
+                num_of_samples = Reagent.current_protocol.num_of_samples or 0
 
         self.minNumRep = self.min_num_of_replica(NumSamples=num_of_samples)
 
@@ -177,7 +177,7 @@ class Reagent:
         :param NumSamples:
         :return:
         """
-        NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples or 0
+        NumSamples = NumSamples or Reagent.current_protocol.num_of_samples or 0
         return self.volpersample * NumSamples * self.excess
 
     def init_vol(self, NumSamples=None, initial_vol=None):
@@ -198,7 +198,7 @@ class Reagent:
         :return:
         """
         if NumSamples is None:
-            NumSamples = Reagent.current_protocol.NumOfSamples
+            NumSamples = Reagent.current_protocol.num_of_samples
         if not NumSamples:
             return
         V_per_sample = self.volpersample * self.excess
@@ -281,5 +281,5 @@ class preMix(Reagent):
         makePreMix(self, NumSamples)
 
     def compVol(self,index, NumSamples=None):
-        NumSamples = NumSamples or Reagent.current_protocol.NumOfSamples
+        NumSamples = NumSamples or Reagent.current_protocol.num_of_samples
         return self.components[index].minVol(NumSamples)

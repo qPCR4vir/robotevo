@@ -49,12 +49,12 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
     def Run(self):
         self.initialize()
 
-        NumOfSamples = self.NumOfSamples
+        num_of_samples = self.num_of_samples
         wt           = self.worktable
 
         Itr.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'\
                        .format(self.num_plates,
-                               NumOfSamples     )).exec()
+                               num_of_samples     )).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
         LysBufCuvette = wt.get_labware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
@@ -69,8 +69,8 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         # Set volumen / sample
         LysisBufferVolume   = 100.0       # VL1 or VL
 
-        all_samples = range(NumOfSamples)
-        maxTips     = min  (self.n_tips, NumOfSamples)
+        all_samples = range(num_of_samples)
+        maxTips     = min  (self.n_tips, num_of_samples)
         maxMask     = Rbt.tipsMask[maxTips]
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
@@ -79,7 +79,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                                        LysBufCuvette,
                                        volpersample = LysisBufferVolume,
                                        defLiqClass  = 'MN VL',
-                                       num_of_samples= self.num_plates * NumOfSamples)
+                                       num_of_samples= self.num_plates * num_of_samples)
 
         # Show the check_list GUI to the user for possible small changes
 
