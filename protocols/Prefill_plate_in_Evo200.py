@@ -144,8 +144,8 @@ class Prefill_plate_in_Evo200(Evo200):
 
         loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier
         loc.site -= 1
-        car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", n_sites=3), loc.grid, label ="MP 3Pos")
-        loc.rack = car
+        carrier = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", n_sites=3), loc.grid, label ="MP 3Pos")
+        loc.carrier = carrier
         Itr.transfer_rack(Plat2, loc ).exec()                                            # just showing how RoMa works.
 
         with group("Fill plate with mixes "):

@@ -1383,16 +1383,16 @@ class transfer_rack(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        assert isinstance(self.labware,                 Lab.Labware)
-        assert isinstance(self.labware.type,            Lab.Labware.Type)
-        assert isinstance(self.labware.location.rack,   Lab.Carrier)
+        assert isinstance(self.labware,                  Lab.Labware)
+        assert isinstance(self.labware.type,             Lab.Labware.Type)
+        assert isinstance(self.labware.location.carrier, Lab.Carrier)
 
-        assert isinstance(self.destination,        Lab.WorkTable.Location)
-        assert isinstance(self.destination.rack,   Lab.Carrier)
+        assert isinstance(self.destination,          Lab.WorkTable.Location)
+        assert isinstance(self.destination.carrier,  Lab.Carrier)
 
         if self.lid is not None:
             assert isinstance(self.lid,      Lab.WorkTable.Location)
-            assert isinstance(self.lid.rack, Lab.Carrier)
+            assert isinstance(self.lid.carrier, Lab.Carrier)
 
         assert self.cover in [0, 1]
 
@@ -1416,9 +1416,9 @@ class transfer_rack(Instruction):
                     string1   (self.vectorName),             # 10. name of RoMa vector to use (as in the Freedom EVOware configuration), example: "Narrow"
                     string1   (""),                          # 11. unused                                                        example: ""
                     string1   (""),                          # 12. unused                                                        example: ""
-                    string1   (self.labware.location.rack.label),  # 13. carrier name, source    ?                               example: "MP 3Pos"
-                    string1   (self.lid.rack.label if self.lid else ""),  # 14. carrier name, lid     ?                               example: "MP 3Pos"
-                    string1   (self.destination.rack.label),  # 15. carrier name, destination    ?                               example: "MP 3Pos"
+                    string1   (self.labware.location.carrier.label),  # 13. carrier name, source    ?                               example: "MP 3Pos"
+                    string1   (self.lid.carrier.label if self.lid else ""),  # 14. carrier name, lid     ?                               example: "MP 3Pos"
+                    string1   (self.destination.carrier.label),  # 15. carrier name, destination    ?                               example: "MP 3Pos"
                     string1   (self.labware.location.site),   # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
                     string1   (self.lid.location.site if self.lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
                     string1   (self.destination.site)         # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"

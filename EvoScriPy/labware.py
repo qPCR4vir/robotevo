@@ -9,7 +9,7 @@ __author__ = 'qPCR4vir'
 class WorkTable:
     """ Collection of carriers.Types and Labware.Types and pos of instances """
 
-    curWorkTable = None
+    cur_worktable = None
 
     def __init__(self, template_file, grids=67, sites=127):
 
@@ -27,7 +27,7 @@ class WorkTable:
         self.def_DiTiWaste      = None
         self.def_DiTi           = None
 
-        WorkTable.curWorkTable  = self
+        WorkTable.cur_worktable  = self
 
         if isinstance(template_file, list):
             self.template = template_file
@@ -40,32 +40,32 @@ class WorkTable:
     class Location:
         """ One location in a WorkTable """
 
-        def __init__(self, grid=None, site=None, rack=None, rack_site=None, worktable=None):
+        def __init__(self, grid=None, site=None, carrier=None, carrier_site=None, worktable=None):
             """
             :param grid: int, 1-67.   worktable grid. Carrier grid position
             :param site: int, 0 - 127. Site on carrier (on RAck?) = lab location - (site on carrier - 1) !!!!!
-            :param rack:
-            :param rack_site:
+            :param carrier:
+            :param carrier_site:
             """
 
             # A Location have sense only in a WorkTable
-            self.worktable = worktable or WorkTable.curWorkTable
+            self.worktable = worktable or WorkTable.cur_worktable
             assert isinstance(self.worktable, WorkTable)
 
-            self.rack = rack
+            self.carrier = carrier
             assert 1 <= grid <= len(self.worktable.grids)
-            site -= 1                         # TODO revise - it will be an error if site is None
+            site -= 1                                 # TODO revise - it will be an error if site is None
             assert 0 <= site <= self.worktable.n_sites
             self.grid = grid
             self.site = site
-            self.rack_site = rack_site
+            self.rack_site = carrier_site
 
         def __str__(self):
             return "grid:{grid:d}, site:{site:d}".format(grid=self.grid, site=self.site + 1)
 
     class File:
         def __init__(self, input, output, worktable):
-            self.worktable = worktable
+            self.worktable                  = worktable
             self.output                     = output
             self.input                      = input
             self.check_summa    : str       = None
@@ -76,7 +76,7 @@ class WorkTable:
         def write(self, worktable):
             lines = [
                 self.check_summa,
-                self.date_time + " " +  self.user,
+                self.date_time + " " + self.user,
                 " "*128,
                 "Administrator" + " "*115,
                 "--{ RES }--",
@@ -108,17 +108,18 @@ class WorkTable:
             line = "14;"
             labw = { }
 
-    def parse_worktable_file(self, templateFile):
-        if not templateFile:
-            return []                                                             # RETURN
-        template_list = []                                                        # a grid-line first list the types
-        with open(templateFile, 'r', encoding='Latin-1') as tmpl:
+    def parse_worktable_file(self, template_file):
+        if not template_file:
+            return []                                                         # RETURN
+
+        template_list = []                                                    # a grid-line first list the types
+        with open(template_file, 'r', encoding='Latin-1') as tmpl:
             # parsing_grid=False
             grid_num       = -1
             labware_types = []
             for line in tmpl:
                 template_list += [line]
-                if line.startswith("--{ RPG }--"):                            # end of the worktable description
+                if  line.startswith("--{ RPG }--"):                           # end of the worktable description
                     break                                                     # BREAK
                 line = line.split(';')
 
@@ -152,7 +153,7 @@ class WorkTable:
 
 
         self.template = template_list
-        self.template_file_name = templateFile
+        self.template_file_name = template_file
         return template_list
 
     def add_new_labware(self, labware, loc: Location = None):
@@ -387,7 +388,7 @@ class Carrier:
                        label        : str       = None,
                        worktable    : WorkTable = None):
 
-        worktable = worktable or WorkTable.curWorkTable
+        worktable = worktable or WorkTable.cur_worktable
         self.grid = grid
         self.type = carrier_type
         self.labwares = [None] * self.type.n_sites
@@ -664,7 +665,7 @@ class Labware:
         if isinstance(location, WorkTable.Location):    # location take priority
             worktable = location.worktable
             if not isinstance(worktable, WorkTable):
-                worktable = WorkTable.curWorkTable
+                worktable = WorkTable.cur_worktable
                 if isinstance(worktable, WorkTable):
                     location.worktable = worktable      # avoid wt.add_labware "moving" new labware
 
@@ -676,8 +677,8 @@ class Labware:
 
         if isinstance(worktable, WorkTable):
             worktable.add_new_labware(self, location)
-        if location and location.rack:                   # ??????????????
-            location.rack.add_labware(self, location.rack_site)
+        if location and location.carrier:                   # ??????????????
+            location.carrier.add_labware(self, location.rack_site)
         self.init_wells()
 
     def __str__(self):
@@ -1371,5 +1372,5 @@ Box10x10     = Labware.Type("Box 10x10"              ,10, 10, maxVol= 2000)
 
 
 def getLabware(labw_type, label, worktable=None):
-    worktable = worktable or WorkTable.curWorkTable
+    worktable = worktable or WorkTable.cur_worktable
     return worktable.get_labware(labw_type, label)
