@@ -495,8 +495,8 @@ class Robot:
         # w = lab.WorkTable.curWorkTable
         if templateFile is None: return
         if isinstance(self.worktable, Lab.WorkTable):  # todo temp? really to set
-            assert self.worktable.templateFileName == templateFile, 'Attemp to reset wortable from '\
-                   + self.worktable.templateFileName + ' into ' + templateFile
+            assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \
+                                                                      + self.worktable.template_file_name + ' into ' + templateFile
         else:
             self.worktable  = Lab.WorkTable(templateFile)
 

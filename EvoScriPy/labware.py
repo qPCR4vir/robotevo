@@ -7,20 +7,20 @@ __author__ = 'qPCR4vir'
 
 
 class WorkTable:
-    """ Collection of racks.Types and Labware.Types and pos of instances """
+    """ Collection of carriers.Types and Labware.Types and pos of instances """
 
     curWorkTable = None
 
-    def __init__(self, templateFile, grids=67, sites=127):
+    def __init__(self, template_file, grids=67, sites=127):
 
         self.labware_series = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
         self.reagents       = []
-        self.racks          = []
+        self.carriers       = []
         self.template       = []
 
-        self.nSites             = sites
-        self.grid               = [None] * grids            # TODO take this from the template file
-        self.templateFileName   = None
+        self.n_sites            = sites
+        self.grids              = [None] * grids            # TODO take this from the template file
+        self.template_file_name = None
 
         self.def_WashWaste      = None
         self.def_WashCleaner    = None
@@ -29,13 +29,13 @@ class WorkTable:
 
         WorkTable.curWorkTable  = self
 
-        if isinstance(templateFile, list):
-            self.template = templateFile
-            print("Template fileis a list")
+        if isinstance(template_file, list):
+            self.template = template_file
+            print("Template file is a list.")
         else:
-            print("Set template file" + templateFile)
-            self.template = self.parse_worktable_file(templateFile)
-            self.templateFileName = templateFile
+            print("Set template file: " + template_file)
+            self.template = self.parse_worktable_file(template_file)
+            self.template_file_name = template_file
 
     class Location:
         """ One location in a WorkTable """
@@ -53,9 +53,9 @@ class WorkTable:
             assert isinstance(self.worktable, WorkTable)
 
             self.rack = rack
-            assert 1 <= grid <= len(self.worktable.grid)
+            assert 1 <= grid <= len(self.worktable.grids)
             site -= 1                         # TODO revise - it will be an error if site is None
-            assert 0 <= site <= self.worktable.nSites
+            assert 0 <= site <= self.worktable.n_sites
             self.grid = grid
             self.site = site
             self.rack_site = rack_site
@@ -72,8 +72,6 @@ class WorkTable:
             self.date_time      : str       = None
             self.user           : str       = "Admin           "
             self.grid_carriers =None
-
-
 
         def write(self, worktable):
             lines = [
@@ -126,7 +124,7 @@ class WorkTable:
 
                 if line[0] != "998":
                     continue                                                  # CONTINUE
-                if grid_num >= len(self.grid):
+                if grid_num >= len(self.grids):
                     continue                                   # CONTINUE: ignore lines between this and  "--{ RPG }--"
 
                 if labware_types:                      # we have read the types first, now we need to read the labels
@@ -140,7 +138,7 @@ class WorkTable:
                         loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
                         labw = Labware.create(lab_t_label, loc, label)
                         if labw:
-                            pass               # self.addLabware(labw)
+                            pass               # self.add_labware(labw)
                         else:
                             print("Warning! The worktable template have a labware labeled '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
@@ -154,7 +152,7 @@ class WorkTable:
 
 
         self.template = template_list
-        self.templateFileName = templateFile
+        self.template_file_name = templateFile
         return template_list
 
     def add_new_labware(self, labware, loc: Location = None):
@@ -176,8 +174,8 @@ class WorkTable:
         else:
             assert labware.location.worktable is self
 
-        if labware.location.grid >= len(self.grid):
-            raise "This WorkTable have only " + str(len(self.grid)) + " grids. Not " + str(loc.grid)
+        if labware.location.grid >= len(self.grids):
+            raise "This WorkTable have only " + str(len(self.grids)) + " grids. Not " + str(loc.grid)
 
         for type_name, labw_series in self.labware_series.items():                # loop lab_types already in worktable
             for labw in labw_series.labwares:                               # loop labwares in that series
@@ -239,7 +237,7 @@ class WorkTable:
             if isinstance(labware, Labware.Type):
                 labware = labware.name
             if labware not in self.labware_series:                        # todo  what if this is the label of the labware
-                raise Exception("Labware '" + labware + "' was not found in worktable: " + self.templateFileName)
+                raise Exception("Labware '" + labware + "' was not found in worktable: " + self.template_file_name)
 
             series = self.labware_series[labware]
 
@@ -270,7 +268,7 @@ class WorkTable:
                                             + "' : please indicate the labware type to disambiguate")
                     labware = series.labels[label]
             assert labware is not None, ("ERROR: no labware with the label '" + label
-                                         + "' was found in worktable: " + self.templateFileName)
+                                         + "' was found in worktable: " + self.template_file_name)
 
         if isinstance(labw_type, Labware.Type ):
             labw_type = labw_type.name
@@ -281,7 +279,7 @@ class WorkTable:
             if label in series.labels:
                 return series.labels[label]
             raise Exception("ERROR: no labware '" + labw_type + "' with the label '" + label
-                            + "' was found in worktable: " + self.templateFileName)
+                            + "' was found in worktable: " + self.template_file_name)
 
         if label is None:
             label = 0
@@ -333,7 +331,7 @@ class WorkTable:
         self.retireLabware(labw)
         return labw.type.createLabware(loc, label)
 
-    def set_def_DiTi(self, tips) :                 # :Labware.DITIrackType) ->Labware.DITIrackType:
+    def set_def_DiTi(self, tips):                 # :Labware.DITIrackType) ->Labware.DITIrackType:
         old = self.def_DiTi
         self.def_DiTi = tips
         return old
@@ -377,25 +375,31 @@ class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
 
     class Type:
-        def __init__(self, name, width=1, nSite=1):
+        def __init__(self, name, idx: int = None, width: int = 1, n_sites: int = 1):
+            self.idx                    = idx
             self.width                  = width
-            self.nSite                  = nSite
-            self.allowedLabwaresTypes   = []
+            self.n_sites                = n_sites
+            self.allowed_labwares_types = []
             self.name                   = name
 
-    def __init__(self, RackType, grid, label=""):  # , worktable=WorkTable.curWorkTable or robot.Robot.current.worktable
-        self.site = grid
-        self.type = RackType
-        self.labwares = [None] * self.type.nSite
+    def __init__(self, carrier_type : Type,
+                       grid         : int,
+                       label        : str       = None,
+                       worktable    : WorkTable = None):
+
+        worktable = worktable or WorkTable.curWorkTable
+        self.grid = grid
+        self.type = carrier_type
+        self.labwares = [None] * self.type.n_sites
         self.label = label
 
-    def addLabware(self, labware, site):
-        if labware.type.name not in self.allowedLabwaresTypes:
-            raise "The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in rack '" \
+    def add_labware(self, labware, site):
+        if labware.type.name not in self.type.allowed_labwares_types:
+            raise "The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '" \
                                   + self.type.name    + ":" + self.label
 
-        if site >= self.type.nSite:
-            raise "This rack " + self.type.name + ":" + self.label + " have only " + self.type.nSite + " sites."
+        if site >= self.type.n_sites:
+            raise "This rack " + self.type.name + ":" + self.label + " have only " + self.type.n_sites + " sites."
 
         if self.labwares[site] is not None:
             print("Warning: you replaced the labware '" + self.labwares[site].type.name + ":"
@@ -662,7 +666,7 @@ class Labware:
             if not isinstance(worktable, WorkTable):
                 worktable = WorkTable.curWorkTable
                 if isinstance(worktable, WorkTable):
-                    location.worktable = worktable      # avoid wt.addLabware "moving" new labware
+                    location.worktable = worktable      # avoid wt.add_labware "moving" new labware
 
         self.location   = location
         self.type       = type
@@ -673,7 +677,7 @@ class Labware:
         if isinstance(worktable, WorkTable):
             worktable.add_new_labware(self, location)
         if location and location.rack:                   # ??????????????
-            location.rack.addLabware(self, location.rack_site)
+            location.rack.add_labware(self, location.rack_site)
         self.init_wells()
 
     def __str__(self):
@@ -1312,7 +1316,7 @@ MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  maxV
                     # It was done by change the grig 6 positions to the right and coping the X pos of the first well,
                     # then come back to the originaL GRID AND SET THE COPIED X FOR the last well. The new, duplicated
                     # carrier was set to X width 150 mm
-EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, nSite=16)
+EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, n_sites=16)
 Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
 Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)
 Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=    1500)
