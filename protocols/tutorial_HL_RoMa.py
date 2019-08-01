@@ -14,7 +14,7 @@ import EvoScriPy.reagent as rgnt
 from protocols.Evo200 import Evo200
 
 
-class Tutorial_HL_Roma(Evo200):
+class Tutorial_HL_RoMa(Evo200):
     """
     Starting with 2 plates (A amd B, B on some plate pedestal - hotel) move plate B into a different location;
     then transfer 50µL of aqueous buffer from column 1 of plate A to column 2 of plate B.
@@ -47,7 +47,7 @@ class Tutorial_HL_Roma(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        num_of_samples=num_of_samples or Tutorial_HL_Roma.max_s,
+                        num_of_samples=num_of_samples or Tutorial_HL_RoMa.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
                         output_filename             = output_filename or '../current/RoMa_HL',
@@ -60,8 +60,7 @@ class Tutorial_HL_Roma(Evo200):
 
         self.show_runtime_check_list    = True
 
-        n = self.num_of_samples
-        assert 1 <= n <= Tutorial_HL_Roma.max_s, "Using 96 well plates."
+        assert 1 <= self.num_of_samples <= Tutorial_HL_RoMa.max_s, "Using 96 well plates."
         wt = self.worktable
 
         instr.comment('Transfer 50 uL to a moved plate.').exec()
@@ -77,7 +76,7 @@ class Tutorial_HL_Roma(Evo200):
                                labware      = plate_A,
                                wells        = "A1",
                                replicas     = 8,
-                               volpersample = v )
+                               volpersample = v)
 
         self.check_list()                                          # Show the check_list   -------------------------
 
@@ -108,7 +107,7 @@ class Tutorial_HL_Roma(Evo200):
 
 
 if __name__ == "__main__":
-    p = Tutorial_HL_Roma(num_of_samples= 42,
+    p = Tutorial_HL_RoMa(num_of_samples= 42,
                          run_name        = "_42s")
 
     p.use_version('No version')
