@@ -70,19 +70,19 @@ class WorkTable:
             self.input                      = input
             self.check_summa    : str       = None
             self.date_time      : str       = None
-            self.user           : str       = "Admin           "
-            self.grid_carriers =None
+            self.user           : str       = None
+            self.carriers                   = None
 
         def write(self, worktable):
             lines = [
                 self.check_summa,
                 self.date_time + " " + self.user,
                 " "*128,
-                "Administrator" + " "*115,
+                self.roll,               # + " "*115,
                 "--{ RES }--",
-                "V;200",
+                "V;" + self.file.version,
                 "--{ CFG }--",
-                "",
+                ";".join("999", self.file.n1, self.file.n2, self.file.n3),
                 "",
                 "",
                 "",
@@ -115,8 +115,44 @@ class WorkTable:
         template_list = []                                                    # a grid-line first list the types
         with open(template_file, 'r', encoding='Latin-1') as tmpl:
             # parsing_grid=False
-            grid_num       = -1
+            self.file = WorkTable.File(tmpl, None, self)
+            grid_num      = -1
             labware_types = []
+
+            line = tmpl.readline()
+            template_list += [line]
+            self.file.check_summa = line
+
+            line = tmpl.readline()
+            template_list += [line]
+            self.file.date_time , self.file.user = line.split()
+
+            line = tmpl.readline()
+            template_list += [line]
+
+            line = tmpl.readline()
+            template_list += [line]
+            self.file.roll = line
+
+            line = tmpl.readline()
+            template_list += [line]
+            assert line.startswith("--{ RES }--")
+
+            line = tmpl.readline()
+            template_list += [line]
+            v, self.file.version = line.split(';')
+            assert v == "V"
+
+            line = tmpl.readline()
+            template_list += [line]
+            assert line.startswith("--{ CFG }--")
+
+            line = tmpl.readline()
+            template_list += [line]
+            l999, self.file.n1, self.file.n2, self.file.n3 = line.split(';')
+            assert l999 == "999"
+
+
             for line in tmpl:
                 template_list += [line]
                 if  line.startswith("--{ RPG }--"):                           # end of the worktable description
