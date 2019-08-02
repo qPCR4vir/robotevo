@@ -163,13 +163,12 @@ class WorkTable:
                     continue
                 idx = int(idx)
                 self.file.carriers_grid += [idx]
-                if idx not in Carrier.types_index:
+                if idx not in Carrier.Type.by_index:
                     print("WARNING !! Unknow carrier index " + str(idx)
                           + " in grid " + str(len(self.file.carriers_grid)-1))
                 else:
-                    print("Carrier: " + Carrier.types_index[idx].name
+                    print("Carrier: " + Carrier.Type.by_index[idx].name
                           + " found in grid " + str(len(self.file.carriers_grid)-1))
-
 
             for line in tmpl:
                 template_list += [line]
@@ -429,14 +428,13 @@ stock = Frezeer()
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
 
-    # type name label-string from template worktable file: labwares class-name.
-    # Mountain a list of labwares types
-    # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
-    types_names = {}
-    types_index = {}
-
-
     class Type:
+        # type name label-string from template worktable file: labwares class-name.
+        # Mountain a list of labwares types
+        # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+        by_name  = {}
+        by_index = {}
+
         def __init__(self, name, idx: int = None, width: int = 1, n_sites: int = 1):
             self.idx                    = idx
             self.width                  = width
@@ -444,12 +442,12 @@ class Carrier:
             self.allowed_labwares_types = []
             self.name                   = name
             if name:
-                assert name not in Carrier.types_names, "Duplicate Carrier name: " + name
-                Carrier.types_names[name] = self
+                assert name not in Carrier.Type.by_name, "Duplicate Carrier name: " + name
+                Carrier.Type.by_name[name] = self
             if idx:
-                if idx in Carrier.types_index:
-                    assert Carrier.types_index[idx] is None, "Duplicate Carrier index: " + str(idx)
-                Carrier.types_index[idx] = self
+                if idx in Carrier.Type.by_index:
+                    assert Carrier.Type.by_index[idx] is None, "Duplicate Carrier index: " + str(idx)
+                Carrier.Type.by_index[idx] = self
 
     def __init__(self, carrier_type : Type,
                        grid         : int,
