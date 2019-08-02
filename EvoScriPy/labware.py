@@ -71,7 +71,7 @@ class WorkTable:
             self.check_summa    : str       = None
             self.date_time      : str       = None
             self.user           : str       = None
-            self.carriers                   = None
+            self.carriers_grid              = None
 
         def write(self, worktable):
             lines = [
@@ -120,7 +120,6 @@ class WorkTable:
                     sites = line[-3]
                     Carrier.Type(name, idx=int(idx), n_sites=int(sites))
 
-
     def parse_worktable_file(self, template_file, carrier_file = None):
         if not template_file:
             return []                                                         # RETURN
@@ -131,98 +130,123 @@ class WorkTable:
         with open(template_file, 'r', encoding='Latin-1') as tmpl:
             # parsing_grid=False
             self.file = WorkTable.File(tmpl, None, self)
-            grid_num      = -1
-            labware_types = []
 
-            line = tmpl.readline()
-            template_list += [line]
-            self.file.check_summa = line
-
-            line = tmpl.readline()
-            template_list += [line]
-            self.file.date_time , self.file.user = line.split()
-
-            line = tmpl.readline()
-            template_list += [line]
-
-            line = tmpl.readline()
-            template_list += [line]
-            self.file.roll = line
-
-            line = tmpl.readline()
-            template_list += [line]
-            assert line.startswith("--{ RES }--")
-
-            line = tmpl.readline()
-            template_list += [line]
-            v, self.file.version = line.split(';')
-            assert v == "V"
-
-            line = tmpl.readline()
-            template_list += [line]
-            assert line.startswith("--{ CFG }--")
-
-            line = tmpl.readline()
-            template_list += [line]
-            l999, self.file.n1, self.file.n2, self.file.n3 = line.split(';')
-            assert l999 == "999"
-
-            line = tmpl.readline()
-            template_list += [line]
-            carriers = line.split(';')
-            assert carriers[0] == "14"
-            self.file.carriers_grid = []
-            for idx in carriers[1:-1]:
-                if idx == "-1":
-                    self.file.carriers_grid +=[None]
-                    continue
-                idx = int(idx)
-                self.file.carriers_grid += [idx]
-                if idx not in Carrier.Type.by_index:
-                    print("WARNING !! Unknow carrier index " + str(idx)
-                          + " in grid " + str(len(self.file.carriers_grid)-1))
-                else:
-                    print("Carrier: " + Carrier.Type.by_index[idx].name
-                          + " found in grid " + str(len(self.file.carriers_grid)-1))
+            template_list += self.read_worktable_header(tmpl)
+            template_list += self.read_worktable_carriers_grid(tmpl)
+            template_list += self.read_worktable_labwares_grid(tmpl)
 
             for line in tmpl:
                 template_list += [line]
-                if  line.startswith("--{ RPG }--"):                           # end of the worktable description
+                if line.startswith("--{ RPG }--"):                           # end of the worktable description
                     break                                                     # BREAK
                 line = line.split(';')
 
                 if line[0] != "998":
                     continue                                                  # CONTINUE
-                if grid_num >= len(self.grids):
-                    continue                                   # CONTINUE: ignore lines between this and  "--{ RPG }--"
-
-                if labware_types:                      # we have read the types first, now we need to read the labels
-                    for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
-                        if not lab_t_label:
-                            if label:                                         # todo raise Warning
-                                print("Warning! The worktable template have a label '" +
-                                      label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
-                                      " but no labware type")
-                            continue                                          # CONTINUE:
-                        loc  = WorkTable.Location(grid=grid_num, site=site+1, worktable=self)
-                        labw = Labware.create(lab_t_label, loc, label)
-                        if labw:
-                            pass               # self.add_labware(labw)
-                        else:
-                            print("Warning! The worktable template have a labware labeled '" +
-                                  label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
-                                  " but there is no registered labware type '" + lab_t_label + "'")
-                    labware_types = []
-
-                else:                         # we need to read the types first
-                    grid_num      += 1
-                    labware_types = line[2:-1]
-                    assert int(line[1]) == len(labware_types)  # TODO error msg
-
 
         self.template = template_list
         self.template_file_name = template_file
         return template_list
+
+    def read_worktable_header(self, template):
+        template_list = []  # a grid-line first list the types
+
+        line = template.readline()
+        template_list += [line]
+        self.file.check_summa = line
+
+        line = template.readline()
+        template_list += [line]
+        self.file.date_time, self.file.user = line.split()
+
+        line = template.readline()
+        template_list += [line]
+
+        line = template.readline()
+        template_list += [line]
+        self.file.roll = line
+
+        line = template.readline()
+        template_list += [line]
+        assert line.startswith("--{ RES }--")
+
+        line = template.readline()
+        template_list += [line]
+        v, self.file.version = line.split(';')
+        assert v == "V"
+
+        line = template.readline()
+        template_list += [line]
+        assert line.startswith("--{ CFG }--")
+
+        line = template.readline()
+        template_list += [line]
+        l999, self.file.n1, self.file.n2, self.file.n3 = line.split(';')
+        assert l999 == "999"
+        return template_list
+
+    def read_worktable_carriers_grid(self, template):
+        template_list = []  # a grid-line first list the types
+
+        line = template.readline()
+        template_list += [line]
+        carriers = line.split(';')
+        assert carriers[0] == "14"
+        self.file.carriers_grid = []
+        for idx in carriers[1:-1]:
+            if idx == "-1":
+                self.file.carriers_grid += [None]
+                continue
+            idx = int(idx)
+            self.file.carriers_grid += [idx]
+            if idx not in Carrier.Type.by_index:
+                print("WARNING !! Unknow carrier index " + str(idx)
+                      + " in grid " + str(len(self.file.carriers_grid) - 1))
+            else:
+                print("Carrier: " + Carrier.Type.by_index[idx].name
+                      + " found in grid " + str(len(self.file.carriers_grid) - 1))
+        print("Detected " + str(len(self.file.carriers_grid)) + " grids.")
+        return template_list
+
+    def read_worktable_labwares_grid(self, template):
+
+        grid_num = -1
+
+        template_list = []
+        labware_types = []
+
+        for line in template:
+            template_list += [line]
+            line = line.split(';')
+            assert line[0] == "998"
+
+            if labware_types:  # we have read the types first, now we need to read the labels
+                for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
+                    if not lab_t_label:
+                        if label:  # todo raise Warning
+                            print("Warning! The worktable template have a label '" +
+                                  label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                                  " but no labware type")
+                        continue  # CONTINUE:
+                    loc = WorkTable.Location(grid=grid_num, site=site + 1, worktable=self)
+                    labw = Labware.create(lab_t_label, loc, label)
+                    if labw:
+                        pass  # self.add_labware(labw)
+                    else:
+                        print("Warning! The worktable template have a labware labeled '" +
+                              label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                              " but there is no registered labware type '" + lab_t_label + "'")
+                labware_types = []
+
+            else:  # we need to read the types first
+                grid_num += 1
+                if grid_num >= len(self.file.carriers_grid):  # len(self.grids):
+                    assert line[1] == "2"
+                    return template_list
+                labware_types = line[2:-1]
+                assert int(line[1]) == len(labware_types), "Grid " + str(grid_num) \
+                                                           + " line " + str(len(template_list)) \
+                                                           + ": " + template_list[-1]
 
     def add_new_labware(self, labware, loc: Location = None):
         """
