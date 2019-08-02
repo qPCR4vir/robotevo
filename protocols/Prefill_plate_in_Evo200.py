@@ -47,8 +47,6 @@ class Prefill_plate_in_Evo200(Evo200):
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
-        self.carrier_file = '../EvoScripts/wt_templates/Carrier_Evo200.cfg'
-
     def Run(self):
         self.initialize()                                               # set_EvoMode and set_defaults() from Evo200
 
