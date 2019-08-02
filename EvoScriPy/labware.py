@@ -11,7 +11,7 @@ class WorkTable:
 
     cur_worktable = None
 
-    def __init__(self, template_file, grids=67, sites=127):
+    def __init__(self, template_file, carrier_file=None, grids=67, sites=127):
 
         self.labware_series = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
         self.reagents       = []
@@ -34,7 +34,7 @@ class WorkTable:
             print("Template file is a list.")
         else:
             print("Set template file: " + template_file)
-            self.template = self.parse_worktable_file(template_file, '../EvoScripts/wt_templates/Carrier_Evo200.cfg')
+            self.template = self.parse_worktable_file(template_file, carrier_file)
             self.template_file_name = template_file
 
     class Location:
@@ -113,7 +113,7 @@ class WorkTable:
             return []                                                         # RETURN
         with open(carrier_file, 'r', encoding='Latin-1') as config:
             for line in config:
-                if  line.startswith("13;"):                           # new Carrier
+                if line.startswith("13;"):                           # new Carrier
                     line = line.split(';')
                     name = line[1]
                     idx, u = line[2].split("/")
@@ -123,8 +123,8 @@ class WorkTable:
     def parse_worktable_file(self, template_file, carrier_file = None):
         if not template_file:
             return []                                                         # RETURN
-        if carrier_file:
-            self.parse_carrier_file(carrier_file)
+
+        self.parse_carrier_file(carrier_file)
 
         template_list = []                                                    # a grid-line first list the types
         with open(template_file, 'r', encoding='Latin-1') as tmpl:

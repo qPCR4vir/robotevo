@@ -174,16 +174,16 @@ class Script(ScriptBody):
     """ Create a full and executable script for the evoware soft. Take an existing script or script-template as a base.
     """
 
-    def __init__(self, filename=None, template=None, robot=None):
+    def __init__(self, filename=None, template=None, carrier_file=None, robot=None):
         self.templateNotAdded = True
         ScriptBody.__init__(self, filename)
         assert isinstance(robot, Rbt.Robot)
         self.robot = robot            # ?? may be None?
-        self.set_template(template)  # ??
+        self.set_template(template, carrier_file)  # ??
 
-    def set_template(self, template):
+    def set_template(self, template, carrier_file):
         self.robot.set_as_current()
-        self.robot.set_worktable(template)       # ????
+        self.robot.set_worktable(template, carrier_file)       # ????
         self.templateNotAdded = True
 
     def add_template(self):

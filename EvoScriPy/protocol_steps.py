@@ -128,6 +128,7 @@ class Protocol (Executable):
                  run_name                    = None):
 
         self.worktable_template_filename = worktable_template_filename or ""
+        self.carrier_file                = None
         self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
         self.firstTip                    = firstTip
         self.n_tips                      = n_tips
@@ -1012,6 +1013,7 @@ class Protocol (Executable):
     def init_EvoMode(self):
         self.iRobot = mode.iRobot(instr.Pipette.LiHa1, nTips=self.n_tips)
         self.Script = mode.Script(template=self.worktable_template_filename,
+                                  carrier_file=self.carrier_file,
                                      filename=self.output_filename + '.esc',
                                      robot=self.iRobot.robot)
         self.comments_ = mode.Comments(filename=self.output_filename + '.protocol.txt')

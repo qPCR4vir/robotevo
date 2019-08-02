@@ -214,7 +214,6 @@ class Robot:
     """
     current=None # use immediately, for a short time.
 
-
     def __init__(self,  index       = None,
                         arms        = None,
                         nTips       = None,
@@ -234,7 +233,7 @@ class Robot:
                    {arms.index: arms} if isinstance(arms, Arm) else \
                    {     index: Arm(nTips, index, workingTips, tipsType)}
         self.worktable      = None
-        self.set_worktable(templateFile)
+        #self.set_worktable(templateFile)
         self.def_arm        = index  # or Pipette.LiHa1
         self.droptips       = True
         self.reusetips      = False
@@ -245,13 +244,12 @@ class Robot:
         # self.preservedtips = {} # order:well
         # self.last_preserved_tips = None # lab.DITIrack, offset
 
-
     # Functions to observe the iRobot status (intern-physical status, or user status with are modificators of future
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
     # instruction and even by the final user.
 
     def where_are_preserved_tips(self,
-                                 selected_reagents  : Lab.Labware ,
+                                 selected_reagents: Lab.Labware,
                                  TIP_MASK, type) -> list:   # [lab.DITIrack]
         """
 
@@ -487,18 +485,16 @@ class Robot:
         # assert isinstance(destination, lab.WorkTable.Location)
         self.worktable.add_labware(labware, destination)
 
-
     # relatively simple "setters" and "getters" of current default options
 
-
-    def set_worktable(self,templateFile):
+    def set_worktable(self, templateFile, carrier_file):
         # w = lab.WorkTable.cur_worktable
         if templateFile is None: return
         if isinstance(self.worktable, Lab.WorkTable):  # todo temp? really to set
             assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \
                                                                       + self.worktable.template_file_name + ' into ' + templateFile
         else:
-            self.worktable  = Lab.WorkTable(templateFile)
+            self.worktable  = Lab.WorkTable(templateFile, carrier_file)
 
     def set_as_current(self):
         Robot.current = self
