@@ -245,7 +245,10 @@ class WorkTable:
             else:  # we need to read the types first
                 grid_num += 1
                 if grid_num >= len(self.file.carriers_grid):  # len(self.grids):
-                    assert line[1] == "2"
+                    if line[1] != "2":
+                        print("WARNING !! Non ended 2 Grid " + str(grid_num) \
+                                                           + " line " + str(len(template_list)) \
+                                                           + ": " + template_list[-1])
                     return template_list
                 labware_types = line[2:-1]
                 assert int(line[1]) == len(labware_types), "Grid " + str(grid_num) \
