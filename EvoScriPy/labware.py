@@ -113,6 +113,8 @@ class WorkTable:
     def parse_carrier_file(self, carrier_file = None):
         if not carrier_file:
             return []                                                         # RETURN
+        Carrier.Type.by_name = {}
+        Carrier.Type.by_index = {}
         with open(carrier_file, 'r', encoding='Latin-1') as config:
             for line in config:
                 if line.startswith("13;"):                           # new Carrier
