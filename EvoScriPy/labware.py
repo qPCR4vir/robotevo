@@ -72,6 +72,8 @@ class WorkTable:
             self.date_time      : str       = None
             self.user           : str       = None
             self.carriers_grid              = None
+            self.carriers_no_grid           = None
+
 
         def write(self, worktable):
             lines = [
