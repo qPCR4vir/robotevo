@@ -7,7 +7,7 @@ __author__ = 'qPCR4vir'
 
 
 class WorkTable:
-    """ Collection of carriers.Types and Labware.Types and pos of instances """
+    """ Collection of carriers.types and Labware.types and pos of instances """
 
     cur_worktable = None
 
@@ -151,6 +151,24 @@ class WorkTable:
             template_list += [line]
             l999, self.file.n1, self.file.n2, self.file.n3 = line.split(';')
             assert l999 == "999"
+
+            line = tmpl.readline()
+            template_list += [line]
+            carriers = line.split(';')
+            assert carriers[0] == "14"
+            self.file.carriers_grid = []
+            for idx in carriers[1:-1]:
+                if idx == "-1":
+                    self.file.carriers_grid +=[None]
+                    continue
+                idx = int(idx)
+                self.file.carriers_grid += [idx]
+                if idx not in Carrier.types_index:
+                    print("WARNING !! Unknow carrier index " + str(idx)
+                          + " in grid " + str(len(self.file.carriers_grid)-1))
+                else:
+                    print("Carrier: " + Carrier.types_index[idx].name
+                          + " found in grid " + str(len(self.file.carriers_grid)-1))
 
 
             for line in tmpl:
@@ -411,6 +429,13 @@ stock = Frezeer()
 class Carrier:
     """ Collection of Labwares sites, filled with labwares... """
 
+    # type name label-string from template worktable file: labwares class-name.
+    # Mountain a list of labwares types
+    # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+    types_names = {}
+    types_index = {}
+
+
     class Type:
         def __init__(self, name, idx: int = None, width: int = 1, n_sites: int = 1):
             self.idx                    = idx
@@ -418,6 +443,13 @@ class Carrier:
             self.n_sites                = n_sites
             self.allowed_labwares_types = []
             self.name                   = name
+            if name:
+                assert name not in Carrier.types_names, "Duplicate Carrier name: " + name
+                Carrier.types_names[name] = self
+            if idx:
+                if idx in Carrier.types_index:
+                    assert Carrier.types_index[idx] is None, "Duplicate Carrier index: " + str(idx)
+                Carrier.types_index[idx] = self
 
     def __init__(self, carrier_type : Type,
                        grid         : int,
@@ -436,7 +468,8 @@ class Carrier:
                                   + self.type.name    + ":" + self.label
 
         if site >= self.type.n_sites:
-            raise "This rack " + self.type.name + ":" + self.label + " have only " + self.type.n_sites + " sites."
+            raise "This rack " + self.type.name + ":" + self.label \
+                  + " have only " + str(self.type.n_sites) + " sites."
 
         if self.labwares[site] is not None:
             print("Warning: you replaced the labware '" + self.labwares[site].type.name + ":"
@@ -576,7 +609,7 @@ class Labware:
     # typeName label-string from template worktable file: labwares class-name.
     # Mountain a list of labwares types
     # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
-    Types = {}
+    types = {}
 
     class Type:
 
@@ -658,12 +691,12 @@ class Labware:
 
 
         def __init__(self, name, nRow, nCol=1, maxVol=None):
-            assert name not in Labware.Types, "Duplicate labware type name: " + name
+            assert name not in Labware.types, "Duplicate labware type name: " + name
             self.name           = name
             self.nRow           = nRow
             self.nCol           = nCol
             self.maxVol         = maxVol
-            Labware.Types[name] = self     # .__getattribute__("__class__")
+            Labware.types[name] = self
 
         def __str__(self):
             return "{type:s}".format(type=self.type.name)
@@ -724,7 +757,7 @@ class Labware:
     def create(labw_t_name  : str,
                loc          : WorkTable.Location,
                label        : str):
-        labw_t = Labware.Types.get(labw_t_name)
+        labw_t = Labware.types.get(labw_t_name)
         if not labw_t:
             print("WARNING !! There is not labware type defined with label '" + labw_t_name + "'. ")
             return None
