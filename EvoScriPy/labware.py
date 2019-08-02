@@ -1443,10 +1443,10 @@ MagSeparatPlt8x9  = Labware.Type("96 Well Separation Plate",         8,  9, maxV
 Filterplate       = Labware.Type("FilterplateaufElutionplate flach", 8, 12, maxVol=  2000) # Te-VacS
 MP96MachereyNagel = Labware.Type("96 Well Macherey-Nagel Plate",     8, 12, maxVol=  2000) # Te-VacS
 MP96MNflach       = Labware.Type("96 Well 8er Macherey-Nagel flach", 8, 12, maxVol=  2000) # Te-VacS
-MP_3Pos              = Carrier.Type("MP 3Pos"                        , width=4, n_sites=3 , idx=12 )
-ContaminationFlyway  = Carrier.Type("AntiCOntaminationFlyway"        , width=1, n_sites=40, idx=107)
-EppCarr16po          = Carrier.Type("Tube Eppendorf 16 Pos"          , width=1, n_sites=16, idx=43 )
-Washs2GridTroughDiTi = Carrier.Type("Washstation 2Grid Trough DiTi"  , width=2, n_sites=8 , idx=104)
+# MP_3Pos              = Carrier.Type("MP 3Pos"                        , width=4, n_sites=3 , idx=12 )
+# ContaminationFlyway  = Carrier.Type("AntiCOntaminationFlyway"        , width=1, n_sites=40, idx=107)
+# EppCarr16po          = Carrier.Type("Tube Eppendorf 16 Pos"          , width=1, n_sites=16, idx=43 )
+# Washs2GridTroughDiTi = Carrier.Type("Washstation 2Grid Trough DiTi"  , width=2, n_sites=8 , idx=104)
 
 
 MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
