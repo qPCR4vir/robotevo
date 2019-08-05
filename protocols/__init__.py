@@ -18,7 +18,6 @@ from protocols.Prefill_plates_LysisBuffer             import Prefill_plates_Lysi
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p
 from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates_LysisBuffer_and_ProtKpreMix
 from EvoScriPy.protocol_steps                         import Pipeline
-from protocols.PCR                                    import PCRexperiment
 from protocols.hello_world                            import HelloWorld
 
 available         = []
@@ -30,7 +29,6 @@ available.append( Prefill_plates_LysisBuffer                  ())
 available.append( Prefill_plates_LysisBuffer_and_ProtKpreMix  ())
 available.append( PreKingFisher_RNAextNucleoMag_EtOH80p       ())
 available.append( RNAextr_MN_Vet_Kit                          ())
-available.append( PCRexperiment                               ())
 available.append( HelloWorld                                  ())
 
 
