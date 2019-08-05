@@ -6,11 +6,12 @@
 __author__ = 'qPCR4vir'
 
 
-test_dir = '../current/tests/'
+test_dir = './tests/'
 
-from protocols.hello_world import HelloWorld as Prt
+from protocols.hello_world.hello_world import HelloWorld as Prt
 
-p = Prt ()
+p = Prt(output_filename             = test_dir + 'hello_world',
+        worktable_template_filename = 'hello_world/hello_world.ewt')
 print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 

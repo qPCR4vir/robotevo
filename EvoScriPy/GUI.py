@@ -218,7 +218,7 @@ class App(tkinter.Frame):
     from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
     GUI4parameters[Prefill_plates_LysisBuffer_and_ProtKpreMix.name]=GUI_init_RNAext_parameters
 
-    from protocols.hello_world import HelloWorld
+    from protocols.hello_world.hello_world import HelloWorld
     GUI4parameters[HelloWorld.name]=GUI_init_RNAext_parameters
 
     class GUI_protocol(tkinter.Frame):
