@@ -14,7 +14,8 @@ type of "output".
 
 import EvoScriPy.robot as Rbt
 
-encoding = 'Latin-1'      # ISO/IEC 8859-1
+encoding = 'Latin-1'        # ISO/IEC 8859-1
+newline = '\r\n'            # windows newline
 
 
 class Mode:
@@ -23,6 +24,7 @@ class Mode:
     One import option is to create many of this outputs from a single run.
     """
     encoding = encoding
+    newline = newline
     # Tip_tNum = 4
 
     def exec(self, instr):
@@ -88,6 +90,8 @@ class inFile(toString):
         self.f = None
         self.filename = None
         self.set_file(filename)
+        self.encoding = Mode.encoding
+        self.newline = Mode.newline
 
     def exec(self, instr):
         s = toString.exec(self, instr) + "\n"  # \r
@@ -117,7 +121,7 @@ class inFile(toString):
     def set_file(self, filename=None):
         self.done()       # ??
         self.filename = filename
-        self.f = open(filename, 'w', encoding=Mode.encoding) if filename is not None else None
+        self.f = open(filename, 'w', encoding=self.encoding, newline=self.newline) if filename is not None else None
         print("Opened file for script: " + filename)
 
 
