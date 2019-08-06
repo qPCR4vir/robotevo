@@ -52,8 +52,8 @@ class Tutorial_HL(Evo200):
                         GUI                         = GUI,
                         num_of_samples=num_of_samples or Tutorial_HL.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or '../current/dilutions_HL',
+                                                      'tutorial_hl_dilution.ewt',
+                        output_filename             = output_filename or './scripts/dilutions_HL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
