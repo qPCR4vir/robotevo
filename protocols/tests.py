@@ -33,7 +33,7 @@ p.Run()
 
 
 
-from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p  import PreKingFisher_RNAextNucleoMag_EtOH80p as Prt
+from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p import PreKingFisher_RNAextNucleoMag_EtOH80p as Prt
 
 p = Prt (num_of_samples    = 96,
          output_filename = test_dir + 'PreKingFisher_RNAextNucleoMag_EtOH80p',
@@ -51,7 +51,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit as Prt
+from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit as Prt
 
 p = Prt (num_of_samples    = 48,
          output_filename = test_dir + 'RNAext_MNVet_TeMag',

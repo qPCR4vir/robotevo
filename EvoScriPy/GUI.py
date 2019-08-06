@@ -203,10 +203,10 @@ class App(tkinter.Frame):
     from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
     GUI4parameters[Prefill_plate_in_Evo200.name] = GUI_init_RNAext_parameters
 
-    from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
+    from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters
 
-    from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p      import PreKingFisher_RNAextNucleoMag_EtOH80p
+    from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p import PreKingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNAext_parameters
 
     from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
