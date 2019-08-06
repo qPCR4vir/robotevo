@@ -32,7 +32,7 @@ class Evo200 (Protocol):
                           firstTip                    = firstTip,
                           run_name                    = run_name)
 
-        self.carrier_file = 'evo200_f/Carrier_Evo200.cfg'
+        self.carrier_file = 'evo200_f/Carrier.cfg'
 
     def set_defaults(self):
         wt = self.worktable
