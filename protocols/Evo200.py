@@ -47,25 +47,3 @@ class Evo200 (Protocol):
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
         wt.def_DiTiWaste   = DiTiWaste
-
-
-class Evo200_FLI (Evo200):
-    """Using the Evo200_FLI"""
-
-    def __init__(self,
-                 num_of_samples              = None,
-                 GUI                         = None,
-                 worktable_template_filename = None,
-                 output_filename             = None,
-                 firstTip                    = None,
-                 run_name                    = None):
-
-
-        Evo200.__init__(self,
-                        GUI                         = GUI,
-                        n_tips                      = 8,
-                        num_of_samples              = num_of_samples,
-                        worktable_template_filename = worktable_template_filename,
-                        output_filename             = output_filename,
-                        firstTip                    = firstTip,
-                        run_name                    = run_name)

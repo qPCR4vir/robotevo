@@ -9,7 +9,7 @@ __author__ = 'Ariel'
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.instructions as Itr
 import EvoScriPy.labware as Lab
-from protocols.Evo100 import Evo100_FLI
+from protocols.evo100_f.evo100_f import Evo100_FLI
 import EvoScriPy.reagent as Rgt
 
 
@@ -42,9 +42,9 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                             num_of_samples=num_of_samples or Prefill_plates_VEW1_ElutionBuffer_VEW2.max_s,
                             worktable_template_filename
                                                     = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt',
+                                                      'Prefill_VEW1_ElutB_and_VEW2.ewt',
                             output_filename         = output_filename or
-                                                      '../current/Prefill_plates_VEW1_ElutionBuffer_VEW2',
+                                                      '../scripts/Prefill_plates_VEW1_ElutionBuffer_VEW2',
                             firstTip                = firstTip,
                             run_name                = run_name)
 

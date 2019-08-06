@@ -7,8 +7,7 @@ __author__ = 'Ariel'
 
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.instructions as Itr
-# import EvoScriPy.Labware as lab
-from protocols.Evo100 import Evo100_FLI
+from protocols.evo100_f.evo100_f import Evo100_FLI
 import EvoScriPy.reagent as Rgt
 from EvoScriPy.instructions_Te_MagS import *
 

@@ -9,7 +9,7 @@ __author__ = 'Ariel'
 from EvoScriPy.protocol_steps import *
 import EvoScriPy.instructions as Itr
 import EvoScriPy.labware as Lab
-from protocols.Evo100 import Evo100_FLI
+from protocols.evo100_f.evo100_f import Evo100_FLI
 import EvoScriPy.reagent as Rgt
 
 
@@ -64,8 +64,8 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             num_of_samples= Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
-                            worktable_template_filename='../EvoScripts/wt_templates/Prefill_plates_LysisBuffer.ewt',  # Prefill_plates_LysisBuffer_and_ProtKpreMix.ewt',
-                            output_filename         ='../current/' + run_name,
+                            worktable_template_filename='Prefill_plates_LysisBuffer.ewt',
+                            output_filename         ='../scripts/' + run_name,
                             run_name                = run_name)
 
     def Run(self):
