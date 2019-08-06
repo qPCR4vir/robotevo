@@ -200,7 +200,7 @@ class App(tkinter.Frame):
             App.GUI_init_parameters.update_parameters(self)
             self.read_num_of_samples()
 
-    from protocols.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
+    from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
     GUI4parameters[Prefill_plate_in_Evo200.name] = GUI_init_RNAext_parameters
 
     from protocols.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
@@ -209,13 +209,13 @@ class App(tkinter.Frame):
     from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p      import PreKingFisher_RNAextNucleoMag_EtOH80p
     GUI4parameters[PreKingFisher_RNAextNucleoMag_EtOH80p.name]=GUI_init_RNAext_parameters
 
-    from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
+    from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
     GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_RNAext_parameters
 
-    from protocols.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
+    from protocols.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
     GUI4parameters[Prefill_plates_LysisBuffer.name]=GUI_init_RNAext_parameters
 
-    from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
+    from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
     GUI4parameters[Prefill_plates_LysisBuffer_and_ProtKpreMix.name]=GUI_init_RNAext_parameters
 
     from protocols.hello_world.hello_world import HelloWorld

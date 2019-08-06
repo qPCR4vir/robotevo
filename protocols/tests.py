@@ -16,7 +16,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2 as Prt
+from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2 as Prt
 
 p = Prt (num_of_samples    = 96,
          output_filename = test_dir + 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
@@ -142,7 +142,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-from protocols.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200 as Prt
+from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200 as Prt
 
 p = Prt (num_of_samples    = 4,
          output_filename = test_dir + 'demo-two.mixes',
