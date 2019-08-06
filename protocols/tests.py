@@ -177,7 +177,7 @@ print("\n\n************ " + p.output_filename + " **************\n")
 p.Run()
 
 
-from protocols.Tutorial_LL import Tutorial_LL as Prt
+from protocols.tutorial_LL.tutorial_LL import Tutorial_LL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir + 'Tutorial_LLevel_atomic',
