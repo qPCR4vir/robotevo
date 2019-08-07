@@ -374,12 +374,12 @@ class Robot:
 
     # Functions to change the physical status, to model physical actions, or that directly
     # correspond to actions in the hardware.
-    # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method instr.actualize_robot_state(self):
+    # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method instructions.actualize_robot_state(self):
 
 
     def get_tips_executed(self, rack_series, tip_mask=-1) -> (int, list):   # (int, [lab.Tip])
 
-        """ To be call from instr.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
+        """ To be call from instructions.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
         status and the number of tips already mounted.
         If it return mask = 0 no evo-instruction for the real robot will be generated in some cases.

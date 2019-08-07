@@ -30,7 +30,7 @@ class Mode:
     def exec(self, instr):
         pass
 
-        # def allowed(self, instr):
+        # def allowed(self, instructions):
         #       return True
 
     def done(self):
