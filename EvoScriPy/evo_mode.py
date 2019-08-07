@@ -12,7 +12,7 @@ type of "output".
 """
 
 
-import EvoScriPy.robot as Rbt
+from EvoScriPy.robot import Robot
 
 encoding = 'Latin-1'        # ISO/IEC 8859-1
 newline = '\r\n'            # windows newline
@@ -181,7 +181,7 @@ class Script(ScriptBody):
     def __init__(self, filename=None, template=None, carrier_file=None, robot=None):
         self.templateNotAdded = True
         ScriptBody.__init__(self, filename)
-        assert isinstance(robot, Rbt.Robot)
+        assert isinstance(robot, Robot)
         self.robot = robot            # ?? may be None?
         self.set_template(template, carrier_file)  # ??
 
@@ -211,7 +211,7 @@ class iRobot(Mode):
     """
     def __init__(self, index,  nTips , arms=None):
         Mode.__init__(self )
-        self.robot = Rbt.Robot(index=index, arms=arms, nTips=nTips)
+        self.robot = Robot(index=index, arms=arms, nTips=nTips)
         self.set_as_current()
 
     def exec(self, instr):
