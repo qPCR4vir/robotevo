@@ -42,7 +42,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                             num_of_samples=num_of_samples or Prefill_plates_VEW1_ElutionBuffer_VEW2.max_s,
                             worktable_template_filename
                                                     = worktable_template_filename or
-                                                      'Prefill_VEW1_ElutB_and_VEW2.ewt',
+                                                      'Prefill_plates_VEW1_ElutionBuffer_VEW2/Prefill_VEW1_ElutB_and_VEW2.ewt',
                             output_filename         = output_filename or
                                                       '../scripts/Prefill_plates_VEW1_ElutionBuffer_VEW2',
                             firstTip                = firstTip,
