@@ -49,7 +49,7 @@ class Tutorial_HL(Evo200):
 
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        num_of_samples=num_of_samples or Tutorial_HL.max_s,
+                        num_of_samples              = num_of_samples or Tutorial_HL.max_s,
                         worktable_template_filename = worktable_template_filename or
                                                       this / 'tutorial_hl_dilution.ewt',
                         output_filename             = output_filename or this / 'scripts' / 'dilutions_HL',

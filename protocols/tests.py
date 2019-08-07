@@ -156,7 +156,6 @@ from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_HLevel',
-         worktable_template_filename = 'tutorial_HL/tutorial_hl_dilution.ewt',
          run_name                    = "_6s")
 p.use_version('No version')
 p.go_first_pos('A01')
@@ -168,7 +167,6 @@ from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
 
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_HLevel',
-         worktable_template_filename = 'tutorial_HL/tutorial_hl_dilution.ewt',
          run_name                    = "_46s")
 p.use_version('No version')
 p.go_first_pos('A01')
@@ -180,7 +178,6 @@ from protocols.tutorial_LL.tutorial_LL import Tutorial_LL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
-         worktable_template_filename = 'tutorial_HL/tutorial_hl_dilution.ewt',
          run_name                    = "_6s")
 p.use_version('No version')
 p.go_first_pos('A01')
@@ -192,7 +189,6 @@ from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
 
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
-         worktable_template_filename = 'tutorial_HL/tutorial_hl_dilution.ewt',
          run_name                    = "_46s")
 p.use_version('No version')
 p.go_first_pos('A01')

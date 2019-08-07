@@ -47,12 +47,14 @@ class Tutorial_LL(Evo200):
                  firstTip                    = None,
                  run_name: str               = ""):
 
+        this = Path(__file__).parent
+
         Evo200.__init__(self,
                         GUI                         = GUI,
-                        num_of_samples=num_of_samples or Tutorial_LL.max_s,
+                        num_of_samples              = num_of_samples or Tutorial_LL.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or '../current/dilutions_LL',
+                                                      this.parent / 'tutorial_HL' / 'tutorial_hl_dilution.ewt',
+                        output_filename             = output_filename or this / 'scripts' / 'dilutions_LL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
