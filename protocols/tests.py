@@ -5,14 +5,13 @@
 # 2014-2019
 __author__ = 'qPCR4vir'
 
-
-test_dir = './tests/'
+from pathlib import Path
+test_dir = Path(__file__).parent / 'tests'
 
 from protocols.hello_world.hello_world import HelloWorld as Prt
 
-p = Prt(output_filename             = test_dir + 'hello_world',
-        worktable_template_filename = 'hello_world/hello_world.ewt')
-print("\n\n************ " + p.output_filename + " **************\n")
+p = Prt(output_filename=test_dir / 'hello_world')
+print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
