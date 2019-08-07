@@ -891,9 +891,10 @@ class comment(Instruction):
 
 
 class userPrompt(Instruction):    # todo declare const
-    """ A.15.4.22 User Prompt (Worklist: UserPrompt)
     """
-    def __init__(self, text, sound = 1, closeTime = -1 ):
+    A.15.4.22 User Prompt (Worklist: UserPrompt)
+    """
+    def __init__(self, text:str, sound:int = 1, closeTime:int = -1 ):
         """
         """
         Instruction.__init__(self, "UserPrompt")

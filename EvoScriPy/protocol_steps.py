@@ -1232,6 +1232,18 @@ class Protocol (Executable):
     def delay(self):            # todo
         pass
 
+    def user_prompt(self, text:str, sound:bool = True, close_time:int = -1 ):
+        """
+        Interrupt pippeting to popup a message box to the operator.
+
+        :param text: the text in the box
+        :param sound: Should add an acustic signal?
+        :param close_time: time to wait for automatic closing the box.
+        The user can close the box at any time, and this will be the only way
+        to close the box if not passed (defoult to -1) with cause no automaticclosingg
+        :return:
+        """
+        instr.userPrompt(text, sound=int(sound), closeTime=close_time).exec()
 
 class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.

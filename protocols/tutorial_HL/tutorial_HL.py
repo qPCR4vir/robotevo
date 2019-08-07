@@ -97,7 +97,7 @@ class Tutorial_HL(Evo200):
 
         with group("Fill dilutions"):
 
-            instr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
+            self.user_prompt("Put the plate for dilutions in " + str(plate.location))
 
             with self.tips(tip_type="DiTi 200 ul", reuse=True, drop=False, drop_last=True):
                 self.distribute(reagent           = mix1,
