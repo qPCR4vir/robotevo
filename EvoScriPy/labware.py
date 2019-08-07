@@ -349,7 +349,7 @@ class WorkTable:
         assert isinstance(series, Labware.Type.Series)
         series.current = labware
 
-    def get_labware(self, labw_type=None, label:(str, int)=None):
+    def get_labware(self, labw_type=None, label: (str, int) = None):
         """
         Return a `Labware` already created manually or after the worktable template was scanned.
         The labware type is optional (if you provide a label), but it makes the search more robust.
@@ -362,17 +362,21 @@ class WorkTable:
         labware = None
         if labw_type is None:
             assert isinstance(label, str), "Please get at least the labware type or label"
-            for series in self.labware_series:
+            for labw_type in self.labware_series:
+                series = self.labware_series[labw_type]
                 if label in series.labels:
                     assert labware is None, ("ERROR: two labware have the label '"  + label
                                             + "' : please indicate the labware type to disambiguate")
                     labware = series.labels[label]
+                    assert isinstance(labware, Labware)
+
             assert labware is not None, ("ERROR: no labware with the label '" + label
                                          + "' was found in worktable: " + self.template_file_name)
+            return labware
 
-        if isinstance(labw_type, Labware.Type ):
+        if isinstance(labw_type, Labware.Type):
             labw_type = labw_type.name
-        assert isinstance(labw_type,str)
+        assert isinstance(labw_type, str)
         series = self.labware_series[labw_type]
 
         if isinstance(label, str):
@@ -793,6 +797,7 @@ class Labware:
         if location and location.carrier:                   # ??????????????
             location.carrier.add_labware(self, location.rack_site)
         self.init_wells()
+        print("Created labware " + str(self) + " in " + str(self.location))
 
     def __str__(self):
         return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
