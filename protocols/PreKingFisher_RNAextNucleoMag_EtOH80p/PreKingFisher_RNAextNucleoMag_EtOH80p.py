@@ -70,9 +70,9 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             num_of_samples=num_of_samples or PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
                             worktable_template_filename
                                                     = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
+                                                      'PreKingFisher_RNAextNucleoMag_EtOH80p/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
                             output_filename         = output_filename or
-                                                      '../current/PreKingFisher_RNAextNucleoMag_EtOH80p',
+                                                      '../scripts/PreKingFisher_RNAextNucleoMag_EtOH80p',
                             firstTip                = firstTip,
                             run_name                = run_name)
 
