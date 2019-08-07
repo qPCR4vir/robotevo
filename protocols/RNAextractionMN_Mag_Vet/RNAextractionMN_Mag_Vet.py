@@ -74,8 +74,8 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             GUI                         = GUI,
                             num_of_samples=num_of_samples or RNAextr_MN_Vet_Kit.max_s,
                             worktable_template_filename = worktable_template_filename or
-                                                          '../EvoScripts/wt_templates/avr_RNAext_MNVet_15TeMag.ewt',
-                            output_filename         = output_filename or '../current/RNAext_MNVet_TeMag',
+                                                          'RNAextractionMN_Mag_Vet/avr_RNAext_MNVet_15TeMag.ewt',
+                            output_filename         = output_filename or '../scripts/RNAext_MNVet_TeMag',
                             firstTip                = firstTip,
                             run_name                = run_name)
 
