@@ -730,50 +730,51 @@ class Protocol (Executable):
         instructions.wash_tips(wasteVol=4).exec()
         return oriSel
 
-    def makePreMix(self, preMix        : preMix,
-                         NumSamples    : int       = None,
-                         force_replies : bool      = False):
+    def makePreMix(self,
+                   pre_mix       : preMix,
+                   NumSamples    : int       = None,
+                   force_replies : bool      = False):
         """
         A preMix is just that: a premix of reagents (aka - components)
         which have been already defined to add some vol per sample.
         Uses one new tip per component.
         It calculates and checks self the minimum and maximum number of replica of the resulting preMix
-        :param preMix    : what to make, a predefined preMix
+        :param pre_mix    : what to make, a predefined preMix
         :param NumSamples:
         :param force_replies: use all the preMix predefined replicas
         :return:
         """
 
-        assert isinstance(preMix, preMix)
+        assert isinstance(pre_mix, preMix)
         mxnTips     = self.robot.curArm().nTips  # max number of Tips
-        ncomp       = len(preMix.components)
+        ncomp       = len(pre_mix.components)
         nt          = min(mxnTips, ncomp)
         NumSamples  = NumSamples or self.num_of_samples
-        labw        = preMix.labware
-        tVol        = preMix.minVol(NumSamples)
-        mxnrepl     = len(preMix.Replicas)                        # max number of replies
-        mnnrepl     = preMix.min_num_of_replica(NumSamples)       # min number of replies
-        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, preMix.name)
+        labw        = pre_mix.labware
+        tVol        = pre_mix.minVol(NumSamples)
+        mxnrepl     = len(pre_mix.Replicas)                        # max number of replies
+        mnnrepl     = pre_mix.min_num_of_replica(NumSamples)       # min number of replies
+        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
-            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl-nrepl, preMix.name))
-            preMix.Replicas = preMix.Replicas[:nrepl]
+            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
+            pre_mix.Replicas = pre_mix.Replicas[:nrepl]
 
-        msg = "preMix: {:.1f} µL of {:s}".format(tVol, preMix.name)
+        msg = "preMix: {:.1f} µL of {:s}".format(tVol, pre_mix.name)
         with group(msg):
             msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
-                                .format( labw.location.grid,
-                                         labw.location.site + 1,
-                                         str([str(well) for well in preMix.Replicas]) ,
-                                         ncomp                        )
+                                .format(labw.location.grid,
+                                        labw.location.site + 1,
+                                        str([str(well) for well in pre_mix.Replicas]),
+                                        ncomp)
             instructions.comment(msg).exec()
             samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
             with self.tips(robot.tipsMask[nt]):   #  want to use preserved ?? selected=??
                 tip = -1
                 ctips = nt
-                for ridx, reagent_component in enumerate(preMix.components):       # iterate reagent components
+                for ridx, reagent_component in enumerate(pre_mix.components):       # iterate reagent components
                     labw = reagent_component.labware
-                    sVol = reagent_component.volpersample*preMix.excess       # vol we need for each sample
+                    sVol = reagent_component.volpersample * pre_mix.excess       # vol we need for each sample
                     rVol = sVol*NumSamples                        # the total vol we need of this reagent component
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
                                 .format( idx = ridx + 1,
@@ -798,9 +799,9 @@ class Protocol (Executable):
                             current_comp_repl +=1
                         dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
                         self.aspirate_one(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
-                        self._multidispense_in_replicas(ridx, preMix, [sp / NumSamples * dV for sp in samples_per_replicas])
+                        self._multidispense_in_replicas(ridx, pre_mix, [sp / NumSamples * dV for sp in samples_per_replicas])
                         rVol -= dV
-                self.mix_reagent(preMix, maxTips=ctips)
+                self.mix_reagent(pre_mix, maxTips=ctips)
 
     def get_tips(self, TIP_MASK         = None,
                        tip_type         = None,
