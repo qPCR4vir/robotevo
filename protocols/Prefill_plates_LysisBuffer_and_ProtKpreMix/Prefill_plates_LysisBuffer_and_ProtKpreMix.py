@@ -64,7 +64,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             num_of_samples= Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
-                            worktable_template_filename='Prefill_plates_LysisBuffer.ewt',
+                            worktable_template_filename='Prefill_plates_LysisBuffer/Prefill_plates_LysisBuffer.ewt',
                             output_filename         ='../scripts/' + run_name,
                             run_name                = run_name)
 
