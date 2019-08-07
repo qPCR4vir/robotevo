@@ -60,12 +60,12 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
     def __init__(self, GUI=None, run_name="Prefill plates with LysisBuffer"):
         self.def_init()
-
+        this = Path(__file__).parent
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             num_of_samples= Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
-                            worktable_template_filename='Prefill_plates_LysisBuffer/Prefill_plates_LysisBuffer.ewt',
-                            output_filename         ='../scripts/' + run_name,
+                            worktable_template_filename=this.parent / 'Prefill_plates_LysisBuffer/Prefill_plates_LysisBuffer.ewt',
+                            output_filename         = this / 'scripts' / '',
                             run_name                = run_name)
 
     def Run(self):

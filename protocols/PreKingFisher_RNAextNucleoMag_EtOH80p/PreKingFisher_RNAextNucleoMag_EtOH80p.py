@@ -64,15 +64,15 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                  run_name           : str       = ""):
 
         self.V_default()
-
+        this = Path(__file__).parent
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             num_of_samples=num_of_samples or PreKingFisher_RNAextNucleoMag_EtOH80p.max_s,
                             worktable_template_filename
                                                     = worktable_template_filename or
-                                                      'PreKingFisher_RNAextNucleoMag_EtOH80p/PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
+                                                      this / 'PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
                             output_filename         = output_filename or
-                                                      '../scripts/PreKingFisher_RNAextNucleoMag_EtOH80p',
+                                                      this / 'scripts' / 'PreKingFisher_RNAextNucleoMag_EtOH80p',
                             firstTip                = firstTip,
                             run_name                = run_name)
 

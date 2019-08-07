@@ -69,13 +69,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                  run_name           : str       = ""):
 
         self.versions_defaults()
-
+        this = Path(__file__).parent
         Evo100_FLI.__init__(self,
                             GUI                         = GUI,
                             num_of_samples=num_of_samples or RNAextr_MN_Vet_Kit.max_s,
                             worktable_template_filename = worktable_template_filename or
-                                                          'RNAextractionMN_Mag_Vet/avr_RNAext_MNVet_15TeMag.ewt',
-                            output_filename         = output_filename or '../scripts/RNAext_MNVet_TeMag',
+                                                          this / 'avr_RNAext_MNVet_15TeMag.ewt',
+                            output_filename         = output_filename or this / 'scripts' / 'RNAext_MNVet_TeMag',
                             firstTip                = firstTip,
                             run_name                = run_name)
 

@@ -38,12 +38,14 @@ class Prefill_plate_in_Evo200(Evo200):
                  firstTip                    = None,
                  run_name: str               = ""):
 
+        this = Path(__file__).parent
+
         Evo200.__init__(self,
                         GUI                         = GUI,
                         num_of_samples=num_of_samples or Prefill_plate_in_Evo200.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      'Prefill_plate_in_Evo200/demo-two.mixes.Evo200example.ewt',
-                        output_filename             = output_filename or '../scripts/two.mixes',
+                                                      this / 'demo-two.mixes.Evo200example.ewt',
+                        output_filename             = output_filename or this / 'scripts' / 'two.mixes',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 

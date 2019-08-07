@@ -128,9 +128,14 @@ class Protocol (Executable):
                  firstTip                    = None,
                  run_name                    = None):
 
+        evo_scripts = Path(__file__).parent.parent / 'EvoScripts' / 'scripts'
+        output = output_filename or evo_scripts
+        assert isinstance(output, Path)
+        output_filename = output.parent / (output.name + (run_name or ""))
+
         self.worktable_template_filename = worktable_template_filename or ""
         self.carrier_file                = None
-        self.output_filename             = (output_filename or '../current/AWL') + (run_name or "")
+        self.output_filename             = output_filename
         self.firstTip                    = firstTip
         self.n_tips                      = n_tips
         self.EvoMode                     = None      # mode.multiple

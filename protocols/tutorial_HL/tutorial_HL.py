@@ -7,7 +7,6 @@ __author__ = 'Ariel'
 
 # Tutorial
 
-from pathlib import Path
 from EvoScriPy.protocol_steps import *
 from protocols.Evo200 import Evo200
 
@@ -46,7 +45,7 @@ class Tutorial_HL(Evo200):
                  firstTip                    = None,
                  run_name: str               = ""):
 
-        this = Path(__file__)
+        this = Path(__file__).parent
 
         Evo200.__init__(self,
                         GUI                         = GUI,
