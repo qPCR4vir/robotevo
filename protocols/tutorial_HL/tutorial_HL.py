@@ -7,6 +7,7 @@ __author__ = 'Ariel'
 
 # Tutorial
 
+from pathlib import Path
 from EvoScriPy.protocol_steps import *
 from protocols.Evo200 import Evo200
 
@@ -45,12 +46,14 @@ class Tutorial_HL(Evo200):
                  firstTip                    = None,
                  run_name: str               = ""):
 
+        this = Path(__file__)
+
         Evo200.__init__(self,
                         GUI                         = GUI,
                         num_of_samples=num_of_samples or Tutorial_HL.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      'tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or './scripts/dilutions_HL',
+                                                      this / 'tutorial_hl_dilution.ewt',
+                        output_filename             = output_filename or this / 'scripts' / 'dilutions_HL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -76,11 +79,11 @@ class Tutorial_HL(Evo200):
 
 
 
-        diluent = rgnt.Reagent("Diluent",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
+        diluent = Reagent("Diluent",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
                               diluent_cuvette,
                               volpersample = vd )
 
-        mix1    = rgnt.Reagent("mix1",
+        mix1    = Reagent("mix1",
                               mixes,
                               volpersample = v)
 
@@ -90,7 +93,7 @@ class Tutorial_HL(Evo200):
 
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
 
-        dilution = rgnt.Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
+        dilution = Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
                                 plate,
                                 replicas         = n,
                                 minimize_aliquots= False)
@@ -113,8 +116,5 @@ class Tutorial_HL(Evo200):
 
 
 if __name__ == "__main__":
-    p = Tutorial_HL(num_of_samples= 42,
-                    run_name        = "_42s")
-
-    p.use_version('No version')
+    p = Tutorial_HL(num_of_samples=42, run_name="_42s")
     p.Run()

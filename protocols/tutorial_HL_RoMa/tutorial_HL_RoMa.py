@@ -72,7 +72,7 @@ class Tutorial_HL_RoMa(Evo200):
         v  = 50                                       # uL to be distribute
 
 
-        buffer_A = rgnt.Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
+        buffer_A = Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
                                labware      = plate_A,
                                wells        = "A1",
                                replicas     = 8,
@@ -84,7 +84,7 @@ class Tutorial_HL_RoMa(Evo200):
 
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
 
-        dilution = rgnt.Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
+        dilution = Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
                                 plate,
                                 replicas         = n,
                                 minimize_aliquots= False)
