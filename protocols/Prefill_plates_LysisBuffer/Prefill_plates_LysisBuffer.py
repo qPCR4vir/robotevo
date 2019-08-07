@@ -7,10 +7,7 @@ __author__ = 'Ariel'
 # todo: deprecate, this is now one version in Prefill_plates_LysisBuffer_and_ProtKpreMix
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions as Itr
-import EvoScriPy.labware as Lab
 from protocols.evo100_f.evo100_f import Evo100_FLI
-import EvoScriPy.reagent as Rgt
 
 
 class Prefill_plates_LysisBuffer(Evo100_FLI):
@@ -45,7 +42,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                             GUI                     = GUI,
                             num_of_samples= Prefill_plates_LysisBuffer.max_s,
                             worktable_template_filename=this / 'Prefill_plates_LysisBuffer.ewt',
-                            output_filename         = this / 'scripts' / '',
+                            output_filename         = this / 'scripts' / 'Prefill_LysisBuffer',
                             run_name                = run_name)
 
     def Run(self):
@@ -113,3 +110,11 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                 self.drop_tips()
 
         self.done()
+
+
+if __name__ == "__main__":
+
+    p = Prefill_plates_LysisBuffer(run_name='1 plate')
+
+    p.use_version('1 plate')
+    p.Run()
