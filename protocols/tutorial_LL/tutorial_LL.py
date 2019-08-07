@@ -7,13 +7,11 @@ __author__ = 'Ariel'
 
 # Tutorial
 
-from   EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions   as     Itr
-import EvoScriPy.labware        as     Lab
-from protocols.Evo200 import Evo200
+from EvoScriPy.protocol_steps import *
+from protocols.evo200_f.evo200_f import Evo200_FLI
 
 
-class Tutorial_LL(Evo200):
+class Tutorial_LL(Evo200_FLI):
     """
     Created n wells with 100 uL of mix1 diluted 1:10. A diluent is provided.
     A reagent "mix1" is diluted (distributed) in n wells 1:10.
@@ -34,14 +32,14 @@ class Tutorial_LL(Evo200):
     min_s, max_s = 1, 96                  # all dilutions in one 96 well plate
 
     def def_versions(self):               # for now just ignore the variants
-        self.versions = {'No version': self.V_def               }
+        self.versions = {'No version': self.v_def}
 
-    def V_def(self):
+    def v_def(self):
         pass
 
     def __init__(self,
                  GUI                         = None,
-                 num_of_samples: int           = 8,
+                 num_of_samples: int         = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -49,14 +47,14 @@ class Tutorial_LL(Evo200):
 
         this = Path(__file__).parent
 
-        Evo200.__init__(self,
-                        GUI                         = GUI,
-                        num_of_samples              = num_of_samples or Tutorial_LL.max_s,
-                        worktable_template_filename = worktable_template_filename or
-                                                      this.parent / 'tutorial_HL' / 'tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or this / 'scripts' / 'dilutions_LL',
-                        firstTip                    = firstTip,
-                        run_name                    = run_name)
+        Evo200_FLI.__init__(self,
+                            GUI                         = GUI,
+                            num_of_samples              = num_of_samples or Tutorial_LL.max_s,
+                            worktable_template_filename = worktable_template_filename or
+                                                          this.parent / 'tutorial_HL' / 'tutorial_hl_dilution.ewt',
+                            output_filename             = output_filename or this / 'scripts' / 'dilutions_LL',
+                            firstTip                    = firstTip,
+                            run_name                    = run_name)
 
     def Run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
@@ -68,14 +66,14 @@ class Tutorial_LL(Evo200):
         assert 1 <= n <= Tutorial_LL.max_s , "In this demo we want to set dilutions in a 96 well plate."
         wt = self.worktable
 
-        Itr.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
+        instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
-        diluent_cuvette   = wt.get_labware(Lab.Trough_100ml, "BufferCub")
-        assert isinstance(diluent_cuvette, Lab.Cuvette)
+        diluent_cuvette   = wt.get_labware(lab.Trough_100ml, "BufferCub")
+        assert isinstance(diluent_cuvette, lab.Cuvette)
 
-        mixes             = wt.get_labware(Lab.Eppendorfrack, "mixes")
-        assert isinstance(mixes, Lab.Labware)
+        mixes             = wt.get_labware(lab.Eppendorfrack, "mixes")
+        assert isinstance(mixes, lab.Labware)
 
         vf = 100                                      # The final volume of every dilution, uL
         v  = vf /10                                   # uL to be distribute from original mix1 to each Dil_10
@@ -88,22 +86,21 @@ class Tutorial_LL(Evo200):
         mix1     = mixes.Wells[0]                     # just one 1,5 mL tube
         mix1.vol = v * n * excess
 
+        self.user_prompt("Put diluent in "+str(diluent[0]))        # Show the check_list   -------------------------
+        self.user_prompt("Put mix1 in " + str(mix1))
 
-        Itr.userPrompt("Put diluent in "+str(diluent[0]) ).exec()  # Show the check_list   -------------------------
-        Itr.userPrompt("Put mix1 in " + str(mix1)).exec()
-
-        Itr.wash_tips(wasteVol=5, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
-        assert isinstance(plate, Lab.Labware)
+        assert isinstance(plate, lab.Labware)
 
         dilution = plate.Wells[:n]                                 # Define place for temporal reactions  ----------
 
         with group("Fill dilutions"):
 
-            Itr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
+            self.user_prompt("Put the plate for dilutions in " + str(plate.location))
 
-            arm = self.robot.curArm(Itr.Pipette.LiHa1)
+            arm = self.robot.curArm(instructions.Pipette.LiHa1)
             m_tips = arm.nTips
 
             n_tips = min(n, m_tips)                                                 # distribute mix1 --------------
@@ -114,28 +111,28 @@ class Tutorial_LL(Evo200):
             dil_left = n
             while dil_left:
                 n_tips = min(dil_left, m_tips)
-                maxMultiDisp_N = arm.Tips[0].type.maxVol // v
+                max_multi_disp_n = arm.Tips[0].type.maxVol // v
                 dsp, rst = divmod(dil_left, n_tips)
-                if dsp >= maxMultiDisp_N:
-                    dsp = maxMultiDisp_N
+                if dsp >= max_multi_disp_n:
+                    dsp = max_multi_disp_n
                     vol = [v * dsp] * n_tips                                        # equal volume with each tips
-                    availableDisp = dsp
+                    available_disp = dsp
                 else:
                     vol = [v * (dsp + 1)] * rst + [v * dsp] * (n_tips - rst)
-                    availableDisp = dsp + bool(rst)
+                    available_disp = dsp + bool(rst)
 
                 for tip in range(n_tips):
                     self.aspirate(arm=arm, TIP_MASK=robot.tipMask[tip], volume=vol, from_wells=mix1)
 
-                while availableDisp:
+                while available_disp:
                     n_tips = min(n_tips, dil_left)
-                    curSample = n - dil_left
-                    sel = dilution[curSample: curSample + n_tips]
+                    cur_sample = n - dil_left
+                    sel = dilution[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
                                   TIP_MASK = robot.tipsMask[n_tips],
                                   volume   = v,
                                   to_wells = sel)
-                    availableDisp -= 1
+                    available_disp -= 1
                     dil_left -= n_tips
 
             self.drop_tip()
@@ -148,27 +145,27 @@ class Tutorial_LL(Evo200):
             dil_left = n
             while dil_left:
                 n_tips = min(dil_left, m_tips, len(diluent))
-                maxMultiDisp_N = arm.Tips[0].type.maxVol // vd
+                max_multi_disp_n = arm.Tips[0].type.maxVol // vd
                 dsp, rst = divmod(dil_left, n_tips)
-                if dsp >= maxMultiDisp_N:
-                    dsp = maxMultiDisp_N
+                if dsp >= max_multi_disp_n:
+                    dsp = max_multi_disp_n
                     vol = [vd * dsp] * n_tips       # equal volume with each tips
-                    availableDisp = dsp
+                    available_disp = dsp
                 else:
                     vol = [vd * (dsp + 1)] * rst + [vd * dsp] * (n_tips - rst)
-                    availableDisp = dsp + bool(rst)
+                    available_disp = dsp + bool(rst)
 
                 self.aspirate(arm=arm, TIP_MASK=robot.tipsMask[n_tips], volume=vol, from_wells=diluent)
 
-                while availableDisp:
+                while available_disp:
                     n_tips = min(n_tips, dil_left)
-                    curSample = n - dil_left
-                    sel = dilution[curSample: curSample + n_tips]
+                    cur_sample = n - dil_left
+                    sel = dilution[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
                                   TIP_MASK = robot.tipsMask[n_tips],
                                   volume   = vd,
                                   to_wells = sel)
-                    availableDisp -= 1
+                    available_disp -= 1
                     dil_left -= n_tips
 
             self.drop_tip()
@@ -177,8 +174,7 @@ class Tutorial_LL(Evo200):
 
 
 if __name__ == "__main__":
-    p = Tutorial_LL(num_of_samples= 42,
-                    run_name        = "_42s")
+    p = Tutorial_LL(num_of_samples= 42, run_name        = "_42s")
 
     p.use_version('No version')
     p.Run()
