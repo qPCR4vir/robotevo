@@ -362,8 +362,7 @@ class WorkTable:
         labware = None
         if labw_type is None:
             assert isinstance(label, str), "Please get at least the labware type or label"
-            for labw_type in self.labware_series:
-                series = self.labware_series[labw_type]
+            for series in self.labware_series.values():
                 if label in series.labels:
                     assert labware is None, ("ERROR: two labware have the label '"  + label
                                             + "' : please indicate the labware type to disambiguate")
