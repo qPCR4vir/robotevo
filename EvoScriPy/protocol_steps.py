@@ -1017,16 +1017,22 @@ class Protocol (Executable):
         Reagent.set_reagent_list(self)
 
     def init_EvoMode(self):
+
+        script_dir = self.output_filename.parent
+        script_name = self.output_filename.name
+        script = script_dir / (script_name + '.esc')
+        assert isinstance(script, Path)
+
         self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, nTips=self.n_tips)
-        self.Script = mode.Script(template=self.worktable_template_filename,
-                                  carrier_file=self.carrier_file,
-                                     filename=self.output_filename + '.esc',
-                                     robot=self.iRobot.robot)
-        self.comments_ = mode.Comments(filename=self.output_filename + '.protocol.txt')
+        self.Script = mode.Script(template     = self.worktable_template_filename,
+                                  carrier_file = self.carrier_file,
+                                  filename     = script,
+                                  robot        = self.iRobot.robot)
+        self.comments_ = mode.Comments(filename= script.with_suffix('.protocol.txt'))
         self.EvoMode = mode.multiple([self.iRobot,
                                          self.Script,
-                                         mode.AdvancedWorkList(self.output_filename + '.gwl'),
-                                         mode.ScriptBody(self.output_filename + '.txt'),
+                                         mode.AdvancedWorkList(script.with_suffix('.gwl')),
+                                         mode.ScriptBody(script.with_suffix('.txt')),
                                          mode.StdOut(),
                                          self.comments_
                                          ])

@@ -33,7 +33,7 @@ class WorkTable:
             self.template = template_file
             print("Template file is a list.")
         else:
-            print("Set template file: " + template_file)
+            print("Set template file: " + str(template_file))
             self.template = self.parse_worktable_file(template_file, carrier_file)
             self.template_file_name = template_file
 

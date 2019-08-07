@@ -122,7 +122,7 @@ class inFile(toString):
         self.done()       # ??
         self.filename = filename
         self.f = open(filename, 'w', encoding=self.encoding, newline=self.newline) if filename is not None else None
-        print("Opened file for script: " + filename)
+        print("Opened file for script: " + str(filename))
 
 
 class Comments(inFile):
