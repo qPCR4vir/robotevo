@@ -6,7 +6,6 @@
 
 __author__ = 'qPCR4vir'
 
-from pathlib import Path
 from EvoScriPy.protocol_steps import *
 
 
@@ -32,5 +31,3 @@ class Evo100(Protocol):
                           output_filename             = output_filename,
                           firstTip                    = firstTip,
                           run_name                    = run_name)
-
-        self.carrier_file = Path(__file__).parent / 'evo100_f' / 'Carrier.cfg'

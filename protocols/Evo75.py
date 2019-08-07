@@ -7,7 +7,6 @@
 __author__ = 'qPCR4vir'
 
 
-from pathlib import Path
 from EvoScriPy.protocol_steps import *
 
 
@@ -26,17 +25,14 @@ class Evo75(Protocol):
 
         Protocol.__init__(self,
                           GUI                         = GUI,
-                          n_tips= n_tips,
-                          num_of_samples= num_of_samples,
+                          n_tips                      = n_tips,
+                          num_of_samples              = num_of_samples,
                           worktable_template_filename = worktable_template_filename,
                           output_filename             = output_filename,
                           firstTip                    = firstTip,
                           run_name                    = run_name)
 
-        self.carrier_file = Path(__file__).parent / 'evo75_f' / 'Carrier.cfg'
-
-
-    def set_defaults(self):
+     def set_defaults(self):
         wt = self.worktable
 
         wt.def_DiTi     = lab.DiTi_0200ul                   # this is a type, the others are labwares

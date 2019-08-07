@@ -7,6 +7,7 @@
 __author__ = 'qPCR4vir'
 
 
+from pathlib import Path
 from protocols.Evo75 import Evo75
 
 
@@ -16,21 +17,21 @@ class Evo75_FLI(Evo75):
     """
 
     def __init__(self,
-                 num_of_samples                = None,
+                 num_of_samples              = None,
                  GUI                         = None,
-                 worktable_template_filename = '../EvoScripts/Freedom75_FLI_PCR.ewt',
+                 worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
                  run_name                    = None):
 
+        Evo75.__init__(self,
+                       GUI                         = GUI,
+                       n_tips                      = 1,
+                       num_of_samples              = num_of_samples,
+                       worktable_template_filename = worktable_template_filename,
+                       output_filename             = output_filename,
+                       firstTip                    = firstTip,
+                       run_name                    = run_name)
 
-        Evo100.__init__(self,
-                        GUI                         = GUI,
-                        nTips                       = 1,
-                        num_of_samples= num_of_samples,
-                        worktable_template_filename = worktable_template_filename,
-                        output_filename             = output_filename,
-                        firstTip                    = firstTip,
-                        run_name                    = run_name)
+        self.carrier_file = Path(__file__).parent / 'Carrier.cfg'
 
-        self.carrier_file = 'Carrier.cfg'
