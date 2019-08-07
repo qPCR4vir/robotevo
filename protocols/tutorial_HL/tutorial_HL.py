@@ -66,7 +66,7 @@ class Tutorial_HL(Evo200):
         assert 1 <= n <= Tutorial_HL.max_s , "In this demo we want to set dilutions in a 96 well plate."
         wt = self.worktable
 
-        instr.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
+        instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
         diluent_cuvette = wt.get_labware(lab.Trough_100ml, "BufferCub")
@@ -88,7 +88,7 @@ class Tutorial_HL(Evo200):
 
         self.check_list()                                          # Show the check_list   -------------------------
 
-        instr.wash_tips(wasteVol=5, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
 
