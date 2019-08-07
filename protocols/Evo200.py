@@ -7,8 +7,8 @@
 __author__ = 'qPCR4vir'
 
 
+from pathlib import Path
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.reagent as Rgt
 
 
 class Evo200 (Protocol):
@@ -32,7 +32,7 @@ class Evo200 (Protocol):
                           firstTip                    = firstTip,
                           run_name                    = run_name)
 
-        self.carrier_file = 'evo200_f/Carrier.cfg'
+        self.carrier_file = Path(__file__).parent / 'evo200_f' / 'Carrier.cfg'
 
     def set_defaults(self):
         wt = self.worktable

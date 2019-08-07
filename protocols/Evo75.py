@@ -7,15 +7,17 @@
 __author__ = 'qPCR4vir'
 
 
+from pathlib import Path
 from EvoScriPy.protocol_steps import *
+
 
 class Evo75(Protocol):
     """ Using the Evo75
     """
 
     def __init__(self,
-                 n_tips                       = 1,
-                 num_of_samples                = None,
+                 n_tips                      = 1,
+                 num_of_samples              = None,
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
@@ -31,17 +33,18 @@ class Evo75(Protocol):
                           firstTip                    = firstTip,
                           run_name                    = run_name)
 
-        self.carrier_file = 'evo75_f/Carrier.cfg'
+        self.carrier_file = Path(__file__).parent / 'evo75_f' / 'Carrier.cfg'
+
 
     def set_defaults(self):
         wt = self.worktable
 
-        wt.def_DiTi     = Lab.DiTi_0200ul                   # this is a type, the others are labwares
+        wt.def_DiTi     = lab.DiTi_0200ul                   # this is a type, the others are labwares
 
-        WashCleanerS    = wt.get_labware(Lab.CleanerShallow, "")
-        WashWaste       = wt.get_labware(Lab.WasteWash, "")
-        WashCleanerL    = wt.get_labware(Lab.CleanerDeep, "")
-        DiTiWaste       = wt.get_labware(Lab.DiTi_Waste_plate, "TipWaste")
+        WashCleanerS    = wt.get_labware(lab.CleanerShallow, "")
+        WashWaste       = wt.get_labware(lab.WasteWash, "")
+        WashCleanerL    = wt.get_labware(lab.CleanerDeep, "")
+        DiTiWaste       = wt.get_labware(lab.DiTi_Waste_plate, "TipWaste")
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS

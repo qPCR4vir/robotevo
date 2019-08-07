@@ -6,12 +6,13 @@
 
 __author__ = 'qPCR4vir'
 
+from pathlib import Path
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.reagent as Rgt
 
 
 class Evo100(Protocol):
-    """ Using the Evo100
+    """
+    Using the Evo100
     """
 
     def __init__(self,
@@ -32,4 +33,4 @@ class Evo100(Protocol):
                           firstTip                    = firstTip,
                           run_name                    = run_name)
 
-        self.carrier_file = 'evo100_f/Carrier.cfg'
+        self.carrier_file = Path(__file__).parent / 'evo100_f' / 'Carrier.cfg'
