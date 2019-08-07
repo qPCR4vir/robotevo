@@ -8,10 +8,10 @@ __author__ = 'Ariel'
 # Tutorial
 
 from EvoScriPy.protocol_steps import *
-from protocols.Evo200 import Evo200
+from protocols.evo200_f.evo200_f import Evo200_FLI
 
 
-class Tutorial_HL(Evo200):
+class Tutorial_HL(Evo200_FLI):
     """
     Created n wells with 100 uL of mix1 diluted 1:10. A diluent is provided.
     A reagent "mix1" is diluted (distributed) in n wells 1:10.
@@ -32,14 +32,14 @@ class Tutorial_HL(Evo200):
     min_s, max_s = 1, 96                    # all dilutions in one 96 well plate
 
     def def_versions(self):                 # for now just ignore the variants
-        self.versions = {'No version': self.V_def               }
+        self.versions = {'No version': self.v_def}
 
-    def V_def(self):
+    def v_def(self):
         pass
 
     def __init__(self,
                  GUI                         = None,
-                 num_of_samples: int           = 8,
+                 num_of_samples: int         = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
@@ -47,14 +47,14 @@ class Tutorial_HL(Evo200):
 
         this = Path(__file__).parent
 
-        Evo200.__init__(self,
-                        GUI                         = GUI,
-                        num_of_samples              = num_of_samples or Tutorial_HL.max_s,
-                        worktable_template_filename = worktable_template_filename or
-                                                      this / 'tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or this / 'scripts' / 'dilutions_HL',
-                        firstTip                    = firstTip,
-                        run_name                    = run_name)
+        Evo200_FLI.__init__(self,
+                            GUI                         = GUI,
+                            num_of_samples              = num_of_samples or Tutorial_HL.max_s,
+                            worktable_template_filename = worktable_template_filename or
+                                                          this / 'tutorial_hl_dilution.ewt',
+                            output_filename             = output_filename or this / 'scripts' / 'dilutions_HL',
+                            firstTip                    = firstTip,
+                            run_name                    = run_name)
 
     def Run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
@@ -63,28 +63,22 @@ class Tutorial_HL(Evo200):
         self.show_runtime_check_list    = True
 
         n = self.num_of_samples
-        assert 1 <= n <= Tutorial_HL.max_s , "In this demo we want to set dilutions in a 96 well plate."
+        assert 1 <= n <= Tutorial_HL.max_s, "In this demo we want to set dilutions in a 96 well plate."
         wt = self.worktable
 
         instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
-        diluent_cuvette = wt.get_labware(lab.Trough_100ml, "BufferCub")
-        mixes           = wt.get_labware(lab.Eppendorfrack, "mixes")
+        diluent_cuvette = wt.get_labware(label="BufferCub")
+        mixes           = wt.get_labware(label="mixes")
 
         vf = 100                                      # The final volume of every dilution, uL
         v  = vf /10                                   # uL to be distribute from original mix1 to each Dil_10
         vd = vf - v                                   # uL to be distribute from diluent to each Dil_10
 
-
-
-        diluent = Reagent("Diluent",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
-                              diluent_cuvette,
-                              volpersample = vd )
-
-        mix1    = Reagent("mix1",
-                              mixes,
-                              volpersample = v)
+        # Define the reagents in each labware (Cuvette, eppys, etc.) -
+        diluent = Reagent("Diluent", diluent_cuvette, volpersample = vd)
+        mix1    = Reagent("mix1",  mixes,  volpersample = v)
 
         self.check_list()                                          # Show the check_list   -------------------------
 
@@ -93,9 +87,9 @@ class Tutorial_HL(Evo200):
         plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
 
         dilution = Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
-                                plate,
-                                replicas         = n,
-                                minimize_aliquots= False)
+                           plate,
+                           replicas         = n,
+                           minimize_aliquots= False)
 
         with group("Fill dilutions"):
 
