@@ -13,7 +13,7 @@ from EvoScriPy.instructions_Te_MagS import *
 mix_mag_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix.esc" .decode(EvoScriPy.evo_mode.Mode.encoding)
 mix_mag_eluat = br"C:\Prog\robotevo\EvoScripts\subroutines\avr_MagMix_Eluat.esc".decode(EvoScriPy.evo_mode.Mode.encoding)
 # robot.rep_sub = br"repeat_subroutine.esc" .decode(mode.Mode.encoding)
-Rbt.rep_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\repeat_subroutine.esc".decode(EvoScriPy.evo_mode.Mode.encoding)
+robot.rep_sub = br"C:\Prog\robotevo\EvoScripts\subroutines\repeat_subroutine.esc".decode(EvoScriPy.evo_mode.Mode.encoding)
 
 
 class RNAextr_MN_Vet_Kit(Evo100_FLI):
@@ -89,25 +89,25 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         if self.add_VL:
-            LysBuf      = wt.get_labware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+            LysBuf      = wt.get_labware(lab.Trough_100ml, "2-Vl Lysis Buffer")
 
         if self.do_extraction:
-            BindBuf     = wt.get_labware(Lab.Trough_100ml, "3-VEB Binding Buffer")
-            ElutBuf     = wt.get_labware(Lab.Trough_100ml, "1-VEL-ElutionBuffer")
-            Eluat       = wt.get_labware(Lab.EppRack3x16R, "Eluat")
+            BindBuf     = wt.get_labware(lab.Trough_100ml, "3-VEB Binding Buffer")
+            ElutBuf     = wt.get_labware(lab.Trough_100ml, "1-VEL-ElutionBuffer")
+            Eluat       = wt.get_labware(lab.EppRack3x16R, "Eluat")
 
-        Samples     = wt.get_labware(Lab.EppRack3x16, "Proben")
+        Samples     = wt.get_labware(lab.EppRack3x16, "Proben")
         Lysis       = Samples
 
-        DiTi1000_1  = wt.get_labware(Lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2  = wt.get_labware(Lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3  = wt.get_labware(Lab.DiTi_1000ul, "1000-3")
+        DiTi1000_1  = wt.get_labware(lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2  = wt.get_labware(lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3  = wt.get_labware(lab.DiTi_1000ul, "1000-3")
 
-        Reagents   = wt.get_labware(Lab.GreinRack16_2mL, "Reactives")
+        Reagents   = wt.get_labware(lab.GreinRack16_2mL, "Reactives")
 
         if self.do_extraction:
-            self.TeMg_Heat = wt.get_labware(Lab.TeMag48, "48 Pos Heat")
-            self.TeMag     = wt.get_labware(Lab.TeMag48, "48PosMagnet")
+            self.TeMg_Heat = wt.get_labware(lab.TeMag48, "48 Pos Heat")
+            self.TeMag     = wt.get_labware(lab.TeMag48, "48PosMagnet")
             TeMag          = self.TeMag
             Lysis          = TeMag
 
@@ -143,7 +143,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         all_samples = range(num_of_samples)
         maxTips     = min  (self.n_tips, num_of_samples)
-        maxMask     = Rbt.tipsMask[maxTips]
+        maxMask     = robot.tipsMask[maxTips]
         par         = Lysis.parallelOrder(self.n_tips, all_samples)
 
                                                         # Define the Reagents in each labware (Cuvette, eppys, etc.)
@@ -200,17 +200,17 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           defLiqClass   = B_liquidClass)
 
             VEW1            = Reagent("VEW1 - Wash Buffer ",
-                                          wt.get_labware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
+                                          wt.get_labware(lab.Trough_100ml, "4-VEW1 Wash Buffe"),
                                           volpersample  = VEW1Volume,
                                           defLiqClass   = B_liquidClass)
 
             VEW2            = Reagent("VEW2 - WashBuffer ",
-                                          wt.get_labware(Lab.Trough_100ml, "5-VEW2-WashBuffer"),
+                                          wt.get_labware(lab.Trough_100ml, "5-VEW2-WashBuffer"),
                                           volpersample  =VEW2Volume,
                                           defLiqClass   =B_liquidClass)
 
             EtOH80p         = Reagent("Ethanol 80% ",
-                                          Lab.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
+                                          lab.getLabware(lab.Trough_100ml,  "7-EtOH80p"     ),
                                           volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
             ElutionBuffer   = Reagent("Elution Buffer ",

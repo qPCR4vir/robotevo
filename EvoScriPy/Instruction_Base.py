@@ -12,8 +12,8 @@ Implement the
 
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoScriPy.evo_mode
-import EvoScriPy.labware as Lab
-import EvoScriPy.robot as Rbt
+import EvoScriPy.labware as lab
+import EvoScriPy.robot as robot
 
 supportVirtualRobot = True  # OK explore this idea ! (problems with "asynchronous" and multiple mode)
 
@@ -86,7 +86,7 @@ class Instruction:
     def __init__(self, name):
         self.name = name
         self.arg = []
-        self.robot = Rbt.Robot.current
+        self.robot = robot.Robot.current
 
     def validateArg(self):
         self.arg = []
@@ -154,7 +154,7 @@ class Pipette(Instruction):
     def __init__(self,
                  name,
                  tipMask                    = None,
-                 labware      : Lab.Labware = None,
+                 labware      : lab.Labware = None,
                  spacing                    = 1,           # todo how to use in actualize_robot_state, validateArg ?
                  wellSelection              = None,        # todo    use???
                  LoopOptions                = None,        # todo how to model???
@@ -212,7 +212,7 @@ class Pipette(Instruction):
 
         self.arm = self.robot.curArm(self.arm)
 
-        max_tip_mask = Rbt.tipsMask[self.arm.nTips]
+        max_tip_mask = robot.tipsMask[self.arm.nTips]
         if self.tipMask is None:
             self.tipMask = max_tip_mask
         assert 0 <= self.tipMask <= max_tip_mask; "Invalid tip mask"
@@ -222,23 +222,23 @@ class Pipette(Instruction):
 
         well_selection_str = None                                      # Set selected wells to match labware selection.
         if self.wellSelection is None:                                 # only labware selection.
-            assert isinstance(self.labware, Lab.Labware)
+            assert isinstance(self.labware, lab.Labware)
             assert len(self.labware.selected_wells()) > 0, "No well selected for pipetting in " + str(self.labware) + "."
             well_selection_str = self.labware.wellSelectionStr()       # use them
         else:
             if not isinstance(self.wellSelection, list):
                 self.wellSelection = [self.wellSelection]
             if len(self.wellSelection) == 0:
-                assert isinstance(self.labware, Lab.Labware)
+                assert isinstance(self.labware, lab.Labware)
                 assert len(self.labware.selected_wells()) > 0, "No well selected to pipette."
                 well_selection_str = self.labware.wellSelectionStr()
             else:
                 w0 = self.wellSelection[0]
-                if isinstance(w0, Lab.Well):
+                if isinstance(w0, lab.Well):
                     if self.labware is None:
                         self.labware = w0.labware
                     assert w0.labware is self.labware, "Using a well from another labware"
-                assert isinstance(self.labware, Lab.Labware)
+                assert isinstance(self.labware, lab.Labware)
                 self.labware.selectOnly(self.wellSelection)
                 well_selection_str = self.labware.wellSelectionStr(self.wellSelection)
 
@@ -330,7 +330,7 @@ class DITIs(Instruction):
         Instruction.__init__(self, name)
         self.arm     = self.robot.curArm(arm)
         self.options = options
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.tipMask = tipMask if tipMask is not None else robot.tipsMask[self.robot.curArm().nTips]
 
 
     def validateArg(self):

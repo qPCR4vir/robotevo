@@ -55,11 +55,11 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                      .format(self.num_plates, num_of_samples))
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
-        LysBufCuvette = wt.get_labware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+        LysBufCuvette = wt.get_labware(lab.Trough_100ml, "2-Vl Lysis Buffer")
 
-        DiTi1000_1  = wt.get_labware(Lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2  = wt.get_labware(Lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3  = wt.get_labware(Lab.DiTi_1000ul, "1000-3")
+        DiTi1000_1  = wt.get_labware(lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2  = wt.get_labware(lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3  = wt.get_labware(lab.DiTi_1000ul, "1000-3")
 
 
         self.go_first_pos()                      #  Set the initial position of the tips
@@ -86,7 +86,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        LysPlat = [wt.get_labware(Lab.MP96deepwell, "Plate lysis-" + str(i + 1)) for i in range(self.num_plates)]
+        LysPlat = [wt.get_labware(lab.MP96deepwell, "Plate lysis-" + str(i + 1)) for i in range(self.num_plates)]
 
         par = LysPlat[0].parallelOrder(self.n_tips, all_samples)
 

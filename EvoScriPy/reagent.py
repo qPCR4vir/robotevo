@@ -6,8 +6,7 @@
 __author__ = 'qPCR4vir'
 
 
-import EvoScriPy.labware as Lab
-# from Robot import current
+import EvoScriPy.labware as lab
 from EvoScriPy.Instruction_Base import def_liquidClass
 
 def_reagent_excess = 4
@@ -31,10 +30,10 @@ class Reagent:
 
     def __init__(self,
                  name           : str,
-                 labware        : (Lab.Labware, str)        = None,
+                 labware        : (lab.Labware, str)        = None,
                  volpersample   : float                     = 0.0,
                  single_use     : float                     = None,
-                 wells          : (int, [int], [Lab.Well])  = None,
+                 wells          : (int, [int], [lab.Well])  = None,
                  replicas       : int                       = None,
                  defLiqClass    : (str,(str,str))           = None,
                  excess         : float                     = None,
@@ -70,19 +69,19 @@ class Reagent:
                                    This default value can be temporally change by setting that global.
         """
         if labware is None:
-            if isinstance(wells, Lab.Well):
+            if isinstance(wells, lab.Well):
                 labware = wells.labware
-            elif isinstance(wells, list) and isinstance(wells[0], Lab.Well):
+            elif isinstance(wells, list) and isinstance(wells[0], lab.Well):
                 labware = wells[0].labware
         if isinstance(labware, str):
             labware = Reagent.current_protocol.worktable.get_labware(label=labware)
-        assert isinstance(labware, Lab.Labware), "No labware defined for Reagent " + name
+        assert isinstance(labware, lab.Labware), "No labware defined for Reagent " + name
 
         # add self to the list of reagents of the worktable were the labware is.
-        assert isinstance(labware.location.worktable, Lab.WorkTable)                                   # todo temporal
-        if (isinstance(labware,                     Lab.Labware) and
-            isinstance(labware.location,            Lab.WorkTable.Location) and
-            isinstance(labware.location.worktable,  Lab.WorkTable) ):
+        assert isinstance(labware.location.worktable, lab.WorkTable)                                   # todo temporal
+        if (isinstance(labware,                     lab.Labware) and
+            isinstance(labware.location,            lab.WorkTable.Location) and
+            isinstance(labware.location.worktable,  lab.WorkTable) ):
           labware.location.worktable.reagents.append(self)
         else:
           if (Reagent.current_protocol):

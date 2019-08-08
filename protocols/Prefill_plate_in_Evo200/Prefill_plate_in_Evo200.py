@@ -59,8 +59,8 @@ class Prefill_plate_in_Evo200(Evo200):
                      .format(num_of_samples))
 
 
-        BufCuvette    = wt.get_labware(Lab.Trough_100ml, "BufferCub")           # Get Labwares from the work table
-        master_mixes_ = wt.get_labware(Lab.Eppendorfrack, "mixes")
+        BufCuvette    = wt.get_labware(lab.Trough_100ml, "BufferCub")           # Get Labwares from the work table
+        master_mixes_ = wt.get_labware(lab.Eppendorfrack, "mixes")
 
         maxTips       = min  (self.n_tips, num_of_samples)
 
@@ -111,8 +111,8 @@ class Prefill_plate_in_Evo200(Evo200):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        Plat1 = wt.get_labware(Lab.MP96MachereyNagel, "plate1")
-        Plat2 = wt.get_labware(Lab.MP96well, "plate2")
+        Plat1 = wt.get_labware(lab.MP96MachereyNagel, "plate1")
+        Plat2 = wt.get_labware(lab.MP96well, "plate2")
 
         # Define place for temporal reactions
         Reagent.use_minimal_number_of_aliquots = False
@@ -142,7 +142,7 @@ class Prefill_plate_in_Evo200(Evo200):
 
         loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier
         loc.site -= 1
-        carrier = Lab.Carrier(lab.Carrier.Type.by_name["MP 3Pos"], loc.grid, label ="MP 3Pos")
+        carrier = lab.Carrier(lab.Carrier.Type.by_name["MP 3Pos"], loc.grid, label ="MP 3Pos")
         loc.carrier = carrier
         instructions.transfer_rack(Plat2, loc ).exec()                                            # just showing how RoMa works.
 

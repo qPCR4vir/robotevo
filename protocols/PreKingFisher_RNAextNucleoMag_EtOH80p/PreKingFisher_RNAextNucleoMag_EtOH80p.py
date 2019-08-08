@@ -84,16 +84,16 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         if self.add_VL:
-            LysBuf      = wt.get_labware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
+            LysBuf      = wt.get_labware(lab.Trough_100ml, "2-Vl Lysis Buffer")
 
         if self.do_extraction:
-            BindBuf     = wt.get_labware(Lab.Trough_100ml, "3-VEB Binding Buffer")
+            BindBuf     = wt.get_labware(lab.Trough_100ml, "3-VEB Binding Buffer")
 
-        DiTi1000_1  = wt.get_labware(Lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2  = wt.get_labware(Lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3  = wt.get_labware(Lab.DiTi_1000ul, "1000-3")
+        DiTi1000_1  = wt.get_labware(lab.DiTi_1000ul, "1000-1")
+        DiTi1000_2  = wt.get_labware(lab.DiTi_1000ul, "1000-2")
+        DiTi1000_3  = wt.get_labware(lab.DiTi_1000ul, "1000-3")
 
-        Reagents   = wt.get_labware(Lab.GreinRack16_2mL, "Reactives")
+        Reagents   = wt.get_labware(lab.GreinRack16_2mL, "Reactives")
 
                                                                 # Set the initial position of the tips
 
@@ -180,7 +180,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                           defLiqClass   = B_liquidClass)
 
         EtOH80p         = Reagent("Ethanol 80% ",
-                                      wt.get_labware(Lab.Trough_100ml, "7-EtOH80p"),
+                                      wt.get_labware(lab.Trough_100ml, "7-EtOH80p"),
                                       volpersample      =EtOH80pVolume,
                                       defLiqClass       =B_liquidClass)
 
@@ -191,11 +191,11 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Define the Reagents not shown in the check_list GUI
                                                         # Define samples and the place for temporal reactions
 
-        Plate_lysis = wt.get_labware(Lab.MP96deepwell, "Plate lysis")  # Plate 12 x 8 ?
-        Plate_EtOH  = wt.get_labware(Lab.MP96deepwell, "Plate EtOH")  # Plate 12 x 8 ? MP96well !!
+        Plate_lysis = wt.get_labware(lab.MP96deepwell, "Plate lysis")  # Plate 12 x 8 ?
+        Plate_EtOH  = wt.get_labware(lab.MP96deepwell, "Plate EtOH")  # Plate 12 x 8 ? MP96well !!
 
         if self.version != 'original samples':
-           Samples  = wt.get_labware(Lab.EppRack6x16, "Proben")  # 6x16 = 12 x 8 ?
+           Samples  = wt.get_labware(lab.EppRack6x16, "Proben")  # 6x16 = 12 x 8 ?
 
 
         par = Plate_lysis.parallelOrder(self.n_tips, all_samples)

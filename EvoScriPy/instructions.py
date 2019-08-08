@@ -273,7 +273,7 @@ class getDITI2(DITIs):
     """
     def __init__(self,
                  tipMask         = None,
-                 DITI_series  :(str, Lab.DITIrackType, Lab.DITIrack, Lab.DITIrackTypeSeries)     = None,
+                 DITI_series  :(str, lab.DITIrackType, lab.DITIrack, lab.DITIrackTypeSeries)     = None,
                  options         = 0,
                  arm             = None,
                  AirgapVolume    = 0,
@@ -392,7 +392,7 @@ class set_DITI_Counter(Pipette):            # todo help determining the type,set
         self.posInRack = posInRack
 
     def validateArg(self):
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
         self.arg = [integer(self.type),
                     string1(self.labware.location.grid),
                     string1(self.labware.location.site),
@@ -438,9 +438,9 @@ class set_DITI_Counter2(Pipette):
         self.posInRack = posInRack
 
     def validateArg(self):
-        if not isinstance(self.labware, Lab.DITIrack):
+        if not isinstance(self.labware, lab.DITIrack):
             self.labware  = self.robot.worktable.get_DITI_series(self.labware).current
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
 
         self.arg = [string1(self.labware.type.name),
                     string1(self.labware.location.grid),
@@ -483,14 +483,14 @@ class pickUp_DITIs(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
 
         self.arg[3:4]   = []
         self.arg[-1:-1] = [integer(self.type)]
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
         self.tipMask, tips = self.robot.pick_up_tips_executed(self.tipMask, self.labware)
         assert not tips
 
@@ -522,14 +522,14 @@ class pickUp_DITIs2(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
 
         self.arg[3:4]   = []        # delete arg tip spacing
         self.arg[-1:-1] = [string1(self.labware.type.name)]
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
         self.tipMask, tips = self.robot.pick_up_tips_executed(self.tipMask, self.labware)
         assert not tips
 
@@ -541,14 +541,14 @@ class set_DITIs_Back(Pipette):
     """
     def __init__(self,
                  tipMask,
-                 labware  : Lab.DITIrack,
+                 labware  : lab.DITIrack,
                  wellSelection      = None,
                  LoopOptions        = def_LoopOp,
                  arm                = None,
                  RackName           = None,
                  Well               = None):
 
-        assert isinstance(labware, Lab.DITIrack)
+        assert isinstance(labware, lab.DITIrack)
 
         Pipette.__init__(self, 'Set_DITIs_Back',
                          tipMask     = tipMask,
@@ -562,7 +562,7 @@ class set_DITIs_Back(Pipette):
 
     def validateArg(self):
         Pipette.validateArg(self)
-        assert isinstance(self.labware, Lab.DITIrack)
+        assert isinstance(self.labware, lab.DITIrack)
 
         self.arg[3:4] = []
         return True
@@ -1346,12 +1346,12 @@ class transfer_rack(Instruction):
 
     #
     def __init__(self,
-                 labware        : Lab.Labware,
-                 destination    : Lab.WorkTable.Location,
+                 labware        : lab.Labware,
+                 destination    : lab.WorkTable.Location,
                  vectorName     : str         = None,
                  backHome       : bool        = True,
                  slow           : bool        = True,
-                 lid            : Lab.Labware = None,
+                 lid            : lab.Labware = None,
                  cover          : int         = 0,         # todo revise !!!!
                  romaNo         : int         = None
                  ):
@@ -1384,16 +1384,16 @@ class transfer_rack(Instruction):
 
     def validateArg(self):
         Instruction.validateArg(self)
-        assert isinstance(self.labware,                  Lab.Labware)
-        assert isinstance(self.labware.type,             Lab.Labware.Type)
-        assert isinstance(self.labware.location.carrier, Lab.Carrier)
+        assert isinstance(self.labware,                  lab.Labware)
+        assert isinstance(self.labware.type,             lab.Labware.Type)
+        assert isinstance(self.labware.location.carrier, lab.Carrier)
 
-        assert isinstance(self.destination,          Lab.WorkTable.Location)
-        assert isinstance(self.destination.carrier,  Lab.Carrier)
+        assert isinstance(self.destination,          lab.WorkTable.Location)
+        assert isinstance(self.destination.carrier,  lab.Carrier)
 
         if self.lid is not None:
-            assert isinstance(self.lid,      Lab.WorkTable.Location)
-            assert isinstance(self.lid.carrier, Lab.Carrier)
+            assert isinstance(self.lid,      lab.WorkTable.Location)
+            assert isinstance(self.lid.carrier, lab.Carrier)
 
         assert self.cover in [0, 1]
 
