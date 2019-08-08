@@ -1259,6 +1259,13 @@ class Protocol (Executable):
         """
         instructions.userPrompt(text, sound=int(sound), closeTime=close_time).exec()
 
+    def comment(self, text:str):
+        """
+        Add a text comment in the generated script
+        :param text:
+        """
+        instructions.comment(text).exec()
+
 class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
 

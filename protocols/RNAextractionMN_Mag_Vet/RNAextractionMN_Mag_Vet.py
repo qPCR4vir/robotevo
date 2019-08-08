@@ -6,9 +6,7 @@
 __author__ = 'Ariel'
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions as Itr
 from protocols.evo100_f.evo100_f import Evo100_FLI
-import EvoScriPy.reagent as Rgt
 from EvoScriPy.instructions_Te_MagS import *
 
 
@@ -85,8 +83,8 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         num_of_samples = self.num_of_samples
         wt           = self.worktable
 
-        Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit')
-                    .format(str(num_of_samples))).exec()
+        self.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit')
+                     .format(str(num_of_samples)))
 
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
 
@@ -154,7 +152,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         #                            volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
         if self.add_preMix:
-            ProtK = Rgt.Reagent("Proteinase K ",
+            ProtK = Reagent("Proteinase K ",
                                 Reagents,
                                 replicas            = 2,
                                 minimize_aliquots   = False,
@@ -162,19 +160,19 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                 volpersample        = ProtKVolume,
                                 defLiqClass         = Small_vol_disp)
 
-            cRNA   = Rgt.Reagent("Carrier RNA ",
+            cRNA   = Reagent("Carrier RNA ",
                                  Reagents,
                                  wells= 14,
                                  volpersample       = cRNAVolume,
                                  defLiqClass        = Small_vol_disp)
 
-            IC_MS2 = Rgt.Reagent("IC MS2 phage culture ",
+            IC_MS2 = Reagent("IC MS2 phage culture ",
                                  Reagents,
                                  wells= 13,
                                  volpersample       = IC_MS2Volume,
                                  defLiqClass        = Small_vol_disp)
 
-            pK_cRNA_MS2 = Rgt.preMix("ProtK+cRNA+IC-MS2 mix ",
+            pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents,
                                      pos            = 8,
                                      components     = [cRNA, ProtK, IC_MS2],
@@ -182,13 +180,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                      excess         = 20)
 
         if self.add_VL:
-            LysisBuffer = Rgt.Reagent("VL - Lysis Buffer ",
+            LysisBuffer = Reagent("VL - Lysis Buffer ",
                                       LysBuf,
                                       volpersample  =LysisBufferVolume,
                                       defLiqClass   ='MN VL')
 
         if self.do_extraction:
-            B_Beads         = Rgt.Reagent("B - Beads ",
+            B_Beads         = Reagent("B - Beads ",
                                           Reagents,
                                           wells= [1, 2],
                                           initial_vol  = 1200.0,
@@ -196,26 +194,26 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           defLiqClass  = Beads_LC_2,
                                           maxFull      = 70)
 
-            BindingBuffer   = Rgt.Reagent("VEB - Binding Buffer ",
+            BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                           BindBuf,
                                           volpersample  = BindingBufferVolume,
                                           defLiqClass   = B_liquidClass)
 
-            VEW1            = Rgt.Reagent("VEW1 - Wash Buffer ",
+            VEW1            = Reagent("VEW1 - Wash Buffer ",
                                           wt.get_labware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
                                           volpersample  = VEW1Volume,
                                           defLiqClass   = B_liquidClass)
 
-            VEW2            = Rgt.Reagent("VEW2 - WashBuffer ",
+            VEW2            = Reagent("VEW2 - WashBuffer ",
                                           wt.get_labware(Lab.Trough_100ml, "5-VEW2-WashBuffer"),
                                           volpersample  =VEW2Volume,
                                           defLiqClass   =B_liquidClass)
 
-            EtOH80p         = Rgt.Reagent("Ethanol 80% ",
+            EtOH80p         = Reagent("Ethanol 80% ",
                                           Lab.getLabware(Lab.Trough_100ml,  "7-EtOH80p"     ),
                                           volpersample=EtOH80pVolume, defLiqClass=B_liquidClass)
 
-            ElutionBuffer   = Rgt.Reagent("Elution Buffer ",
+            ElutionBuffer   = Reagent("Elution Buffer ",
                                           ElutBuf,
                                           volpersample  =ElutionBufferVolume,
                                           defLiqClass   =B_liquidClass)            # defLiqClass="Eluat"   ??
@@ -226,7 +224,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                         # Define the Reagents not shown in the check_list GUI
                                                         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rgt.Reagent("lysis_{:02d}".format(s + 1),
+            Reagent("lysis_{:02d}".format(s + 1),
                         Lysis,
                         initial_vol     = InitLysisVol,
                         wells=par[s] + 1,
@@ -234,21 +232,21 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                         excess          = 0)
 
             if self.do_extraction:
-                Rgt.Reagent("RNA_{:02d}".format(s + 1),
+                Reagent("RNA_{:02d}".format(s + 1),
                             Eluat,
                             initial_vol = 0.0,
                             wells=s + 1,
                             defLiqClass = def_liquidClass,
                             excess      = 0)
 
-                Rgt.Reagent("probe_{:02d}".format(s + 1),
+                Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume if self.add_samples else InitLysisVol,
                             wells=s + 1,
                             defLiqClass = SampleLiqClass,
                             excess      = 0)
 
-        Itr.wash_tips(wasteVol=30, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=30, FastWash=True).exec()
         if self.do_extraction:
             Te_MagS_ActivateHeater(50).exec()                                     # set incubation temperature at 50°C
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
@@ -267,19 +265,17 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                optimizeFrom         = False,
                                optimizeTo           = True,
                                NumSamples           = num_of_samples)
-            Itr.wash_tips(wasteVol=4, FastWash=True).exec()
+            instructions.wash_tips(wasteVol=4, FastWash=True).exec()
 
         if self.add_VL:                                                                     # add  LysisBuffer
             with self.tips(reuse=True, drop=False, drop_first=True):
                 self.distribute  (reagent=LysisBuffer, to_labware_region= Lysis.selectOnly(all_samples))
-
 
         if not self.do_extraction:
             self.done()
             return
 
         with incubation(10): pass # if self.add_samples
-
 
         with group("Add B-Beads"):
 
@@ -348,11 +344,9 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         :param using_liquid_class: dict
         :param vol:
         """
-        # import protocols.RNAextractionMN_Mag.RobotInitRNAextraction as RI
-
         wells = wells or reagent.labware.selected() or range(self.num_of_samples)
         if not using_liquid_class:
-            using_liquid_class =  reagent.defLiqClass
+            using_liquid_class = reagent.defLiqClass
         with group("Wash in TeMag with " + reagent.name):
 
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
@@ -369,8 +363,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
 if __name__ == "__main__":
 
-    p = RNAextr_MN_Vet_Kit(num_of_samples= 48,
-                           run_name        = "_48_original samples")
+    p = RNAextr_MN_Vet_Kit(num_of_samples= 48, run_name= "_48_original samples")
 
     p.use_version('original samples')
     p.go_first_pos('A01')

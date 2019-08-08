@@ -7,10 +7,7 @@ __author__ = 'Ariel'
 
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions as Itr
-import EvoScriPy.labware as Lab
 from protocols.evo100_f.evo100_f import Evo100_FLI
-import EvoScriPy.reagent as Rgt
 
 
 class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
@@ -81,8 +78,8 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         wt           = self.worktable
 
-        Itr.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit')
-                                             .format(str(self.num_of_samples))).exec()
+        self.comment((self.version + 'for extracting RNA from {:s} samples with the MN-Vet kit')
+                     .format(str(self.num_of_samples)))
 
                                                         # Get Labwares (Cuvette, eppys, etc.) from the work table
 
@@ -132,7 +129,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         if self.add_preMix:                             # we need to add ProtK+cRNA+MS2 mix
-            ProtK       = Rgt.Reagent("Proteinase K ",
+            ProtK       = Reagent("Proteinase K ",
                                       Reagents,
                                       replicas     = 2,
                                       minimize_aliquots=False,
@@ -140,13 +137,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       volpersample = ProtKVolume,
                                       defLiqClass  = Small_vol_disp)
 
-            cRNA        = Rgt.Reagent("Carrier RNA ",
+            cRNA        = Reagent("Carrier RNA ",
                                       Reagents,
                                       wells= 14,
                                       volpersample  = cRNAVolume,
                                       defLiqClass   = Small_vol_disp)
 
-            IC_MS2      = Rgt.Reagent("IC MS2 phage culture ",
+            IC_MS2      = Reagent("IC MS2 phage culture ",
                                       Reagents,
                                       wells= 13,
                                       volpersample  = IC_MS2Volume,
@@ -155,7 +152,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             # IC2         = Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
             #                           volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
 
-            pK_cRNA_MS2 = Rgt.preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
+            pK_cRNA_MS2 = preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
                                        Reagents,
                                        pos          = 8,
                                        components   = [cRNA, ProtK, IC_MS2] ,
@@ -163,13 +160,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                        excess       = 20)
 
         if self.add_VL:
-            LysisBuffer = Rgt.Reagent("VL - Lysis Buffer ",
+            LysisBuffer = Reagent("VL - Lysis Buffer ",
                                       LysBuf,
                                       volpersample  = LysisBufferVolume,
                                       defLiqClass   = 'MN VL')
 
         if self.do_extraction:
-            B_Beads         = Rgt.Reagent("B - Beads ",
+            B_Beads         = Reagent("B - Beads ",
                                           Reagents,
                                           wells= [1, 2],
                                           initial_vol  = 1200,
@@ -177,12 +174,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                           defLiqClass  = Beads_LC_2,
                                           maxFull      = 70)
 
-            BindingBuffer   = Rgt.Reagent("VEB - Binding Buffer ",
+            BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                           BindBuf,
                                           volpersample  = BindingBufferVolume,
                                           defLiqClass   = B_liquidClass)
 
-        EtOH80p         = Rgt.Reagent("Ethanol 80% ",
+        EtOH80p         = Reagent("Ethanol 80% ",
                                       wt.get_labware(Lab.Trough_100ml, "7-EtOH80p"),
                                       volpersample      =EtOH80pVolume,
                                       defLiqClass       =B_liquidClass)
@@ -205,20 +202,20 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         for s in all_samples:
 
-            Rgt.Reagent("lysis_{:02d}".format(s + 1),
+            Reagent("lysis_{:02d}".format(s + 1),
                         Plate_lysis,
                         initial_vol = InitLysisVol,
                         wells=par[s] + 1,
                         excess      = 0)
 
-            Rgt.Reagent("EtOH80p_{:02d}".format(s + 1),
+            Reagent("EtOH80p_{:02d}".format(s + 1),
                         Plate_EtOH,
                         initial_vol = 0.0,
                         wells=par[s] + 1,  # todo revise order !!!
                         excess      = 0)
 
             if self.add_samples:
-                Rgt.Reagent("probe_{:02d}".format(s + 1),
+                Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume,
                             wells=s + 1,
@@ -226,7 +223,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             excess      = 0)
 
 
-        Itr.wash_tips(wasteVol=30, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=30, FastWash=True).exec()
 
         with group("Prefill plate with EtOH80p"):
 
@@ -248,7 +245,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
             if self.add_samples:                                        # add samples
 
-                Itr.userPrompt("Please make sure the samples are in place").exec()
+                self.user_prompt("Please make sure the samples are in place")
                 with self.tips(reuse=False, drop=True):
                     self.transfer( from_labware_region  = Samples,
                                    to_labware_region    = Plate_lysis,
@@ -258,15 +255,15 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                    optimizeTo           = True,           # todo Really ??
                                    NumSamples           = num_of_samples)
 
-                Itr.wash_tips(wasteVol=4, FastWash=True).exec()
+                instructions.wash_tips(wasteVol=4, FastWash=True).exec()
 
             if self.do_extraction and self.add_preMix:
-                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
+                self.user_prompt("Please Schutteln the plates for lysis in pos 1")
                 with incubation(minutes=5):
                     pass
 
         if self.do_extraction:
-            Itr.userPrompt("Please make sure the samples are back in place").exec()
+            self.user_prompt("Please make sure the samples are back in place")
 
             with group("Beads binding"):
 
@@ -282,7 +279,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                 with self.tips(reuse=True, drop=False):
                     self.distribute(reagent=BindingBuffer, to_labware_region=Plate_lysis.selectOnly(all_samples))
 
-                Itr.userPrompt("Please Schutteln the plates for lysis in pos 1").exec()
+                self.user_prompt("Please Schutteln the plates for lysis in pos 1")
 
         self.drop_tips()
         self.done()

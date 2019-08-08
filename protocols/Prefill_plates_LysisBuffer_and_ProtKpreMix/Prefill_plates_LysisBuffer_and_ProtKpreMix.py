@@ -7,10 +7,7 @@ __author__ = 'Ariel'
 
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions as Itr
-import EvoScriPy.labware as Lab
 from protocols.evo100_f.evo100_f import Evo100_FLI
-import EvoScriPy.reagent as Rgt
 
 
 class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
@@ -74,9 +71,8 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         num_of_samples = self.num_of_samples
         wt           = self.worktable
 
-        Itr.comment('Prefill {:d} plates with Lysis Buffer and ProtK preMix  for {:d} samples.'\
-                       .format(self.num_plates,
-                               num_of_samples     )).exec()
+        self.comment('Prefill {:d} plates with Lysis Buffer and ProtK preMix  for {:d} samples.'\
+                     .format(self.num_plates, num_of_samples))
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
 
@@ -114,13 +110,13 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                                         # Define the reagents in each labware (Cuvette, eppys, etc.)
 
         if self.preMix_from_Cuvette or self.preMix_from_LysBuf_pK_Cuvette:
-            pK_cRNA_MS2 = Rgt.Reagent(preMixName,
+            pK_cRNA_MS2 = Reagent(preMixName,
                                       preMixProtKCuvette,
                                       volpersample=preMixVol,
                                       defLiqClass='MN VL',
                                       num_of_samples=self.num_plates * num_of_samples)
         else:
-            ProtK = Rgt.Reagent("Proteinase K ",
+            ProtK = Reagent("Proteinase K ",
                                 Reagents_TubeRack,
                                 volpersample   = ProtKVolume,
                                 defLiqClass    = Small_vol_disp,
@@ -128,21 +124,21 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                 maxFull        = 90)
             ProtK.maxFull=0.96
 
-            cRNA = Rgt.Reagent("Carrier RNA ",
+            cRNA = Reagent("Carrier RNA ",
                                Reagents_TubeRack,
                                volpersample    = cRNAVolume,
                                defLiqClass     = Small_vol_disp,
                                num_of_samples  = self.num_plates * num_of_samples,
                                maxFull         = 95)
 
-            IC_MS2 = Rgt.Reagent("IC MS2 phage culture ",
+            IC_MS2 = Reagent("IC MS2 phage culture ",
                                  Reagents_TubeRack,
                                  volpersample   = IC_MS2Volume,
                                  defLiqClass    = Small_vol_disp,
                                  num_of_samples = self.num_plates * num_of_samples,
                                  maxFull        = 95)
 
-            pK_cRNA_MS2 = Rgt.preMix("ProtK+cRNA+IC-MS2 mix ",
+            pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents_TubeRack,
                                      components     = [cRNA, ProtK, IC_MS2],
                                      defLiqClass    = W_liquidClass,
@@ -152,7 +148,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             pK_cRNA_MS2.maxFull = 0.95
 
         if not self.preMix_from_LysBuf_pK_Cuvette:
-            LysisBufferReact = Rgt.Reagent("VL - Lysis Buffer ",
+            LysisBufferReact = Reagent("VL - Lysis Buffer ",
                                            LysBufCuvette,
                                            volpersample    = LysisBufferVolume,
                                            defLiqClass     = 'MN VL',
@@ -163,7 +159,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         self.check_list()
         self.set_EvoMode()
 
-        Itr.wash_tips(wasteVol=5, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
         LysPlat = [wt.get_labware(Lab.MP96deepwell, "Plate lysis-" + str(i + 1)) for i in range(self.num_plates)]
 
@@ -172,7 +168,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         # Define place for temporal "reactions"
         for i, LP in enumerate(LysPlat):
             for s in all_samples:
-                Rgt.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
+                Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
                             LP,
                             initial_vol =0.0,
                             wells=s + 1,
@@ -185,7 +181,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                     self.makePreMix(pK_cRNA_MS2, NumSamples=self.num_plates * num_of_samples)
 
 
-            Itr.userPrompt("Put the plates for LysisBufferReact").exec()
+            self.user_prompt("Put the plates for LysisBufferReact")
 
             for LP in LysPlat:
                 with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):

@@ -51,9 +51,8 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         num_of_samples = self.num_of_samples
         wt           = self.worktable
 
-        Itr.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'\
-                       .format(self.num_plates,
-                               num_of_samples     )).exec()
+        self.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'
+                     .format(self.num_plates, num_of_samples))
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
         LysBufCuvette = wt.get_labware(Lab.Trough_100ml, "2-Vl Lysis Buffer")
@@ -74,7 +73,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        LysisBufferReact = Rgt.Reagent("VL - Lysis Buffer ",
+        LysisBufferReact = Reagent("VL - Lysis Buffer ",
                                        LysBufCuvette,
                                        volpersample = LysisBufferVolume,
                                        defLiqClass  = 'MN VL',
@@ -85,7 +84,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         self.check_list()
         self.set_EvoMode()
 
-        Itr.wash_tips(wasteVol=5, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
         LysPlat = [wt.get_labware(Lab.MP96deepwell, "Plate lysis-" + str(i + 1)) for i in range(self.num_plates)]
 
@@ -94,7 +93,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         # Define place for temporal reactions
         for i, LP in enumerate(LysPlat):
             for s in all_samples:
-                Rgt.Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
+                Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),
                             LP,
                             initial_vol =0.0,
                             wells=s + 1,
@@ -102,7 +101,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         with group("Prefill plates with LysisBufferReact"):
 
-            Itr.userPrompt("Put the plates for LysisBufferReact").exec()
+            self.user_prompt("Put the plates for LysisBufferReact")
 
             for LP in LysPlat:
                 with self.tips(reuse=True, drop=False):

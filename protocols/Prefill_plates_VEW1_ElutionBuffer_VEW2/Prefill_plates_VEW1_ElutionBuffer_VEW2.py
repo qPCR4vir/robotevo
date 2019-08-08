@@ -7,10 +7,7 @@ __author__ = 'Ariel'
 
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions as Itr
-import EvoScriPy.labware as Lab
 from protocols.evo100_f.evo100_f import Evo100_FLI
-import EvoScriPy.reagent as Rgt
 
 
 class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
@@ -56,8 +53,8 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         num_of_samples = self.num_of_samples
         wt           = self.worktable
 
-        Itr.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'
-                                                            .format(str(num_of_samples))).exec()
+        self.comment('Prefill plates with VEW1, Elution buffer and VEW2 for {:s} samples.'
+                     .format(str(num_of_samples)))
 
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
@@ -95,17 +92,17 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
-        VEW1            = Rgt.Reagent("VEW1 - Wash Buffer ",
+        VEW1            = Reagent("VEW1 - Wash Buffer ",
                                       wt.get_labware(Lab.Trough_100ml, "4-VEW1 Wash Buffe"),
                                       volpersample  = VEW1Volume,
                                       defLiqClass   = B_liquidClass)
 
-        VEW2            = Rgt.Reagent("VEW2 - WashBuffer ",
+        VEW2            = Reagent("VEW2 - WashBuffer ",
                                       wt.get_labware(Lab.Trough_100ml, "5-VEW2-WashBuffer"),
                                       volpersample  =VEW2Volume,
                                       defLiqClass   =B_liquidClass)
 
-        ElutionBuffer   = Rgt.Reagent("Elution Buffer ",
+        ElutionBuffer   = Reagent("Elution Buffer ",
                                       ElutBuf,
                                       volpersample  =ElutionBufferVolume,
                                       defLiqClass   =B_liquidClass)
@@ -115,25 +112,25 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         self.check_list()
         self.set_EvoMode()
 
-        Itr.wash_tips(wasteVol=30, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=30, FastWash=True).exec()
 
         par = Plate_VEW1.parallelOrder(self.n_tips, all_samples)
 
         # Define samples and the place for temporal reactions
         for s in all_samples:
-            Rgt.Reagent("VEW1_{:02d}".format(s + 1),
+            Reagent("VEW1_{:02d}".format(s + 1),
                         Plate_VEW1,
                         initial_vol  = 0.0,
                         wells=par[s] + 1,
                         excess       = 0)  # todo revise order !!!
 
-            Rgt.Reagent("VEW2_{:02d}".format(s + 1),
+            Reagent("VEW2_{:02d}".format(s + 1),
                         Plate_VEW2,
                         initial_vol = 0.0,
                         wells=par[s] + 1,
                         excess      = 0)
 
-            Rgt.Reagent("Eluat_{:02d}".format(s + 1),
+            Reagent("Eluat_{:02d}".format(s + 1),
                         Plate_Eluat,
                         initial_vol = 0.0,
                         wells=par[s] + 1,
@@ -142,7 +139,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         with group("Prefill plates with VEW1, Elution buffer and VEW2"):
 
-            Itr.userPrompt("Put the plates for VEW1, Elution buffer and VEW2 in that order").exec()
+            self.user_prompt("Put the plates for VEW1, Elution buffer and VEW2 in that order")
 
             with self.tips(reuse=True, drop=False):
                 self.distribute(reagent             = ElutionBuffer,
