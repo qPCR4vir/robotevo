@@ -72,8 +72,8 @@ class Tutorial_LL(Evo200_FLI):
         diluent_cuvette   = wt.get_labware("BufferCub", labware.Trough_100ml)
         assert isinstance(diluent_cuvette, labware.Cuvette)
 
-        mixes             = wt.get_labware("mixes", labware.Eppendorfrack)
-        assert isinstance(mixes, labware.Labware)
+        mixes_eppis             = wt.get_labware("mixes", labware.Eppendorfrack)
+        assert isinstance(mixes_eppis, labware.Labware)
 
         vf = 100                                      # The final volume of every dilution, uL
         v  = vf /10                                   # uL to be distribute from original mix1 to each dilution_10
@@ -83,7 +83,7 @@ class Tutorial_LL(Evo200_FLI):
         diluent_wells = diluent_cuvette.Wells[0:8]          # Define the wells in each labware (Cuvette, eppys, etc.) ---
         diluent_wells[0].vol = vd * n * excess              # set the initial volume needed - connected wells
 
-        mix1     = mixes.Wells[0]                     # just one 1,5 mL tube
+        mix1     = mixes_eppis.Wells[0]                     # just one 1,5 mL tube
         mix1.vol = v * n * excess
 
         self.user_prompt("Put diluent in "+str(diluent_wells[0]))        # Show the check_list   -------------------------
@@ -94,7 +94,7 @@ class Tutorial_LL(Evo200_FLI):
         plate = wt.get_labware(label="plate", labw_type="96 Well Microplate")
         assert isinstance(plate, labware.Labware)
 
-        dilution = plate.Wells[:n]                                 # Define place for intermediate reactions  ----------
+        dilution_wells = plate.Wells[:n]                                 # Define place for intermediate mixes  ----------
 
         with group("Fill dilutions"):
 
@@ -127,7 +127,7 @@ class Tutorial_LL(Evo200_FLI):
                 while available_disp:
                     n_tips = min(n_tips, dilution_left)
                     cur_sample = n - dilution_left
-                    sel = dilution[cur_sample: cur_sample + n_tips]
+                    sel = dilution_wells[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
                                   TIP_MASK = robot.tipsMask[n_tips],
                                   volume   = v,
@@ -160,7 +160,7 @@ class Tutorial_LL(Evo200_FLI):
                 while available_disp:
                     n_tips = min(n_tips, dilution_left)
                     cur_sample = n - dilution_left
-                    sel = dilution[cur_sample: cur_sample + n_tips]
+                    sel = dilution_wells[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
                                   TIP_MASK = robot.tipsMask[n_tips],
                                   volume   = vd,

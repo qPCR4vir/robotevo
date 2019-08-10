@@ -81,7 +81,7 @@ class Tutorial_HL(Evo200_FLI):
 
         plate = wt.get_labware("plate")
 
-        dilution = Reagent("mix1, diluted 1:10",               # Define place for intermediate reactions  ----------
+        diluted = Reagent("mix1, diluted 1:10",               # Define place for intermediate reactions  ----------
                            plate,
                            replicas         = self.num_of_samples,
                            minimize_aliquots= False)
@@ -92,11 +92,11 @@ class Tutorial_HL(Evo200_FLI):
 
             with self.tips(tip_type="DiTi 200 ul", reuse=True, drop=False, drop_last=True):
                 self.distribute(reagent           = mix1,
-                                to_labware_region = dilution.select_all())
+                                to_labware_region = diluted.select_all())
 
             with self.tips(tip_type="DiTi 1000ul", reuse=True, drop=False, drop_last=True):
                 self.distribute(reagent           = diluent,
-                                to_labware_region = dilution.select_all())
+                                to_labware_region = diluted.select_all())
 
             self.drop_tips()
 
