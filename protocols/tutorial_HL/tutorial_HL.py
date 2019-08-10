@@ -62,33 +62,28 @@ class Tutorial_HL(Evo200_FLI):
 
         self.show_runtime_check_list    = True
 
-        n = self.num_of_samples
-        assert 1 <= n <= Tutorial_HL.max_s, "In this demo we want to set dilutions in a 96 well plate."
+        assert 1 <= self.num_of_samples <= Tutorial_HL.max_s, "In this demo we want to set dilutions in a 96 well plate."
         wt = self.worktable
 
-        instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
-
-        # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
-        diluent_cuvette = wt.get_labware(label="BufferCub")
-        mixes           = wt.get_labware(label="mixes")
+        instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(self.num_of_samples)).exec()
 
         vf = 100                                      # The final volume of every dilution, uL
         v  = vf /10                                   # uL to be distribute from original mix1 to each dilution_10
         vd = vf - v                                   # uL to be distribute from diluent to each dilution_10
 
         # Define the reagents in each labware (Cuvette, eppys, etc.) -
-        diluent = Reagent("Diluent", diluent_cuvette, volpersample = vd)
-        mix1    = Reagent("mix1",  mixes,  volpersample = v)
+        diluent = Reagent("Diluent", labware="BufferCub", volpersample = vd)
+        mix1    = Reagent("mix1",  labware="mixes",  volpersample = v)
 
         self.check_list()                                          # Show the check_list   -------------------------
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        plate = wt.get_labware(label="plate", labw_type="96 Well Microplate")
+        plate = wt.get_labware("plate")
 
         dilution = Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
                            plate,
-                           replicas         = n,
+                           replicas         = self.num_of_samples,
                            minimize_aliquots= False)
 
         with group("Fill dilutions"):
