@@ -18,11 +18,11 @@ class Tutorial_HL(Evo200_FLI):
     The final volume of each dilution is vf=100 uL.
 
     There are many ways to achieve that. Here is one:
-    - Calculate how much to distribute from mix1 to each Dil_10. v= vf/10 and from diluent vd.
+    - Calculate how much to distribute from mix1 to each dilution_10. v= vf/10 and from diluent vd.
     - Create a reagent mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
     - Create a reagent diluent in an cubette 100 mL for vd uL per "sample".
     - Generate check list
-    - Create n Dil_10_i reagents ( i from 0 to n-1 )
+    - Create n dilution_10_i reagents ( i from 0 to n-1 )
     - Distribute mix1
     - Distribute diluent
 
@@ -73,8 +73,8 @@ class Tutorial_HL(Evo200_FLI):
         mixes           = wt.get_labware(label="mixes")
 
         vf = 100                                      # The final volume of every dilution, uL
-        v  = vf /10                                   # uL to be distribute from original mix1 to each Dil_10
-        vd = vf - v                                   # uL to be distribute from diluent to each Dil_10
+        v  = vf /10                                   # uL to be distribute from original mix1 to each dilution_10
+        vd = vf - v                                   # uL to be distribute from diluent to each dilution_10
 
         # Define the reagents in each labware (Cuvette, eppys, etc.) -
         diluent = Reagent("Diluent", diluent_cuvette, volpersample = vd)

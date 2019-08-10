@@ -99,7 +99,7 @@ class Arm:
                                 " and we need " + rack_type.name
                     tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
                 else:
-                    pass # self.Tips[i] = lab.Tip(rack_type)
+                    pass # self.Tips[i] = labware.Tip(rack_type)
         return tip_mask
 
     def mount_more_tips_executed(self, rack_type, tip_mask=-1, tips=None) ->(int, list):
@@ -242,7 +242,7 @@ class Robot:
         self.allow_air      = 0.2
         self.set_as_current()
         # self.preservedtips = {} # order:well
-        # self.last_preserved_tips = None # lab.DITIrack, offset
+        # self.last_preserved_tips = None # labware.DITIrack, offset
 
     # Functions to observe the iRobot status (intern-physical status, or user status with are modificators of future
     # physical actions), or to modify the user status, but not the physical status. It can be used by the protocol
@@ -250,7 +250,7 @@ class Robot:
 
     def where_are_preserved_tips(self,
                                  selected_reagents: lab.Labware,
-                                 TIP_MASK, type) -> list:   # [lab.DITIrack]
+                                 TIP_MASK, type) -> list:   # [labware.DITIrack]
         """
 
         :param selected_reagents:
@@ -377,7 +377,7 @@ class Robot:
     # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method instructions.actualize_robot_state(self):
 
 
-    def get_tips_executed(self, rack_series, tip_mask=-1) -> (int, list):   # (int, [lab.Tip])
+    def get_tips_executed(self, rack_series, tip_mask=-1) -> (int, list):   # (int, [labware.Tip])
 
         """ To be call from instructions.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
@@ -386,7 +386,7 @@ class Robot:
 
         :param tip_mask:
         :param rack_series: the series of this king of tips.
-        :return: (int, [lab.Tip])
+        :return: (int, [labware.Tip])
         """
 
         tip_mask = self.getTips_test(rack_series.type, tip_mask)
@@ -481,14 +481,14 @@ class Robot:
             self.curArm().Tips[tips[i]] = lab.usedTip(self.curArm().Tips[tips[i]], w)
 
     def move_labware_executed(self, labware, destination):
-        # assert isinstance(labware, lab.Labware)
-        # assert isinstance(destination, lab.WorkTable.Location)
+        # assert isinstance(labware, labware.Labware)
+        # assert isinstance(destination, labware.WorkTable.Location)
         self.worktable.add_labware(labware, destination)
 
     # relatively simple "setters" and "getters" of current default options
 
     def set_worktable(self, templateFile, carrier_file):
-        # w = lab.WorkTable.cur_worktable
+        # w = labware.WorkTable.cur_worktable
         if templateFile is None: return
         if isinstance(self.worktable, lab.WorkTable):  # todo temp? really to set
             assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \

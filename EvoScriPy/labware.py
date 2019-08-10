@@ -43,7 +43,7 @@ class WorkTable:
         def __init__(self, grid=None, site=None, carrier=None, carrier_site=None, worktable=None):
             """
             :param grid: int, 1-67.   worktable grid. Carrier grid position
-            :param site: int, 0 - 127. Site on carrier (on RAck?) = lab location - (site on carrier - 1) !!!!!
+            :param site: int, 0 - 127. Site on carrier (on RAck?) = labware location - (site on carrier - 1) !!!!!
             :param carrier:
             :param carrier_site:
             """

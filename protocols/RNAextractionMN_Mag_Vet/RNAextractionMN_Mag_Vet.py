@@ -252,7 +252,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
 
         if self.add_preMix:                                                               #  add  ProtK+cRNA+MS2 mix
-            with group("Add pre mix Prot K."), self.tips(tipsMask=maxMask, reuse=True, drop=False):
+            with group("Add pre mix Prot K."), self.tips(tips_mask=maxMask, reuse=True, drop=False):
                 self.makePreMix(pK_cRNA_MS2)
                 self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
 
@@ -279,7 +279,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         with group("Add B-Beads"):
 
-            with self.tips(tipsMask=maxMask, reuse=True, drop=False):
+            with self.tips(tips_mask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
                     self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
             with self.tips(reuse=True, drop=True):
@@ -300,7 +300,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 with incubation(minutes=0.5):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
 
-                with self.tips(usePreserved=self.preserveingTips()):
+                with self.tips(use_preserved=self.preserveingTips()):
                     self.waste( from_labware_region=    TeMag.selectOnly(all_samples))
 
                 with incubation(minutes=4):
@@ -357,7 +357,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             with incubation(minutes=0.5, timer=2):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
-            with self.tips(usePreserved=self.preserveingTips(), preserve=False, drop=True):
+            with self.tips(use_preserved=self.preserveingTips(), preserve=False, drop=True):
                 self.waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)
 
 

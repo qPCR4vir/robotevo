@@ -18,11 +18,11 @@ class Tutorial_LL(Evo200_FLI):
     The final volume of each dilution is vf=100 uL.
 
     There are many ways to achieve that. Here is one:
-    - Calculate how much to distribute from mix1 to each Dil_10. v= vf/10 and from diluent vd.
+    - Calculate how much to distribute from mix1 to each dilution_10. v= vf/10 and from diluent vd.
     - Create well mix1 in an Eppendorf Tube 1,5 mL for v uL per "sample".
     - Create wells diluent in a cubette 100 mL for vd uL per "sample".
     - Generate check list
-    - Create n Dil_10_i wells ( i from 0 to n-1 )
+    - Create n dilution_10_i wells ( i from 0 to n-1 )
     - Distribute mix1
     - Distribute diluent
 
@@ -76,17 +76,17 @@ class Tutorial_LL(Evo200_FLI):
         assert isinstance(mixes, lab.Labware)
 
         vf = 100                                      # The final volume of every dilution, uL
-        v  = vf /10                                   # uL to be distribute from original mix1 to each Dil_10
-        vd = vf - v                                   # uL to be distribute from diluent to each Dil_10
+        v  = vf /10                                   # uL to be distribute from original mix1 to each dilution_10
+        vd = vf - v                                   # uL to be distribute from diluent to each dilution_10
         excess = 1.04                                 # 4%
 
-        diluent = diluent_cuvette.Wells[0:8]          # Define the wells in each labware (Cuvette, eppys, etc.) ---
-        diluent[0].vol = vd * n * excess              # set the initial volume needed - connected wells
+        diluent_wells = diluent_cuvette.Wells[0:8]          # Define the wells in each labware (Cuvette, eppys, etc.) ---
+        diluent_wells[0].vol = vd * n * excess              # set the initial volume needed - connected wells
 
         mix1     = mixes.Wells[0]                     # just one 1,5 mL tube
         mix1.vol = v * n * excess
 
-        self.user_prompt("Put diluent in "+str(diluent[0]))        # Show the check_list   -------------------------
+        self.user_prompt("Put diluent in "+str(diluent_wells[0]))        # Show the check_list   -------------------------
         self.user_prompt("Put mix1 in " + str(mix1))
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
@@ -108,11 +108,11 @@ class Tutorial_LL(Evo200_FLI):
                              tip_type = "DiTi 200 ul",
                              arm      = arm)
 
-            dil_left = n
-            while dil_left:
-                n_tips = min(dil_left, m_tips)
+            dilution_left = n
+            while dilution_left:
+                n_tips = min(dilution_left, m_tips)
                 max_multi_disp_n = arm.Tips[0].type.maxVol // v
-                dsp, rst = divmod(dil_left, n_tips)
+                dsp, rst = divmod(dilution_left, n_tips)
                 if dsp >= max_multi_disp_n:
                     dsp = max_multi_disp_n
                     vol = [v * dsp] * n_tips                                        # equal volume with each tips
@@ -125,28 +125,28 @@ class Tutorial_LL(Evo200_FLI):
                     self.aspirate(arm=arm, TIP_MASK=robot.tipMask[tip], volume=vol, from_wells=mix1)
 
                 while available_disp:
-                    n_tips = min(n_tips, dil_left)
-                    cur_sample = n - dil_left
+                    n_tips = min(n_tips, dilution_left)
+                    cur_sample = n - dilution_left
                     sel = dilution[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
                                   TIP_MASK = robot.tipsMask[n_tips],
                                   volume   = v,
                                   to_wells = sel)
                     available_disp -= 1
-                    dil_left -= n_tips
+                    dilution_left -= n_tips
 
             self.drop_tip()
 
-            n_tips = min(n, m_tips, len(diluent))                                    # distribute diluent ----------
+            n_tips = min(n, m_tips, len(diluent_wells))                                    # distribute diluent ----------
             self.pick_up_tip(TIP_MASK = robot.tipsMask[n_tips],                        # using 1000 uL tips
                              tip_type = "DiTi 1000ul",
                              arm      = arm)
 
-            dil_left = n
-            while dil_left:
-                n_tips = min(dil_left, m_tips, len(diluent))
+            dilution_left = n
+            while dilution_left:
+                n_tips = min(dilution_left, m_tips, len(diluent_wells))
                 max_multi_disp_n = arm.Tips[0].type.maxVol // vd
-                dsp, rst = divmod(dil_left, n_tips)
+                dsp, rst = divmod(dilution_left, n_tips)
                 if dsp >= max_multi_disp_n:
                     dsp = max_multi_disp_n
                     vol = [vd * dsp] * n_tips       # equal volume with each tips
@@ -155,18 +155,18 @@ class Tutorial_LL(Evo200_FLI):
                     vol = [vd * (dsp + 1)] * rst + [vd * dsp] * (n_tips - rst)
                     available_disp = dsp + bool(rst)
 
-                self.aspirate(arm=arm, TIP_MASK=robot.tipsMask[n_tips], volume=vol, from_wells=diluent)
+                self.aspirate(arm=arm, TIP_MASK=robot.tipsMask[n_tips], volume=vol, from_wells=diluent_wells)
 
                 while available_disp:
-                    n_tips = min(n_tips, dil_left)
-                    cur_sample = n - dil_left
+                    n_tips = min(n_tips, dilution_left)
+                    cur_sample = n - dilution_left
                     sel = dilution[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
                                   TIP_MASK = robot.tipsMask[n_tips],
                                   volume   = vd,
                                   to_wells = sel)
                     available_disp -= 1
-                    dil_left -= n_tips
+                    dilution_left -= n_tips
 
             self.drop_tip()
 

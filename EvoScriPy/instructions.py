@@ -355,7 +355,7 @@ class dropDITI(Pipette):
         self.tipMask = self.robot.drop_tips_executed(self.tipMask, self.labware)
 
 
-class set_DITI_Counter(Pipette):            # todo help determining the type,set other lab.def_LabW,   deprecated???
+class set_DITI_Counter(Pipette):            # todo help determining the type,set other labware.def_LabW,   deprecated???
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter) pag. 15 - 15
         If you are using DITIs, Freedom EVOware remembers the position in the DITI
     rack of the last DITI which was fetched. When starting a new run, the Get DITIs
@@ -1069,7 +1069,7 @@ class Te_MO_Aspirate(Instruction):
                             tipMask,
                             liquidClass,
                             volume,
-                            labware or lab.def_LabW,
+                            labware or labware.def_LabW,
                             spacing,
                             wellSelection,
                             LoopOptions,

@@ -234,13 +234,13 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
             if self.add_preMix:                                          # add  ProtK+cRNA+MS2 mix
 
-                with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                with self.tips(tips_mask=maxMask, reuse=True, drop=False, drop_last=True):
                     self.makePreMix(pK_cRNA_MS2)
                     self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.add_VL:                                             # add  LysisBuffer
 
-                with self.tips(tipsMask=maxMask, reuse=True, drop=False, drop_last=True):
+                with self.tips(tips_mask=maxMask, reuse=True, drop=False, drop_last=True):
                     self.distribute  (reagent=LysisBuffer, to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.add_samples:                                        # add samples
@@ -267,7 +267,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
             with group("Beads binding"):
 
-                with self.tips(tipsMask=maxMask, reuse=True, drop=False):
+                with self.tips(tips_mask=maxMask, reuse=True, drop=False):
                     for p in [40, 50, 60, 65]:
                         self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
 
