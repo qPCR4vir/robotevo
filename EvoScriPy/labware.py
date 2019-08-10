@@ -349,7 +349,7 @@ class WorkTable:
         assert isinstance(series, Labware.Type.Series)
         series.current = labware
 
-    def get_labware(self, labw_type=None, label: (str, int) = None):
+    def get_labware(self, label: (str, int) = None, labw_type=None):
         """
         Return a `Labware` already created manually or after the worktable template was scanned.
         The labware type is optional (if you provide a label), but it makes the search more robust.
@@ -1495,4 +1495,4 @@ Box10x10     = Labware.Type("Box 10x10"              ,10, 10, maxVol= 2000)
 
 def getLabware(labw_type, label, worktable=None):
     worktable = worktable or WorkTable.cur_worktable
-    return worktable.get_labware(labw_type, label)
+    return worktable.get_labware(label, labw_type)

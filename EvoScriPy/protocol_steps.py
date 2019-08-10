@@ -992,10 +992,10 @@ class Protocol (Executable):
 
         wt.def_DiTi       = labware.DiTi_1000ul                 # this is a type, the others are labwares
 
-        WashCleanerS    = wt.get_labware(labware.CleanerSWS, "")
-        WashWaste       = wt.get_labware(labware.WasteWS, "")
-        WashCleanerL    = wt.get_labware(labware.CleanerLWS, "")
-        DiTiWaste       = wt.get_labware(labware.DiTi_Waste, "")
+        WashCleanerS    = wt.get_labware("", labware.CleanerSWS)
+        WashWaste       = wt.get_labware("", labware.WasteWS)
+        WashCleanerL    = wt.get_labware("", labware.CleanerLWS)
+        DiTiWaste       = wt.get_labware("", labware.DiTi_Waste)
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS

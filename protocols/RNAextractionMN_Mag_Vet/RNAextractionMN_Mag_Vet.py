@@ -89,25 +89,25 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         if self.add_VL:
-            LysBuf      = wt.get_labware(lab.Trough_100ml, "2-Vl Lysis Buffer")
+            LysBuf      = wt.get_labware("2-Vl Lysis Buffer", lab.Trough_100ml)
 
         if self.do_extraction:
-            BindBuf     = wt.get_labware(lab.Trough_100ml, "3-VEB Binding Buffer")
-            ElutBuf     = wt.get_labware(lab.Trough_100ml, "1-VEL-ElutionBuffer")
-            Eluat       = wt.get_labware(lab.EppRack3x16R, "Eluat")
+            BindBuf     = wt.get_labware("3-VEB Binding Buffer", lab.Trough_100ml)
+            ElutBuf     = wt.get_labware("1-VEL-ElutionBuffer", lab.Trough_100ml)
+            Eluat       = wt.get_labware("Eluat", lab.EppRack3x16R)
 
-        Samples     = wt.get_labware(lab.EppRack3x16, "Proben")
+        Samples     = wt.get_labware("Proben", lab.EppRack3x16)
         Lysis       = Samples
 
-        DiTi1000_1  = wt.get_labware(lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2  = wt.get_labware(lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3  = wt.get_labware(lab.DiTi_1000ul, "1000-3")
+        DiTi1000_1  = wt.get_labware("1000-1", lab.DiTi_1000ul)
+        DiTi1000_2  = wt.get_labware("1000-2", lab.DiTi_1000ul)
+        DiTi1000_3  = wt.get_labware("1000-3", lab.DiTi_1000ul)
 
-        Reagents   = wt.get_labware(lab.GreinRack16_2mL, "Reactives")
+        Reagents   = wt.get_labware("Reactives", lab.GreinRack16_2mL)
 
         if self.do_extraction:
-            self.TeMg_Heat = wt.get_labware(lab.TeMag48, "48 Pos Heat")
-            self.TeMag     = wt.get_labware(lab.TeMag48, "48PosMagnet")
+            self.TeMg_Heat = wt.get_labware("48 Pos Heat", lab.TeMag48)
+            self.TeMag     = wt.get_labware("48PosMagnet", lab.TeMag48)
             TeMag          = self.TeMag
             Lysis          = TeMag
 
@@ -200,12 +200,12 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           defLiqClass   = B_liquidClass)
 
             VEW1            = Reagent("VEW1 - Wash Buffer ",
-                                          wt.get_labware(lab.Trough_100ml, "4-VEW1 Wash Buffe"),
+                wt.get_labware("4-VEW1 Wash Buffe", lab.Trough_100ml),
                                           volpersample  = VEW1Volume,
                                           defLiqClass   = B_liquidClass)
 
             VEW2            = Reagent("VEW2 - WashBuffer ",
-                                          wt.get_labware(lab.Trough_100ml, "5-VEW2-WashBuffer"),
+                wt.get_labware("5-VEW2-WashBuffer", lab.Trough_100ml),
                                           volpersample  =VEW2Volume,
                                           defLiqClass   =B_liquidClass)
 

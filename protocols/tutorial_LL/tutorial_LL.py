@@ -69,11 +69,11 @@ class Tutorial_LL(Evo200_FLI):
         instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
-        diluent_cuvette   = wt.get_labware(lab.Trough_100ml, "BufferCub")
-        assert isinstance(diluent_cuvette, lab.Cuvette)
+        diluent_cuvette   = wt.get_labware("BufferCub", labware.Trough_100ml)
+        assert isinstance(diluent_cuvette, labware.Cuvette)
 
-        mixes             = wt.get_labware(lab.Eppendorfrack, "mixes")
-        assert isinstance(mixes, lab.Labware)
+        mixes             = wt.get_labware("mixes", labware.Eppendorfrack)
+        assert isinstance(mixes, labware.Labware)
 
         vf = 100                                      # The final volume of every dilution, uL
         v  = vf /10                                   # uL to be distribute from original mix1 to each dilution_10
@@ -91,8 +91,8 @@ class Tutorial_LL(Evo200_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
-        assert isinstance(plate, lab.Labware)
+        plate = wt.get_labware(label="plate", labw_type="96 Well Microplate")
+        assert isinstance(plate, labware.Labware)
 
         dilution = plate.Wells[:n]                                 # Define place for temporal reactions  ----------
 

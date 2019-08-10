@@ -82,7 +82,7 @@ class Tutorial_HL_RoMa(Evo200):
 
         instr.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        plate = wt.get_labware(labw_type="96 Well Microplate", label="plate")
+        plate = wt.get_labware(label="plate", labw_type="96 Well Microplate")
 
         dilution = Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
                                 plate,

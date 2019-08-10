@@ -84,16 +84,16 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         if self.add_VL:
-            LysBuf      = wt.get_labware(lab.Trough_100ml, "2-Vl Lysis Buffer")
+            LysBuf      = wt.get_labware("2-Vl Lysis Buffer", labware.Trough_100ml)
 
         if self.do_extraction:
-            BindBuf     = wt.get_labware(lab.Trough_100ml, "3-VEB Binding Buffer")
+            BindBuf     = wt.get_labware("3-VEB Binding Buffer", labware.Trough_100ml)
 
-        DiTi1000_1  = wt.get_labware(lab.DiTi_1000ul, "1000-1")
-        DiTi1000_2  = wt.get_labware(lab.DiTi_1000ul, "1000-2")
-        DiTi1000_3  = wt.get_labware(lab.DiTi_1000ul, "1000-3")
+        DiTi1000_1  = wt.get_labware("1000-1", labware.DiTi_1000ul)
+        DiTi1000_2  = wt.get_labware("1000-2", labware.DiTi_1000ul)
+        DiTi1000_3  = wt.get_labware("1000-3", labware.DiTi_1000ul)
 
-        Reagents   = wt.get_labware(lab.GreinRack16_2mL, "Reactives")
+        Reagents    = wt.get_labware("Reactives", labware.GreinRack16_2mL)
 
                                                                 # Set the initial position of the tips
 
@@ -167,22 +167,22 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         if self.do_extraction:
             B_Beads         = Reagent("B - Beads ",
-                                          Reagents,
-                                          wells= [1, 2],
-                                          initial_vol  = 1200,
-                                          volpersample = B_BeadsVolume,
-                                          defLiqClass  = Beads_LC_2,
-                                          maxFull      = 70)
+                                      Reagents,
+                                      wells= [1, 2],
+                                      initial_vol  = 1200,
+                                      volpersample = B_BeadsVolume,
+                                      defLiqClass  = Beads_LC_2,
+                                      maxFull      = 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
-                                          BindBuf,
-                                          volpersample  = BindingBufferVolume,
-                                          defLiqClass   = B_liquidClass)
+                                      BindBuf,
+                                      volpersample  = BindingBufferVolume,
+                                      defLiqClass   = B_liquidClass)
 
         EtOH80p         = Reagent("Ethanol 80% ",
-                                      wt.get_labware(lab.Trough_100ml, "7-EtOH80p"),
-                                      volpersample      =EtOH80pVolume,
-                                      defLiqClass       =B_liquidClass)
+                                  wt.get_labware("7-EtOH80p", labware.Trough_100ml),
+                                  volpersample      =EtOH80pVolume,
+                                  defLiqClass       =B_liquidClass)
 
                                                         # Show the check_list GUI to the user for possible small changes
         self.check_list()
@@ -191,11 +191,11 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                         # Define the Reagents not shown in the check_list GUI
                                                         # Define samples and the place for temporal reactions
 
-        Plate_lysis = wt.get_labware(lab.MP96deepwell, "Plate lysis")  # Plate 12 x 8 ?
-        Plate_EtOH  = wt.get_labware(lab.MP96deepwell, "Plate EtOH")  # Plate 12 x 8 ? MP96well !!
+        Plate_lysis = wt.get_labware("Plate lysis", labware.MP96deepwell)  # Plate 12 x 8 ?
+        Plate_EtOH  = wt.get_labware("Plate EtOH", labware.MP96deepwell)  # Plate 12 x 8 ? MP96well !!
 
         if self.version != 'original samples':
-           Samples  = wt.get_labware(lab.EppRack6x16, "Proben")  # 6x16 = 12 x 8 ?
+           Samples  = wt.get_labware("Proben", labware.EppRack6x16)  # 6x16 = 12 x 8 ?
 
 
         par = Plate_lysis.parallelOrder(self.n_tips, all_samples)
