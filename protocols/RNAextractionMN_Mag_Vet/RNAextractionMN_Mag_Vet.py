@@ -222,7 +222,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         self.check_list()
         self.set_EvoMode()
                                                         # Define the Reagents not shown in the check_list GUI
-                                                        # Define samples and the place for temporal reactions
+                                                        # Define samples and the place for intermediate reactions
         for s in all_samples:
             Reagent("lysis_{:02d}".format(s + 1),
                         Lysis,

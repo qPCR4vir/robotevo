@@ -94,7 +94,7 @@ class Tutorial_LL(Evo200_FLI):
         plate = wt.get_labware(label="plate", labw_type="96 Well Microplate")
         assert isinstance(plate, labware.Labware)
 
-        dilution = plate.Wells[:n]                                 # Define place for temporal reactions  ----------
+        dilution = plate.Wells[:n]                                 # Define place for intermediate reactions  ----------
 
         with group("Fill dilutions"):
 

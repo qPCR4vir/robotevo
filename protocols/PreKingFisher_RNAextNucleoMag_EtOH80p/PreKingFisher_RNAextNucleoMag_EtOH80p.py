@@ -189,7 +189,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         self.set_EvoMode()
 
                                                         # Define the Reagents not shown in the check_list GUI
-                                                        # Define samples and the place for temporal reactions
+                                                        # Define samples and the place for intermediate reactions
 
         Plate_lysis = wt.get_labware("Plate lysis", labware.MP96deepwell)  # Plate 12 x 8 ?
         Plate_EtOH  = wt.get_labware("Plate EtOH", labware.MP96deepwell)  # Plate 12 x 8 ? MP96well !!

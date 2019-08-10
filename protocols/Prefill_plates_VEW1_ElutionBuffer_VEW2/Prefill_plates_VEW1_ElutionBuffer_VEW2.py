@@ -116,7 +116,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
         par = Plate_VEW1.parallelOrder(self.n_tips, all_samples)
 
-        # Define samples and the place for temporal reactions
+        # Define samples and the place for intermediate reactions
         for s in all_samples:
             Reagent("VEW1_{:02d}".format(s + 1),
                         Plate_VEW1,

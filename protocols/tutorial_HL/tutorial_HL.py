@@ -81,7 +81,7 @@ class Tutorial_HL(Evo200_FLI):
 
         plate = wt.get_labware("plate")
 
-        dilution = Reagent("mix1, diluted 1:10",               # Define place for temporal reactions  ----------
+        dilution = Reagent("mix1, diluted 1:10",               # Define place for intermediate reactions  ----------
                            plate,
                            replicas         = self.num_of_samples,
                            minimize_aliquots= False)

@@ -90,7 +90,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         par = LysPlat[0].parallelOrder(self.n_tips, all_samples)
 
-        # Define place for temporal reactions
+        # Define place for intermediate reactions
         for i, LP in enumerate(LysPlat):
             for s in all_samples:
                 Reagent("lysis_{:d}-{:02d}".format(i + 1, s + 1),

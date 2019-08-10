@@ -114,7 +114,7 @@ class Prefill_plate_in_Evo200(Evo200):
         Plat1 = wt.get_labware("plate1", labware.MP96MachereyNagel)
         Plat2 = wt.get_labware("plate2", labware.MP96well)
 
-        # Define place for temporal reactions
+        # Define place for intermediate reactions
         Reagent.use_minimal_number_of_aliquots = False
         mix1_10 = Reagent(f"mix1, diluted 1:10",
                         Plat1,
