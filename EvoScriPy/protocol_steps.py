@@ -975,9 +975,10 @@ class Protocol (Executable):
         """
         prompt_msg = ""
         for reagent in self.worktable.reagents:
-            reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
-            print(reagent_msg)
-            self.check_reagent_level(reagent)
+            if reagent.include_in_check:
+                reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
+                print(reagent_msg)
+                self.check_reagent_level(reagent)
 
     def show_check_list(self):
         """
@@ -988,9 +989,10 @@ class Protocol (Executable):
         """
         prompt_msg = ""
         for reagent in self.worktable.reagents:
-            reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
-            print(reagent_msg)
-            prompt_msg += reagent_msg + ""
+            if reagent.include_in_check:
+                reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
+                print(reagent_msg)
+                prompt_msg += reagent_msg + ""
 
         self.user_prompt(prompt_msg)
 
