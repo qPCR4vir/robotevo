@@ -7,7 +7,7 @@
 __author__ = 'qPCR4vir'
 
 
-from pathlib import Path
+from EvoScriPy.protocol_steps import *
 from protocols.Evo75 import Evo75
 
 
@@ -33,5 +33,7 @@ class Evo75_FLI(Evo75):
                        firstTip                    = firstTip,
                        run_name                    = run_name)
 
+    def set_paths(self):
+        Evo75.set_paths(self)
+        self.root_directory = Path(__file__).parent
         self.carrier_file = Path(__file__).parent / 'Carrier.cfg'
-

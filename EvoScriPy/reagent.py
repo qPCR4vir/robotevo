@@ -148,6 +148,7 @@ class Reagent:
         self.pos        = self.Replicas[0].offset                                   # ??
 
         self.init_vol(NumSamples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
+        self.include_in_check = True
 
     def min_num_of_replica(self, NumSamples: int=None)->int:
         """

@@ -35,7 +35,7 @@ class Evo75(Protocol):
      def set_defaults(self):
         wt = self.worktable
 
-        wt.def_DiTi     = lab.DiTi_0200ul                   # this is a type, the others are labwares
+        wt.def_DiTi_type     = lab.DiTi_0200ul                   # this is a type, the others are labwares
 
         WashCleanerS    = wt.get_labware("", lab.CleanerShallow)
         WashWaste       = wt.get_labware("", lab.WasteWash)

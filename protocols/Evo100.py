@@ -15,8 +15,8 @@ class Evo100(Protocol):
     """
 
     def __init__(self,
-                 n_tips                       = 4,
-                 num_of_samples                = None,
+                 n_tips                      = 4,
+                 num_of_samples              = None,
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,

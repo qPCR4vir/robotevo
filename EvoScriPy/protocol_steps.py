@@ -50,7 +50,11 @@ class Executable:
         self.def_versions()
         self.version     = next(iter(self.versions))
 
-        Reagent.set_reagent_list(self)                                                      # todo Revise !!!
+        self.set_paths()
+        Reagent.set_reagent_list(self)
+
+    def set_paths(self):
+        self.root_directory = Path(__file__).parent
 
     def set_defaults(self):
         """
@@ -644,7 +648,8 @@ class Protocol (Executable):
         # all wells with equal volume. todo: waste all vol from EACH well?. v: just for msg
         v = volume if volume else from_labware_region.Wells[original_selection[0]].vol
 
-        Asp = instructions.aspirate(tm, Te_Mag_LC, volume, from_labware_region)                 # todo: revert this LC temp hack
+        water_free_uncentered = "Te-Mag"  # "Water free" but uncentered  # todo: revert this LC temp hack
+        Asp = instructions.aspirate(tm, water_free_uncentered, volume, from_labware_region)
         # Asp = instructions.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
 
         Dst = instructions.dispense(tm, using_liquid_class, volume, to_waste_labware)
@@ -691,10 +696,11 @@ class Protocol (Executable):
                         dV -= Rest                      # the last Rest uL have to be aspired with the other Liq Class
                         Asp.volume = dV                 # with Liq Class with Detect: ">> AVR-Serum 1000 <<	365"
                         Dst.volume = dV
-                        Asp.liquidClass = Te_Mag_LC     # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
+                        Asp.liquidClass = water_free_uncentered     # ">> AVR-Serum 1000 <<	365"  # "No Liq Detect"
                         Asp.exec()                      # <---- low level, direct aspirate here !!
                         Asp.volume = CtrVol             # ?? minimal, 'fake' vol ?
-                        Asp.liquidClass = Te_Mag_Centre # just to go to the center
+                        to_centre = "Te-Mag Centre"     # To Centre after normal aspiration.
+                        Asp.liquidClass = to_centre     # just to go to the center
 
                         with self.tips(allow_air=CtrVol):
                             Asp.exec()
@@ -707,20 +713,23 @@ class Protocol (Executable):
 
                     # now waste the Rest with a LC with no liquid level detection, avoiding collisions
                     Asp.volume = Rest                   # force aspirate Rest, which may be more than rests in well
-                    Asp.liquidClass =  Te_Mag_Rest      # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
-                    with self.tips(    allow_air = Rest ):
+                    take_rest = "Te-Mag Rest"
+                    Asp.liquidClass = take_rest      # ">> AVR-Serum 1000 <<	367" # "No Liq Detect"
+                    with self.tips(allow_air = Rest):
                             Asp.exec()
                     Asp.volume = CtrVol
-                    Asp.liquidClass = Te_Mag_Force_Centre
-                    with self.tips(    allow_air = Rest + CtrVol ):
+                    force_centre = "Te-Mag Force Centre"
+                    Asp.liquidClass = force_centre
+                    with self.tips(allow_air = Rest + CtrVol):
                             Asp.exec()
                     Asp.volume = RestPlus
-                    Asp.liquidClass =  Te_Mag_RestPlus  # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
-                    with self.tips(    allow_air = RestPlus + Rest + CtrVol ):
+                    take_rest_plus = "Te-Mag RestPlus"
+                    Asp.liquidClass = take_rest_plus  # ">> AVR-Serum 1000 <<	369" # "No Liq Detect"
+                    with self.tips(allow_air = RestPlus + Rest + CtrVol):
                             Asp.exec()
                     # Ctr.exec()
                     Asp.volume = CtrVol
-                    Asp.liquidClass = Te_Mag_Force_Centre
+                    Asp.liquidClass = force_centre
                     Dst.volume += Rest + RestPlus
                     with self.tips(allow_air = CtrVol + RestPlus + Rest + CtrVol):
                             Asp.exec()
@@ -989,21 +998,9 @@ class Protocol (Executable):
         self.EvoMode.done()
         Executable.done(self)
 
-    def set_defaults(self):
-        wt = self.worktable
-
-        wt.def_DiTi       = labware.DiTi_1000ul                 # this is a type, the others are labwares
-
-        WashCleanerS    = wt.get_labware("", labware.CleanerSWS)
-        WashWaste       = wt.get_labware("", labware.WasteWS)
-        WashCleanerL    = wt.get_labware("", labware.CleanerLWS)
-        DiTiWaste       = wt.get_labware("", labware.DiTi_Waste)
-
-        wt.def_WashWaste   = WashWaste
-        wt.def_WashCleaner = WashCleanerS
-        wt.def_DiTiWaste   = DiTiWaste
-
-        Reagent("Liquid waste", wt.def_WashWaste)
+    def set_paths(self):
+        Executable.set_paths(self)
+        self.root_directory = Path(__file__).parent
 
     def initialize(self):
         self.set_EvoMode()
@@ -1011,7 +1008,10 @@ class Protocol (Executable):
             Executable.initialize(self)
         Reagent.set_reagent_list(self)
         if self.def_DiTi_check_liquid_level is None:
-            self.def_DiTi_check_liquid_level = self.worktable.def_DiTi
+            self.def_DiTi_check_liquid_level = self.worktable.def_DiTi_type
+
+    def set_defaults(self):
+        wt = self.worktable
 
     def set_EvoMode(self):
         if not self.EvoMode:
@@ -1348,14 +1348,7 @@ B_liquidClass   = "Water free cuvette"
 W_liquidClass   = Water_free      #    or "AVR-Water free DITi 1000"
 Std_liquidClass = Water_free      #    or "Water free dispense DiTi 1000"
 Small_vol_disp  = "Water wet"     #    or "Water free Low Volume"  ??
-Beads_LC_1      = "MixBeads_1"
-Beads_LC_2      = "MixBeads_2"
 
-Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentered
-Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
-Te_Mag_Rest     = "Te-Mag Rest"
-Te_Mag_Force_Centre   = "Te-Mag Force Centre"
-Te_Mag_RestPlus = "Te-Mag RestPlus"
 
 # TODO  implement Debugger: prompt and or wait
 

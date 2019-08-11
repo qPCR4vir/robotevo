@@ -7,7 +7,7 @@
 __author__ = 'qPCR4vir'
 
 
-from pathlib import Path
+from EvoScriPy.protocol_steps import *
 from protocols.Evo200 import Evo200
 
 
@@ -33,4 +33,25 @@ class Evo200_FLI (Evo200):
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
+    def set_paths(self):
+        Evo200.set_paths(self)
+        self.root_directory = Path(__file__).parent
         self.carrier_file = Path(__file__).parent / 'Carrier.cfg'
+
+    def set_defaults(self):
+        wt = self.worktable
+
+        wt.def_DiTi_type       = labware.DiTi_1000ul                 # this is a type, the others are labwares
+
+        WashCleanerS    = wt.get_labware("Cleaner1", labware.CleanerSWS)
+        WashWaste       = wt.get_labware("Waste", labware.WasteWS)
+        WashCleanerL    = wt.get_labware("Cleaner2", labware.CleanerLWS)
+        DiTiWaste       = wt.get_labware("DiTi Waste", labware.DiTi_Waste)
+
+        wt.def_WashWaste   = WashWaste
+        wt.def_WashCleaner = WashCleanerS
+        wt.def_DiTiWaste   = DiTiWaste
+
+        Reagent("Liquid waste", wt.def_WashWaste).include_in_check = False
+
+
