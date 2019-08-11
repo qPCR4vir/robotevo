@@ -5,8 +5,7 @@
 # 2014-2019
 __author__ = 'Ariel'
 
-from EvoScriPy.protocol_steps import *
-from protocols.evo100_f.evo100_f import Evo100_FLI
+from protocols.evo100_f.evo100_f import *
 from EvoScriPy.instructions_Te_MagS import *
 
 

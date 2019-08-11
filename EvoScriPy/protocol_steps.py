@@ -317,7 +317,7 @@ class Protocol (Executable):
         """
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
         the same number of wells in the target labware using the current LiHa arm with maximum number of tips
-        (of type: `self.worktable.def_DiTi`, which can be set `with self.tips(tip_type = myTipsRackType)`).
+        (of type: `self.worktable.def_DiTi_type`, which can be set `with self.tips(tip_type = myTipsRackType)`).
         # todo: count for 'broken' tips
 
         The number of "samples" may be explicitly indicated in which case will be assumed to begin from the
@@ -387,8 +387,8 @@ class Protocol (Executable):
         SampleCnt = NumSamples
 
         assert isinstance(volume, (int, float))
-        assert 0 < volume <= self.worktable.def_DiTi.maxVol, \
-            "Invalid volumen to transfer ("+str(volume)+") with tips " + self.worktable.def_DiTi
+        assert 0 < volume <= self.worktable.def_DiTi_type.maxVol, \
+            "Invalid volumen to transfer ("+str(volume)+") with tips " + self.worktable.def_DiTi_type
 
         nt = min(SampleCnt, nt)
         lf = from_labware_region
@@ -504,7 +504,7 @@ class Protocol (Executable):
         if nt > SampleCnt:
             nt = SampleCnt
         # mV = robot.Robot.current.curArm().Tips[0].type.maxVol * 0.8
-        mV = self.worktable.def_DiTi.maxVol * mix_p    # What tip tp use !
+        mV = self.worktable.def_DiTi_type.maxVol * mix_p    # What tip tp use !
         if volume:
             v = volume
         else:
@@ -578,7 +578,7 @@ class Protocol (Executable):
                          labware     =reagent.labware,
                          cycles      =cycles).exec()
 
-    def waste(self,  from_labware_region : labware.Labware      = None,
+    def waste(self,  from_labware_region : labware.Labware  = None,
                      using_liquid_class  : str              = None,
                      volume              : float            = None,     # todo accept a list ??
                      to_waste_labware    : labware.CuvetteType  = None,
@@ -587,7 +587,7 @@ class Protocol (Executable):
         """
         Use this function as a final step of a `in-well` pellet wash procedure (magnetically or by centrifuge created).
         Waste a `volume` from each of the selected wells `from_labware_region` (source labware wells)
-        `to_waste_labware` using the current LiHa arm with maximum number of tips (of type: `self.worktable.def_DiTi`,
+        `to_waste_labware` using the current LiHa arm with maximum number of tips (of type: `self.worktable.def_DiTi_type`,
         which can be set `with self.tips(tip_type = myTipsRackType)`). # todo: count for 'broken' tips
         If no source wells are selected this function will auto select a `self.num_of_samples` number
         of wells in the source labware.
@@ -620,29 +620,29 @@ class Protocol (Executable):
             volume = 0.0
         assert isinstance(volume, (int, float))
 
-        oriSel = from_labware_region.selected()         # list of the selected well offset
+        original_selection = from_labware_region.selected()         # list of the selected well offset
         nt = self.robot.curArm().nTips                  # the number of tips to be used in each cycle of pipetting
 
-        if not oriSel:
-            oriSel = range(self.num_of_samples)
+        if not original_selection:
+            original_selection = range(self.num_of_samples)
         if optimize:                                    # todo: if None reuse self.optimize (to be created !!)
-            oriSel = from_labware_region.parallelOrder(nt, oriSel)
+            original_selection = from_labware_region.parallelOrder(nt, original_selection)
 
-        NumSamples = len(oriSel)                        # oriSel used to calculate number of "samples"
+        NumSamples = len(original_selection)                        # oriSel used to calculate number of "samples"
         SampleCnt = NumSamples                          # the number of selected wells
 
         if nt > SampleCnt:                              # very few wells selected (less than tips)
             nt = SampleCnt
         tm = robot.tipsMask[nt]                           # todo: count for 'broken' tips
         nt = to_waste_labware.autoselect(maxTips=nt)
-        mV = self.worktable.def_DiTi.maxVol
+        mV = self.worktable.def_DiTi_type.maxVol
 
         Rest = 50                    # the volume we cannot further aspirate with liquid detection, to small, collisions
         RestPlus = 50
         CtrVol = 0.5
 
         # all wells with equal volume. todo: waste all vol from EACH well?. v: just for msg
-        v = volume if volume else from_labware_region.Wells[oriSel[0]].vol
+        v = volume if volume else from_labware_region.Wells[original_selection[0]].vol
 
         Asp = instructions.aspirate(tm, Te_Mag_LC, volume, from_labware_region)                 # todo: revert this LC temp hack
         # Asp = instructions.aspirate(tm, using_liquid_class[0], volume, from_labware_region)
@@ -655,7 +655,7 @@ class Protocol (Executable):
         with group(msg):
 
             msg += " in [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
-                  + str([i+1 for i in oriSel])
+                  + str([i+1 for i in original_selection])
             instructions.comment(msg).exec()
 
             while SampleCnt:                                # loop wells (samples)
@@ -666,7 +666,7 @@ class Protocol (Executable):
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 
-                sel = oriSel[curSample:curSample + nt]      # select the next nt (number of used tips) wells
+                sel = original_selection[curSample:curSample + nt]      # select the next nt (number of used tips) wells
                 Asp.labware.selectOnly(sel)
 
                 if volume:                                                  # volume: to be Waste
@@ -722,15 +722,15 @@ class Protocol (Executable):
                     Asp.volume = CtrVol
                     Asp.liquidClass = Te_Mag_Force_Centre
                     Dst.volume += Rest + RestPlus
-                    with self.tips(    allow_air = CtrVol + RestPlus + Rest + CtrVol ):
+                    with self.tips(allow_air = CtrVol + RestPlus + Rest + CtrVol):
                             Asp.exec()
-                    with self.tips(    allow_air = CtrVol + RestPlus + Rest + CtrVol ):
+                    with self.tips(allow_air = CtrVol + RestPlus + Rest + CtrVol):
                             Dst.exec()
 
                 SampleCnt -= nt
-            Asp.labware.selectOnly(oriSel)
+            Asp.labware.selectOnly(original_selection)
         instructions.wash_tips(wasteVol=4).exec()
-        return oriSel
+        return original_selection
 
     def makePreMix(self,
                    pre_mix       : preMix,
@@ -805,9 +805,10 @@ class Protocol (Executable):
                         rVol -= dV
                 self.mix_reagent(pre_mix, maxTips=ctips)
 
-    def get_tips(self, TIP_MASK         = None,
-                       tip_type         = None,
-                       selected_samples = None):  # todo TIP_MASK=None
+    def get_tips(self,
+                 TIP_MASK         = None,
+                 tip_type         = None,
+                 selected_samples = None):  # todo TIP_MASK=None
         """
         It will decide to get new tips or to pick back the preserved tips for the selected samples
         :param TIP_MASK:
@@ -836,7 +837,7 @@ class Protocol (Executable):
                 instructions.pickUp_DITIs2(tipsMask, tip_rack).exec()
             assert tips_in_rack == 0
         else:
-            tip_type= tip_type or self.worktable.def_DiTi
+            tip_type= tip_type or self.worktable.def_DiTi_type
             I = instructions.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm)
             I.exec()
         return mask                                    # todo REVISE !!   I.tipMask
@@ -971,17 +972,18 @@ class Protocol (Executable):
 
     def show_check_list(self):
         """
-                Will show a user prompt with a check list to set all defined reagents:
-                 Name, position in the worktable, wells and initial volume (on every well occupied by all
-                 the reagents defined so fort.
-                Will be executed at the end of self.check_list() but only if self.show_runtime_check_list is True
-                """
+        Will show a user prompt with a check list to set all defined reagents:
+        Name, position in the worktable, wells and initial volume (on every well occupied by all
+        the reagents defined so fort.
+        Will be executed at the end of self.check_list() but only if self.show_runtime_check_list is True
+        """
         prompt_msg = ""
         for reagent in self.worktable.reagents:
             reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
             print(reagent_msg)
             prompt_msg += reagent_msg + ""
-        instructions.userPrompt(prompt_msg).exec()
+
+        self.user_prompt(prompt_msg)
 
     def done(self):
         self.EvoMode.done()

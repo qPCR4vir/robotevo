@@ -25,7 +25,7 @@ class WorkTable:
         self.def_WashWaste      = None
         self.def_WashCleaner    = None
         self.def_DiTiWaste      = None
-        self.def_DiTi           = None
+        self.def_DiTi_type      = None
 
         WorkTable.cur_worktable  = self
 
@@ -435,8 +435,8 @@ class WorkTable:
         return labw.type.createLabware(loc, label)
 
     def set_def_DiTi(self, tips):                 # :Labware.DITIrackType) ->Labware.DITIrackType:
-        old = self.def_DiTi
-        self.def_DiTi = tips
+        old = self.def_DiTi_type
+        self.def_DiTi_type = tips
         return old
 
     def get_DITI_series(self, rack =None):
@@ -451,7 +451,7 @@ class WorkTable:
             return rack.series
 
         if rack is None:
-            rack = self.def_DiTi.name
+            rack = self.def_DiTi_type.name
 
         if isinstance(rack, DITIrackType):
             rack = rack.name

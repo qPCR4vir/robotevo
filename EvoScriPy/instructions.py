@@ -388,7 +388,7 @@ class set_DITI_Counter(Pipette):            # todo help determining the type,set
         Pipette.__init__(self, "Set_DITI_Counter" , labware = labware, tipMask=True)
 
         self.type      = type
-        self.labware   = labware or self.robot.worktable.def_DiTi
+        self.labware   = labware or self.robot.worktable.def_DiTi_type
         self.posInRack = posInRack
 
     def validateArg(self):
@@ -434,7 +434,7 @@ class set_DITI_Counter2(Pipette):
         Pipette.__init__(self, "Set_DITI_Counter2" , labware = labware, tipMask=True)
 
         self.lastPos   = lastPos                                     # todo implement internally; how??
-        self.labware   = labware or self.robot.worktable.def_DiTi
+        self.labware   = labware or self.robot.worktable.def_DiTi_type
         self.posInRack = posInRack
 
     def validateArg(self):
@@ -478,7 +478,7 @@ class pickUp_DITIs(Pipette):
                              RackName    = RackName,
                              Well        = Well,
                              arm         = arm)
-        self.labware = labware  or self.robot.worktable.def_DiTi
+        self.labware = labware  or self.robot.worktable.def_DiTi_type
         self.type = type
 
     def validateArg(self):
@@ -518,7 +518,7 @@ class pickUp_DITIs2(Pipette):
                              Well        = Well,
                              arm         = arm)
         self.type    = type
-        self.labware = labware or self.robot.worktable.def_DiTi
+        self.labware = labware or self.robot.worktable.def_DiTi_type
 
     def validateArg(self):
         Pipette.validateArg(self)

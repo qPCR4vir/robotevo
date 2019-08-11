@@ -263,7 +263,7 @@ class Robot:
         selected_reagents = selected_reagents.selected_wells()
 
         TIP_MASK        = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
-        type            = type if type else self.worktable.def_DiTi
+        type            = type if type else self.worktable.def_DiTi_type
         where           = []
         n               = lab.count_tips(TIP_MASK)
 

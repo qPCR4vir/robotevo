@@ -143,9 +143,9 @@ p.Run()
 
 from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200 as Prt
 
-p = Prt (num_of_samples    = 4,
-         output_filename = test_dir / 'demo-two.mixes',
-         run_name        = "_test_4s_mix_1_2")
+p = Prt(num_of_samples  = 4,
+        output_filename = test_dir / 'demo-two.mixes',
+        run_name        = "_test_4s_mix_1_2")
 p.use_version('No version')
 p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
