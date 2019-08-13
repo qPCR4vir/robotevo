@@ -41,13 +41,22 @@ class Evo100_FLI(Evo100):
         self.carrier_file = self.root_directory / 'Carrier.cfg'
 
     def set_defaults(self):
-        self.Beads_LC_1         = self.liquid_classes().def_lc["MixBeads_1"]
-        self.Beads_LC_2         = self.liquid_classes().def_lc["MixBeads_2"]
-        self.Te_Mag_LC          = self.liquid_classes().def_lc["Te-Mag"]  # "Water free" but uncentered
-        self.Te_Mag_Centre      = self.liquid_classes().def_lc["Te-Mag Centre"]  # To Centre after normal aspiration.
-        self.Te_Mag_Rest        = self.liquid_classes().def_lc["Te-Mag Rest"]
-        self.Te_Mag_Force_Centre = self.liquid_classes().def_lc["Te-Mag Force Centre"]
-        self.Te_Mag_RestPlus    = self.liquid_classes().def_lc["Te-Mag RestPlus"]
+        self.Beads_LC_1         = self.liquid_classes().all["MixBeads_1"]
+        self.Beads_LC_2         = self.liquid_classes().all["MixBeads_2"]
+        self.Te_Mag_LC          = self.liquid_classes().all["Te-Mag"]         # "Water free" but uncentered
+        self.Te_Mag_Centre      = self.liquid_classes().all["Te-Mag Centre"]  # To Centre after normal aspiration.
+        self.Te_Mag_Rest        = self.liquid_classes().all["Te-Mag Rest"]
+        self.Te_Mag_Force_Centre = self.liquid_classes().all["Te-Mag Force Centre"]
+        self.Te_Mag_RestPlus    = self.liquid_classes().all["Te-Mag RestPlus"]
+        self.Water_free         = self.liquid_classes().all["Water free"]  # General. No detect and no track small volumes < 50 µL
+
+        # self.SerumLiqClass      = self.liquid_classes().all["Serum Asp preMix3"]  # or "MN Virus Sample"
+        self.TissueHomLiqClass  = self.liquid_classes().all["Serum Asp"]
+
+        self.B_liquidClass      = self.liquid_classes().all["Water free cuvette"]
+        self.W_liquidClass      = self.Water_free                           # or "AVR-Water free DITi 1000"
+        self.Std_liquidClass    = self.Water_free                           # or "Water free dispense DiTi 1000"
+        self.Small_vol_disp     = self.liquid_classes().all["Water wet"]    # or "Water free Low Volume"  ??
 
         wt = self.worktable
 

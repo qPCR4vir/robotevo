@@ -21,6 +21,9 @@ class LiquidClass:
         self.name = name
         self.liquid_name = liquid_name
 
+    def __str__(self):
+        return self.name
+
 class LiquidClassDefault(LiquidClass):
 
     def __init__(self, name:str, liquid_name:str= ""):
@@ -38,30 +41,62 @@ class LiquidClasses:
     def __init__(self, database:Path):
         custom_file = database / 'CustomLCs.XML'
         default_file = database / 'DefaultLCs.XML'
-        self.def_lc = {}
+        self.all = {}
         try:
-            with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
-                for lc in default:
-                    lc = lc.split(';')
-                    lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
-                    self.def_lc[lc.name] = lc
-                    print("txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
-            return
+            self._read_def_liq_class_txt_file(default_file)
 
         except OSError as err:
             print("OS error: {0}".format(err))
+            self._read_def_liq_class_xml_file(default_file)
 
-            tree = ET.parse(default_file)
-            root = tree.getroot()
-            with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
-                for lc in root.findall('LiquidClass'):
-                    name = lc.get('name')
-                    liquid_name = lc.get('liquidName')
-                    print("name='" + name + "' :liquid Name='" + liquid_name + "'")
-                    default.write(name + ";" + liquid_name + ";" + "\n")
-                    lc = LiquidClassDefault(name, liquid_name)
-                    self.def_lc[lc.name] = lc
-                    print("txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+        try:
+            self._read_cus_liq_class_txt_file(custom_file)
+
+        except OSError as err:
+            print("OS error: {0}".format(err))
+            self._read_cus_liq_class_xml_file(custom_file)
+
+    def _read_cus_liq_class_xml_file(self, custom_file):
+        tree = ET.parse(custom_file)
+        root = tree.getroot()
+        with open(custom_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as custom:
+            for lc in root.findall('LiquidClass'):
+                name = lc.get('name')
+                # liquid_name = lc.get('liquidName')
+                print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                custom.write(name + "\t" + liquid_name + "\t" + "\n")
+                lc = LiquidClassDefault(name, liquid_name)
+                self.all[lc.name] = lc
+                print("to txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+    def _read_cus_liq_class_txt_file(self, custom_file):
+        with open(custom_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as custom:
+            for lc in custom:
+                lc = lc.split('\t')
+                lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
+                self.all[lc.name] = lc
+                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+    def _read_def_liq_class_xml_file(self, default_file):
+        tree = ET.parse(default_file)
+        root = tree.getroot()
+        with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
+            for lc in root.findall('LiquidClass'):
+                name = lc.get('name')
+                liquid_name = lc.get('liquidName')
+                # print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                default.write(name + "\t" + liquid_name + "\t" + "\n")
+                lc = LiquidClassDefault(name, liquid_name)
+                self.all[lc.name] = lc
+                print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+    def _read_def_liq_class_txt_file(self, default_file):
+        with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
+            for lc in default:
+                lc = lc.split('\t')
+                lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
+                self.all[lc.name] = lc
+                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
 
 class WorkTable:

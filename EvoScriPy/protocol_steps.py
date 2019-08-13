@@ -1343,17 +1343,6 @@ def incubation(minutes, timer=1):
     yield
     instructions.waitTimer(timer=timer, timeSpan=minutes * 60).exec()
 
-# Some commons Liquid Class names  -----------------------------------------------------------------------
-Water_free = "Water free"  # General. No detect and no track small volumes < 50 µL
-
-SerumLiqClass      = "Serum Asp preMix3"   # or "MN Virus Sample"
-TissueHomLiqClass  = "Serum Asp"
-
-
-B_liquidClass   = "Water free cuvette"
-W_liquidClass   = Water_free      #    or "AVR-Water free DITi 1000"
-Std_liquidClass = Water_free      #    or "Water free dispense DiTi 1000"
-Small_vol_disp  = "Water wet"     #    or "Water free Low Volume"  ??
 
 
 # TODO  implement Debugger: prompt and or wait
