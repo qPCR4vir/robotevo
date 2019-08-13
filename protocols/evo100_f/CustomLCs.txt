@@ -1,0 +1,452 @@
+4	Utilitzem amb les puntes de la 5 a la 8. (250ul).	
+>> AVR-Serum 1000 << 191	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 193	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 196	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 197	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 198	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 202	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 203	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 204	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 205	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 206	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 207	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 208	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 209	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 210	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 211	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 212	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 213	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 214	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 215	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 216	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 217	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 220	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 221	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 222	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 223	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 224	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 225	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 227	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 228	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 229	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 232	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 233	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 234	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 235	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 236	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 239	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 240	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 241	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 242	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 243	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 244	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 245	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 246	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 247	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 248	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 249	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 250	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 251	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 252	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 253	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 254	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 255	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 257	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 258	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 259	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 260	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 261	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 262	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 263	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 264	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 265	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 266	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 267	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 268	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 270	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 271	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 272	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 273	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 274	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 275	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 276	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 277	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 278	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 279	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 281	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 282	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 283	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 284	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 285	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 286	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 299	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 301	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 302	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 303	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 304	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 305	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 306	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 307	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 308	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 309	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 311	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 312	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 313	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 314	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 315	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 316	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 317	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 319	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 321	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 323	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 324	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 325	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 326	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 327	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 328	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 330	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 331	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 332	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 333	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 334	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 335	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 339	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 340	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 341	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 342	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 343	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 344	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 347	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 348	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 349	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 350	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 355	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 356	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 359	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 360	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 361	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 362	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 363	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 364	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 365	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 366	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 367	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 368	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 369	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 370	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 371	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 375	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 376	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 377	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 378	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 379	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 380	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 381	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 384	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 385	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 386	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 387	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 388	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 389	Serum smples for the Liquid Handling Arm	
+>> AVR-Serum 1000 << 390	Serum smples for the Liquid Handling Arm	
+>> AVR-Water free DITi 1000 << 218	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 219	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 269	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 287	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 288	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 289	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 290	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 291	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 292	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 293	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 294	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 295	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 298	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 300	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 310	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 318	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 320	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 322	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 329	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 337	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 338	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 346	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 351	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 352	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 353	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 354	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 357	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 358	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 372	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 373	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 374	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 382	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 383	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 391	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 395	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 396	General liquid class for Buffer	
+>> AVR-Water free DITi 1000 << 397	General liquid class for Buffer	
+>> AVR-Water free DITi 200 << 194	General liquid class for most pipetting devices and tip types	
+>> AVR-Water free DITi 200 << 200	General liquid class for most pipetting devices and tip types	
+>> AVR-Water free DITi 200 << 201	General liquid class for most pipetting devices and tip types	
+>> AVR-Water free DITi 200 << 231	General liquid class for most pipetting devices and tip types	
+>> AVR-Water free DITi 200 << 237	General liquid class for most pipetting devices and tip types	
+>> AVR-Water free DITi 200 << 238	General liquid class for most pipetting devices and tip types	
+>> Beads << 102	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 103	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 104	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 105	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 106	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 107	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 108	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 109	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 110	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 111	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 112	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 113	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 114	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 115	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 116	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 117	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 118	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 119	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 120	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 121	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 122	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 123	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 124	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 125	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 126	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 127	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 128	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 129	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 130	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 131	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 132	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 133	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 134	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 135	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 136	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 137	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 138	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 139	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 140	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 156	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 157	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 158	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 159	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 160	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 161	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 162	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 163	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 164	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 165	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 166	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 167	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 168	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 169	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 170	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 171	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 172	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 173	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 174	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 175	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 176	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 177	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 180	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 181	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 182	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 183	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 184	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 185	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 186	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 187	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 54	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 55	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 56	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 57	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 58	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 59	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 60	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 61	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 62	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 63	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 64	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 65	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 66	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 67	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 68	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 69	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 70	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 71	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 72	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 73	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 74	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 75	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 76	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 77	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 78	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 79	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 83	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Beads << 84	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Buffer free DITi 1000-AVR << 199	General liquid class for Buffer	
+>> Buffer free DITi 1000-AVR << 296	General liquid class for Buffer	
+>> Buffer free DITi 1000-AVR << 297	General liquid class for Buffer	
+>> Buffer free DITi 1000-AVR << 336	General liquid class for Buffer	
+>> Buffer free DITi 1000-AVR << 345	General liquid class for Buffer	
+>> MixBeads << 49	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> MixBeads << 53	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> MN MV2 << 100	buffer MV2	
+>> MN MV2 << 93	buffer MV2	
+>> MN MV2 << 94	buffer MV2	
+>> MN MV2 << 95	buffer MV2	
+>> MN MV2 << 96	buffer MV2	
+>> MN MV2 << 97	buffer MV2	
+>> MN MV2 << 98	buffer MV2	
+>> MN MV2 << 99	buffer MV2	
+>> MN MV4 waste  << 13	aspirate waste left/right	
+>> MN MV4 waste  << 27	aspirate waste left/right	
+>> MN MV4 waste  << 30	aspirate waste left/right	
+>> MN MV4 waste  << 47	aspirate waste left/right	
+>> MN MV5 << 36	wash buffer MV5	
+>> MN MV5 << 81	wash buffer MV5	
+>> MN MV5 waste << 14	aspirate waste left/right	
+>> MN MV5 waste << 26	aspirate waste left/right	
+>> MN MV5 waste << 31	aspirate waste left/right	
+>> MN MV5 waste << 34	aspirate waste left/right	
+>> MN MV5 waste << 35	aspirate waste left/right	
+>> MN MV5 waste << 37	aspirate waste left/right	
+>> MN MV5 waste << 38	aspirate waste left/right	
+>> MN MV5 waste << 39	aspirate waste left/right	
+>> MN MV5 waste << 40	aspirate waste left/right	
+>> MN MV5 waste << 52	aspirate waste left/right	
+>> MN MV5 waste << 82	aspirate waste left/right	
+>> MN MV6 elution << 15	aspirate eluate left/right	
+>> MN MV6 elution << 150	aspirate eluate left/right	
+>> MN MV6 elution << 16	aspirate eluate left/right	
+>> MN MV6 elution << 17	aspirate eluate left/right	
+>> MN MV6 elution << 24	aspirate eluate left/right	
+>> MN MV6 elution << 25	aspirate eluate left/right	
+>> MN MV6 elution << 32	aspirate eluate left/right	
+>> MN MV6 elution << 48	aspirate eluate left/right	
+>> MV2 << 80	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 141	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 142	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 143	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 178	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 179	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 18	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 188	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 189	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 19	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 190	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 20	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 21	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 22	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 23	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 8	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Probe << 85	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Serum Asp << 398	Serum smples for the Liquid Handling Arm	
+>> Serum Asp << 399	Serum smples for the Liquid Handling Arm	
+>> Serum Asp << 400	Serum smples for the Liquid Handling Arm	
+>> Ueberstand1 << 10	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 101	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 12	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 144	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 145	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 146	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 147	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 148	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 149	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 151	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 152	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 153	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 154	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 155	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 28	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 29	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 33	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 41	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 42	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 44	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 45	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 46	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 50	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 51	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 7	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 86	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 87	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 88	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 89	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 9	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 90	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Ueberstand1 << 91	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+>> Water free << 402	General. No detect and no track small volumes	
+>> Water free << 403	General. No detect and no track small volumes	
+>> Water free dispense << 392	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 393	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 394	General liquid class for most pipetting devices and tip types	
+>> Water wet << 401	General. No detect and no track small volumes	
+AVR-Serum 1000	Serum smples for the Liquid Handling Arm	
+AVR-Serum 200	Serum smples for the Liquid Handling Arm	
+AVR-Water free DITi 1000	General liquid class for Buffer	
+AVR-Water free DITi 200	General liquid class for most pipetting devices and tip types	
+Beads	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+Buffer free DITi 1000-AVR	General liquid class for Buffer	
+Eluat	No Liq Det. R/L	
+Elution	Water	
+Internal control 	MS2	
+MixBeads	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+MixBeads_1	Not to tief	
+MixBeads_2	Full mix	
+MN B-Beads	magnetic beads	
+MN Blood	Blood	
+MN eluate transfer	aspirate eluate left/right	
+MN EtOH 80%	wash buffer MB4	
+MN EtOH waste 	aspirate waste left/right	
+MN MR2	buffer MR2	
+MN MR3	wash buffer VEW1	
+MN MR3 waste 	aspirate waste left/right	
+MN MR4	wash buffer MR4	
+MN MR4 waste 	aspirate waste left/right	
+MN MR5	elution buffer MR5	
+MN MV2	buffer MV2	
+MN MV3	wash buffer MV3	
+MN MV3 waste 	aspirate waste left/right	
+MN MV4	wash buffer MV4	
+MN MV4 waste 	aspirate waste left/right	
+MN MV5	wash buffer MV5	
+MN MV5 waste	aspirate waste left/right	
+MN MV6 	elution buffer MV6	
+MN MV6 elution	aspirate eluate left/right	
+MN NM RNA Sample waste	aspirate left/right	
+MN Proteinase K	Proteinase K	
+MN rDNase	rDNase mixture	
+MN rDNase waste	aspirate left/right	
+MN VEB	buffer VEB	
+MN VEL	elution buffer VEL	
+MN VET Sample waste	aspirate left/right	
+MN VEW1	wash buffer VEW1	
+MN VEW1 waste 	aspirate waste left/right	
+MN VEW2	wash buffer VEW2	
+MN VEW2 waste	waste liquid	
+MN Virus Beads 	magnetic beads	
+MN Virus Sample	Virus	
+MN Virus Sample waste	aspirate left/right	
+MN VL	lysis buffer VL	
+MV2	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+Samples	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+Serum Asp	Serum smples for the Liquid Handling Arm	
+Serum Disp postMix3	Serum smples for the Liquid Handling Arm	
+Te-Mag	General. No detect and no track small volumes	
+Te-Mag Centre	To Centre after normal aspiration.	
+Te-Mag Force Centre	To Centre after normal aspiration.	
+Te-Mag Rest	Rest 50 uL. No detect and no track small volumes	
+Te-Mag RestPlus	Rest 50 uL. No detect and no track small volumes	
+TEST NO LLD	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+Ueberstand1	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+Water free	General. No detect and no track small volumes	
+Water free cuvette	General. 	
+Water free dispense DiTi 200	Improved accuracy below 20 µl for 200 µl Disposable Tips	
+Water free Low Volume	No detect no track when small volumes are expected to left 	
+Water wet	General. No detect and no track small volumes	

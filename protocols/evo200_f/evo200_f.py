@@ -15,6 +15,7 @@ class Evo200_FLI (Evo200):
     """
     Using the Evo200_FLI
     """
+    _liquid_classes = None
 
     def __init__(self,
                  num_of_samples              = None,
@@ -36,7 +37,7 @@ class Evo200_FLI (Evo200):
     def set_paths(self):
         Evo200.set_paths(self)
         self.root_directory = Path(__file__).parent
-        self.carrier_file = Path(__file__).parent / 'Carrier.cfg'
+        self.carrier_file = self.root_directory / 'Carrier.cfg'
 
     def set_defaults(self):
         wt = self.worktable
@@ -53,5 +54,13 @@ class Evo200_FLI (Evo200):
         wt.def_DiTiWaste   = DiTiWaste
 
         Reagent("Liquid waste", wt.def_WashWaste).include_in_check = False
+
+    def liquid_classes(self):
+        return None
+
+        if Evo200_FLI._liquid_classes is None:
+            Evo200_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
+
+        return Evo200_FLI._liquid_classes
 
 

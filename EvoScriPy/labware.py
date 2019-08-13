@@ -6,6 +6,99 @@
 __author__ = 'qPCR4vir'
 
 
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+
+class LiquidClass:
+
+    def __init__(self, name:str, liquid_name:str= ""):
+        """
+
+        :param name:
+        :param liquid_name:
+        """
+        self.name = name
+        self.liquid_name = liquid_name
+
+    def __str__(self):
+        return self.name
+
+class LiquidClassDefault(LiquidClass):
+
+    def __init__(self, name:str, liquid_name:str= ""):
+        LiquidClass.__init__(self, name, liquid_name)
+        self.derived = {}
+
+class LiquidClassDerived(LiquidClass):
+
+    def __init__(self, raw_name:str, origen:LiquidClassDefault):
+        raw = raw_name.split(';')
+
+
+class LiquidClasses:
+
+    def __init__(self, database:Path):
+        custom_file = database / 'CustomLCs.XML'
+        default_file = database / 'DefaultLCs.XML'
+        self.all = {}
+        try:
+            self._read_def_liq_class_txt_file(default_file)
+
+        except OSError as err:
+            print("OS error: {0}".format(err))
+            self._read_def_liq_class_xml_file(default_file)
+
+        try:
+            self._read_cus_liq_class_txt_file(custom_file)
+
+        except OSError as err:
+            print("OS error: {0}".format(err))
+            self._read_cus_liq_class_xml_file(custom_file)
+
+    def _read_cus_liq_class_xml_file(self, custom_file):
+        tree = ET.parse(custom_file)
+        root = tree.getroot()
+        with open(custom_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as custom:
+            for lc in root.findall('LiquidClass'):
+                name = lc.get('name')
+                liquid_name = lc.get('liquidName')
+                # print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                custom.write(name + "\t" + liquid_name + "\t" + "\n")
+                lc = LiquidClassDefault(name, liquid_name)
+                self.all[lc.name] = lc
+                print("to txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+    def _read_cus_liq_class_txt_file(self, custom_file):
+        with open(custom_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as custom:
+            for lc in custom:
+                lc = lc.split('\t')
+                lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
+                self.all[lc.name] = lc
+                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+    def _read_def_liq_class_xml_file(self, default_file):
+        tree = ET.parse(default_file)
+        root = tree.getroot()
+        with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
+            for lc in root.findall('LiquidClass'):
+                name = lc.get('name')
+                liquid_name = lc.get('liquidName')
+                # print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                default.write(name + "\t" + liquid_name + "\t" + "\n")
+                lc = LiquidClassDefault(name, liquid_name)
+                self.all[lc.name] = lc
+                print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+    def _read_def_liq_class_txt_file(self, default_file):
+        with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
+            for lc in default:
+                lc = lc.split('\t')
+                lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
+                self.all[lc.name] = lc
+                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
+
 class WorkTable:
     """ Collection of carriers.types and Labware.types and pos of instances """
 
@@ -118,6 +211,7 @@ class WorkTable:
         with open(carrier_file, 'r', encoding='Latin-1') as config:
             for line in config:
                 if line.startswith("13;"):                           # new Carrier
+                    # print("line-" + line)
                     line = line.split(';')
                     name = line[1]
                     idx, u = line[2].split("/")
@@ -135,9 +229,9 @@ class WorkTable:
             # parsing_grid=False
             self.file = WorkTable.File(tmpl, None, self)
 
-            template_list += self.read_worktable_header(tmpl)
-            template_list += self.read_worktable_carriers_grid(tmpl)
-            template_list += self.read_worktable_labwares_grid(tmpl)
+            template_list += self._read_worktable_header(tmpl)
+            template_list += self._read_worktable_carriers_grid(tmpl)
+            template_list += self._read_worktable_labwares_grid(tmpl)
 
             for line in tmpl:
                 template_list += [line]
@@ -152,7 +246,7 @@ class WorkTable:
         self.template_file_name = template_file
         return template_list
 
-    def read_worktable_header(self, template):
+    def _read_worktable_header(self, template):
         template_list = []  # a grid-line first list the types
 
         line = template.readline()
@@ -189,7 +283,7 @@ class WorkTable:
         assert l999 == "999"
         return template_list
 
-    def read_worktable_carriers_grid(self, template):
+    def _read_worktable_carriers_grid(self, template):
         template_list = []  # a grid-line first list the types
 
         line = template.readline()
@@ -212,7 +306,7 @@ class WorkTable:
         print("Detected " + str(len(self.file.carriers_grid)) + " grids.")
         return template_list
 
-    def read_worktable_labwares_grid(self, template):
+    def _read_worktable_labwares_grid(self, template):
 
         grid_num = -1
 
@@ -317,7 +411,7 @@ class WorkTable:
                         labware.location = loc                                  # the simplest intention: move it
                         return
                     else:
-                        labware.location.worktable.retireLabware(labware)       # remove from previous worktable
+                        labware.location.worktable.retire_labware(labware)       # remove from previous worktable
                         return
                 else:                                                           # no new worktable
                     loc.worktable = labware.location.worktable                  # just move it in current worktable
@@ -326,7 +420,7 @@ class WorkTable:
 
         # assert labware.series is None, "For now we assume labware with no location or worktable have no series"
 
-        self.retireLabware(labware)                                             # remove from previous worktable/series
+        self.retire_labware(labware)                                             # remove from previous worktable/series
         loc.worktable.add_new_labware(labware, loc)                             # add to the new worktable
 
     def get_current_labware(self, labware):
@@ -417,7 +511,7 @@ class WorkTable:
 
         return labw, fpos
 
-    def retireLabware(self, labw):
+    def retire_labware(self, labw):
         assert isinstance(labw, Labware )
 
         if labw.type.name in self.labware_series:
@@ -428,10 +522,10 @@ class WorkTable:
         labw.location = None
         return labw
 
-    def replaceWithNew(self, labw, label):
+    def replace_with_new(self, labw, label):
         assert isinstance(labw, Labware )
         loc = labw.location
-        self.retireLabware(labw)
+        self.retire_labware(labw)
         return labw.type.createLabware(loc, label)
 
     def set_def_DiTi(self, tips):                 # :Labware.DITIrackType) ->Labware.DITIrackType:

@@ -135,19 +135,19 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       minimize_aliquots=False,
                                       wells= [15, 16],
                                       volpersample = ProtKVolume,
-                                      defLiqClass  = Small_vol_disp)
+                                      defLiqClass  = self.Small_vol_disp)
 
             cRNA        = Reagent("Carrier RNA ",
                                       Reagents,
                                       wells= 14,
                                       volpersample  = cRNAVolume,
-                                      defLiqClass   = Small_vol_disp)
+                                      defLiqClass   = self.Small_vol_disp)
 
             IC_MS2      = Reagent("IC MS2 phage culture ",
                                       Reagents,
                                       wells= 13,
                                       volpersample  = IC_MS2Volume,
-                                      defLiqClass   = Small_vol_disp)
+                                      defLiqClass   = self.Small_vol_disp)
 
             # IC2         = Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
             #                           volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
@@ -156,7 +156,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                        Reagents,
                                        pos          = 8,
                                        components   = [cRNA, ProtK, IC_MS2] ,
-                                       defLiqClass  = W_liquidClass,
+                                       defLiqClass  = self.W_liquidClass,
                                        excess       = 20)
 
         if self.add_VL:
@@ -171,18 +171,18 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       wells= [1, 2],
                                       initial_vol  = 1200,
                                       volpersample = B_BeadsVolume,
-                                      defLiqClass  = Beads_LC_2,
+                                      defLiqClass  = self.Beads_LC_2,
                                       maxFull      = 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                       BindBuf,
                                       volpersample  = BindingBufferVolume,
-                                      defLiqClass   = B_liquidClass)
+                                      defLiqClass   = self.B_liquidClass)
 
         EtOH80p         = Reagent("Ethanol 80% ",
                                   wt.get_labware("7-EtOH80p", labware.Trough_100ml),
                                   volpersample      =EtOH80pVolume,
-                                  defLiqClass       =B_liquidClass)
+                                  defLiqClass       =self.B_liquidClass)
 
                                                         # Show the check_list GUI to the user for possible small changes
         self.check_list()

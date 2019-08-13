@@ -95,17 +95,17 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         VEW1            = Reagent("VEW1 - Wash Buffer ",
                                   wt.get_labware("4-VEW1 Wash Buffe", labware.Trough_100ml),
                                   volpersample  = VEW1Volume,
-                                  defLiqClass   = B_liquidClass)
+                                  defLiqClass   = self.B_liquidClass)
 
         VEW2            = Reagent("VEW2 - WashBuffer ",
                                   wt.get_labware("5-VEW2-WashBuffer", labware.Trough_100ml),
                                   volpersample  =VEW2Volume,
-                                  defLiqClass   =B_liquidClass)
+                                  defLiqClass   =self.B_liquidClass)
 
         ElutionBuffer   = Reagent("Elution Buffer ",
                                   ElutBuf,
                                   volpersample  =ElutionBufferVolume,
-                                  defLiqClass   =B_liquidClass)
+                                  defLiqClass   =self.B_liquidClass)
 
                                                         # Show the check_list GUI to the user for posible small changes
 
