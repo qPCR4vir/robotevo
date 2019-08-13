@@ -31,7 +31,6 @@ print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p import PreKingFisher_RNAextNucleoMag_EtOH80p as Prt
 
 p = Prt (num_of_samples    = 96,
@@ -40,7 +39,6 @@ p = Prt (num_of_samples    = 96,
 p.use_version('VL-pKmix prefill')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
-
 
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'PreKingFisher_RNAextNucleoMag_EtOH80p',
@@ -60,7 +58,6 @@ p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-only prefill")
@@ -69,7 +66,6 @@ p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-
 p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-pKmix prefill")
@@ -77,7 +73,6 @@ p.use_version('VL-pKmix prefill')
 p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
-
 
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
@@ -95,7 +90,6 @@ p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-only inactivated")
@@ -103,7 +97,6 @@ p.use_version('VL-only inactivated')
 p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
-
 
 p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
@@ -113,7 +106,6 @@ p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-pKmix Inactivated")
@@ -122,7 +114,6 @@ p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-
 p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_original samples")
@@ -130,7 +121,6 @@ p.use_version('original samples')
 p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
-
 
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
@@ -162,9 +152,6 @@ p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-
-from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
-
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_HLevel',
          run_name                    = "_46s")
@@ -183,9 +170,6 @@ p.use_version('No version')
 p.go_first_pos('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
-
-
-from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
 
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
