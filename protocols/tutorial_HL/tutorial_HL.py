@@ -59,7 +59,6 @@ class Tutorial_HL(Evo200_FLI):
     def Run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
                                     # which calls GUI.update_parameters() and set_defaults() from Evo200
-
         self.show_runtime_check_list    = True
 
         assert 1 <= self.num_of_samples <= Tutorial_HL.max_s, "In this demo we want to set dilutions in a 96 well plate."

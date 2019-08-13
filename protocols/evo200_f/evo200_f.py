@@ -36,7 +36,7 @@ class Evo200_FLI (Evo200):
     def set_paths(self):
         Evo200.set_paths(self)
         self.root_directory = Path(__file__).parent
-        self.carrier_file = Path(__file__).parent / 'Carrier.cfg'
+        self.carrier_file = self.root_directory / 'Carrier.cfg'
 
     def set_defaults(self):
         wt = self.worktable
