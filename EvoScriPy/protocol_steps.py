@@ -1004,7 +1004,11 @@ class Protocol (Executable):
         Executable.set_paths(self)
         self.root_directory = Path(__file__).parent
 
+    def liquid_classes(self):
+        return None
+
     def initialize(self):
+        self.liquid_classes()
         self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)

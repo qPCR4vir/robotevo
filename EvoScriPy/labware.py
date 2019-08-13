@@ -38,12 +38,31 @@ class LiquidClasses:
     def __init__(self, database:Path):
         custom_file = database / 'CustomLCs.XML'
         default_file = database / 'DefaultLCs.XML'
-        tree = ET.parse(default_file)
-        root = tree.getroot()
-        for lc in root.findall('LiquidClass'):
-            name = lc.get('name')
-            liquid_name = lc.get('liquidName')
-            print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+        self.def_lc = {}
+        try:
+            with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
+                for lc in default:
+                    lc = lc.split(';')
+                    lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
+                    self.def_lc[lc.name] = lc
+                    print("txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+            return
+
+        except OSError as err:
+            print("OS error: {0}".format(err))
+
+            tree = ET.parse(default_file)
+            root = tree.getroot()
+            with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
+                for lc in root.findall('LiquidClass'):
+                    name = lc.get('name')
+                    liquid_name = lc.get('liquidName')
+                    print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                    default.write(name + ";" + liquid_name + ";" + "\n")
+                    lc = LiquidClassDefault(name, liquid_name)
+                    self.def_lc[lc.name] = lc
+                    print("txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+
 
 class WorkTable:
     """ Collection of carriers.types and Labware.types and pos of instances """
@@ -157,6 +176,7 @@ class WorkTable:
         with open(carrier_file, 'r', encoding='Latin-1') as config:
             for line in config:
                 if line.startswith("13;"):                           # new Carrier
+                    # print("line-" + line)
                     line = line.split(';')
                     name = line[1]
                     idx, u = line[2].split("/")

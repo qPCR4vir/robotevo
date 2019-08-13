@@ -16,6 +16,7 @@ class Evo100_FLI(Evo100):
     Using the Evo100_FLI_INNT
     """
     min_s, max_s = 1, 48
+    _liquid_classes = None
 
     def __init__(self,
                  num_of_samples              = None,
@@ -40,6 +41,14 @@ class Evo100_FLI(Evo100):
         self.carrier_file = self.root_directory / 'Carrier.cfg'
 
     def set_defaults(self):
+        self.Beads_LC_1         = self.liquid_classes().def_lc["MixBeads_1"]
+        self.Beads_LC_2         = self.liquid_classes().def_lc["MixBeads_2"]
+        self.Te_Mag_LC          = self.liquid_classes().def_lc["Te-Mag"]  # "Water free" but uncentered
+        self.Te_Mag_Centre      = self.liquid_classes().def_lc["Te-Mag Centre"]  # To Centre after normal aspiration.
+        self.Te_Mag_Rest        = self.liquid_classes().def_lc["Te-Mag Rest"]
+        self.Te_Mag_Force_Centre = self.liquid_classes().def_lc["Te-Mag Force Centre"]
+        self.Te_Mag_RestPlus    = self.liquid_classes().def_lc["Te-Mag RestPlus"]
+
         wt = self.worktable
 
         wt.def_DiTi_type       = labware.DiTi_1000ul                 # this is a type, the others are labwares
@@ -55,11 +64,10 @@ class Evo100_FLI(Evo100):
 
         Reagent("Liquid waste", wt.def_WashWaste).include_in_check = False
 
+    def liquid_classes(self):
+        if Evo100_FLI._liquid_classes is None:
+            Evo100_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
-Beads_LC_1      = "MixBeads_1"
-Beads_LC_2      = "MixBeads_2"
-Te_Mag_LC       = "Te-Mag"          # "Water free" but uncentered
-Te_Mag_Centre   = "Te-Mag Centre"   # To Centre after normal aspiration.
-Te_Mag_Rest     = "Te-Mag Rest"
-Te_Mag_Force_Centre   = "Te-Mag Force Centre"
-Te_Mag_RestPlus = "Te-Mag RestPlus"
+        return Evo100_FLI._liquid_classes
+
+
