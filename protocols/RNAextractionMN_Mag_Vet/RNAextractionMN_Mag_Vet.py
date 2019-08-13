@@ -86,7 +86,6 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                      .format(str(num_of_samples)))
 
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
-        labware.LiquidClasses(self.root_directory)
 
         if self.add_VL:
             LysBuf      = wt.get_labware("2-Vl Lysis Buffer", lab.Trough_100ml)
