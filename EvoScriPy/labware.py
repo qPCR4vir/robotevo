@@ -62,8 +62,8 @@ class LiquidClasses:
         with open(custom_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as custom:
             for lc in root.findall('LiquidClass'):
                 name = lc.get('name')
-                # liquid_name = lc.get('liquidName')
-                print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                liquid_name = lc.get('liquidName')
+                # print("name='" + name + "' :liquid Name='" + liquid_name + "'")
                 custom.write(name + "\t" + liquid_name + "\t" + "\n")
                 lc = LiquidClassDefault(name, liquid_name)
                 self.all[lc.name] = lc
