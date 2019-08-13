@@ -1,0 +1,25 @@
+DMSO free dispense	General liquid class for most pipetting devices and tip types	
+DMSO wet contact	For MCA96, MCA384 and Te-MO96	
+DMSO wet contact MC96 HP block	High Precision fixed tip block for MCA96 and Te-MO96	
+DMSO wet contact MCA 384 DiTi 125	Improved accuracy below 50 µl for 125 µl Disposable Tips	
+DMSO wet contact MCA 384 DiTi 50	Improved accuracy below 15 µl for 50 µl Disposable Tips	
+DMSO wet contact MCA 384 large capacity tip block	Improved accuracy below 15 µl for the large capacity tip block	
+Ethanol free dispense	General liquid class for the Liquid Handling Arm	
+Serum free dispense	General liquid class for the Liquid Handling Arm	
+Serum free dispense DiTi 1000	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+System Liquid free dispense	Aspirate and dispense System Liquid with the LiHa	
+Water dry contact High density plate	For Te-PS tips and 10 µl Disposable Tips in dry 1536 well plate	
+Water free dispense	General liquid class for most pipetting devices and tip types	
+Water free dispense DiTi 1000	Improved accuracy below 200 µl for 1000 µl Disposable Tips	
+Water free dispense DiTi 50	For 50 ul disposable tips without filter using 500 ul syringe	
+Water free dispense DiTi 50 filter	For 50 ul disposable tips with filter using 500 ul syringe	
+Water free dispense MCA DiTi 500 	Water	
+Water wet contact	General liquid class for most pipetting devices and tip types	
+Water wet contact MC96 HP block	High Precision fixed tip block for MCA96 and Te-MO96 	
+Water wet contact MCA 384 DiTi 125	Improved accuracy below 50 µl for 125 µl Disposable Tips	
+Water wet contact MCA 384 DiTi 50	Improved accuracy below 15 µl for 50 µl Disposable Tips	
+Water wet contact MCA 384 large capacity tip block	Improved accuracy below 15 µl for the large capacity tip block	
+Water wet contact MCA wide-bore	For wide bore MCA96 Disposable Tips	
+WRC step 1 Empty tips	For MCA96, MCA384 and Te-MO96 wash command	
+WRC step 2 Dip in	For MCA96, MCA384 and Te-MO96 wash command	
+WRC step 3 Blow out underwater	For MCA96, MCA384 and Te-MO96 wash command	
