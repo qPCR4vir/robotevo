@@ -8,13 +8,10 @@ __author__ = 'Ariel'
 # Tutorial
 
 from EvoScriPy.protocol_steps import *
-import EvoScriPy.instructions as instr
-import EvoScriPy.labware as lab
-import EvoScriPy.reagent as rgnt
-from protocols.Evo200 import Evo200
+from protocols.evo200_f.evo200_f import Evo200_FLI
 
 
-class Tutorial_HL_RoMa(Evo200):
+class Tutorial_HL_RoMa(Evo200_FLI):
     """
     Starting with 2 plates (A amd B, B on some plate pedestal - hotel) move plate B into a different location;
     then transfer 50µL of aqueous buffer from column 1 of plate A to column 2 of plate B.
@@ -45,7 +42,7 @@ class Tutorial_HL_RoMa(Evo200):
                  firstTip                    = None,
                  run_name: str               = ""):
 
-        Evo200.__init__(self,
+        Evo200_FLI.__init__(self,
                         GUI                         = GUI,
                         num_of_samples=num_of_samples or Tutorial_HL_RoMa.max_s,
                         worktable_template_filename = worktable_template_filename or

@@ -8,10 +8,9 @@ __author__ = 'qPCR4vir'
 
 
 from EvoScriPy.protocol_steps import *
-from protocols.Evo200 import Evo200
 
 
-class Evo200_FLI (Evo200):
+class Evo200_FLI (Protocol):
     """
     Using the Evo200_FLI
     """
@@ -25,7 +24,7 @@ class Evo200_FLI (Evo200):
                  firstTip                    = None,
                  run_name                    = None):
 
-        Evo200.__init__(self,
+        Protocol.__init__(self,
                         GUI                         = GUI,
                         n_tips                      = 8,
                         num_of_samples              = num_of_samples,
@@ -35,7 +34,7 @@ class Evo200_FLI (Evo200):
                         run_name                    = run_name)
 
     def set_paths(self):
-        Evo200.set_paths(self)
+        Protocol.set_paths(self)
         self.root_directory = Path(__file__).parent
         self.carrier_file = self.root_directory / 'Carrier.cfg'
 
