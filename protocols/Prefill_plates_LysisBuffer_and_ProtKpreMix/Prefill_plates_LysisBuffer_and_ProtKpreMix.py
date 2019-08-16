@@ -21,9 +21,9 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
     min_s, max_s = 1, 96
 
     def def_versions(self):
-        self.versions = {'3 plate': self.V_3_plate,
-                         '2 plate': self.V_2_plate,
-                         '1 plate': self.V_1_plate,
+        self.versions = {'3 plate': self.v_3_plate,
+                         '2 plate': self.v_2_plate,
+                         '1 plate': self.v_1_plate,
                          '3 plate from Cuvette preMix': self.V_3_plate_Cuvette,
                          '2 plate from Cuvette preMix': self.V_2_plate_Cuvette,
                          '1 plate from Cuvette preMix': self.V_1_plate_Cuvette,
@@ -32,9 +32,9 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                          '1 plate from Cuvette LysBuf-pK-preMix': self.V_1_plate_LysBuf_pK_Cuvette
                          }
 
-    def V_1_plate(self):        self.def_init(1)
-    def V_2_plate(self):        self.def_init(2)
-    def V_3_plate(self):        self.def_init(3)
+    def v_1_plate(self):        self.def_init(1)
+    def v_2_plate(self):        self.def_init(2)
+    def v_3_plate(self):        self.def_init(3)
 
     def plate_pK_Cuvette(self, num_plates=1):
         self.def_init(num_plates)
@@ -60,7 +60,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         this = Path(__file__).parent
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
-                            num_of_samples= Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
+                            num_of_samples          = Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
                             worktable_template_filename=this.parent / 'Prefill_plates_LysisBuffer/Prefill_plates_LysisBuffer.ewt',
                             output_filename         = this / 'scripts' / '',
                             run_name                = run_name)

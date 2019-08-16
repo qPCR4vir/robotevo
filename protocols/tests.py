@@ -180,7 +180,18 @@ print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-#from protocols.Prefill_plates_LysisBuffer             import Prefill_plates_LysisBuffer
-#from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates_LysisBuffer_and_ProtKpreMix
-#from EvoScriPy.protocol_steps                         import Pipeline
+from protocols.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer as Prt
 
+p = Prt(run_name="_1_plate")
+p.use_version('1 plate')
+p.go_first_pos('A01')
+print("\n\n************ " + str(p.output_filename) + " **************\n")
+p.Run()
+
+p = Prt (run_name="_3_plate")
+p.use_version('3 plate')
+p.go_first_pos('A01')
+print("\n\n************ " + str(p.output_filename) + " **************\n")
+p.Run()
+
+#from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates_LysisBuffer_and_ProtKpreMix

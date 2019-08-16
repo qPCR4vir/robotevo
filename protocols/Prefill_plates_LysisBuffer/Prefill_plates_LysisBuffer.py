@@ -4,7 +4,7 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2018-2019
 __author__ = 'Ariel'
-# todo: deprecate, this is now one version in Prefill_plates_LysisBuffer_and_ProtKpreMix
+# this is now one version in Prefill_plates_LysisBuffer_and_ProtKpreMix
 
 from EvoScriPy.protocol_steps import *
 from protocols.evo100_f.evo100_f import Evo100_FLI
@@ -23,16 +23,11 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
     def def_versions(self):
         self.versions = {'3 plate': self.V_3_plate,
                          '2 plate': self.V_2_plate,
-                         '1 plate': self.V_1_plate                         }
+                         '1 plate': self.V_1_plate}
 
-    def V_1_plate(self):
-        self.num_plates = 1
-
-    def V_2_plate(self):
-        self.num_plates = 2
-
-    def V_3_plate(self):
-        self.num_plates = 3
+    def V_1_plate(self):        self.num_plates = 1
+    def V_2_plate(self):        self.num_plates = 2
+    def V_3_plate(self):        self.num_plates = 3
 
     def __init__(self, GUI=None, run_name="Prefill plates with LysisBuffer"):
 
@@ -40,7 +35,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
-                            num_of_samples= Prefill_plates_LysisBuffer.max_s,
+                            num_of_samples          = Prefill_plates_LysisBuffer.max_s,
                             worktable_template_filename=this / 'Prefill_plates_LysisBuffer.ewt',
                             output_filename         = this / 'scripts' / 'Prefill_LysisBuffer',
                             run_name                = run_name)
@@ -54,12 +49,12 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         self.comment('Prefill {:d} plates with LysisBufferReact for {:d} samples.'
                      .format(self.num_plates, num_of_samples))
 
-        # Get Labwares (Cuvette, eppys, etc.) from the work table
-        LysBufCuvette = wt.get_labware("2-Vl Lysis Buffer", lab.Trough_100ml)
+                                                       # Get Labwares (Cuvette, eppys, etc.) from the work table
+        LysBufCuvette = wt.get_labware("2-Vl Lysis Buffer", labware.Trough_100ml)
 
-        DiTi1000_1  = wt.get_labware("1000-1", lab.DiTi_1000ul)
-        DiTi1000_2  = wt.get_labware("1000-2", lab.DiTi_1000ul)
-        DiTi1000_3  = wt.get_labware("1000-3", lab.DiTi_1000ul)
+        DiTi1000_1  = wt.get_labware("1000-1", labware.DiTi_1000ul)
+        DiTi1000_2  = wt.get_labware("1000-2", labware.DiTi_1000ul)
+        DiTi1000_3  = wt.get_labware("1000-3", labware.DiTi_1000ul)
 
 
         self.go_first_pos()                      #  Set the initial position of the tips
@@ -68,16 +63,14 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         LysisBufferVolume   = 100.0       # VL1 or VL
 
         all_samples = range(num_of_samples)
-        maxTips     = min  (self.n_tips, num_of_samples)
-        maxMask     = Rbt.tipsMask[maxTips]
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         LysisBufferReact = Reagent("VL - Lysis Buffer ",
-                                       LysBufCuvette,
-                                       volpersample = LysisBufferVolume,
-                                       defLiqClass  = 'MN VL',
-                                       num_of_samples= self.num_plates * num_of_samples)
+                                   LysBufCuvette,
+                                   volpersample = LysisBufferVolume,
+                                   defLiqClass  = 'MN VL',
+                                   num_of_samples= self.num_plates * num_of_samples)
 
         # Show the check_list GUI to the user for possible small changes
 
@@ -86,7 +79,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        LysPlat = [wt.get_labware("Plate lysis-" + str(i + 1), lab.MP96deepwell) for i in range(self.num_plates)]
+        LysPlat = [wt.get_labware("Plate lysis-" + str(i + 1), labware.MP96deepwell) for i in range(self.num_plates)]
 
         par = LysPlat[0].parallelOrder(self.n_tips, all_samples)
 

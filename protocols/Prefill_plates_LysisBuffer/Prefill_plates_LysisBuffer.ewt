@@ -38,8 +38,8 @@ V;200
 998;8;Washstation 2Grid Cleaner short;Washstation 2Grid Waste;Washstation 2Grid Cleaner long;Trough 100ml;Trough 100ml;Trough 100ml;Washstation 2Grid DiTi Waste;;
 998;;;;3-VEB Binding Buffer;2-Vl Lysis Buffer;7-EtOH80p;;;
 998;0;
-998;3;96 Well DeepWell square;;96 Well DeepWell square;
-998;Plate lysis;;Plate EtOH;
+998;3;96 Well DeepWell square;96 Well DeepWell square;96 Well DeepWell square;
+998;Plate lysis-1;Plate lysis-2;Plate lysis-3;
 998;0;
 998;0;
 998;0;

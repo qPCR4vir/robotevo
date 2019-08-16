@@ -476,7 +476,7 @@ class WorkTable:
             if label in series.labels:
                 return series.labels[label]
             raise Exception("ERROR: no labware '" + labw_type + "' with the label '" + label
-                            + "' was found in worktable: " + self.template_file_name)
+                            + "' was found in worktable: " + str(self.template_file_name))
 
         if label is None:
             label = 0
