@@ -55,7 +55,7 @@ class Evo100_FLI(Protocol):
         self.Te_Mag_RestPlus     = self.get_liquid_class("Te-Mag RestPlus")
         self.Water_free          = self.get_liquid_class("Water free")     # General. No detect and no track small volumes < 50 µL
 
-        self.SerumLiqClass      = self.get_liquid_class("Serum Asp preMix3")  # or "MN Virus Sample"
+        self.SerumLiqClass      = self.get_liquid_class("Serum Disp postMix3")  # or "MN Virus Sample"
         self.TissueHomLiqClass  = self.get_liquid_class("Serum Asp")
 
         self.B_liquidClass      = self.get_liquid_class("Water free cuvette")
