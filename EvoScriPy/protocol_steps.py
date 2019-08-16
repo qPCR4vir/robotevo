@@ -1007,6 +1007,9 @@ class Protocol (Executable):
     def liquid_classes(self):
         return None
 
+    def get_liquid_class(self, name:str):
+        return self.liquid_classes().all[name]
+
     def initialize(self):
         self.liquid_classes()
         self.set_EvoMode()
