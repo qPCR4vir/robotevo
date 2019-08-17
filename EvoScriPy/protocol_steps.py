@@ -54,6 +54,7 @@ class Executable:
         Reagent.set_reagent_list(self)
 
     def set_paths(self):
+    	# todo: make private
         self.root_directory = Path(__file__).parent
 
     def set_defaults(self):
@@ -61,6 +62,7 @@ class Executable:
         Set initial values that will not be rest during secondary initializations.
         The "primary initialization" maybe a light one, like defining the list of versions available.
         Here, for example, initialize the list of reagents.
+        	# todo: make private
         """
         print('set def in Executable')
 

@@ -49,7 +49,10 @@ class LiquidClasses:
 
         except OSError as err:
             print("OS error: {0}".format(err))
-            self._read_def_liq_class_xml_file(default_file)
+            try:
+                self._read_def_liq_class_xml_file(default_file)
+            except  OSError as err:
+                print("OS error: {0}".format(err))
 
         try:
             self._read_cus_liq_class_txt_file(custom_file)
@@ -320,7 +323,7 @@ class WorkTable:
         grid_num = -1
 
         template_list = []
-        labware_types = []
+        labware_types = []  # set to an empty, False value
 
         for line in template:
             template_list += [line]
@@ -328,9 +331,13 @@ class WorkTable:
             assert line[0] == "998"
 
             if labware_types:  # we have read the types first, now we need to read the labels
+                carrier_type_idx = self.file.carriers_grid[grid_num]
+                carrier_type = Carrier.Type.by_index[carrier_type_idx]
+                assert len(labware_types) == carrier_type.numb_sites
+                carrier = Carrier(type=carrier_type, grid=grid_num)
                 for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
                     if not lab_t_label:
-                        if label:  # todo raise Warning
+                        if label: 
                             print("Warning! The worktable template have a label '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                   " but no labware type")
