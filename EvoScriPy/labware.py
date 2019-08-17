@@ -24,11 +24,13 @@ class LiquidClass:
     def __str__(self):
         return self.name
 
+
 class LiquidClassDefault(LiquidClass):
 
     def __init__(self, name:str, liquid_name:str= ""):
         LiquidClass.__init__(self, name, liquid_name)
         self.derived = {}
+
 
 class LiquidClassDerived(LiquidClass):
 
@@ -100,7 +102,9 @@ class LiquidClasses:
 
 
 class WorkTable:
-    """ Collection of carriers.types and Labware.types and pos of instances """
+    """
+    Collection of carriers.types and Labware.types and pos of instances
+    """
 
     cur_worktable = None
 
@@ -131,7 +135,9 @@ class WorkTable:
             self.template_file_name = template_file
 
     class Location:
-        """ One location in a WorkTable """
+        """
+        One location in a WorkTable
+        """
 
         def __init__(self, grid=None, site=None, carrier=None, carrier_site=None, worktable=None):
             """
@@ -151,7 +157,10 @@ class WorkTable:
             assert 0 <= site <= self.worktable.n_sites
             self.grid = grid
             self.site = site
-            self.rack_site = carrier_site
+            if carrier is not None:
+                assert isinstance(carrier, Carrier)
+                assert 0 < carrier_site <= carrier.type.n_sites
+            self.carrier_site = carrier_site
 
         def __str__(self):
             return "grid:{grid:d}, site:{site:d}".format(grid=self.grid, site=self.site + 1)
@@ -569,7 +578,9 @@ stock = Frezeer()
 
 
 class Carrier:
-    """ Collection of Labwares sites, filled with labwares... """
+    """
+    Collection of Labwares sites, filled with labwares...
+    """
 
     class Type:
         # type name label-string from template worktable file: labwares class-name.
@@ -578,7 +589,7 @@ class Carrier:
         by_name  = {}
         by_index = {}
 
-        def __init__(self, name, idx: int = None, width: int = 1, n_sites: int = 1):
+        def __init__(self, name, idx: int = None, width: int = None, n_sites: int = None):
             self.idx                    = idx
             self.width                  = width
             self.n_sites                = n_sites
@@ -605,8 +616,8 @@ class Carrier:
 
     def add_labware(self, labware, site):
         if labware.type.name not in self.type.allowed_labwares_types:
-            raise "The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '" \
-                                  + self.type.name    + ":" + self.label
+            print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
+                  + self.type.name    + ":" + self.label)
 
         if site >= self.type.n_sites:
             raise "This rack " + self.type.name + ":" + self.label \
@@ -614,7 +625,7 @@ class Carrier:
 
         if self.labwares[site] is not None:
             print("Warning: you replaced the labware '" + self.labwares[site].type.name + ":"
-                                                        + self.labwares[site].label )
+                                                        + self.labwares[site].label)
 
         self.labwares[site] = labware
         if labware.location.grid != self.grid:      # ?????????
@@ -754,7 +765,6 @@ class Labware:
 
     class Type:
 
-
         class Series:
 
             def __init__(self, labware):                                # labware: Labware
@@ -830,7 +840,6 @@ class Labware:
             def __len__(self):
                 return len(self.labwares)
 
-
         def __init__(self, name, nRow, nCol=1, maxVol=None):
             assert name not in Labware.types, "Duplicate labware type name: " + name
             self.name           = name
@@ -851,7 +860,6 @@ class Labware:
 
         def create_series(self, labware ):
             return Labware.Type.Series(labware)
-
 
     class Position:
         def __init__(self, row, col=1):
@@ -888,7 +896,7 @@ class Labware:
         if isinstance(worktable, WorkTable):
             worktable.add_new_labware(self, location)
         if location and location.carrier:                   # ??????????????
-            location.carrier.add_labware(self, location.rack_site)
+            location.carrier.add_labware(self, location.carrier_site)
         self.init_wells()
         print("Created labware " + str(self) + " in " + str(self.location))
 
