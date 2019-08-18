@@ -14,7 +14,10 @@ class Evo200_FLI (Protocol):
     """
     Using the Evo200_FLI
     """
+    min_s, max_s = 1, 48
     _liquid_classes = None
+    _carrier_types = None
+    _labware_types = None
 
     def __init__(self,
                  num_of_samples              = None,
@@ -25,13 +28,13 @@ class Evo200_FLI (Protocol):
                  run_name                    = None):
 
         Protocol.__init__(self,
-                        GUI                         = GUI,
-                        n_tips                      = 8,
-                        num_of_samples              = num_of_samples,
-                        worktable_template_filename = worktable_template_filename,
-                        output_filename             = output_filename,
-                        firstTip                    = firstTip,
-                        run_name                    = run_name)
+                          GUI                         = GUI,
+                          n_tips                      = 8,
+                          num_of_samples              = num_of_samples or Evo200_FLI.max_s,
+                          worktable_template_filename = worktable_template_filename,
+                          output_filename             = output_filename,
+                          firstTip                    = firstTip,
+                          run_name                    = run_name)
 
     def set_paths(self):
         Protocol.set_paths(self)
@@ -45,6 +48,13 @@ class Evo200_FLI (Protocol):
             Evo200_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
         return Evo200_FLI._liquid_classes
+
+
+    def carrier_types(self):
+        if Evo200_FLI._carrier_types is None:
+            Evo200_FLI._carrier_types = labware.Carrier.Types(self.carrier_file)
+
+        return Evo200_FLI._carrier_types
 
     def set_defaults(self):
         wt = self.worktable
