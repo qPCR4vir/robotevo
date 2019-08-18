@@ -489,6 +489,7 @@ class Robot:
 
     def set_worktable(self, templateFile, robot_protocol):
         # w = labware.WorkTable.cur_worktable
+        print("Going to set template: " + str(templateFile))
         if templateFile is None: return
         if isinstance(self.worktable, labware.WorkTable):  # todo temp? really to set
             assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \

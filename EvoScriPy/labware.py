@@ -75,17 +75,17 @@ class LiquidClasses:
                 custom.write(name + "\t" + liquid_name + "\t" + "\n")
                 lc = LiquidClassDefault(name, liquid_name)
                 self.all[lc.name] = lc
-                print("to txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("to txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_cus_liq_class_txt_file(self, custom_file):
         with open(custom_file.with_suffix('.txt'), 'r', encoding='Latin-1') as custom:
             print('Parsing: ' + str(custom_file.with_suffix('.txt')))
             for lc in custom:
-                print("Line: " + lc)
+                # print("Line: " + lc)
                 lc = lc.split('\t')
                 lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
                 self.all[lc.name] = lc
-                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_xml_file(self, default_file):
         tree = ET.parse(default_file)
@@ -95,11 +95,11 @@ class LiquidClasses:
             for lc in root.findall('LiquidClass'):
                 name = lc.get('name')
                 liquid_name = lc.get('liquidName')
-                print("name='" + name + "' :liquid Name='" + liquid_name + "'")
+                # print("name='" + name + "' :liquid Name='" + liquid_name + "'")
                 default.write(name + "\t" + liquid_name + "\t" + "\n")
                 lc = LiquidClassDefault(name, liquid_name)
                 self.all[lc.name] = lc
-                print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_txt_file(self, default_file):
         with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
@@ -108,7 +108,7 @@ class LiquidClasses:
                 lc = lc.split('\t')
                 lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
                 self.all[lc.name] = lc
-                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
 
 class WorkTable:
@@ -248,6 +248,7 @@ class WorkTable:
         return template_list
 
     def _read_worktable_header(self, template):
+        print("Read header.")
         template_list = []  # a grid-line first list the types
 
         line = template.readline()
@@ -291,24 +292,24 @@ class WorkTable:
         template_list += [line]
         carriers = line.split(';')
         assert carriers[0] == "14"
-        self.file.carriers_grid = []
+        self.carriers_grid = []
         for idx in carriers[1:-1]:
             if idx == "-1":
-                self.file.carriers_grid += [None]
+                self.carriers_grid += [None]
                 continue
             idx = int(idx)
-            self.file.carriers_grid += [idx]
+            self.carriers_grid += [idx]
             if idx not in robot_protocol.carrier_types().by_index:
                 print("WARNING !! Unknow carrier index " + str(idx)
-                      + " in grid " + str(len(self.file.carriers_grid) - 1))
+                      + " in grid " + str(len(self.carriers_grid) - 1))
             else:
                 print("Carrier: " + robot_protocol.carrier_types().by_index[idx].name
-                      + " found in grid " + str(len(self.file.carriers_grid) - 1))
-        print("Detected " + str(len(self.file.carriers_grid)) + " grids.")
+                      + " found in line carrier-grid for grid " + str(len(self.carriers_grid) - 1))
+        print("Detected " + str(len(self.carriers_grid)) + " grids.")
         return template_list
 
     def _read_worktable_labwares_grid(self, template, robot_protocol):
-
+        print("Reading grids ")
         grid_num = -1
 
         template_list = []
@@ -316,11 +317,14 @@ class WorkTable:
 
         for line in template:
             template_list += [line]
+            # print("Reading grid " + line)
             line = line.split(';')
             assert line[0] == "998"
 
             if not labware_types:     # continue to scan fro carrier grid line with labwares types first
                 grid_num += 1
+                # print("Reading grid " + str(grid_num) + " of " + str(len(self.carriers_grid)))
+                # print("1-with " + str(labware_types) + " labwares")
                 if grid_num >= len(self.carriers_grid):  # len(self.grids):
                     if line[1] != "2":
                         print("WARNING !! Non ended 2 Grid " + str(grid_num) \
@@ -335,7 +339,7 @@ class WorkTable:
             else:     # we have read the types first, now we need to read the labwares labels
                 carrier_type_idx = self.carriers_grid[grid_num]
                 carrier_type = robot_protocol.carrier_types().by_index[carrier_type_idx]
-                assert len(labware_types) == carrier_type.numb_sites
+                assert len(labware_types) == carrier_type.n_sites
                 carrier = Carrier(carrier_type=carrier_type, grid=grid_num)
                 for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
                     if not lab_t_label:
@@ -786,6 +790,7 @@ class Labware:
                 self.type       = labware.type
                 self.add(labware)
                 self.current    = labware
+                print("Created " + str(self))
 
             def __str__(self):
                 return "serie of {n:d} {type:s}".format(n=len(self.labwares), type=self.type.name)

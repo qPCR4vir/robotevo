@@ -1047,6 +1047,7 @@ class Protocol (Executable):
         Reagent.set_reagent_list(self)
 
     def init_EvoMode(self):
+        print("Setting Evo Modes")
 
         script_dir = self.output_filename.parent
         script_name = self.output_filename.name
