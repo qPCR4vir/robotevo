@@ -312,14 +312,27 @@ class WorkTable:
             line = line.split(';')
             assert line[0] == "998"
 
-            if labware_types:  # we have read the types first, now we need to read the labels
+            if not labware_types:     # continue to scan fro carrier grid line with labwares types first
+                grid_num += 1
+                if grid_num >= len(self.carriers_grid):  # len(self.grids):
+                    if line[1] != "2":
+                        print("WARNING !! Non ended 2 Grid " + str(grid_num) \
+                                                           + " line " + str(len(template_list)) \
+                                                           + ": " + template_list[-1])
+                    return template_list
+                labware_types = line[2:-1]
+                assert int(line[1]) == len(labware_types), "Grid " + str(grid_num) \
+                                                           + " line " + str(len(template_list)) \
+                                                           + ": " + template_list[-1]
+
+            else:     # we have read the types first, now we need to read the labwares labels
                 carrier_type_idx = self.carriers_grid[grid_num]
                 carrier_type = robot_protocol.carrier_types().by_index[carrier_type_idx]
                 assert len(labware_types) == carrier_type.numb_sites
                 carrier = Carrier(carrier_type=carrier_type, grid=grid_num)
                 for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
                     if not lab_t_label:
-                        if label: 
+                        if label:
                             print("Warning! The worktable template have a label '" +
                                   label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                   " but no labware type")
@@ -333,19 +346,6 @@ class WorkTable:
                               label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                               " but there is no registered labware type '" + lab_t_label + "'")
                 labware_types = []
-
-            else:  # we need to read the types first
-                grid_num += 1
-                if grid_num >= len(self.carriers_grid):  # len(self.grids):
-                    if line[1] != "2":
-                        print("WARNING !! Non ended 2 Grid " + str(grid_num) \
-                                                           + " line " + str(len(template_list)) \
-                                                           + ": " + template_list[-1])
-                    return template_list
-                labware_types = line[2:-1]
-                assert int(line[1]) == len(labware_types), "Grid " + str(grid_num) \
-                                                           + " line " + str(len(template_list)) \
-                                                           + ": " + template_list[-1]
 
     def add_new_labware(self, labware, loc: Location = None):
         """
