@@ -976,7 +976,7 @@ class Protocol (Executable):
         Will be executed at the end of self.check_list() but only if self.check_initial_liquid_level is True
         """
         prompt_msg = ""
-        for reagent in self.worktable.reagents:
+        for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
                 reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
                 print(reagent_msg)
@@ -990,7 +990,7 @@ class Protocol (Executable):
         Will be executed at the end of self.check_list() but only if self.show_runtime_check_list is True
         """
         prompt_msg = ""
-        for reagent in self.worktable.reagents:
+        for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
                 reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
                 print(reagent_msg)
