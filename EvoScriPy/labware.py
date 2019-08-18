@@ -48,7 +48,7 @@ class LiquidClasses:
             self._read_def_liq_class_txt_file(default_file)
 
         except OSError as err:
-            print("OS error: {0}".format(err))
+            print("No: {0} found. Will generate a new one.".format(err))
             try:
                 self._read_def_liq_class_xml_file(default_file)
             except  OSError as err:
@@ -58,13 +58,16 @@ class LiquidClasses:
             self._read_cus_liq_class_txt_file(custom_file)
 
         except OSError as err:
-            print("OS error: {0}".format(err))
-            self._read_cus_liq_class_xml_file(custom_file)
+            print("No: {0} found. Will generate a new one.".format(err))
+            try:
+                self._read_cus_liq_class_xml_file(custom_file)
+            except  OSError as err:
+                print("OS error: {0}".format(err))
 
     def _read_cus_liq_class_xml_file(self, custom_file):
         tree = ET.parse(custom_file)
         root = tree.getroot()
-        with open(custom_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as custom:
+        with open(custom_file, 'w', encoding='Latin-1', newline='\r\n') as custom:
             for lc in root.findall('LiquidClass'):
                 name = lc.get('name')
                 liquid_name = lc.get('liquidName')
@@ -85,7 +88,7 @@ class LiquidClasses:
     def _read_def_liq_class_xml_file(self, default_file):
         tree = ET.parse(default_file)
         root = tree.getroot()
-        with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
+        with open(default_file, 'w', encoding='Latin-1', newline='\r\n') as default:
             for lc in root.findall('LiquidClass'):
                 name = lc.get('name')
                 liquid_name = lc.get('liquidName')
