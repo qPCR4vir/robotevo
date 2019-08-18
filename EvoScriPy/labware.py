@@ -72,7 +72,7 @@ class LiquidClasses:
                 custom.write(name + "\t" + liquid_name + "\t" + "\n")
                 lc = LiquidClassDefault(name, liquid_name)
                 self.all[lc.name] = lc
-                print("to txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("to txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_cus_liq_class_txt_file(self, custom_file):
         with open(custom_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as custom:
@@ -80,7 +80,7 @@ class LiquidClasses:
                 lc = lc.split('\t')
                 lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
                 self.all[lc.name] = lc
-                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_xml_file(self, default_file):
         tree = ET.parse(default_file)
@@ -93,7 +93,7 @@ class LiquidClasses:
                 default.write(name + "\t" + liquid_name + "\t" + "\n")
                 lc = LiquidClassDefault(name, liquid_name)
                 self.all[lc.name] = lc
-                print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_txt_file(self, default_file):
         with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
@@ -101,7 +101,7 @@ class LiquidClasses:
                 lc = lc.split('\t')
                 lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
                 self.all[lc.name] = lc
-                print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
+                # print("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
 
 class WorkTable:
@@ -213,7 +213,7 @@ class WorkTable:
 
         def grid_carrier_line(self):
             line = "14;"
-            labw = { }
+            labw = {}
 
     def parse_carrier_file(self, carrier_file = None):
         if not carrier_file:
@@ -542,7 +542,7 @@ class WorkTable:
         assert isinstance(labw, Labware )
         loc = labw.location
         self.retire_labware(labw)
-        return labw.type.createLabware(loc, label)
+        return labw.type.create_labware(loc, label)
 
     def set_def_DiTi(self, tips):                 # :Labware.DITIrackType) ->Labware.DITIrackType:
         old = self.def_DiTi_type
@@ -610,10 +610,11 @@ class Carrier:
                     assert Carrier.Type.by_index[idx] is None, "Duplicate Carrier index: " + str(idx)
                 Carrier.Type.by_index[idx] = self
 
-    def __init__(self, carrier_type : Type,
-                       grid         : int,
-                       label        : str       = None,
-                       worktable    : WorkTable = None):
+    def __init__(self,
+                 carrier_type : Type,
+                 grid         : int,
+                 label        : str       = None,
+                 worktable    : WorkTable = None):
 
         worktable = worktable or WorkTable.cur_worktable
         self.grid = grid
@@ -861,7 +862,7 @@ class Labware:
         def size(self) -> int:
             return self.nRow * self.nCol
 
-        def createLabware(self, loc, label):
+        def create_labware(self, loc, label):
             labw = Labware(self, label, loc)
             return labw
 
@@ -919,7 +920,7 @@ class Labware:
             print("WARNING !! There is not labware type defined with label '" + labw_t_name + "'. ")
             return None
         assert isinstance(labw_t, Labware.Type)
-        labw = labw_t.createLabware(loc, label)
+        labw = labw_t.create_labware(loc, label)
         return labw
 
     def init_wells(self):
@@ -1270,7 +1271,7 @@ class DITIrackType(Labware.Type):
         self.preserved_tips = {}        # order:well ??? sample order:tip well ??sample offset:tip well todo in series?
         # self.last_preserved_tips = None              # a tip Well in a DiTi rack
 
-    def createLabware(self, loc, label):
+    def create_labware(self, loc, label):
         labw = DITIrack(self, loc, label)
         return labw
 
@@ -1453,7 +1454,7 @@ class DITIwasteType(Labware.Type):
     def __init__(self, name, capacity=5*96):
         Labware.Type.__init__(self, name, nRow=capacity)
 
-    def createLabware(self, loc, label):
+    def create_labware(self, loc, label):
         labw = DITIwaste(self, loc, label)
         return labw
 
@@ -1490,7 +1491,7 @@ class CuvetteType(Labware.Type):
                          nCol=1):
         Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
 
-    def createLabware(self, loc, label):
+    def create_labware(self, loc, label):
         labw = Cuvette(self, loc, label)
         return labw
 

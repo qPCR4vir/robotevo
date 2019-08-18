@@ -78,14 +78,19 @@ class Reagent:
         assert isinstance(labware, lab.Labware), "No labware defined for Reagent " + name
 
         # add self to the list of reagents of the worktable were the labware is.
+        worktable = None
         assert isinstance(labware.location.worktable, lab.WorkTable)                                   # todo temporal
-        if (isinstance(labware,                     lab.Labware) and
-            isinstance(labware.location,            lab.WorkTable.Location) and
-            isinstance(labware.location.worktable,  lab.WorkTable) ):
-          labware.location.worktable.reagents.append(self)
+        if (    isinstance(labware,                     lab.Labware)
+            and isinstance(labware.location,            lab.WorkTable.Location)
+            and isinstance(labware.location.worktable,  lab.WorkTable)):
+
+            worktable = labware.location.worktable
         else:
-          if (Reagent.current_protocol):
-              Reagent.current_protocol.worktable.reagents.append(self)                                 # todo temporal
+            if (Reagent.current_protocol):
+                worktable = Reagent.current_protocol.worktable                               # todo temporal
+
+        assert name not in worktable.reagents
+        worktable.reagents[name] = self
 
         ex= def_reagent_excess if excess is None else excess
 
