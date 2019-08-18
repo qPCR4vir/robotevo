@@ -1012,8 +1012,22 @@ class Protocol (Executable):
     def get_liquid_class(self, name:str):
         return self.liquid_classes().all[name]
 
+    def carrier_types(self):
+        return None
+
+    def get_carrier_type(self, name:str):
+        return self.carrier_types().all[name]
+
+    def labware_types(self):
+        return None
+
+    def get_labware_type(self, name:str):
+        return self.labware_types().all[name]
+
     def initialize(self):
         self.liquid_classes()
+        self.carrier_types()
+        self.labware_types()
         self.set_EvoMode()
         if not self.initialized:
             Executable.initialize(self)
@@ -1041,7 +1055,7 @@ class Protocol (Executable):
 
         self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, nTips=self.n_tips)
         self.Script = mode.Script(template     = self.worktable_template_filename,
-                                  carrier_file = self.carrier_file,
+                                  robot_protocol = self,
                                   filename     = script,
                                   robot        = self.iRobot.robot)
         self.comments_ = mode.Comments(filename= script.with_suffix('.protocol.txt'))

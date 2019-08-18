@@ -111,11 +111,13 @@ class WorkTable:
 
     cur_worktable = None
 
-    def __init__(self, template_file, carrier_file=None, grids=67, sites=127):
+    def __init__(self, template_file, robot_protocol=None, grids=67, sites=127):
 
-        self.labware_series = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
-        self.reagents       = []
-        self.carriers       = []
+        self.labware_series   = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
+        self.reagents         = {}
+        self.carriers_grid    = []
+        self.carriers_no_grid = []  # in reality in grid with index > real number of grids?
+
         self.template       = []
 
         self.n_sites            = sites
@@ -134,7 +136,7 @@ class WorkTable:
             print("Template file is a list.")
         else:
             print("Set template file: " + str(template_file))
-            self.template = self.parse_worktable_file(template_file, carrier_file)
+            self.template = self.parse_worktable_file(template_file, robot_protocol)
             self.template_file_name = template_file
 
     class Location:
@@ -176,9 +178,6 @@ class WorkTable:
             self.check_summa    : str       = None
             self.date_time      : str       = None
             self.user           : str       = None
-            self.carriers_grid              = None
-            self.carriers_no_grid           = None
-
 
         def write(self, worktable):
             lines = [
@@ -215,26 +214,9 @@ class WorkTable:
             line = "14;"
             labw = {}
 
-    def parse_carrier_file(self, carrier_file = None):
-        if not carrier_file:
-            return []                                                         # RETURN
-        Carrier.Type.by_name = {}
-        Carrier.Type.by_index = {}
-        with open(carrier_file, 'r', encoding='Latin-1') as config:
-            for line in config:
-                if line.startswith("13;"):                           # new Carrier
-                    # print("line-" + line)
-                    line = line.split(';')
-                    name = line[1]
-                    idx, u = line[2].split("/")
-                    sites = line[-3]
-                    Carrier.Type(name, idx=int(idx), n_sites=int(sites))
-
-    def parse_worktable_file(self, template_file, carrier_file = None):
+    def parse_worktable_file(self, template_file, robot_protocol):
         if not template_file:
             return []                                                         # RETURN
-
-        self.parse_carrier_file(carrier_file)
 
         template_list = []                                                    # a grid-line first list the types
         with open(template_file, 'r', encoding='Latin-1') as tmpl:
@@ -242,8 +224,8 @@ class WorkTable:
             self.file = WorkTable.File(tmpl, None, self)
 
             template_list += self._read_worktable_header(tmpl)
-            template_list += self._read_worktable_carriers_grid(tmpl)
-            template_list += self._read_worktable_labwares_grid(tmpl)
+            template_list += self._read_worktable_carriers_grid(tmpl, robot_protocol)
+            template_list += self._read_worktable_labwares_grid(tmpl, robot_protocol)
 
             for line in tmpl:
                 template_list += [line]
@@ -295,7 +277,7 @@ class WorkTable:
         assert l999 == "999"
         return template_list
 
-    def _read_worktable_carriers_grid(self, template):
+    def _read_worktable_carriers_grid(self, template, robot_protocol):
         template_list = []  # a grid-line first list the types
 
         line = template.readline()
@@ -309,16 +291,16 @@ class WorkTable:
                 continue
             idx = int(idx)
             self.file.carriers_grid += [idx]
-            if idx not in Carrier.Type.by_index:
+            if idx not in robot_protocol.carrier_types().by_index:
                 print("WARNING !! Unknow carrier index " + str(idx)
                       + " in grid " + str(len(self.file.carriers_grid) - 1))
             else:
-                print("Carrier: " + Carrier.Type.by_index[idx].name
+                print("Carrier: " + robot_protocol.carrier_types().by_index[idx].name
                       + " found in grid " + str(len(self.file.carriers_grid) - 1))
         print("Detected " + str(len(self.file.carriers_grid)) + " grids.")
         return template_list
 
-    def _read_worktable_labwares_grid(self, template):
+    def _read_worktable_labwares_grid(self, template, robot_protocol):
 
         grid_num = -1
 
@@ -331,10 +313,10 @@ class WorkTable:
             assert line[0] == "998"
 
             if labware_types:  # we have read the types first, now we need to read the labels
-                carrier_type_idx = self.file.carriers_grid[grid_num]
-                carrier_type = Carrier.Type.by_index[carrier_type_idx]
+                carrier_type_idx = self.carriers_grid[grid_num]
+                carrier_type = robot_protocol.carrier_types().by_index[carrier_type_idx]
                 assert len(labware_types) == carrier_type.numb_sites
-                carrier = Carrier(type=carrier_type, grid=grid_num)
+                carrier = Carrier(carrier_type=carrier_type, grid=grid_num)
                 for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
                     if not lab_t_label:
                         if label: 
@@ -354,7 +336,7 @@ class WorkTable:
 
             else:  # we need to read the types first
                 grid_num += 1
-                if grid_num >= len(self.file.carriers_grid):  # len(self.grids):
+                if grid_num >= len(self.carriers_grid):  # len(self.grids):
                     if line[1] != "2":
                         print("WARNING !! Non ended 2 Grid " + str(grid_num) \
                                                            + " line " + str(len(template_list)) \
@@ -589,12 +571,34 @@ class Carrier:
     Collection of Labwares sites, filled with labwares...
     """
 
+    class Types:
+
+        def __init__(self, carrier_file: Path):
+            self.by_name = {}
+            self.by_index = {}
+            self.parse_file(carrier_file)
+
+        def parse_file(self, carrier_file=None):
+            if not carrier_file:
+                return []  # RETURN
+            with open(carrier_file, 'r', encoding='Latin-1') as config:
+                for line in config:
+                    if line.startswith("13;"):  # new Carrier
+                        # print("line-" + line)
+                        line = line.split(';')
+                        name = line[1]
+                        idx, u = line[2].split("/")
+                        sites = line[-3]
+                        self.add_type(Carrier.Type(name, idx=int(idx), n_sites=int(sites)))
+
+        def add_type(self, carrier_type):
+            assert isinstance(carrier_type, Carrier.Type)
+            assert carrier_type.name not in self.by_name, "Duplicate Carrier name: " + carrier_type.name
+            assert carrier_type.idx not in self.by_index, "Duplicate Carrier index: " + str(carrier_type.idx)
+            self.by_name[carrier_type.name] = carrier_type
+            self.by_index[carrier_type.idx] = carrier_type
+
     class Type:
-        # type name label-string from template worktable file: labwares class-name.
-        # Mountain a list of labwares types
-        # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
-        by_name  = {}
-        by_index = {}
 
         def __init__(self, name, idx: int = None, width: int = None, n_sites: int = None):
             self.idx                    = idx
@@ -602,13 +606,6 @@ class Carrier:
             self.n_sites                = n_sites
             self.allowed_labwares_types = []
             self.name                   = name
-            if name:
-                assert name not in Carrier.Type.by_name, "Duplicate Carrier name: " + name
-                Carrier.Type.by_name[name] = self
-            if idx:
-                if idx in Carrier.Type.by_index:
-                    assert Carrier.Type.by_index[idx] is None, "Duplicate Carrier index: " + str(idx)
-                Carrier.Type.by_index[idx] = self
 
     def __init__(self,
                  carrier_type : Type,

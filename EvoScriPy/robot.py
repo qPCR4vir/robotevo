@@ -487,14 +487,14 @@ class Robot:
 
     # relatively simple "setters" and "getters" of current default options
 
-    def set_worktable(self, templateFile, carrier_file):
+    def set_worktable(self, templateFile, robot_protocol):
         # w = labware.WorkTable.cur_worktable
         if templateFile is None: return
         if isinstance(self.worktable, labware.WorkTable):  # todo temp? really to set
             assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \
                                                                       + self.worktable.template_file_name + ' into ' + templateFile
         else:
-            self.worktable  = labware.WorkTable(templateFile, carrier_file)
+            self.worktable  = labware.WorkTable(templateFile, robot_protocol)
 
     def set_as_current(self):
         Robot.current = self

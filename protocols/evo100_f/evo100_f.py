@@ -16,6 +16,8 @@ class Evo100_FLI(Protocol):
     """
     min_s, max_s = 1, 48
     _liquid_classes = None
+    _carrier_types = None
+    _labware_types = None
 
     def __init__(self,
                  num_of_samples              = None,
@@ -44,6 +46,12 @@ class Evo100_FLI(Protocol):
             Evo100_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
         return Evo100_FLI._liquid_classes
+
+    def carrier_types(self):
+        if Evo100_FLI._carrier_types is None:
+            Evo100_FLI._carrier_types = labware.Carrier.Types(self.carrier_file)
+
+        return Evo100_FLI._carrier_types
 
     def set_defaults(self):
         self.Beads_LC_1          = self.get_liquid_class("MixBeads_1")
