@@ -1015,8 +1015,10 @@ class Protocol (Executable):
     def carrier_types(self):
         return None
 
-    def get_carrier_type(self, name:str):
-        return self.carrier_types().all[name]
+    def get_carrier_type(self, carrier:(str, int)):
+        if isinstance(carrier, str):
+            return self.carrier_types().by_name[carrier]
+        return self.carrier_types().by_index[carrier]
 
     def labware_types(self):
         return None

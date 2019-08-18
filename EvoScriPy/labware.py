@@ -298,7 +298,9 @@ class WorkTable:
                 self.carriers_grid += [None]
                 continue
             idx = int(idx)
-            self.carriers_grid += [idx]
+
+            self.carriers_grid += [idx]                   # <--------- set carriers_grid += [idx]
+
             if idx not in robot_protocol.carrier_types().by_index:
                 print("WARNING !! Unknow carrier index " + str(idx)
                       + " in grid " + str(len(self.carriers_grid) - 1))
@@ -593,6 +595,7 @@ class Carrier:
             if not carrier_file:
                 return []  # RETURN
             with open(carrier_file, 'r', encoding='Latin-1') as config:
+                print("Parsing carriers types from " + str(carrier_file))
                 for line in config:
                     if line.startswith("13;"):  # new Carrier
                         # print("line-" + line)
