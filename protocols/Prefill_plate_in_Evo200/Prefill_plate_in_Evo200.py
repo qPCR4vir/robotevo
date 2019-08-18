@@ -57,11 +57,10 @@ class Prefill_plate_in_Evo200(Evo200_FLI):
         self.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'
                      .format(num_of_samples))
 
-
         BufCuvette    = wt.get_labware("BufferCub", labware.Trough_100ml)  # Get Labwares from the work table
         master_mixes_ = wt.get_labware("mixes", labware.Eppendorfrack)
 
-        maxTips       = min  (self.n_tips, num_of_samples)
+        maxTips       = min(self.n_tips, num_of_samples)
 
         buf_per_sample =0
         well_v = 100
@@ -86,17 +85,17 @@ class Prefill_plate_in_Evo200(Evo200_FLI):
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
         buffer_reag = Reagent("Buffer ",
-                                  BufCuvette,
-                                  volpersample = buf_per_sample,
-                                  # defLiqClass  = 'MN VL',
-                                  # num_of_samples= num_of_samples
-                                  )
+                              BufCuvette,
+                              volpersample = buf_per_sample,
+                              # defLiqClass  = 'MN VL',
+                              # num_of_samples= num_of_samples
+                              )
 
-        mix1 =Reagent("mix1",
-                          master_mixes_,
-                          volpersample = dil_mix1_10,
-                          # defLiqClass  = 'MN VL'
-                          )
+        mix1 = Reagent("mix1",
+                       master_mixes_,
+                       volpersample = dil_mix1_10,
+                       # defLiqClass  = 'MN VL'
+                       )
 
         mix2 = Reagent("mix2",
                        master_mixes_,
@@ -110,40 +109,40 @@ class Prefill_plate_in_Evo200(Evo200_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        Plat1 = wt.get_labware("plate1", labware.MP96MachereyNagel)
-        Plat2 = wt.get_labware("plate2", labware.MP96well)
+        plate_1 = wt.get_labware("plate1", labware.MP96MachereyNagel)
+        plate_2 = wt.get_labware("plate2", labware.MP96well)
 
         # Define place for intermediate reactions
         Reagent.use_minimal_number_of_aliquots = False
         mix1_10 = Reagent(f"mix1, diluted 1:10",
-                        Plat1,
-                        initial_vol = 0.0,
-                        replicas    = num_of_samples,
-                        excess      = 0)
+                          plate_1,
+                          initial_vol = 0.0,
+                          replicas    = num_of_samples,
+                          excess      = 0)
 
         mix2_10 = Reagent(f"mix2, diluted 1:10",
-                        Plat1,
-                        initial_vol = 0.0,
-                        replicas    = num_of_samples,
-                        excess      = 0)
+                          plate_1,
+                          initial_vol = 0.0,
+                          replicas    = num_of_samples,
+                          excess      = 0)
 
         mix1_100 = Reagent(f"mix1, diluted 1:100",
-                              Plat2,
-                              initial_vol=0.0,
-                              replicas=num_of_samples,
-                              excess=0)
+                           plate_2,
+                           initial_vol=0.0,
+                           replicas=num_of_samples,
+                           excess=0)
 
         mix2_100 = Reagent(f"mix2, diluted 1:100",
-                              Plat2,
-                              initial_vol=0.0,
-                              replicas=num_of_samples,
-                              excess=0)
+                           plate_2,
+                           initial_vol=0.0,
+                           replicas=num_of_samples,
+                           excess=0)
 
-        loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier
+        loc = plate_2.location               # just showing how to move the plate from one site to the next in the carrier
         loc.site -= 1
-        carrier = labware.Carrier(labware.Carrier.Type.by_name["MP 3Pos"], loc.grid, label ="MP 3Pos")
+        carrier = labware.Carrier(self.get_carrier_type("MP 3Pos"), loc.grid, label ="MP 3Pos")
         loc.carrier = carrier
-        instructions.transfer_rack(Plat2, loc ).exec()                                            # just showing how RoMa works.
+        instructions.transfer_rack(plate_2, loc).exec()                                            # just showing how RoMa works.
 
         with group("Fill plate with mixes "):
 
