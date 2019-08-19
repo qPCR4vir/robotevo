@@ -169,6 +169,9 @@ class WorkTable:
                 grid = carrier.grid
             assert 1 <= grid <= len(self.worktable.grids)
             self.grid = grid
+            if self.carrier is None:
+                self.carrier = self.worktable.carriers_grid[self.grid]
+
             site -= 1                                               # TODO revise - it will be an error if site is None
             assert 0 <= site <= self.worktable.n_sites
             self.site = site
