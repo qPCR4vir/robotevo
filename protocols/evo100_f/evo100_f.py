@@ -50,6 +50,13 @@ class Evo100_FLI(Protocol):
     def carrier_types(self):
         if Evo100_FLI._carrier_types is None:
             Evo100_FLI._carrier_types = labware.Carrier.Types(self.carrier_file)
+            self.get_carrier_type("DiTi 3Pos").allowed_labwares_types.extend(['DiTi 1000ul',
+                                                                              '96 Well Microplate',
+                                                                              '96 Well DeepWell square'
+                                                                              ])
+            self.get_carrier_type("Trough 3Pos 25+100ml").allowed_labwares_types.append('Trough 100ml')
+            self.get_carrier_type("Washstation 2Grid Trough DiTi").allowed_labwares_types.append('Trough 100ml:5-VEW2-WashBuffer')
+
 
         return Evo100_FLI._carrier_types
 

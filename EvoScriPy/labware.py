@@ -350,22 +350,27 @@ class WorkTable:
                 carrier_type_idx = self.carriers_grid[grid_num]
                 carrier_type = robot_protocol.carrier_types().by_index[carrier_type_idx]
                 assert len(labware_types) == carrier_type.n_sites
-                carrier = Carrier(carrier_type=carrier_type, grid=grid_num)
-                for site, (lab_t_label, label) in enumerate(zip(labware_types, line[1:-1])):
-                    if not lab_t_label:
-                        if label:
-                            print("Warning! The worktable template have a label '" +
-                                  label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                carrier = Carrier(carrier_type=carrier_type, grid=grid_num, worktable=self)
+                self.carriers_grid[grid_num] = carrier
+                for site, (labw_type_name, labw_label) in enumerate(zip(labware_types, line[1:-1])):
+                    if not labw_type_name and labw_label:
+                        print("WARNING!! Going to ignore entry - The worktable template have a labware label '" +
+                                  labw_label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                   " but no labware type")
                         continue  # CONTINUE:
-                    loc = WorkTable.Location(grid=grid_num, site=site + 1, worktable=self)
-                    labw = Labware.create(lab_t_label, loc, label)
+                    # if labw_type_name and not labw_label:
+                    #    print("WARNING!! Going to ignore entry - The worktable template have a labware type '" +
+                    #              labw_type_name + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                    #              " but no labware")
+                    #    continue  # CONTINUE:
+                    loc = WorkTable.Location(carrier=carrier, site=site + 1, worktable=self)
+                    labw = Labware.create(labw_type_name, loc, labw_label)
                     if labw:
                         pass  # self.add_labware(labw)
                     else:
                         print("Warning! The worktable template have a labware labeled '" +
-                              label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
-                              " but there is no registered labware type '" + lab_t_label + "'")
+                              labw_label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                              " but there is no registered labware type '" + labw_type_name + "'")
                 labware_types = []
 
     def add_new_labware(self, labware, loc: Location = None):
@@ -389,6 +394,12 @@ class WorkTable:
 
         if labware.location.grid >= len(self.grids):
             raise "This WorkTable have only " + str(len(self.grids)) + " grids. Not " + str(loc.grid)
+        if labware.location.carrier:
+            assert labware.location.grid == labware.location.carrier.grid
+            assert labware.location.carrier is self.carriers_grid[labware.location.grid]
+        else:
+            labware.location.carrier = self.carriers_grid[labware.location.grid]
+        labware.location.carrier.add_labware(labware, labware.location.carrier_site)
 
         for type_name, labw_series in self.labware_series.items():                # loop lab_types already in worktable
             for labw in labw_series.labwares:                               # loop labwares in that series
@@ -538,6 +549,14 @@ class WorkTable:
 
         if isinstance(labw.series, Labware.Type.Series):
             labw.series.remove(labw)
+
+        carrier = None
+        if labw.location.carrier:
+            carrier = labw.location.carrier
+        else:
+            carrier = self.carriers_grid[labw.location.grid]
+        assert labw is carrier.labwares[labw.location.carrier_site]
+        carrier.labwares[labw.location.carrier_site] = None
         labw.location = None
         return labw
 
@@ -644,10 +663,10 @@ class Carrier:
     def add_labware(self, labware, site):
         if labware.type.name not in self.type.allowed_labwares_types:
             print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
-                  + self.type.name    + ":" + self.label)
+                  + self.type.name    + ":" + str(self.label))
 
         if site >= self.type.n_sites:
-            raise "This rack " + self.type.name + ":" + self.label \
+            raise "This carrier " + self.type.name + ":" + self.label \
                   + " have only " + str(self.type.n_sites) + " sites."
 
         if self.labwares[site] is not None:
@@ -923,8 +942,7 @@ class Labware:
 
         if isinstance(worktable, WorkTable):
             worktable.add_new_labware(self, location)
-        if location and location.carrier:                   # ??????????????
-            location.carrier.add_labware(self, location.carrier_site)
+
         self.init_wells()
         print("Created labware " + str(self) + " in " + str(self.location))
 
