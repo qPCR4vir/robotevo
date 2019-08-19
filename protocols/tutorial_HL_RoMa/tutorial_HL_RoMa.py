@@ -25,7 +25,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
 
     """
 
-    name = "Tutorial_HL. Dilutions."
+    name = "Tutorial_HL_RoMa. Dilutions."
     min_s, max_s = 1, 96                                            # 96 well plate ??
 
     def def_versions(self):                                         # for now just ignore the variants
@@ -42,12 +42,14 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                  firstTip                    = None,
                  run_name: str               = ""):
 
+        this = Path(__file__).parent
+
         Evo200_FLI.__init__(self,
                         GUI                         = GUI,
-                        num_of_samples=num_of_samples or Tutorial_HL_RoMa.max_s,
+                        num_of_samples              = num_of_samples or Tutorial_HL_RoMa.max_s,
                         worktable_template_filename = worktable_template_filename or
-                                                      '../EvoScripts/wt_templates/tutorial_hl_dilution.ewt',
-                        output_filename             = output_filename or '../current/RoMa_HL',
+                                                      this / 'tutorial_hl_RoMa_dilution.ewt',
+                        output_filename             = output_filename or this / 'scripts' / 'RoMa_HL',
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
@@ -60,7 +62,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
         assert 1 <= self.num_of_samples <= Tutorial_HL_RoMa.max_s, "Using 96 well plates."
         wt = self.worktable
 
-        instr.comment('Transfer 50 uL to a moved plate.').exec()
+        self.comment('Transfer 50 uL to a moved plate.')
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
         plate_A = wt.get_labware("plate")
