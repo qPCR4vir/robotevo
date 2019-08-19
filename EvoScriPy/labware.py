@@ -164,15 +164,23 @@ class WorkTable:
             assert isinstance(self.worktable, WorkTable)
 
             self.carrier = carrier
+            if grid is None:
+                assert isinstance(carrier, Carrier)
+                grid = carrier.grid
             assert 1 <= grid <= len(self.worktable.grids)
-            site -= 1                                 # TODO revise - it will be an error if site is None
-            assert 0 <= site <= self.worktable.n_sites
             self.grid = grid
+            site -= 1                                               # TODO revise - it will be an error if site is None
+            assert 0 <= site <= self.worktable.n_sites
             self.site = site
+            self.carrier_site = carrier_site                        # TODO revise
+            if not self.carrier_site:
+                self.carrier_site = self.site                       # TODO revise
             if carrier is not None:
                 assert isinstance(carrier, Carrier)
-                assert 0 < carrier_site <= carrier.type.n_sites
-            self.carrier_site = carrier_site
+                assert 0 <= self.carrier_site < carrier.type.n_sites, ( "There is no site " + str(site) + " carrier type "
+                                                                       +  carrier.type.name + 'with number of sites '
+                                                                       + str(carrier.type.n_sites) )
+
 
         def __str__(self):
             return "grid:{grid:d}, site:{site:d}".format(grid=self.grid, site=self.site + 1)
