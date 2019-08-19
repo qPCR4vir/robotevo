@@ -42,8 +42,6 @@ class Evo200_FLI (Protocol):
         self.carrier_file = self.root_directory / 'Carrier.cfg'
 
     def liquid_classes(self):
-        return None
-
         if Evo200_FLI._liquid_classes is None:
             Evo200_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
