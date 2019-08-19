@@ -1020,6 +1020,13 @@ class Protocol (Executable):
             return self.carrier_types().by_name[carrier]
         return self.carrier_types().by_index[carrier]
 
+    def allow_labware(self, carrier_type, labwares):
+        carrier = self.get_carrier_type(carrier_type)
+        if isinstance(labwares, list):
+            carrier.allowed_labwares_types.extend(labwares)
+        else:
+            carrier.allowed_labwares_types.append(labwares)
+
     def labware_types(self):
         return None
 

@@ -50,13 +50,29 @@ class Evo100_FLI(Protocol):
     def carrier_types(self):
         if Evo100_FLI._carrier_types is None:
             Evo100_FLI._carrier_types = labware.Carrier.Types(self.carrier_file)
-            self.get_carrier_type("DiTi 3Pos").allowed_labwares_types.extend(['DiTi 1000ul',
-                                                                              '96 Well Microplate',
-                                                                              '96 Well DeepWell square'
-                                                                              ])
-            self.get_carrier_type("Trough 3Pos 25+100ml").allowed_labwares_types.append('Trough 100ml')
-            self.get_carrier_type("Washstation 2Grid Trough DiTi").allowed_labwares_types.append('Trough 100ml:5-VEW2-WashBuffer')
 
+            self.allow_labware("DiTi 3Pos", ['DiTi 1000ul',
+                                             '96 Well Microplate',
+                                             '96 Well DeepWell square'])
+            self.allow_labware("MP 3Pos", ['DiTi 1000ul',
+                                           '96 Well Microplate',
+                                           '96 Well DeepWell square'])
+
+            self.allow_labware("Trough 3Pos 25+100ml", 'Trough 100ml')
+            self.allow_labware("Washstation 2Grid Trough DiTi", ['Washstation 2Grid Cleaner short',
+                                                                 'Washstation 2Grid Cleaner long',
+                                                                 'Washstation 2Grid Waste',
+                                                                 'Washstation 2Grid DiTi Waste',
+                                                                 'Trough 100ml'])
+            self.allow_labware("Tube Eppendorf 16 Sites", ['Tube Greinerconic 2mL 16 Pos',
+                                                           'Tube Eppendorf 1 Pos',
+                                                           'Tube Eppendorf 2mL 1 Pos',
+                                                           'Tube Greiner conic 2mL 1 Pos',
+                                                           'Tube Eppendorf 2mL 16 Pos'])
+            self.allow_labware("Tube Eppendorf 3x16=48 Pos", ['Tube Eppendorf 3x 16 PosR',
+                                                              'Tube Eppendorf 3x 16 Pos'])
+            self.allow_labware("Tube Eppendorf 6x16=96 Pos", ['Tube Eppendorf 6x 16 Pos'])
+            self.allow_labware("Te-MagS portrait", 'Tube Eppendorf 48 Pos')
 
         return Evo100_FLI._carrier_types
 

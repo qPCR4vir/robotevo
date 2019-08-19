@@ -353,10 +353,11 @@ class WorkTable:
                 carrier = Carrier(carrier_type=carrier_type, grid=grid_num, worktable=self)
                 self.carriers_grid[grid_num] = carrier
                 for site, (labw_type_name, labw_label) in enumerate(zip(labware_types, line[1:-1])):
-                    if not labw_type_name and labw_label:
-                        print("WARNING!! Going to ignore entry - The worktable template have a labware label '" +
-                                  labw_label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
-                                  " but no labware type")
+                    if not labw_type_name:
+                        if labw_label:
+                            print("WARNING!! Going to ignore entry - The worktable template have a labware label '" +
+                                      labw_label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
+                                      " but no labware type")
                         continue  # CONTINUE:
                     # if labw_type_name and not labw_label:
                     #    print("WARNING!! Going to ignore entry - The worktable template have a labware type '" +
@@ -664,6 +665,7 @@ class Carrier:
         if labware.type.name not in self.type.allowed_labwares_types:
             print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
                   + self.type.name    + ":" + str(self.label))
+            print('"' + self.type.name + '", "' + labware.type.name + '"')
 
         if site >= self.type.n_sites:
             raise "This carrier " + self.type.name + ":" + self.label \
@@ -820,7 +822,7 @@ class Labware:
                 self.type       = labware.type
                 self.add(labware)
                 self.current    = labware
-                print("Created " + str(self))
+                # print("Created " + str(self))
 
             def __str__(self):
                 return "serie of {n:d} {type:s}".format(n=len(self.labwares), type=self.type.name)
