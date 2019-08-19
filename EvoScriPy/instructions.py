@@ -1417,12 +1417,12 @@ class transfer_rack(Instruction):
                     string1   (self.vectorName),             # 10. name of RoMa vector to use (as in the Freedom EVOware configuration), example: "Narrow"
                     string1   (""),                          # 11. unused                                                        example: ""
                     string1   (""),                          # 12. unused                                                        example: ""
-                    string1   (self.labware.location.carrier.label),  # 13. carrier name, source    ?                               example: "MP 3Pos"
-                    string1   (self.lid.carrier.label if self.lid else ""),  # 14. carrier name, lid     ?                               example: "MP 3Pos"
-                    string1   (self.destination.carrier.label),  # 15. carrier name, destination    ?                               example: "MP 3Pos"
-                    string1   (self.labware.location.site),   # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
+                    string1   (self.labware.location.carrier.type.name),     # 13. carrier name, source    ?                     example: "MP 3Pos"
+                    string1   (self.lid.carrier.type.name if self.lid else ""),  # 14. carrier name, lid     ?                       example: "MP 3Pos"
+                    string1   (self.destination.carrier.type.name),          # 15. carrier name, destination    ?                               example: "MP 3Pos"
+                    string1   (self.labware.location.site),                  # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
                     string1   (self.lid.location.site if self.lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
-                    string1   (self.destination.site)         # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
+                    string1   (self.destination.site)                        # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
                     ]
         return True
 
