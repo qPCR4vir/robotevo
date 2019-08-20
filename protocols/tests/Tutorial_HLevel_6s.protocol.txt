@@ -5,5 +5,5 @@ Fill dilutions
     Distribute: 10.0 킠 of mix1
         Distribute: 10.0 킠 of mix1 (62.4 킠 total) from [grid:12 site:1 ['well 1 in labware mixes:  with 62.0 uL of reagent mix1'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6]:
 
-    Distribute: 90.0 킠 of Diluent
-        Distribute: 90.0 킠 of Diluent (561.6 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 561.0 uL of reagent Diluent'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6]:
+    Distribute: 90.0 킠 of diluent
+        Distribute: 90.0 킠 of diluent (561.6 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 561.0 uL of reagent diluent'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6]:

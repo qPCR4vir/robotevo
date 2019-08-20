@@ -1,5 +1,5 @@
 Comment("Dilute 1:10 mix1 in 6 wells.");
-UserPrompt("Check Diluent in ['well 1 in labware BufferCub:  with 561.0 uL of reagent Diluent']Check mix1 in ['well 1 in labware mixes:  with 62.0 uL of reagent mix1']",1,-1);
+UserPrompt("Check diluent in ['well 1 in labware BufferCub:  with 561.0 uL of reagent diluent']Check mix1 in ['well 1 in labware mixes:  with 62.0 uL of reagent mix1']",1,-1);
 Wash(255,19,1,19,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
 Group("Fill dilutions");
 UserPrompt("Put the plate for dilutions in grid:55, site:3",1,-1);
@@ -15,8 +15,8 @@ Aspirate(32,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","0","0"
 Dispense(63,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","0","0",0,0,0,0,55,2,1,"0C08o0000000000000",0,0);
 GroupEnd();
 DropDITI(63,19,6,0.00,300,0);
-Group("Distribute: 90.0 µL of Diluent");
-Comment("Distribute: 90.0 µL of Diluent (561.6 µL total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 561.0 uL of reagent Diluent'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6]:");
+Group("Distribute: 90.0 µL of diluent");
+Comment("Distribute: 90.0 µL of diluent (561.6 µL total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 561.0 uL of reagent diluent'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6]:");
 GetDITI2(63,"DiTi 1000ul",0,0,0,300);
 Aspirate(63,"Water free","90.00","90.00","90.00","90.00","90.00","90.00","0","0",0,0,0,0,53,0,1,"0108®0",0,0);
 Dispense(63,"Water free","90.00","90.00","90.00","90.00","90.00","90.00","0","0",0,0,0,0,55,2,1,"0C08o0000000000000",0,0);
