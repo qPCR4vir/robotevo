@@ -72,7 +72,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
 
                                                             # Set the initial position of the tips
 
-        self.go_first_pos()
+        self.set_first_tip()
 
                                                             # Set volumen / sample
 
@@ -164,5 +164,5 @@ if __name__ == "__main__":
                                                run_name        = "")
 
     p.use_version('Standard')
-    # p.go_first_pos('A01')
+    # p.set_first_tip('A01')
     p.Run()

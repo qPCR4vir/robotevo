@@ -187,5 +187,5 @@ if __name__ == "__main__":
     # \EvoScripts\scripts\temp/Ko_Platte_17_11_2011.esc
 
     p.use_version('No version')
-    # p.go_first_pos('A01')
+    # p.set_first_tip('A01')
     p.Run()

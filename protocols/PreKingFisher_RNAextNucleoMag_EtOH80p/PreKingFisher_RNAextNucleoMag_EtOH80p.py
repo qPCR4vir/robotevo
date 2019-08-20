@@ -97,7 +97,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
                                                                 # Set the initial position of the tips
 
-        self.go_first_pos()
+        self.set_first_tip()
 
                                                                 # Set volumen / sample
 
@@ -291,5 +291,5 @@ if __name__ == "__main__":
                                               run_name        = "")
 
     p.use_version('VL-pKmix Inactivated')
-    # p.go_first_pos('A01')
+    # p.set_first_tip('A01')
     p.Run()

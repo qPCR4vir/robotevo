@@ -54,7 +54,7 @@ p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-only prefill")
 p.use_version('VL-only prefill')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -62,7 +62,7 @@ p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-only prefill")
 p.use_version('VL-only prefill')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -70,7 +70,7 @@ p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -78,7 +78,7 @@ p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -86,7 +86,7 @@ p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-only inactivated")
 p.use_version('VL-only inactivated')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -94,7 +94,7 @@ p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-only inactivated")
 p.use_version('VL-only inactivated')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -102,7 +102,7 @@ p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_VL-pKmix Inactivated")
 p.use_version('VL-pKmix Inactivated')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -110,7 +110,7 @@ p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_VL-pKmix Inactivated")
 p.use_version('VL-pKmix Inactivated')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -118,7 +118,7 @@ p = Prt (num_of_samples    = 48,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_48s_original samples")
 p.use_version('original samples')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -126,7 +126,7 @@ p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'RNAext_MNVet_TeMag',
          run_name        = "_test_6s_original samples")
 p.use_version('original samples')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -137,7 +137,7 @@ p = Prt(num_of_samples  = 4,
         output_filename = test_dir / 'demo-two.mixes',
         run_name        = "_test_4s_mix_1_2")
 p.use_version('No version')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -148,7 +148,7 @@ p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_HLevel',
          run_name                    = "_6s")
 p.use_version('No version')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -156,7 +156,7 @@ p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_HLevel',
          run_name                    = "_46s")
 p.use_version('No version')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -167,7 +167,7 @@ p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
          run_name                    = "_6s")
 p.use_version('No version')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -175,7 +175,7 @@ p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
          run_name                    = "_46s")
 p.use_version('No version')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -184,13 +184,13 @@ from protocols.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Pref
 
 p = Prt(run_name="_1_plate")
 p.use_version('1 plate')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 p = Prt (run_name="_3_plate")
 p.use_version('3 plate')
-p.go_first_pos('A01')
+p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 

@@ -112,7 +112,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
                                                                #  Set the initial position of the tips
 
-        self.go_first_pos()
+        self.set_first_tip()
 
                                                                # Set volumen / sample
 
@@ -365,5 +365,5 @@ if __name__ == "__main__":
     p = RNAextr_MN_Vet_Kit(num_of_samples= 48, run_name= "_48_original samples")
 
     p.use_version('original samples')
-    p.go_first_pos('A01')
+    p.set_first_tip('A01')
     p.Run()

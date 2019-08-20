@@ -86,7 +86,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         Reagents_TubeRack   = wt.get_labware("Reactives", lab.GreinRack16_2mL)
 
 
-        self.go_first_pos()                                 #  Set the initial position of the tips
+        self.set_first_tip()                                 #  Set the initial position of the tips
 
                                                             # Set volumen / sample
         ProtKVolume         =  20.0

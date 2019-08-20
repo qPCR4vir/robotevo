@@ -1,7 +1,5 @@
-# Copyright (C) 2019-2019, Ariel Vina Rodriguez ( arielvina@yahoo.es )
-#  distributed under the GNU General Public License, see <http://www.gnu.org/licenses/>.
-#
 # author Ariel Vina-Rodriguez (qPCR4vir)
+# this example is free to use at your onw risk
 # 2019-2019
 __author__ = 'Ariel'
 

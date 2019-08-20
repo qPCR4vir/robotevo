@@ -883,7 +883,7 @@ class Protocol (Executable):
         instructions.dropDITI(TIP_MASK).exec()
         # return TIP_MASK
 
-    def go_first_pos(self, first_tip: (int, str) = None):
+    def set_first_tip(self, first_tip: (int, str) = None, tip_type:(str, labware.DITIrackType) = None):
         """
         Optionally set the Protocol.firstTip, a position in rack, like 42 or 'B06'
         (optionally including the rack self referenced with a number, like '2-B06', were 2 will be the second
@@ -894,7 +894,7 @@ class Protocol (Executable):
             self.firstTip = first_tip                                       # just keep it
 
         if self.firstTip is not None and self.worktable is not None:        # set in wt
-            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip)
+            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip, labw_type_name=tip_type)
             instructions.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
 
     def consolidate(self):              # todo

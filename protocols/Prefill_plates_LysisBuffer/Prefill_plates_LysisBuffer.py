@@ -57,7 +57,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         DiTi1000_3  = wt.get_labware("1000-3", labware.DiTi_1000ul)
 
 
-        self.go_first_pos()                      #  Set the initial position of the tips
+        self.set_first_tip()                      #  Set the initial position of the tips
 
         # Set volumen / sample
         LysisBufferVolume   = 100.0       # VL1 or VL
