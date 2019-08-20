@@ -498,7 +498,7 @@ class WorkTable:
                     assert isinstance(labware, Labware)
 
             assert labware is not None, ("ERROR: no labware with the label '" + label
-                                         + "' was found in worktable: " + self.template_file_name)
+                                         + "' was found in worktable: " + str(self.template_file_name))
             return labware
 
         if isinstance(labw_type, Labware.Type):
@@ -668,9 +668,9 @@ class Carrier:
 
     def add_labware(self, labware, site):
         if labware.type.name not in self.type.allowed_labwares_types:
-            print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
-                  + self.type.name    + ":" + str(self.label))
-            print('"' + self.type.name + '", "' + labware.type.name + '"')
+            #print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
+            #      + self.type.name    + ":" + str(self.label))
+            print('            self.allow_labware("' + self.type.name + '", "' + labware.type.name + '")')
 
         if site >= self.type.n_sites:
             raise "This carrier " + self.type.name + ":" + self.label \
@@ -951,7 +951,7 @@ class Labware:
             worktable.add_new_labware(self, location)
 
         self.init_wells()
-        print("Created labware " + str(self) + " in " + str(self.location))
+        # print("Created labware " + str(self) + " in " + str(self.location))
 
     def __str__(self):
         return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
