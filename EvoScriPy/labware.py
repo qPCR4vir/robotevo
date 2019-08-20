@@ -533,6 +533,8 @@ class WorkTable:
             labw = self.get_DITI_series().current
             assert labw, "Failed to find first DITI position."
 
+        if posstr is None:
+            posstr = ""
 
         pos = posstr.split('-')
 
@@ -983,25 +985,26 @@ class Labware:
         self.selectOnly(range(offset, offset + maxTips))
         return maxTips
 
-    def offset(self, row, col=1):
-        if isinstance(row, str):
+    def offset(self, row_pos, col=1):
+        assert row_pos is not None
+
+        if isinstance(row_pos, Well):
+            assert row_pos.labware is self, "This is a well from another labware."
+            return row_pos.offset
+
+        if isinstance(row_pos, str):
             assert col == 1, "Please, define the column only in the row string."
-            return self.offsetFromName(row)
+            return self.offsetFromName(row_pos)
 
+        if isinstance(row_pos, Labware.Position):
+            col = row_pos.col
+            row_pos = row_pos.row
 
-        if isinstance(row, Well):
-            assert row.labware is self, "This is a well from another labware."
-            return row.offset
+        if isinstance(row_pos, int):
+            return row_pos - 1 + (col - 1) * self.type.nRow
 
-        if isinstance(row, Labware.Position):
-            col = row.col
-            row = row.row
-
-        if isinstance(row, int):
-            return row - 1 + (col - 1) * self.type.nRow
-
-        assert len(row.replicas) == 1, "Failed to assume a Reagent with only one replica (aliquot)"
-        return self.offset(row)
+        assert len(row_pos.replicas) == 1, "Failed to assume a Reagent with only one replica (aliquot)"
+        return self.offset(row_pos, col)
 
         # assert False, "Unknow row type"
 

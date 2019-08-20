@@ -147,6 +147,8 @@ class App(tkinter.Frame):
 
         def set_firstTip(self, *args):
             self.protocol.firstTip = self.firstTip_v.get()
+            if self.protocol.firstTip == "None":
+                self.protocol.firstTip = None
 
         def set_WT_FN(self, *args):
             self.protocol.worktable_template_filename = self.worktable_filename_v.get()
