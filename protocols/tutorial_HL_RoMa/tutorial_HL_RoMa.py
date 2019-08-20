@@ -11,14 +11,17 @@ from protocols.evo200_f.evo200_f import Evo200_FLI
 
 class Tutorial_HL_RoMa(Evo200_FLI):
     """
-    Starting with 2 plates (A amd B, B on some plate pedestal - hotel) move plate B into a different location;
-    then transfer 50µL of aqueous buffer from column 1 of plate A to column 2 of plate B.
+    Put a plate in place and transfer 50 µL to 1 column from a wells in 2nd column of another plate
+
+    Starting with 2 plates (A amd B, B somewhere else (1- other carrier, 2- on some plate pedestal - hotel)
+    move plate B into a different location;
+    then transfer 50 µL of aqueous buffer from column 1 of plate A to column 2 of plate B.
 
     There are different ways to achieve that. Here is one:
-    - Create a reagent buffer_A in column 1 of plate A, with 100 uL per well.
+    - Define a reagent buffer_A in column 1 of `plateA` , with 100 uL per well.
     - Generate check list
-    - Transfer plate B from the hotel to the worktable
-    - Create a reagent buffer_B in column 2 of plate B.
+    - Transfer plate B from the original location `plateB_origen` to the final location `plateB`
+    - Create a reagent buffer_B in column 2 of `plateB`.
     - Transfer 50µL of buffer_A to buffer_B.
 
     """
@@ -57,55 +60,52 @@ class Tutorial_HL_RoMa(Evo200_FLI):
 
         self.show_runtime_check_list    = True
 
-        assert 1 <= self.num_of_samples <= Tutorial_HL_RoMa.max_s, "Using 96 well plates."
+        assert 1 <= self.num_of_samples <= Tutorial_HL_RoMa.max_s - 8, "Using 96 well plates."
+        # assert self.num_of_samples == 8, "testing just one column."
+
         wt = self.worktable
 
         self.comment('Transfer 50 uL to a moved plate.')
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table    -----------------------------------------------
-        plate_A = wt.get_labware("plate")
-        plate_A = wt.get_labware("plate")
+        plate_A = wt.get_labware("plateA")
+        plate_B = wt.get_labware("plateB_origen")
+        new_location = wt.get_labware("plateB").location
 
         v  = 50                                       # uL to be distribute
-
 
         buffer_A = Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
                                labware      = plate_A,
                                wells        = "A1",
-                               replicas     = 8,
-                               volpersample = v)
+                               replicas     = self.num_of_samples,
+                               volpersample = v,
+                               initial_vol= [100]*self.num_of_samples,
+                               minimize_aliquots= False)
 
         self.check_list()                                          # Show the check_list   -------------------------
+        self.user_prompt("Put the plate B in " + str(plate_B.location))
 
-        instr.wash_tips(wasteVol=5, FastWash=True).exec()
+        instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        plate = wt.get_labware(label="plate", labw_type="96 Well Microplate")
+        instructions.transfer_rack(plate_B, new_location).exec()
 
-        dilution = Reagent("mix1, diluted 1:10",               # Define place for intermediate reactions  ----------
-                                plate,
-                                replicas         = n,
-                                minimize_aliquots= False)
+        buffer_B = Reagent("buffer B",              # Define place for intermediate reactions  ----------
+                           labware      = plate_B,
+                           wells        = "A1",
+                           replicas     = self.num_of_samples,
+                           minimize_aliquots= False)
 
-        with group("Fill dilutions"):
-
-            instr.userPrompt("Put the plate for dilutions in " + str(plate.location)).exec()
+        with group("Fill column"):
 
             with self.tips(tip_type="DiTi 200 ul", reuse=True, drop=False, drop_last=True):
-                self.distribute(reagent           = mix1,
-                                to_labware_region = dilution.select_all())
-
-            with self.tips(tip_type="DiTi 1000ul", reuse=True, drop=False, drop_last=True):
-                self.distribute(reagent           = diluent,
-                                to_labware_region = dilution.select_all())
-
-            self.drop_tips()
+                self.distribute(reagent           = buffer_A,
+                                to_labware_region = buffer_B.select_all())
 
         self.done()
 
-
 if __name__ == "__main__":
-    p = Tutorial_HL_RoMa(num_of_samples= 42,
-                         run_name        = "_42s")
+    p = Tutorial_HL_RoMa(num_of_samples= 8,
+                         run_name        = "_8s")
 
     p.use_version('No version')
     p.Run()
