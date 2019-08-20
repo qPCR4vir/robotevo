@@ -951,7 +951,7 @@ class Labware:
             worktable.add_new_labware(self, location)
 
         self.init_wells()
-        # print("Created labware " + str(self) + " in " + str(self.location))
+        print("Created labware " + str(self) + " in " + str(self.location))
 
     def __str__(self):
         return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)

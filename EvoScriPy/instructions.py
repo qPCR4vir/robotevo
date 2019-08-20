@@ -1395,12 +1395,13 @@ class transfer_rack(Instruction):
             assert isinstance(self.lid,      lab.WorkTable.Location)
             assert isinstance(self.lid.carrier, lab.Carrier)
 
+        print("Transafering from " + str(self.labware.location) + " to " + str(self.destination))
         assert self.cover in [0, 1]
 
         if self.vectorName is None:
             self.vectorName = "Narrow"
         assert self.vectorName in ["Narrow", "DriveIN_Narrow",
-                                   "Wide",   "DriveIN_Wide" ],  f"Pased {self.vectorName}"
+                                   "Wide",   "DriveIN_Wide" ],  f"Passed {self.vectorName}"
         if self.romaNo is None:
             self.romaNo = RoMa.RoMa_1
         assert self.romaNo in [RoMa.RoMa_1, RoMa.RoMa_2], f"romaNo must be 0 or 1, but passed: {self.romaNo}"

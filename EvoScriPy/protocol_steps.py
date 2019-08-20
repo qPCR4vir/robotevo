@@ -1069,13 +1069,13 @@ class Protocol (Executable):
                                   filename     = script,
                                   robot        = self.iRobot.robot)
         self.comments_ = mode.Comments(filename= script.with_suffix('.protocol.txt'))
-        self.EvoMode = mode.multiple([self.iRobot,
-                                         self.Script,
-                                         mode.AdvancedWorkList(script.with_suffix('.gwl')),
-                                         mode.ScriptBody(script.with_suffix('.txt')),
-                                         mode.StdOut(),
-                                         self.comments_
-                                         ])
+
+        self.EvoMode = mode.multiple([self.Script,
+                                      mode.AdvancedWorkList(script.with_suffix('.gwl')),
+                                      mode.ScriptBody(script.with_suffix('.txt')),
+                                      mode.StdOut(),
+                                      self.comments_,
+                                      self.iRobot ])
         mode.current = self.EvoMode
         self.worktable  = self.iRobot.robot.worktable  # shortcut !!
         self.robot      = self.iRobot.robot
