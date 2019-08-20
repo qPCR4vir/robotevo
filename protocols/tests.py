@@ -194,4 +194,14 @@ p.set_first_tip('A01')
 print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
+from protocols.tutorial_HL_RoMa.tutorial_HL_RoMa import Tutorial_HL_RoMa as Prt
+
+p = Prt (num_of_samples              = 8,
+         output_filename             = test_dir / 'Tutorial_HL_RoMa',
+         run_name                    = "_6s")
+p.use_version('No version')
+p.set_first_tip('A01')
+print("\n\n************ " + str(p.output_filename) + " **************\n")
+p.Run()
+
 #from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates_LysisBuffer_and_ProtKpreMix
