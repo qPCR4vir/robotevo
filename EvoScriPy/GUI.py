@@ -12,8 +12,9 @@ Implement a GUI that automatically detect available protocols.
 
 import tkinter
 from tkinter.filedialog import askopenfilename
+from pathlib import Path
 
-from protocols import available
+from protocols.registre_protocols import available
 
 
 
@@ -154,7 +155,7 @@ class App(tkinter.Frame):
             self.worktable_filename_v.set( tkinter.filedialog.askopenfilename(title='Select the WorkTable template') )
 
         def set_O_FN(self, *args):
-            self.protocol.output_filename = self.output_filename_v.get()
+            self.protocol.output_filename = Path(self.output_filename_v.get())
 
         def change_O_FN(self, new_O_FN):
             print("\nChanging prot name from: " + self.output_filename_v.get())
@@ -285,7 +286,7 @@ class App(tkinter.Frame):
 
         def setVariant(self, variant):
             self.selected_version_StrVar.set(variant)
-            self.protocol.output_filename = self.output_filename + "_" + variant
+            self.protocol.output_filename = Path(self.output_filename + "_" + variant)
             self.GUI_init.change_O_FN(self.protocol.output_filename)
 
         def setVariantsMenu(self, value):
@@ -377,7 +378,7 @@ class App(tkinter.Frame):
                 for rf in self.ReplicaFrames:  # change replicas
                     rf.Vol.set(rf.reply.vol)
 
-        def CheckList(self):
+        def check_list(self):
 
             self.GUI_init.update_parameters()
 
@@ -395,7 +396,7 @@ class App(tkinter.Frame):
             # todo: add "global protocol variables" like number of samples, worktable template and output files
 
             self.reagent_frames = [App.GUI_protocol.ReagentFrame(self, reagent)
-                                   for reagent in self.protocol.worktable.reagents]
+                                   for reagent in self.protocol.worktable.reagents.values()]
 
             # self.GUI_parameters.destroy() #    ['state'] = 'disabled'
             for child in self.GUI_parameters.winfo_children():

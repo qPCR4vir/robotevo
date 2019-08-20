@@ -1,0 +1,30 @@
+Prefill a plate with some dilutions of two master mix and Buffer Reagent for 16 samples.
+Check: ['well 4 in labware BufferCub:  with 5990.0 uL of reagent Buffer ']
+Check: ['well 1 in labware mixes:  with 166.0 uL of reagent mix1']
+Check: ['well 2 in labware mixes:  with 166.0 uL of reagent mix2']
+
+Fill plate with mixes 
+
+    Distribute: 10.0 킠 of mix1
+        Distribute: 10.0 킠 of mix1 (166.4 킠 total) from [grid:12 site:1 ['well 1 in labware mixes:  with 166.0 uL of reagent mix1'] into plate1[grid:33 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]:
+
+    Distribute: 10.0 킠 of mix2
+        Distribute: 10.0 킠 of mix2 (166.4 킠 total) from [grid:12 site:1 ['well 2 in labware mixes:  with 166.0 uL of reagent mix2'] into plate1[grid:33 site:1] in order [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]:
+
+    Distribute: 90.0 킠 of Buffer 
+        Distribute: 90.0 킠 of Buffer  (5990.4 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 5990.0 uL of reagent Buffer '] into plate1[grid:33 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]:
+
+    Distribute: 90.0 킠 of Buffer 
+        Distribute: 90.0 킠 of Buffer  (5990.4 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 4550.0 uL of reagent Buffer '] into plate1[grid:33 site:1] in order [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]:
+
+    Transfer: 10.0 킠 from plate1
+        Transfer: 10.0 킠 from plate1 [grid:33 site:1] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] into plate2[grid:55 site:2] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]:
+
+    Transfer: 10.0 킠 from plate1
+        Transfer: 10.0 킠 from plate1 [grid:33 site:1] in order [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] into plate2[grid:55 site:2] in order [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]:
+
+    Distribute: 90.0 킠 of Buffer 
+        Distribute: 90.0 킠 of Buffer  (5990.4 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 3110.0 uL of reagent Buffer '] into plate2[grid:55 site:2] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]:
+
+    Distribute: 90.0 킠 of Buffer 
+        Distribute: 90.0 킠 of Buffer  (5990.4 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 1670.0 uL of reagent Buffer '] into plate2[grid:55 site:2] in order [17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]:
