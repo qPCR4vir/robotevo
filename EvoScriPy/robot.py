@@ -38,14 +38,14 @@ class Arm:
         self.nTips = nTips
         self.Tips = [None] * nTips
 
-    def getTips_test(self, tip_mask=-1) -> int:
+    def getTips_test(self, tip_mask=None) -> int:
         """ Simple test that the asked positions are free for mounting new tips.
                 :rtype : int
                 :param tip_mask:
                 :return: the mask that can be used
                 :raise "Tip already in position " + str(i):
                 """
-        if tip_mask == -1:
+        if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
 
         for i, tp in enumerate(self.Tips):
@@ -55,7 +55,7 @@ class Arm:
 
         return tip_mask
 
-    def mount_tips_executed(self, rack_type=None, tip_mask=-1, tips=None) -> (int, list):
+    def mount_tips_executed(self, rack_type=None, tip_mask=None, tips=None) -> (int, list):
         """     Mount only one kind of new tip at a time or just the tips given in the list
         :param rack_type:
         :param tips:
@@ -64,7 +64,7 @@ class Arm:
         :return: the mask that can be used
         :raise "Tip already in position " + str(i):
         """
-        if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
+        if tip_mask is None:  tip_mask = tipsMask[self.nTips]
         n = labware.count_tips(tip_mask)
         assert n <= self.nTips
         t = 0
@@ -82,14 +82,14 @@ class Arm:
                 t += 1
         return tip_mask, (tips[t:] if t < n else [])
 
-    def getMoreTips_test(self, rack_type, tip_mask=-1) -> int:
+    def getMoreTips_test(self, rack_type, tip_mask=None) -> int:
         """ Mount only the tips with are not already mounted.
             Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                 :rtype : int
                 :param tip_mask: int
                 :return: the mask that can be used
                 """
-        if tip_mask == -1:
+        if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -102,14 +102,14 @@ class Arm:
                     pass # self.Tips[i] = labware.Tip(rack_type)
         return tip_mask
 
-    def mount_more_tips_executed(self, rack_type, tip_mask=-1, tips=None) ->(int, list):
+    def mount_more_tips_executed(self, rack_type, tip_mask=None, tips=None) ->(int, list):
         """ Mount only the tips with are not already mounted.
             Mount only one kind of tip at a time, but not necessary the same of the already mounted.
                 :rtype : int
                 :param tip_mask: int
                 :return: the mask that can be used
                 """
-        if tip_mask == -1:  tip_mask = tipsMask[self.nTips]
+        if tip_mask is None:  tip_mask = tipsMask[self.nTips]
         n = labware.count_tips(tip_mask)
         assert n <= self.nTips
         t = 0
@@ -131,31 +131,34 @@ class Arm:
                     t += 1
         return tip_mask, tips[t:] if t < n else []
 
-    def drop_test(self, tip_mask=-1) -> (int, [int]):
+    def eject_tips_test(self, tip_mask=None) -> (int, [int]):
         """ Return the mask and the tips index to be really used.
         :param tip_mask: int
         :return: the mask that can be used with, is "True" if tips actually ned to be drooped
         :rtype : int
         """
-        if tip_mask == -1:
+        # print("eject_tips_test called with mask= " + str(tip_mask))
+        if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
         tips_index = []
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
                 if tp:  # in position
                     tips_index += [i] # tips += [tp]
-                    pass # self.Tips[i] = None
+                    # pass # self.Tips[i] = None
                 else:
-                    tip_mask ^= (1 << i)  # already drooped
+                    tip_mask -= (1 << i)  # already drooped
+        # print("eject_tips_test return mask= " + str(tip_mask))
+
         return tip_mask, tips_index
 
-    def eject_tips_executed(self, tip_mask=-1) -> (int, list):
+    def eject_tips_executed(self, tip_mask=None) -> (int, list):
         """ Drop tips only if needed. Return the mask and the tips really used.
         :param tip_mask: int
         :return: the mask that can be used with, is "True" if tips actually ned to be drooped
         :rtype : int
         """
-        if tip_mask == -1:
+        if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
         tips = []
         for i, tp in enumerate(self.Tips):
@@ -164,10 +167,10 @@ class Arm:
                     tips += [tp]
                     self.Tips[i] = None
                 else:
-                    tip_mask ^= (1 << i)  # already drooped
+                    tip_mask -= (1 << i)  # already drooped
         return tip_mask, tips
 
-    def pipette_executed(self, action, volume, tip_mask=-1) -> (list, int):
+    def pipette_executed(self, action, volume, tip_mask=None) -> (list, int):
         """ Check and actualize the robot Arm state to aspirate [vol]s with a tip mask.
         Using the tip mask will check that you are not trying to use an unmounted tip.
         `volume` values for unsettled tip mask are ignored.
@@ -186,7 +189,7 @@ class Arm:
             d    = self.nTips - len(vol)
             vol += [0]*(d if d > 0 else 0 )
 
-        if tip_mask == -1:
+        if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
 
         for i, tp in enumerate(self.Tips):
@@ -262,7 +265,7 @@ class Robot:
 
         selected_reagents = selected_reagents.selected_wells()
 
-        TIP_MASK        = TIP_MASK if TIP_MASK != -1 else tipsMask[self.curArm().nTips]
+        TIP_MASK        = TIP_MASK if TIP_MASK is not None else tipsMask[self.curArm().nTips]
         type            = type if type else self.worktable.def_DiTi_type
         where           = []
         n               = labware.count_tips(TIP_MASK)
@@ -363,7 +366,7 @@ class Robot:
                 tip_well.labware.selectOnly(tip_well.offset)
         return racks
 
-    def getTips_test(self, rack_type, tip_mask=-1) -> int:   # todo REVISE
+    def getTips_test(self, rack_type, tip_mask=None) -> int:   # todo REVISE
         if self.reusetips:
             tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
         else:
@@ -371,13 +374,11 @@ class Robot:
             tip_mask = self.curArm().getTips_test(tip_mask)
         return tip_mask
 
-
     # Functions to change the physical status, to model physical actions, or that directly
     # correspond to actions in the hardware.
     # It can be CALL ONLY FROM the official low level INSTRUCTIONS in the method instructions.actualize_robot_state(self):
 
-
-    def get_tips_executed(self, rack_series, tip_mask=-1) -> (int, list):   # (int, [labware.Tip])
+    def get_tips_executed(self, rack_series, tip_mask=None) -> (int, list):   # (int, [labware.Tip])
 
         """ To be call from instructions.actualize_robot_state(self): actualize iRobot state (tip mounted and DiTi racks)
         Return the mask with will be really used taking into account the iRobot state, specially, the "reusetips"
@@ -393,7 +394,20 @@ class Robot:
         tips = rack_series.retire_new_tips(tip_mask)
         return self.curArm().mount_tips_executed(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
 
-    def drop_tips_executed(self, TIP_MASK=-1, waste=None):
+    def drop_tips_test(self, TIP_MASK=None):
+        # print("drop_tips_test called with mask= " + str(TIP_MASK))
+
+        if not self.droptips: return 0
+
+        TIP_MASK, tips = self.curArm().eject_tips_test(TIP_MASK)
+
+        # print("drop_tips_test return mask= " + str(TIP_MASK))
+
+        return TIP_MASK
+
+    def drop_tips_executed(self, TIP_MASK=None, waste=None):
+        # print("drop_tips_executed called with mask= " + str(TIP_MASK))
+
         if not self.droptips: return 0
 
         waste = waste if waste else self.worktable.def_DiTiWaste
@@ -401,10 +415,11 @@ class Robot:
 
         TIP_MASK, tips = self.curArm().eject_tips_executed(TIP_MASK)
         waste.waste(tips)
+        # print("drop_tips_executed return mask= " + str(TIP_MASK))
 
         return TIP_MASK
 
-    def pipette_executed(self, action, volume, labware_selection, tip_mask=-1) -> (list, int):
+    def pipette_executed(self, action, volume, labware_selection, tip_mask=None) -> (list, int):
 
         volume, tip_mask = self.curArm().pipette_executed(action, volume, tip_mask)
         w = 0
@@ -475,7 +490,7 @@ class Robot:
 
     def use_tips_executed(self, tipMask, labware_selection):                      # todo Deprecated ??????
 
-        mask, tips = self.curArm().drop_test(tipMask)
+        mask, tips = self.curArm().eject_tips_test(tipMask)
         assert len(tips) == len(labware_selection.selected())
         for i, w in enumerate(labware_selection.selected_wells()):
             self.curArm().Tips[tips[i]] = labware.usedTip(self.curArm().Tips[tips[i]], w)
@@ -489,7 +504,7 @@ class Robot:
 
     def set_worktable(self, templateFile, robot_protocol):
         # w = labware.WorkTable.cur_worktable
-        print("Going to set template: " + str(templateFile))
+        # print("Going to set template: " + str(templateFile))
         if templateFile is None: return
         if isinstance(self.worktable, labware.WorkTable):  # todo temp? really to set
             assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \

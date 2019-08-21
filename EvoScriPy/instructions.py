@@ -314,6 +314,10 @@ class getDITI2(DITIs):
         self.tipMask, tips = self.robot.get_tips_executed(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
 
+    def exec(self, mode=None):
+        self.tipMask = self.robot.getTips_test(self.DITI_series, self.tipMask)  # todo use arm ?
+        Pipette.exec(self, mode=mode)
+
 
 class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI). pag A - 130 and 15 - 14
@@ -350,6 +354,10 @@ class dropDITI(Pipette):
             self.AirgapSpeed = def_AirgapSpeed
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
+
+    def exec(self, mode=None):
+        self.tipMask = self.robot.drop_tips_test(self.tipMask)  # todo use arm ?
+        Pipette.exec(self, mode=mode)
 
     def actualize_robot_state(self):
         self.tipMask = self.robot.drop_tips_executed(self.tipMask, self.labware)

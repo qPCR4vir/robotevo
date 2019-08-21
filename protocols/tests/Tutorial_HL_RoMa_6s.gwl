@@ -2,7 +2,7 @@ B;Comment("Transfer 50 uL to a moved plate.");
 B;UserPrompt("Check buffer in ['well 1 in labware plateA:  with 100.0 uL of reagent buffer', 'well 2 in labware plateA:  with 100.0 uL of reagent buffer', 'well 3 in labware plateA:  with 100.0 uL of reagent buffer', 'well 4 in labware plateA:  with 100.0 uL of reagent buffer', 'well 5 in labware plateA:  with 100.0 uL of reagent buffer', 'well 6 in labware plateA:  with 100.0 uL of reagent buffer', 'well 7 in labware plateA:  with 100.0 uL of reagent buffer', 'well 8 in labware plateA:  with 100.0 uL of reagent buffer']",1,-1);
 B;UserPrompt("Put the plate B in grid:43, site:3",1,-1);
 B;Wash(255,19,1,19,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
-B;Transfer_Rack("55","55",1,0,1,0,0,"0","96 Well Microplate","Narrow","","","MP 3Pos","","MP 3Pos","2","","2");
+B;Transfer_Rack("43","55",1,0,1,0,0,"0","96 Well Microplate","Narrow","","","MP 3Pos Cooled","","MP 3Pos","2","","2");
 B;Comment("Distribute: 50.0 µL of buffer (416.0 µL total) from [grid:55 site:2 ['well 1 in labware plateA:  with 100.0 uL of reagent buffer', 'well 2 in labware plateA:  with 100.0 uL of reagent buffer', 'well 3 in labware plateA:  with 100.0 uL of reagent buffer', 'well 4 in labware plateA:  with 100.0 uL of reagent buffer', 'well 5 in labware plateA:  with 100.0 uL of reagent buffer', 'well 6 in labware plateA:  with 100.0 uL of reagent buffer', 'well 7 in labware plateA:  with 100.0 uL of reagent buffer', 'well 8 in labware plateA:  with 100.0 uL of reagent buffer'] into plateB_origen[grid:55 site:3] in order [1, 2, 3, 4, 5, 6, 7, 8]:");
 B;GetDITI2(255,"DiTi 200 ul",0,0,0,300);
 B;Aspirate(255,"Water free","50","50","50","50","50","50","50","50",0,0,0,0,55,1,1,"0C08¯1000000000000",0,0);

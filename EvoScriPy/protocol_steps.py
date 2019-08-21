@@ -186,7 +186,11 @@ class Protocol (Executable):
         if selected_samples is not None:
             assert isinstance(selected_samples, labware.Labware)      # todo set some current?
 
-        if drop_first:  self.drop_tips()
+        if drop_first:
+            droping = self.set_dropTips(True)
+            self.drop_tips()
+            self.set_dropTips(droping)
+
         if reuse         is not None: reuse_old          = self.reuseTips       (reuse        )
         if drop          is not None: drop_old           = self.set_dropTips    (drop         )
         if preserve      is not None: preserve_old       = self.preserveTips    (preserve     )
@@ -206,7 +210,10 @@ class Protocol (Executable):
         if preserve      is not None: preserve      = self.preserveTips    (preserve_old    )
         if use_preserved is not None: use_preserved = self.usePreservedTips(use_preserved_old)
         if allow_air     is not None: allow_air     = self.set_allow_air   (allow_air_old   )
-        if drop_last:   self.drop_tips()
+        if drop_last:
+            droping = self.set_dropTips(True)
+            self.drop_tips()
+            self.set_dropTips(droping)
 
     def distribute(self,
                    volume            : float        = None,
@@ -1115,7 +1122,7 @@ class Protocol (Executable):
     def usePreservedTips(self, usePreserved=True)->bool:
         return self.robot.usePreservedTips(usePreserved)
 
-    def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=-1):
+    def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=None):
         pass # instructions.moveLiha
 
     # Lower lever API & "private" functions -------------------------------------------------------------
