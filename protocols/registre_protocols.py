@@ -11,7 +11,7 @@ Maintain here a list of all available customer protocols
 # todo separate this into a new registre_protocols.py and registre_in_GUI.py
 """
 
-from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
+from protocols.demo_two_mixes.demo_two_mixes import DemoTwoMixes
 from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
@@ -23,7 +23,7 @@ from protocols.hello_world.hello_world import HelloWorld
 available         = []
 available_classes = {}
 
-available.append( Prefill_plate_in_Evo200                     ())
+available.append( DemoTwoMixes                     ())
 available.append( Prefill_plates_VEW1_ElutionBuffer_VEW2      ())
 available.append( Prefill_plates_LysisBuffer                  ())
 available.append( Prefill_plates_LysisBuffer_and_ProtKpreMix  ())

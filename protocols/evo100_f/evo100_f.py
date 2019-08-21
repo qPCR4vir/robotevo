@@ -77,6 +77,9 @@ class Evo100_FLI(Protocol):
         return Evo100_FLI._carrier_types
 
     def set_defaults(self):
+
+        wt = self.worktable
+
         self.Beads_LC_1          = self.get_liquid_class("MixBeads_1")
         self.Beads_LC_2          = self.get_liquid_class("MixBeads_2")
         self.Te_Mag_LC           = self.get_liquid_class("Te-Mag")         # "Water free" but uncentered
@@ -93,8 +96,6 @@ class Evo100_FLI(Protocol):
         self.W_liquidClass      = self.Water_free                           # or "AVR-Water free DITi 1000"
         self.Std_liquidClass    = self.Water_free                           # or "Water free dispense DiTi 1000"
         self.Small_vol_disp     = self.get_liquid_class("Water wet")        # or "Water free Low Volume"  ??
-
-        wt = self.worktable
 
         wt.def_DiTi_type       = labware.DiTi_1000ul                 # this is a type, the others are labwares
 

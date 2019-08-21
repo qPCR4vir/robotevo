@@ -51,7 +51,7 @@ V;200
 998;0;
 998;0;
 998;0;
-998;6;96 Well Macherey-Nagel Plate;96 Well Macherey-Nagel Plate;;;;;
+998;6;96 Well Microplate;96 Well Macherey-Nagel Plate;;;;;
 998;plate1;plate3;;;;;
 998;0;
 998;0;
@@ -78,7 +78,7 @@ V;200
 998;3;Trough 100ml;Trough 100ml;Trough 100ml;
 998;RA3/2;RA3/1;RA2;
 998;3;DiTi 1000ul;96 Well Microplate;96 Well Microplate;
-998;DiTi1000/2;plate-2-moved;plate2;
+998;DiTi1000/2;plate2-moved;plate2;
 998;0;
 998;0;
 998;0;

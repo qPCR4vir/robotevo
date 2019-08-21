@@ -131,7 +131,7 @@ print("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200 as Prt
+from protocols.demo_two_mixes.demo_two_mixes import DemoTwoMixes as Prt
 
 p = Prt(num_of_samples  = 4,
         output_filename = test_dir / 'demo-two.mixes',
