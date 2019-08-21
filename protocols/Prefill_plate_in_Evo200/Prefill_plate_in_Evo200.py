@@ -139,7 +139,7 @@ class Prefill_plate_in_Evo200(Evo200_FLI):
                            excess=0)
 
         loc = plate_2.location               # just showing how to move the plate from one site to the next in the carrier
-        loc.site -= 1
+        loc.site -= 1   # todo fix this !!!!!!!!!!!!!!!
         #carrier = labware.Carrier(self.get_carrier_type("MP 3Pos"), loc.grid, label ="MP 3Pos")
         #loc.carrier = carrier
         instructions.transfer_rack(plate_2, loc).exec()                                            # just showing how RoMa works.
