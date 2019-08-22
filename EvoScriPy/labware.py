@@ -647,9 +647,9 @@ class Carrier:
 
     class Type:
 
-        def __init__(self, name, idx: int = None, width: int = None, n_sites: int = None):
+        def __init__(self, name, idx: int = None, widht_in_grids: int = None, n_sites: int = None):
             self.idx                    = idx
-            self.width                  = width
+            self.widht_in_grids         = widht_in_grids
             self.n_sites                = n_sites
             self.allowed_labwares_types = []
             self.name                   = name
@@ -1590,7 +1590,7 @@ MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  maxV
                     # It was done by change the grig 6 positions to the right and coping the X pos of the first well,
                     # then come back to the originaL GRID AND SET THE COPIED X FOR the last well. The new, duplicated
                     # carrier was set to X width 150 mm
-EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, n_sites=16)
+EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", widht_in_grids=1, n_sites=16)
 Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
 Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)
 Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=    1500)
