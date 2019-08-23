@@ -102,7 +102,7 @@ class LiquidClasses:
                 # print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_txt_file(self, default_file):
-        with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
+        with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1') as default:
             print('Parsing: ' + str(default_file.with_suffix('.txt')))
             for lc in default:
                 lc = lc.split('\t')
