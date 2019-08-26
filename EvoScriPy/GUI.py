@@ -203,8 +203,8 @@ class App(tkinter.Frame):
             App.GUI_init_parameters.update_parameters(self)
             self.read_num_of_samples()
 
-    from protocols.Prefill_plate_in_Evo200.Prefill_plate_in_Evo200 import Prefill_plate_in_Evo200
-    GUI4parameters[Prefill_plate_in_Evo200.name] = GUI_init_RNAext_parameters
+    from protocols.demo_two_mixes.demo_two_mixes import DemoTwoMixes
+    GUI4parameters[DemoTwoMixes.name] = GUI_init_RNAext_parameters
 
     from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
     GUI4parameters[RNAextr_MN_Vet_Kit.name]=GUI_init_RNAext_parameters

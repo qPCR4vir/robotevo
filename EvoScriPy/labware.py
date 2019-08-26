@@ -102,7 +102,7 @@ class LiquidClasses:
                 # print("to- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_txt_file(self, default_file):
-        with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1', newline='\r\n') as default:
+        with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1') as default:
             print('Parsing: ' + str(default_file.with_suffix('.txt')))
             for lc in default:
                 lc = lc.split('\t')
@@ -498,7 +498,7 @@ class WorkTable:
                     assert isinstance(labware, Labware)
 
             assert labware is not None, ("ERROR: no labware with the label '" + label
-                                         + "' was found in worktable: " + self.template_file_name)
+                                         + "' was found in worktable: " + str(self.template_file_name))
             return labware
 
         if isinstance(labw_type, Labware.Type):
@@ -647,9 +647,9 @@ class Carrier:
 
     class Type:
 
-        def __init__(self, name, idx: int = None, width: int = None, n_sites: int = None):
+        def __init__(self, name, idx: int = None, widht_in_grids: int = None, n_sites: int = None):
             self.idx                    = idx
-            self.width                  = width
+            self.widht_in_grids         = widht_in_grids
             self.n_sites                = n_sites
             self.allowed_labwares_types = []
             self.name                   = name
@@ -668,9 +668,9 @@ class Carrier:
 
     def add_labware(self, labware, site):
         if labware.type.name not in self.type.allowed_labwares_types:
-            print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
-                  + self.type.name    + ":" + str(self.label))
-            print('"' + self.type.name + '", "' + labware.type.name + '"')
+            #print("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
+            #      + self.type.name    + ":" + str(self.label))
+            print('            self.allow_labware("' + self.type.name + '", "' + labware.type.name + '")')
 
         if site >= self.type.n_sites:
             raise "This carrier " + self.type.name + ":" + self.label \
@@ -1590,7 +1590,7 @@ MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  maxV
                     # It was done by change the grig 6 positions to the right and coping the X pos of the first well,
                     # then come back to the originaL GRID AND SET THE COPIED X FOR the last well. The new, duplicated
                     # carrier was set to X width 150 mm
-EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", width=1, n_sites=16)
+EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", widht_in_grids=1, n_sites=16)
 Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
 Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)
 Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=    1500)

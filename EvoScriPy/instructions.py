@@ -314,6 +314,10 @@ class getDITI2(DITIs):
         self.tipMask, tips = self.robot.get_tips_executed(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
 
+    def exec(self, mode=None):
+        self.tipMask = self.robot.getTips_test(self.DITI_series, self.tipMask)  # todo use arm ?
+        Pipette.exec(self, mode=mode)
+
 
 class dropDITI(Pipette):
     """ A.15.4.6 Drop DITIs command (Worklist: DropDITI). pag A - 130 and 15 - 14
@@ -350,6 +354,10 @@ class dropDITI(Pipette):
             self.AirgapSpeed = def_AirgapSpeed
         self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
         return True
+
+    def exec(self, mode=None):
+        self.tipMask = self.robot.drop_tips_test(self.tipMask)  # todo use arm ?
+        Pipette.exec(self, mode=mode)
 
     def actualize_robot_state(self):
         self.tipMask = self.robot.drop_tips_executed(self.tipMask, self.labware)
@@ -1395,12 +1403,13 @@ class transfer_rack(Instruction):
             assert isinstance(self.lid,      lab.WorkTable.Location)
             assert isinstance(self.lid.carrier, lab.Carrier)
 
+        print("Transafering from " + str(self.labware.location) + " to " + str(self.destination))
         assert self.cover in [0, 1]
 
         if self.vectorName is None:
             self.vectorName = "Narrow"
         assert self.vectorName in ["Narrow", "DriveIN_Narrow",
-                                   "Wide",   "DriveIN_Wide" ],  f"Pased {self.vectorName}"
+                                   "Wide",   "DriveIN_Wide" ],  f"Passed {self.vectorName}"
         if self.romaNo is None:
             self.romaNo = RoMa.RoMa_1
         assert self.romaNo in [RoMa.RoMa_1, RoMa.RoMa_2], f"romaNo must be 0 or 1, but passed: {self.romaNo}"

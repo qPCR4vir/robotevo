@@ -45,6 +45,30 @@ class Evo100_FLI(Protocol):
         if Evo100_FLI._liquid_classes is None:
             Evo100_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
+            # the liquid classes are static members of this robot-specific protocol class
+            # (only one copy shared for all objects of this class).
+            # But just for convenience of typing we want protocol objects to have
+            # a self. object member which reference that liquid class.
+
+        all = Evo100_FLI._liquid_classes.all
+
+        self.Beads_LC_1          = all["MixBeads_1"]
+        self.Beads_LC_2          = all["MixBeads_2"]
+        self.Te_Mag_LC           = all["Te-Mag"]         # "Water free" but uncentered
+        self.Te_Mag_Centre       = all["Te-Mag Centre"]  # To Centre after normal aspiration.
+        self.Te_Mag_Rest         = all["Te-Mag Rest"]
+        self.Te_Mag_Force_Centre = all["Te-Mag Force Centre"]
+        self.Te_Mag_RestPlus     = all["Te-Mag RestPlus"]
+        self.Water_free          = all["Water free"]     # General. No detect and no track small volumes < 50 µL
+
+        self.SerumLiqClass      = all["Serum Disp postMix3"]  # or "MN Virus Sample"
+        self.TissueHomLiqClass  = all["Serum Asp"]
+
+        self.B_liquidClass      = all["Water free cuvette"]
+        self.W_liquidClass      = self.Water_free                           # or "AVR-Water free DITi 1000"
+        self.Std_liquidClass    = self.Water_free                           # or "Water free dispense DiTi 1000"
+        self.Small_vol_disp     = all["Water wet"]        # or "Water free Low Volume"  ??
+
         return Evo100_FLI._liquid_classes
 
     def carrier_types(self):
@@ -53,46 +77,30 @@ class Evo100_FLI(Protocol):
 
             self.allow_labware("DiTi 3Pos", ['DiTi 1000ul',
                                              '96 Well Microplate',
-                                             '96 Well DeepWell square'])
+                                             '96 Well DeepWell square'], widht_in_grids = 6)
             self.allow_labware("MP 3Pos", ['DiTi 1000ul',
                                            '96 Well Microplate',
-                                           '96 Well DeepWell square'])
+                                           '96 Well DeepWell square'], widht_in_grids = 6)
 
-            self.allow_labware("Trough 3Pos 25+100ml", 'Trough 100ml')
+            self.allow_labware("Trough 3Pos 25+100ml", 'Trough 100ml', widht_in_grids = 1)
             self.allow_labware("Washstation 2Grid Trough DiTi", ['Washstation 2Grid Cleaner short',
                                                                  'Washstation 2Grid Cleaner long',
                                                                  'Washstation 2Grid Waste',
                                                                  'Washstation 2Grid DiTi Waste',
-                                                                 'Trough 100ml'])
+                                                                 'Trough 100ml'], widht_in_grids = 2)
             self.allow_labware("Tube Eppendorf 16 Sites", ['Tube Greinerconic 2mL 16 Pos',
                                                            'Tube Eppendorf 1 Pos',
                                                            'Tube Eppendorf 2mL 1 Pos',
                                                            'Tube Greiner conic 2mL 1 Pos',
-                                                           'Tube Eppendorf 2mL 16 Pos'])
+                                                           'Tube Eppendorf 2mL 16 Pos'], widht_in_grids = 1)
             self.allow_labware("Tube Eppendorf 3x16=48 Pos", ['Tube Eppendorf 3x 16 PosR',
-                                                              'Tube Eppendorf 3x 16 Pos'])
-            self.allow_labware("Tube Eppendorf 6x16=96 Pos", ['Tube Eppendorf 6x 16 Pos'])
-            self.allow_labware("Te-MagS portrait", 'Tube Eppendorf 48 Pos')
+                                                              'Tube Eppendorf 3x 16 Pos'], widht_in_grids = 3)
+            self.allow_labware("Tube Eppendorf 6x16=96 Pos", ['Tube Eppendorf 6x 16 Pos'], widht_in_grids = 6)
+            self.allow_labware("Te-MagS portrait", 'Tube Eppendorf 48 Pos', widht_in_grids = 6)  # ?
 
         return Evo100_FLI._carrier_types
 
     def set_defaults(self):
-        self.Beads_LC_1          = self.get_liquid_class("MixBeads_1")
-        self.Beads_LC_2          = self.get_liquid_class("MixBeads_2")
-        self.Te_Mag_LC           = self.get_liquid_class("Te-Mag")         # "Water free" but uncentered
-        self.Te_Mag_Centre       = self.get_liquid_class("Te-Mag Centre")  # To Centre after normal aspiration.
-        self.Te_Mag_Rest         = self.get_liquid_class("Te-Mag Rest")
-        self.Te_Mag_Force_Centre = self.get_liquid_class("Te-Mag Force Centre")
-        self.Te_Mag_RestPlus     = self.get_liquid_class("Te-Mag RestPlus")
-        self.Water_free          = self.get_liquid_class("Water free")     # General. No detect and no track small volumes < 50 µL
-
-        self.SerumLiqClass      = self.get_liquid_class("Serum Disp postMix3")  # or "MN Virus Sample"
-        self.TissueHomLiqClass  = self.get_liquid_class("Serum Asp")
-
-        self.B_liquidClass      = self.get_liquid_class("Water free cuvette")
-        self.W_liquidClass      = self.Water_free                           # or "AVR-Water free DITi 1000"
-        self.Std_liquidClass    = self.Water_free                           # or "Water free dispense DiTi 1000"
-        self.Small_vol_disp     = self.get_liquid_class("Water wet")        # or "Water free Low Volume"  ??
 
         wt = self.worktable
 

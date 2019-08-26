@@ -79,6 +79,20 @@ class Evo200_FLI (Protocol):
     def set_defaults(self):
         wt = self.worktable
 
+        # todo take from original robot evo200_f (here from evo100_f) !!!
+
+        self.Water_free_d = self.get_liquid_class("Water free dispense")
+        self.Water_wet = self.get_liquid_class("Water wet contact")
+
+        self.Water_free = self.get_liquid_class("Water free")
+        self.SerumLiqClass = self.get_liquid_class("Serum Disp postMix3")  # or "MN Virus Sample"
+        self.TissueHomLiqClass = self.get_liquid_class("Serum Asp")
+
+        self.B_liquidClass = self.get_liquid_class("Water free cuvette")
+        self.W_liquidClass = self.Water_free  # or "AVR-Water free DITi 1000"
+        self.Std_liquidClass = self.Water_free  # or "Water free dispense DiTi 1000"
+        self.Small_vol_disp = self.get_liquid_class("Water wet")  # or "Water free Low Volume"  ??
+
         wt.def_DiTi_type       = labware.DiTi_1000ul                 # this is a type, the others are labwares
 
         WashCleanerS    = wt.get_labware("Cleaner1", labware.CleanerSWS)
