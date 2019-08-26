@@ -14,7 +14,7 @@ class Evo200_FLI (Protocol):
     """
     Using the Evo200_FLI
     """
-    min_s, max_s = 1, 48
+    min_s, max_s = 1, 96
     _liquid_classes = None
     _carrier_types = None
     _labware_types = None
