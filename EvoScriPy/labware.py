@@ -438,12 +438,12 @@ class WorkTable:
         assert isinstance(labware, Labware)
         assert isinstance(loc, WorkTable.Location)
 
-        if isinstance(labware.location, WorkTable.Location):
-            if isinstance(labware.location.worktable, WorkTable):
-                if isinstance(loc.worktable, WorkTable):
-                    if labware.location.worktable is loc.worktable:
+        if isinstance(labware.location, WorkTable.Location):              # the labw have a location
+            if isinstance(labware.location.worktable, WorkTable):         # and that location have a worktable
+                if isinstance(loc.worktable, WorkTable):                  # and the target location have a worktable too
+                    if labware.location.worktable is loc.worktable:       # they are in the same worktable as expected
                         labware.location = loc                                  # the simplest intention: move it
-                        return
+                        return                                     # todo update carrier !!!!!
                     else:
                         labware.location.worktable.retire_labware(labware)       # remove from previous worktable
                         return
