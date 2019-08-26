@@ -438,12 +438,12 @@ class WorkTable:
         assert isinstance(labware, Labware)
         assert isinstance(loc, WorkTable.Location)
 
-        if isinstance(labware.location, WorkTable.Location):              # the labw have a location
-            if isinstance(labware.location.worktable, WorkTable):         # and that location have a worktable
-                if isinstance(loc.worktable, WorkTable):                  # and the target location have a worktable too
-                    if labware.location.worktable is loc.worktable:       # they are in the same worktable as expected
+        if isinstance(labware.location, WorkTable.Location):
+            if isinstance(labware.location.worktable, WorkTable):
+                if isinstance(loc.worktable, WorkTable):
+                    if labware.location.worktable is loc.worktable:
                         labware.location = loc                                  # the simplest intention: move it
-                        return                                     # todo update carrier !!!!!
+                        return
                     else:
                         labware.location.worktable.retire_labware(labware)       # remove from previous worktable
                         return
@@ -791,7 +791,7 @@ def count_tips(TIP_MASK : int) -> int:
 
 class Tip:    # OK play with this idea
     def __init__(self, rack_type):
-        assert isinstance(rack_type, DITIrackType)
+        assert isinstance(rack_type, DITIrackType) or rack_type is Fixed_Tip
         self.vol = 0
         self.type = rack_type
 
@@ -1093,7 +1093,7 @@ class Labware:
         """
         :return: list of the selected well offset
         """
-        return [well.offset for well in self.Wells if well.selFlag]
+        return [well.offset for well in self.Wells if well.selFlag]   
 
     def selected_wells(self):
         return [well for well in self.Wells if well.selFlag]
@@ -1606,6 +1606,8 @@ DiTi_200ul_SBS  = DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     
 DiTi_10ul_SBS   = DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  # 0 9,5 ??
 DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
 DiTi_0200ul     = DITIrackType("DiTi 200 ul",                       maxVol=     190)  # ??
+Fixed_Tip       = Labware.Type("fixed tips", 1, maxVol=1500)  # todo ??
+
 Tip_1000maxVol  = DiTi_1000ul.maxVol
 Tip_200maxVol   = 190                   # TODO revise
 

@@ -340,6 +340,8 @@ class DITIs(Instruction):
 
         self.arm = self.robot.curArm(self.arm)
 
+        assert self.arm.tips_type == self.arm.DiTi
+
         self.arg  = [integer(self.tipMask)]  # arg 1
         self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
         self.arg += [integer(self.arm.index)]      # arg 4

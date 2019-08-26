@@ -209,9 +209,9 @@ class iRobot(Mode):
     One basic use of this, is to guarantee that the robot will be actualized
     once and only once even when multiple modes are used.
     """
-    def __init__(self, index,  nTips , arms=None):
+    def __init__(self, index,  nTips , arms=None, tips_type=None):
         Mode.__init__(self )
-        self.robot = Robot(index=index, arms=arms, nTips=nTips)
+        self.robot = Robot(index=index, arms=arms, nTips=nTips, tips_type=tips_type)
         self.set_as_current()
 
     def exec(self, instr):

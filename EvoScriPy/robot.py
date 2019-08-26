@@ -25,18 +25,24 @@ class Arm:
     Detect      =  0
     Dispense    = -1
 
-    def __init__(self, nTips, index, workingTips=None, tipsType=DiTi): # index=Pipette.LiHa1
+    def __init__(self, nTips, index, workingTips=None, tips_type=None): # index=Pipette.LiHa1
         """
         :param nTips: the number of possible tips
         :param index: int. for example: index=Pipette.LiHa1
         :param workingTips: some tips maybe broken or permanently unused.
-        :param tipsType: DITI or fixed (not implemented)
+        :param tips_type: DITI or fixed (not implemented)
         """
+
         self.index = index
         self.workingTips = workingTips if workingTips is not None else tipsMask[nTips] # todo implement
-        self.tipsType = tipsType
+        self.tips_type = Arm.DiTi if tips_type is None else tips_type
         self.nTips = nTips
-        self.Tips = [None] * nTips
+        tip = None
+        if self.tips_type == Arm.Fixed:
+            tip = labware.Tip(labware.Fixed_Tip)
+
+        self.Tips = [tip] * nTips
+
 
     def getTips_test(self, tip_mask=None) -> int:
         """ Simple test that the asked positions are free for mounting new tips.
@@ -44,7 +50,11 @@ class Arm:
                 :param tip_mask:
                 :return: the mask that can be used
                 :raise "Tip already in position " + str(i):
+
                 """
+        if self.tips_type == Arm.Fixed:
+            return 0
+
         if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
 
@@ -63,13 +73,18 @@ class Arm:
         :param tip_mask:
         :return: the mask that can be used
         :raise "Tip already in position " + str(i):
+
         """
+        if self.tips_type == Arm.Fixed:
+            return 0
+
         if tip_mask is None:  tip_mask = tipsMask[self.nTips]
         n = labware.count_tips(tip_mask)
         assert n <= self.nTips
         t = 0
         if tips is None:   # deprecated
-            assert isinstance(rack_type, labware.Labware.DITIrackType)
+
+            assert isinstance(rack_type, labware.DITIrackType)
             tips = [labware.Tip(rack_type) for i in range(n)]
         else:
             assert n == len(tips)
@@ -89,6 +104,9 @@ class Arm:
                 :param tip_mask: int
                 :return: the mask that can be used
                 """
+        if self.tips_type == Arm.Fixed:
+            return 0
+
         if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
         for i, tp in enumerate(self.Tips):
@@ -109,6 +127,9 @@ class Arm:
                 :param tip_mask: int
                 :return: the mask that can be used
                 """
+        if self.tips_type == Arm.Fixed:
+            return 0
+
         if tip_mask is None:  tip_mask = tipsMask[self.nTips]
         n = labware.count_tips(tip_mask)
         assert n <= self.nTips
@@ -138,6 +159,10 @@ class Arm:
         :rtype : int
         """
         # print("eject_tips_test called with mask= " + str(tip_mask))
+
+        if self.tips_type == Arm.Fixed:
+            return 0, []
+
         if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
         tips_index = []
@@ -158,6 +183,10 @@ class Arm:
         :return: the mask that can be used with, is "True" if tips actually ned to be drooped
         :rtype : int
         """
+
+        if self.tips_type == Arm.Fixed:          # todo call protocol wash ??
+            return 0, []
+
         if tip_mask is None:
             tip_mask = tipsMask[self.nTips]
         tips = []
@@ -221,20 +250,22 @@ class Robot:
                         arms        = None,
                         nTips       = None,
                         workingTips = None,
-                        tipsType    = Arm.DiTi,
+                        tips_type    = Arm.DiTi,
                         templateFile= None): # index=Pipette.LiHa1
         """
         A Robot may have 1 or more Arms, indexes by key index in a dictionary of Arms.
         :param arms:
         :param nTips:
         :param workingTips:
-        :param tipsType:
+        :param tips_type:
         """
+
+
         # assert Robot.current is None
         Robot.current = self
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Arm) else \
-                   {     index: Arm(nTips, index, workingTips, tipsType)}
+                   {     index: Arm(nTips, index, workingTips, tips_type=tips_type)}
         self.worktable      = None
         #self.set_worktable(templateFile)
         self.def_arm        = index  # or Pipette.LiHa1
@@ -390,8 +421,11 @@ class Robot:
         :return: (int, [labware.Tip])
         """
 
+        tips = None
         tip_mask = self.getTips_test(rack_series.type, tip_mask)
-        tips = rack_series.retire_new_tips(tip_mask)
+
+        if tip_mask:
+            tips = rack_series.retire_new_tips(tip_mask)
         return self.curArm().mount_tips_executed(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
 
     def drop_tips_test(self, TIP_MASK=None):

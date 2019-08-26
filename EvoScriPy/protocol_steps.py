@@ -132,7 +132,8 @@ class Protocol (Executable):
                  worktable_template_filename = None,
                  output_filename             = None,
                  firstTip                    = None,
-                 run_name                    = None):
+                 run_name                    = None,
+                 tips_type                   = None):
 
         evo_scripts = Path(__file__).parent.parent / 'EvoScripts' / 'scripts'
         output = output_filename or evo_scripts
@@ -154,6 +155,7 @@ class Protocol (Executable):
         self.check_initial_liquid_level  = False
         self.def_DiTi_check_liquid_level = None
         self.show_runtime_check_list     = False
+        self.tips_type                   = tips_type
 
         Reagent.set_reagent_list(self)
 
@@ -811,9 +813,9 @@ class Protocol (Executable):
                     tip += 1  # use the next tip
                     if tip >= nt:
                         ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
-                        tipsType = self.robot.curArm().Tips[0].type    # only the 0 ??
+                        tips_type = self.robot.curArm().Tips[0].type    # only the 0 ??
                         self.drop_tips(robot.tipsMask[ctips])
-                        self.get_tips(robot.tipsMask[ctips], tipsType)
+                        self.get_tips(robot.tipsMask[ctips], tips_type)
                         tip = 0
                     mV = self.robot.curArm().Tips[tip].type.maxVol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
@@ -839,6 +841,9 @@ class Protocol (Executable):
         :param selected_samples:
         :return:
         """
+        if self.robot.curArm().tips_type == self.robot.curArm().Fixed:          # todo call protocol wash ??
+            return TIP_MASK
+
         mask = TIP_MASK = TIP_MASK if TIP_MASK is not None else robot.tipsMask[self.robot.curArm().nTips]
 
         if self.robot.usePreservedtips:
@@ -1077,7 +1082,7 @@ class Protocol (Executable):
         script = script_dir / (script_name + '.esc')
         assert isinstance(script, Path)
 
-        self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, nTips=self.n_tips)
+        self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, tips_type=self.tips_type, nTips=self.n_tips)
         self.Script = mode.Script(template     = self.worktable_template_filename,
                                   robot_protocol = self,
                                   filename     = script,
