@@ -58,6 +58,12 @@ class aspirate(Pipetting):
     def action():
         return EvoScriPy.robot.Arm.Aspirate
 
+    def validateArg(self):
+        if isinstance(self.liquidClass, tuple):
+            assert len(self.liquidClass) == 2
+            self.liquidClass = self.liquidClass[0]
+        return Pipetting.validateArg(self)
+
 
 class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
@@ -87,6 +93,12 @@ class dispense(Pipetting):
     @staticmethod
     def action():
         return EvoScriPy.robot.Arm.Dispense
+
+    def validateArg(self):
+        if isinstance(self.liquidClass, tuple):
+            assert len(self.liquidClass) == 2
+            self.liquidClass = self.liquidClass[1]
+        return Pipetting.validateArg(self)
 
 
 class mix(Pipetting):
