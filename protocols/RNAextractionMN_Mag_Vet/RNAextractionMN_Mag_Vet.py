@@ -235,7 +235,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             Eluat,
                             initial_vol = 0.0,
                             wells=s + 1,
-                            defLiqClass = def_liquidClass,
+                            defLiqClass = self.Water_free,
                             excess      = 0)
 
                 Reagent("probe_{:02d}".format(s + 1),

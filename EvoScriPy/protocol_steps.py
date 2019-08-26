@@ -1098,6 +1098,7 @@ class Protocol (Executable):
         mode.current = self.EvoMode
         self.worktable  = self.iRobot.robot.worktable  # shortcut !!
         self.robot      = self.iRobot.robot
+        self.robot.liquid_clases = self.liquid_classes()
         assert (self.iRobot.robot.curArm().nTips == self.n_tips)
 
     def comments(self):

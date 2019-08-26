@@ -116,12 +116,14 @@ class DemoTwoMixes(Evo200_FLI):
                           plate1,
                           initial_vol = 0.0,
                           replicas    = num_of_samples,
+                          defLiqClass = self.Water_free,
                           excess      = 0)
 
         mix2_10 = Reagent(f"mix2, diluted 1:10",
                           plate2,
                           initial_vol = 0.0,
                           replicas    = num_of_samples,
+                          defLiqClass = self.Water_free,
                           excess      = 0)
 
         mix1_100 = Reagent(f"mix1, diluted 1:100",
@@ -129,6 +131,7 @@ class DemoTwoMixes(Evo200_FLI):
                            wells       = 'A07',
                            initial_vol = 0.0,
                            replicas    = num_of_samples,
+                           defLiqClass = self.Water_free,
                            excess      = 0)
 
         mix2_100 = Reagent(f"mix2, diluted 1:100",
@@ -136,6 +139,7 @@ class DemoTwoMixes(Evo200_FLI):
                            wells       = 'A07',
                            initial_vol = 0.0,
                            replicas    = num_of_samples,
+                           defLiqClass = self.Water_free,
                            excess      = 0)
 
         instructions.transfer_rack(plate2, new_location).exec()                  # just showing how RoMa works.

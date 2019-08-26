@@ -7,7 +7,6 @@ __author__ = 'qPCR4vir'
 
 
 import EvoScriPy.labware as lab
-from EvoScriPy.Instruction_Base import def_liquidClass
 
 def_reagent_excess = 4
 def_mix_excess = 8
@@ -97,7 +96,7 @@ class Reagent:
         self.labware    = labware
         self.maxFull    = 1.0 if maxFull is None else maxFull/100.0
         self.excess     = 1.0 + ex/100.0
-        self.defLiqClass = defLiqClass or def_liquidClass
+        self.defLiqClass = defLiqClass
         self.name       = name
         self.volpersample = volpersample
         self.components = []                                                            # todo reserved for future use

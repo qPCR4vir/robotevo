@@ -79,7 +79,8 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                                wells        = "A1",
                                replicas     = self.num_of_samples,
                                volpersample = v,
-                               initial_vol= [100]*self.num_of_samples,
+                               initial_vol  = [100]*self.num_of_samples,
+                               defLiqClass  = self.Water_free,
                                minimize_aliquots= False)
 
         self.check_list()                                          # Show the check_list   -------------------------
@@ -93,6 +94,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                            labware      = plate_B,
                            wells        = "A1",
                            replicas     = self.num_of_samples,
+                           defLiqClass  = self.Water_free,
                            minimize_aliquots= False)
 
         with group("Fill column"):

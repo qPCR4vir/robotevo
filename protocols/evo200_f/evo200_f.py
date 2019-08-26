@@ -45,8 +45,24 @@ class Evo200_FLI (Protocol):
         if Evo200_FLI._liquid_classes is None:
             Evo200_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
-        return Evo200_FLI._liquid_classes
+            # the liquid classes are static members of this robot-specific protocol class
+            # (only one copy shared for all objects of this class).
+            # But just for convenience of typing we want protocol objects to have
+            # a self. object member which reference that liquid class.
 
+        all = Evo200_FLI._liquid_classes.all
+
+        self.Water_free          = all["Water free"]     # General. No detect and no track small volumes < 50 µL
+
+        self.SerumLiqClass      = all["Serum Disp postMix3"]  # or "MN Virus Sample"
+        self.TissueHomLiqClass  = all["Serum Asp"]
+
+        self.B_liquidClass      = all["Water free cuvette"]
+        self.W_liquidClass      = self.Water_free
+        self.Std_liquidClass    = self.Water_free
+        self.Small_vol_disp     = all["Water wet"]
+
+        return Evo200_FLI._liquid_classes
 
     def carrier_types(self):
         if Evo200_FLI._carrier_types is None:

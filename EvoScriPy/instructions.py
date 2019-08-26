@@ -69,7 +69,7 @@ class dispense(Pipetting):
     """ A.15.4.2 Dispense (Worklist: Dispense)
     """
     def __init__(self,  tipMask     = None,
-                        liquidClass = def_liquidClass,
+                        liquidClass = None,
                         volume      = def_vol,
                         labware     = None,
                         spacing     = 1,
@@ -111,7 +111,7 @@ class mix(Pipetting):
 
 
     def __init__(self,  tipMask     = None,
-                        liquidClass = def_liquidClass,
+                        liquidClass = None,
                         volume      = def_vol,
                         labware     = None,
                         spacing     = 1,

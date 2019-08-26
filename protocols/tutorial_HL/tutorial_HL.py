@@ -70,8 +70,8 @@ class Tutorial_HL(Evo200_FLI):
         vd = vf - v                                   # uL to be distribute from diluent to each dilution_10
 
         # Define the reagents in each labware (Cuvette, eppys, etc.) -
-        diluent = Reagent("diluent", labware="BufferCub", volpersample = vd)
-        mix1    = Reagent("mix1",  labware="mixes",  volpersample = v)
+        diluent = Reagent("diluent", labware="BufferCub", defLiqClass=self.Water_free, volpersample = vd)
+        mix1    = Reagent("mix1",  labware="mixes", defLiqClass=self.Water_free,  volpersample = v)
 
         self.check_list()                                          # Show the check_list   -------------------------
 
@@ -82,6 +82,7 @@ class Tutorial_HL(Evo200_FLI):
         diluted = Reagent("mix1, diluted 1:10",                    # Define derived reagents  ---------------------
                            plate,
                            replicas         = self.num_of_samples,
+                           defLiqClass      = self.Water_free,
                            minimize_aliquots= False)
 
         with group("Fill dilutions"):

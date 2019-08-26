@@ -274,6 +274,7 @@ class Robot:
         self.preservetips   = False
         self.usePreservedtips = False
         self.allow_air      = 0.2
+        self.liquid_clases  = None
         self.set_as_current()
         # self.preservedtips = {} # order:well
         # self.last_preserved_tips = None # labware.DITIrack, offset

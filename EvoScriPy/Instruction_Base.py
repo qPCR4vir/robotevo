@@ -15,7 +15,9 @@ import EvoScriPy.evo_mode
 import EvoScriPy.labware as lab
 import EvoScriPy.robot as robot
 
-supportVirtualRobot = True  # OK explore this idea ! (problems with "asynchronous" and multiple mode)
+def_vol         = [0]*12
+def_LoopOp      = []
+def_AirgapSpeed = 300
 
 
 class EvoTypes:  # OK improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
@@ -110,6 +112,7 @@ class Instruction:
                                            else '"'+a+'"' if isinstance(a,str)
                                            else  str(a)       for a in self.arg]) + ");"
 
+
 class ScriptONLY(Instruction):
     def allowed(self, mode):
         return not isinstance(mode, EvoScriPy.evo_mode.AdvancedWorkList)
@@ -139,12 +142,6 @@ class T_Mag_Instr(Device):
 
     def __init__(self, commandname):
         Device.__init__(self, "Te-MagS", commandname)
-
-
-def_liquidClass = "Water free"  #"Buffer free DITi 1000-AVR" # "AVR-Water free DITi 1000" # "Water free dispense DiTi 1000"
-def_vol         = [0]*12
-def_LoopOp      = []
-def_AirgapSpeed = 300
 
 
 class Pipette(Instruction):
@@ -292,13 +289,15 @@ class Pipetting(Pipette):
                              Well        = Well,
                              arm         = arm       )
 
-        self.liquidClass = liquidClass or def_liquidClass                       # todo reagent.LC ?
+        self.liquidClass = liquidClass                                     # todo reagent.LC ?
         self.volume      = volume if volume is not None else def_vol
 
     def validateArg(self):
         Pipette.validateArg(self)
-
-        self.liquidClass = self.liquidClass or def_liquidClass            # todo use LiqC of the reagents in wells
+        if isinstance(self.liquidClass  , str):
+            self.liquidClass   = self.robot.liquid_clases.all[self.liquidClass  ]
+        # todo use LiqC of the reagents in wells ?
+        assert isinstance(self.liquidClass  .name, str), "Set the liquid class to be used (for the reagent?)"
 
         self.arg[1:1] =   [string1(self.liquidClass)]                              # arg 2
 
