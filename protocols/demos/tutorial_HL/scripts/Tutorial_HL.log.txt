@@ -1,7 +1,7 @@
 INFO:root:Parsing: C:\prog\robotevo\protocols\evo200_f\DefaultLCs.txt
 INFO:root:Parsing: C:\prog\robotevo\protocols\evo200_f\CustomLCs.txt
 INFO:root:Parsing carriers types from C:\prog\robotevo\protocols\evo200_f\Carrier.cfg
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tutorial_HL\scripts\dilutions_HL_42s.esc
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\demos\tutorial_HL\scripts\dilutions_HL_42s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -73,9 +73,9 @@ INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tutorial_HL\scripts\dilutions_HL_42s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tutorial_HL\scripts\dilutions_HL_42s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tutorial_HL\scripts\dilutions_HL_42s.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\demos\tutorial_HL\scripts\dilutions_HL_42s.protocol.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\demos\tutorial_HL\scripts\dilutions_HL_42s.gwl
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\demos\tutorial_HL\scripts\dilutions_HL_42s.txt
 INFO:root:Check diluent in ['well 1 in labware BufferCub:  with 3931.0 uL of reagent diluent']
 INFO:root:Check mix1 in ['well 1 in labware mixes:  with 436.0 uL of reagent mix1']
 INFO:root:Pick tip 1 from rack site 2 named: DiTi 200 ul have 1 but need 8

@@ -11,7 +11,7 @@ import logging
 test_dir = Path(__file__).parent / 'tests'
 logging.basicConfig(filename=(test_dir / '_tests.log.txt'), filemode='w', level=logging.INFO)
 
-from protocols.hello_world.hello_world import HelloWorld as Prt
+from protocols.demos.hello_world.hello_world import HelloWorld as Prt
 
 p = Prt(output_filename=test_dir / 'hello_world_test_')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -134,7 +134,7 @@ logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-from protocols.demo_two_mixes.demo_two_mixes import DemoTwoMixes as Prt
+from protocols.demos.demo_two_mixes.demo_two_mixes import DemoTwoMixes as Prt
 
 p = Prt(num_of_samples  = 4,
         output_filename = test_dir / 'demo-two.mixes',
@@ -145,7 +145,7 @@ logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
+from protocols.demos.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_HLevel',
@@ -164,7 +164,7 @@ logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-from protocols.tutorial_LL.tutorial_LL import Tutorial_LL as Prt
+from protocols.demos.tutorial_LL.tutorial_LL import Tutorial_LL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
@@ -197,7 +197,7 @@ p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-from protocols.tutorial_HL_RoMa.tutorial_HL_RoMa import Tutorial_HL_RoMa as Prt
+from protocols.demos.tutorial_HL_RoMa.tutorial_HL_RoMa import Tutorial_HL_RoMa as Prt
 
 p = Prt (num_of_samples              = 8,
          output_filename             = test_dir / 'Tutorial_HL_RoMa',

@@ -203,7 +203,7 @@ class App(tkinter.Frame):
             App.GUI_init_parameters.update_parameters(self)
             self.read_num_of_samples()
 
-    from protocols.demo_two_mixes.demo_two_mixes import DemoTwoMixes
+    from protocols.demos.demo_two_mixes.demo_two_mixes import DemoTwoMixes
     GUI4parameters[DemoTwoMixes.name] = GUI_init_RNAext_parameters
 
     from protocols.evo100_f.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN_Vet_Kit
@@ -221,7 +221,7 @@ class App(tkinter.Frame):
     from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
     GUI4parameters[Prefill_plates_LysisBuffer_and_ProtKpreMix.name]=GUI_init_RNAext_parameters
 
-    from protocols.hello_world.hello_world import HelloWorld
+    from protocols.demos.hello_world import HelloWorld
     GUI4parameters[HelloWorld.name]=GUI_init_RNAext_parameters
 
     class GUI_protocol(tkinter.Frame):
