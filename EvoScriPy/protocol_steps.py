@@ -261,7 +261,8 @@ class Protocol (Executable):
         """
         assert isinstance(reagent, Reagent), 'A Reagent expected in reagent to distribute'
         assert isinstance(to_labware_region, labware.Labware), 'A Labware expected in to_labware_region to distribute'
-
+                          # todo allow wellselection here
+                          # allow tip mask continue y calcule num of tips
         if num_tips is None:
             num_tips = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pipetting = all
 
@@ -297,9 +298,11 @@ class Protocol (Executable):
             instructions.comment(msg).exec()
             availableDisp = 0
             while SampleCnt:
-                if num_tips > SampleCnt: num_tips = SampleCnt
+                num_tips = min(num_tips, SampleCnt)
                 with self.tips(robot.tipsMask[num_tips], use_preserved=False, preserve=False):  # OK want to use preserved ?? selected=??
+                    # todo a function returning max vol in arm tips
                     maxMultiDisp_N = self.robot.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
+                    assert maxMultiDisp_N > 0 
                     dsp, rst = divmod(SampleCnt, num_tips)
                     if dsp >= maxMultiDisp_N:
                         dsp = maxMultiDisp_N
