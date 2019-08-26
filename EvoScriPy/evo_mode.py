@@ -11,7 +11,7 @@ Implement the "modes" in which RobotEvo execute the low levels instructions, eff
 type of "output".
 """
 
-
+import logging
 from EvoScriPy.robot import Robot
 
 encoding = 'Latin-1'        # ISO/IEC 8859-1
@@ -57,7 +57,7 @@ class StdOut(toString):
 
     def exec(self, instr):
         s = toString.exec(self, instr)
-        print(s)
+        logging.debug(s)
         return s
 
 
@@ -109,7 +109,7 @@ class inFile(toString):
                     self.f.write(s)
             self.f.close()
             self.f = None
-            # print(self.filename + " done")
+            logging.debug(str(self.filename) + " done")
 
     def open(self):
         if self.f is None:
@@ -122,7 +122,7 @@ class inFile(toString):
         self.done()       # ??
         self.filename = filename
         self.f = open(filename, 'w', encoding=self.encoding, newline=self.newline) if filename is not None else None
-        print("Opened file for script: " + str(filename))
+        logging.info("Opened file for script: " + str(filename))
 
 
 class Comments(inFile):

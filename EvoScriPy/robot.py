@@ -6,6 +6,7 @@
 
 __author__ = 'qPCR4vir'
 
+import logging
 import EvoScriPy.labware as labware
 rep_sub = None      # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(mode.Mode.encoding) ??
 
@@ -158,7 +159,7 @@ class Arm:
         :return: the mask that can be used with, is "True" if tips actually ned to be drooped
         :rtype : int
         """
-        # print("eject_tips_test called with mask= " + str(tip_mask))
+        logging.debug("eject_tips_test called with mask= " + str(tip_mask))
 
         if self.tips_type == Arm.Fixed:
             return 0, []
@@ -173,7 +174,7 @@ class Arm:
                     # pass # self.Tips[i] = None
                 else:
                     tip_mask -= (1 << i)  # already drooped
-        # print("eject_tips_test return mask= " + str(tip_mask))
+        logging.debug("eject_tips_test return mask= " + str(tip_mask))
 
         return tip_mask, tips_index
 
@@ -376,7 +377,7 @@ class Robot:
                             fw = rack.selected_wells() + fw
                         rack.selectOnly([w.offset for w in fw])
                     else:
-                        print("WARNING ! todo, use noncontiguos tips well to aet back?")
+                        logging.warning("WARNING ! todo, use noncontiguos tips well to aet back?")
                 rack, rotate = rack.series.show_next_to(rack)
                 ip = 0
 
@@ -430,18 +431,18 @@ class Robot:
         return self.curArm().mount_tips_executed(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
 
     def drop_tips_test(self, TIP_MASK=None):
-        # print("drop_tips_test called with mask= " + str(TIP_MASK))
+        logging.debug("drop_tips_test called with mask= " + str(TIP_MASK))
 
         if not self.droptips: return 0
 
         TIP_MASK, tips = self.curArm().eject_tips_test(TIP_MASK)
 
-        # print("drop_tips_test return mask= " + str(TIP_MASK))
+        logging.debug("drop_tips_test return mask= " + str(TIP_MASK))
 
         return TIP_MASK
 
     def drop_tips_executed(self, TIP_MASK=None, waste=None):
-        # print("drop_tips_executed called with mask= " + str(TIP_MASK))
+        logging.debug("drop_tips_executed called with mask= " + str(TIP_MASK))
 
         if not self.droptips: return 0
 
@@ -450,7 +451,7 @@ class Robot:
 
         TIP_MASK, tips = self.curArm().eject_tips_executed(TIP_MASK)
         waste.waste(tips)
-        # print("drop_tips_executed return mask= " + str(TIP_MASK))
+        logging.debug("drop_tips_executed return mask= " + str(TIP_MASK))
 
         return TIP_MASK
 
@@ -465,7 +466,7 @@ class Robot:
                 if tip_mask & (1 << i):
                     dv = action*volume[i]
                     if wells[w].reagent is None:
-                        print("WARNING !!! There is no reagent in well {:d} of rack {:s}".format(wells[w].offset+1,
+                        logging.warning("WARNING !!! There is no reagent in well {:d} of rack {:s}".format(wells[w].offset+1,
                                                                    labware_selection.type.name + ": " + labware_selection.label))
                     assert wells[w].vol is not None, (  "Volume of "
                                                       + wells[w].reagent.name
@@ -539,7 +540,7 @@ class Robot:
 
     def set_worktable(self, templateFile, robot_protocol):
         # w = labware.WorkTable.cur_worktable
-        # print("Going to set template: " + str(templateFile))
+        logging.debug("Going to set template: " + str(templateFile))
         if templateFile is None: return
         if isinstance(self.worktable, labware.WorkTable):  # todo temp? really to set
             assert self.worktable.template_file_name == templateFile, 'Attemp to reset wortable from ' \

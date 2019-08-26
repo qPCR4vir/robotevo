@@ -9,6 +9,7 @@ __author__ = 'qPCR4vir'
 """
 Implement the 
 """
+import logging
 
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoScriPy.evo_mode
@@ -313,10 +314,10 @@ class Pipetting(Pipette):
         pass
 
     def pipette_on_iRobot(self,action):
-        # print("pipette_on_iRobot called with mask= " + str(self.tipMask))
+        logging.debug("pipette_on_iRobot called with mask= " + str(self.tipMask))
         self.volume, self.tipMask = self.robot.pipette_executed(action, self.volume,
                                                                 self.labware, self.tipMask)
-        # print("pipette_on_iRobot return= " + str(self.tipMask))
+        logging.debug("pipette_on_iRobot return= " + str(self.tipMask))
 
 
 class DITIs(Instruction):

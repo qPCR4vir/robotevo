@@ -100,5 +100,6 @@ class Tutorial_HL(Evo200_FLI):
         self.done()
 
 if __name__ == "__main__":
+    logging.basicConfig(filename=('scripts/Tutorial_HL.log.txt'), filemode='w', level=logging.INFO)
     p = Tutorial_HL(num_of_samples=42, run_name="_42s")
     p.Run()

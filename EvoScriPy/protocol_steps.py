@@ -9,6 +9,8 @@ __author__ = 'qPCR4vir'
 
 from pathlib import Path
 from contextlib import contextmanager
+import logging
+
 import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instructions
 from EvoScriPy.reagent import Reagent, preMix
@@ -17,7 +19,7 @@ import EvoScriPy.evo_mode as mode
 
 
 def not_implemented():
-    print('This protocols have yet to be implemented.')
+    logging.error('This protocols have yet to be implemented.')
 
 
 # output_filename = '../current/AWL'
@@ -64,7 +66,7 @@ class Executable:
         Here, for example, initialize the list of reagents.
         	# todo: make private
         """
-        print('set def in Executable')
+        logging.debug('set def in Executable')
 
     def initialize(self):
         """
@@ -784,7 +786,7 @@ class Protocol (Executable):
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
-            print("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
+            logging.warning("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
             pre_mix.Replicas = pre_mix.Replicas[:nrepl]
 
         msg = "preMix: {:.1f} µL of {:s}".format(tVol, pre_mix.name)
@@ -996,7 +998,7 @@ class Protocol (Executable):
         for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
                 reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
-                print(reagent_msg)
+                logging.info(reagent_msg)
                 self.check_reagent_level(reagent)
 
     def show_check_list(self):
@@ -1010,7 +1012,7 @@ class Protocol (Executable):
         for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
                 reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
-                print(reagent_msg)
+                logging.info(reagent_msg)
                 prompt_msg += reagent_msg + ""
 
         self.user_prompt(prompt_msg)
@@ -1075,7 +1077,7 @@ class Protocol (Executable):
         Reagent.set_reagent_list(self)
 
     def init_EvoMode(self):
-        print("Setting Evo Modes")
+        logging.debug("Setting Evo Modes")
 
         script_dir = self.output_filename.parent
         script_name = self.output_filename.name
@@ -1349,7 +1351,7 @@ class Pipeline (Executable):
     def RunPi(self):
 
         for protocol in self.protocols:
-            print(protocol.name + protocol.run_name)
+            logging.info(protocol.name + protocol.run_name)
 
 
 @contextmanager

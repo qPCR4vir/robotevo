@@ -10,6 +10,8 @@ __author__ = 'qPCR4vir'
 
 # http://sydney.edu.au/medicine/bosch/facilities/molecular-biology/automation/Manual%20Freedom%20EVOware%202.3%20Research%20Use%20Only.pdf
 
+import logging
+
 from EvoScriPy.Instruction_Base import *
 import EvoScriPy.robot
 #todo organize the arg in each instruction according to the more common use
@@ -1415,7 +1417,7 @@ class transfer_rack(Instruction):
             assert isinstance(self.lid,      lab.WorkTable.Location)
             assert isinstance(self.lid.carrier, lab.Carrier)
 
-        print("Transafering from " + str(self.labware.location) + " to " + str(self.destination))
+        logging.info("Transafering from " + str(self.labware.location) + " to " + str(self.destination))
         assert self.cover in [0, 1]
 
         if self.vectorName is None:

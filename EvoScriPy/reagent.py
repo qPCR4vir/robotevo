@@ -5,7 +5,7 @@
 # 2014-2019
 __author__ = 'qPCR4vir'
 
-
+import logging
 import EvoScriPy.labware as lab
 
 def_reagent_excess = 4
@@ -128,24 +128,24 @@ class Reagent:
             assert len(wells) >= self.minNumRep, ("too few wells (" + str(len(wells)) + ") given for the minimum "
                                                 + "number of replica needed (" + str(self.minNumRep) + " )" )
             if replicas < len(wells):
-                print("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
+                logging.warning("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
                 replicas = len(wells)
             assert not replicas > len(wells), ("too few wells (" + str(len(wells)) + ") given for the desired "
                                                 + "number of replicas (" + str(replicas) + " )" )
             if isinstance(initial_vol, list):
                 assert replicas == len(initial_vol)
             if replicas > self.minNumRep:                                    # todo revise !! for preMix components
-                print("WARNING !! You may be putting more wells replicas (" + str(len(wells)) + ") of " + name
+                logging.warning("WARNING !! You may be putting more wells replicas (" + str(len(wells)) + ") of " + name
                       + " that the minimum you need("  + str(self.minNumRep) + " )")
 
         if not isinstance(initial_vol, list):
             initial_vol = [initial_vol]*replicas
 
         if replicas < len(initial_vol):
-            print("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
+            logging.warning("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
             replicas = len(initial_vol)
             if replicas > self.minNumRep:                                      # todo revise !! for preMix components
-                print("WARNING !! You may be putting more inital volumens values (" + str(replicas) + ") of " + name
+                logging.warning("WARNING !! You may be putting more inital volumens values (" + str(replicas) + ") of " + name
                       + " that the minimum number of replicas you need("  + str(self.minNumRep) + " )")
 
         self.Replicas   = labware.put(self, wells, self.minNumRep if self.minimize_aliquots else replicas)
