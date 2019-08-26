@@ -1,1 +1,0 @@
-Prefill 1 plates with LysisBufferReact for 96 samples.

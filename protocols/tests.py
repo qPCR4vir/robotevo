@@ -13,7 +13,7 @@ logging.basicConfig(filename=(test_dir / '_tests.log.txt'), filemode='w', level=
 
 from protocols.hello_world.hello_world import HelloWorld as Prt
 
-p = Prt(output_filename=test_dir / 'hello_world')
+p = Prt(output_filename=test_dir / 'hello_world_test_')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
@@ -149,7 +149,7 @@ from protocols.tutorial_HL.tutorial_HL import Tutorial_HL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_HLevel',
-         run_name                    = "_6s")
+         run_name                    = "_test__6s")
 p.use_version('No version')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -157,7 +157,7 @@ p.Run()
 
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_HLevel',
-         run_name                    = "_46s")
+         run_name                    = "_test__46s")
 p.use_version('No version')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -168,7 +168,7 @@ from protocols.tutorial_LL.tutorial_LL import Tutorial_LL as Prt
 
 p = Prt (num_of_samples              = 6,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
-         run_name                    = "_6s")
+         run_name                    = "_test__6s")
 p.use_version('No version')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -176,22 +176,22 @@ p.Run()
 
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
-         run_name                    = "_46s")
+         run_name                    = "_test__46s")
 p.use_version('No version')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
 
-from protocols.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer as Prt
+from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer as Prt
 
-p = Prt(run_name="_1_plate")
+p = Prt(run_name="_test_1_plate")
 p.use_version('1 plate')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-p = Prt (run_name="_3_plate")
+p = Prt (run_name="_test_3_plate")
 p.use_version('3 plate')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -201,7 +201,7 @@ from protocols.tutorial_HL_RoMa.tutorial_HL_RoMa import Tutorial_HL_RoMa as Prt
 
 p = Prt (num_of_samples              = 8,
          output_filename             = test_dir / 'Tutorial_HL_RoMa',
-         run_name                    = "_6s")
+         run_name                    = "_test_6s")
 p.use_version('No version')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")

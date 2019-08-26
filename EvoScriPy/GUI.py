@@ -215,7 +215,7 @@ class App(tkinter.Frame):
     from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
     GUI4parameters[Prefill_plates_VEW1_ElutionBuffer_VEW2.name]=GUI_init_RNAext_parameters
 
-    from protocols.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
+    from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
     GUI4parameters[Prefill_plates_LysisBuffer.name]=GUI_init_RNAext_parameters
 
     from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
