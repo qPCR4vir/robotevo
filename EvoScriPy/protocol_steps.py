@@ -320,8 +320,8 @@ class Protocol (Executable):
                         SampleCnt -= num_tips
 
     def transfer(self,
-                 from_labware_region: labware.Labware,
-                 to_labware_region  : labware.Labware,
+                 from_labware_region: labware.Labware,  # todo take list of "samples"
+                 to_labware_region  : labware.Labware,  # todo take list
                  volume             : (int, float),
                  using_liquid_class : (str,tuple)   = None,
                  optimizeFrom       : bool          = True,
@@ -377,29 +377,31 @@ class Protocol (Executable):
             oriSel = range(NumSamples)
             dstSel = range(NumSamples)
         else:
-            oriSel = to_labware_region.selected()
-            dstSel = from_labware_region.selected()
+            oriSel = from_labware_region.selected()
+            dstSel = to_labware_region.selected()
 
             if not dstSel:
                 if not oriSel:
                     oriSel = range(self.num_of_samples)
                     dstSel = range(self.num_of_samples)
                 else:
-                    dstSel = oriSel
+                    dstSel = oriSel  # todo ??
             else:
                 if not oriSel:
-                    oriSel = dstSel
+                    oriSel = dstSel  # todo ??
                 else:
                     l = min(len(oriSel), len(dstSel))   # transfer the minimum of the selected
                     oriSel = oriSel[:l]                 # todo Best reise an error ??
                     dstSel = dstSel[:l]
         if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)   # a list of well offset s
-        if optimizeTo  :   dstSel = to_labware_region.parallelOrder  (nt, dstSel)
+        if optimizeTo  : dstSel = to_labware_region.parallelOrder  (nt, dstSel)
 
         NumSamples = len(dstSel)
         SampleCnt = NumSamples
 
         assert isinstance(volume, (int, float))
+
+        # todo revise !!!
         assert 0 < volume <= self.worktable.def_DiTi_type.maxVol, \
             "Invalid volumen to transfer ("+str(volume)+") with tips " + self.worktable.def_DiTi_type
 
