@@ -176,7 +176,7 @@ p.Run()
 
 p = Prt (num_of_samples              = 46,
          output_filename             = test_dir / 'Tutorial_LLevel_atomic',
-         run_name                    = "_test__46s")
+         run_name                    = "_test_46s")
 p.use_version('No version')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -185,13 +185,13 @@ p.Run()
 
 from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer as Prt
 
-p = Prt(run_name="_test_1_plate")
+p = Prt(run_name="_test_1_plate", output_filename = (test_dir / 'Prefill_LysisBuffer'))
 p.use_version('1 plate')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-p = Prt (run_name="_test_3_plate")
+p = Prt (run_name="_test_3_plate", output_filename = (test_dir / 'Prefill_LysisBuffer'))
 p.use_version('3 plate')
 p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
@@ -207,4 +207,17 @@ p.set_first_tip('A01')
 logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
 p.Run()
 
-#from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix  import Prefill_plates_LysisBuffer_and_ProtKpreMix
+from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix  as Prt
+
+p = Prt(run_name="_test_1_plate", output_filename = (test_dir / 'Prefill_LysisBuffer_pK'))
+p.use_version('1 plate')
+p.set_first_tip('A01')
+logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+p.Run()
+
+p = Prt (run_name="_test_3_plate", output_filename = (test_dir / 'Prefill_LysisBuffer_pK'))
+p.use_version('3 plate')
+p.set_first_tip('A01')
+logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+# p.Run()
+

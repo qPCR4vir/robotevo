@@ -29,7 +29,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
     def V_2_plate(self):        self.num_plates = 2
     def V_3_plate(self):        self.num_plates = 3
 
-    def __init__(self, GUI=None, run_name="Prefill plates with LysisBuffer"):
+    def __init__(self, GUI=None, run_name=None, output_filename=None):
 
         this = Path(__file__).parent
 
@@ -37,7 +37,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                             GUI                     = GUI,
                             num_of_samples          = Prefill_plates_LysisBuffer.max_s,
                             worktable_template_filename=this / 'Prefill_plates_LysisBuffer.ewt',
-                            output_filename         = this / 'scripts' / 'Prefill_LysisBuffer',
+                            output_filename         = output_filename or this / 'scripts' / 'Prefill_LysisBuffer',
                             run_name                = run_name)
 
     def Run(self):

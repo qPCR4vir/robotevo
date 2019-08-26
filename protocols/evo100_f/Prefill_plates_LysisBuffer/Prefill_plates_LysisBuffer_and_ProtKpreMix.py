@@ -55,14 +55,14 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         self.preMix_from_Cuvette = False
         self.preMix_from_LysBuf_pK_Cuvette = False
 
-    def __init__(self, GUI=None, run_name="Prefill plates with LysisBuffer"):
+    def __init__(self, GUI=None, run_name=None, output_filename=None):
         self.def_init()
         this = Path(__file__).parent
         Evo100_FLI.__init__(self,
                             GUI                     = GUI,
                             num_of_samples          = Prefill_plates_LysisBuffer_and_ProtKpreMix.max_s,
-                            worktable_template_filename=this.parent / 'Prefill_plates_LysisBuffer/Prefill_plates_LysisBuffer.ewt',
-                            output_filename         = this / 'scripts' / '',
+                            worktable_template_filename=this / 'Prefill_plates_LysisBuffer.ewt',
+                            output_filename         = output_filename or (this / 'scripts' / 'Prefill_LysisBuffer_pK'),
                             run_name                = run_name)
 
     def Run(self):
@@ -76,14 +76,14 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        preMixProtKCuvette = wt.get_labware("8-preMix ProtK", lab.Trough_100ml)
-        LysBufCuvette      = wt.get_labware("2-Vl Lysis Buffer", lab.Trough_100ml)
+        preMixProtKCuvette = wt.get_labware("8-preMix ProtK", labware.Trough_100ml)
+        LysBufCuvette      = wt.get_labware("2-Vl Lysis Buffer", labware.Trough_100ml)
 
-        DiTi1000_1  = wt.get_labware("1000-1", lab.DiTi_1000ul)
-        DiTi1000_2  = wt.get_labware("1000-2", lab.DiTi_1000ul)
-        DiTi1000_3  = wt.get_labware("1000-3", lab.DiTi_1000ul)
+        DiTi1000_1  = wt.get_labware("1000-1", labware.DiTi_1000ul)
+        DiTi1000_2  = wt.get_labware("1000-2", labware.DiTi_1000ul)
+        DiTi1000_3  = wt.get_labware("1000-3", labware.DiTi_1000ul)
 
-        Reagents_TubeRack   = wt.get_labware("Reactives", lab.GreinRack16_2mL)
+        Reagents_TubeRack   = wt.get_labware("Reactives", labware.GreinRack16_2mL)
 
 
         self.set_first_tip()                                 #  Set the initial position of the tips
@@ -105,7 +105,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         all_samples = range(num_of_samples)
         maxTips     = min  (self.n_tips, num_of_samples)
-        maxMask     = Rbt.tipsMask[maxTips]
+        maxMask     = robot.tipsMask[maxTips]
 
                                                         # Define the reagents in each labware (Cuvette, eppys, etc.)
 
@@ -119,7 +119,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             ProtK = Reagent("Proteinase K ",
                                 Reagents_TubeRack,
                                 volpersample   = ProtKVolume,
-                                defLiqClass    = Small_vol_disp,
+                                defLiqClass    = self.Small_vol_disp,
                                 num_of_samples = self.num_plates * num_of_samples,
                                 maxFull        = 90)
             ProtK.maxFull=0.96
@@ -127,21 +127,21 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             cRNA = Reagent("Carrier RNA ",
                                Reagents_TubeRack,
                                volpersample    = cRNAVolume,
-                               defLiqClass     = Small_vol_disp,
+                               defLiqClass     = self.Small_vol_disp,
                                num_of_samples  = self.num_plates * num_of_samples,
                                maxFull         = 95)
 
             IC_MS2 = Reagent("IC MS2 phage culture ",
                                  Reagents_TubeRack,
                                  volpersample   = IC_MS2Volume,
-                                 defLiqClass    = Small_vol_disp,
+                                 defLiqClass    = self.Small_vol_disp,
                                  num_of_samples = self.num_plates * num_of_samples,
                                  maxFull        = 95)
 
             pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents_TubeRack,
                                      components     = [cRNA, ProtK, IC_MS2],
-                                     defLiqClass    = W_liquidClass,
+                                     defLiqClass    = self.W_liquidClass,
                                      excess         = 8,
                                      maxFull        = 90,
                                      num_of_samples = self.num_plates * num_of_samples  )
@@ -161,7 +161,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        LysPlat = [wt.get_labware("Plate lysis-" + str(i + 1), lab.MP96deepwell) for i in range(self.num_plates)]
+        LysPlat = [wt.get_labware("Plate lysis-" + str(i + 1), labware.MP96deepwell) for i in range(self.num_plates)]
 
         par = LysPlat[0].parallelOrder(self.n_tips, all_samples)
 
@@ -194,3 +194,11 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         self.drop_tips()
 
         self.done()
+
+
+if __name__ == "__main__":
+
+    p = Prefill_plates_LysisBuffer_and_ProtKpreMix(run_name='1 plate')
+
+    p.use_version('1 plate')
+    p.Run()

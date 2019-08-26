@@ -3742,9 +3742,9 @@ WARNING:root:WARNING !!! There is no reagent in well 5 of rack 96 Well Microplat
 WARNING:root:WARNING !!! There is no reagent in well 6 of rack 96 Well Microplate: plate
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__46s **************
+************ C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__46s.esc
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -3816,9 +3816,9 @@ INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__46s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__46s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__46s.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.protocol.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.gwl
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.txt
 INFO:root:Pick tip 1 from rack site 2 named: DiTi 200 ul have 1 but need 8
 INFO:root:Pick tip 2 from rack site 2 named: DiTi 200 ul have 2 but need 8
 INFO:root:Pick tip 3 from rack site 2 named: DiTi 200 ul have 3 but need 8
@@ -3945,9 +3945,9 @@ WARNING:root:WARNING !!! There is no reagent in well 45 of rack 96 Well Micropla
 WARNING:root:WARNING !!! There is no reagent in well 46 of rack 96 Well Microplate: plate
 INFO:root:
 
-************ C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_1_plate **************
+************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_1_plate.esc
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 8
@@ -3968,7 +3968,7 @@ INFO:root:Created serie of 1 Trough 100ml
 INFO:root:Created labware Trough 100ml:1-VEL-ElutionBuffer in grid:20, site:1
 INFO:root:Created labware Trough 100ml:5-VEW2-WashBuffer in grid:20, site:2
 INFO:root:Created labware Trough 100ml:4-VEW1 Wash Buffe in grid:20, site:3
-INFO:root:Created labware Trough 100ml:Labware2 in grid:21, site:2
+INFO:root:Created labware Trough 100ml:8-preMix ProtK in grid:21, site:2
 INFO:root:Created serie of 1 Washstation 2Grid Cleaner short
 INFO:root:Created labware Washstation 2Grid Cleaner short: in grid:23, site:1
 INFO:root:Created serie of 1 Washstation 2Grid Waste
@@ -3986,18 +3986,18 @@ INFO:root:Created labware 96 Well DeepWell square:Plate lysis-2 in grid:25, site
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-3 in grid:25, site:3
 WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_1_plate.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_1_plate.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_1_plate.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.protocol.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.gwl
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_3_plate **************
+************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_3_plate.esc
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 8
@@ -4018,7 +4018,7 @@ INFO:root:Created serie of 1 Trough 100ml
 INFO:root:Created labware Trough 100ml:1-VEL-ElutionBuffer in grid:20, site:1
 INFO:root:Created labware Trough 100ml:5-VEW2-WashBuffer in grid:20, site:2
 INFO:root:Created labware Trough 100ml:4-VEW1 Wash Buffe in grid:20, site:3
-INFO:root:Created labware Trough 100ml:Labware2 in grid:21, site:2
+INFO:root:Created labware Trough 100ml:8-preMix ProtK in grid:21, site:2
 INFO:root:Created serie of 1 Washstation 2Grid Cleaner short
 INFO:root:Created labware Washstation 2Grid Cleaner short: in grid:23, site:1
 INFO:root:Created serie of 1 Washstation 2Grid Waste
@@ -4036,9 +4036,9 @@ INFO:root:Created labware 96 Well DeepWell square:Plate lysis-2 in grid:25, site
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-3 in grid:25, site:3
 WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_3_plate.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_3_plate.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\evo100_f\Prefill_plates_LysisBuffer\scripts\Prefill_LysisBuffer_test_3_plate.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.protocol.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.gwl
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
@@ -4143,3 +4143,61 @@ INFO:root:Pick tip 5 from rack site 1 named: DiTi 200 ul have 5 but need 8
 INFO:root:Pick tip 6 from rack site 1 named: DiTi 200 ul have 6 but need 8
 INFO:root:Pick tip 7 from rack site 1 named: DiTi 200 ul have 7 but need 8
 INFO:root:Pick tip 8 from rack site 1 named: DiTi 200 ul have 8 but need 8
+INFO:root:
+
+************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate **************
+
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.esc
+INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
+INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 7
+INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 8
+INFO:root:Carrier: Trough 3Pos 25+100ml found in line carrier-grid for grid 20
+INFO:root:Carrier: Trough 3Pos 25+100ml found in line carrier-grid for grid 21
+INFO:root:Carrier: Washstation 2Grid Trough DiTi found in line carrier-grid for grid 23
+INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 25
+INFO:root:Detected 99 grids.
+INFO:root:Created serie of 1 DiTi 1000ul
+INFO:root:Created labware DiTi 1000ul:1000-1 in grid:1, site:1
+INFO:root:Created labware DiTi 1000ul:1000-2 in grid:1, site:2
+INFO:root:Created labware DiTi 1000ul:1000-3 in grid:1, site:3
+INFO:root:Created serie of 1 Tube Greinerconic 2mL 16 Pos
+INFO:root:Created labware Tube Greinerconic 2mL 16 Pos:Reactives in grid:7, site:1
+INFO:root:Created serie of 1 Tube Eppendorf 6x 16 Pos
+INFO:root:Created labware Tube Eppendorf 6x 16 Pos:Proben in grid:8, site:1
+INFO:root:Created serie of 1 Trough 100ml
+INFO:root:Created labware Trough 100ml:1-VEL-ElutionBuffer in grid:20, site:1
+INFO:root:Created labware Trough 100ml:5-VEW2-WashBuffer in grid:20, site:2
+INFO:root:Created labware Trough 100ml:4-VEW1 Wash Buffe in grid:20, site:3
+INFO:root:Created labware Trough 100ml:8-preMix ProtK in grid:21, site:2
+INFO:root:Created serie of 1 Washstation 2Grid Cleaner short
+INFO:root:Created labware Washstation 2Grid Cleaner short: in grid:23, site:1
+INFO:root:Created serie of 1 Washstation 2Grid Waste
+INFO:root:Created labware Washstation 2Grid Waste: in grid:23, site:2
+INFO:root:Created serie of 1 Washstation 2Grid Cleaner long
+INFO:root:Created labware Washstation 2Grid Cleaner long: in grid:23, site:3
+INFO:root:Created labware Trough 100ml:3-VEB Binding Buffer in grid:23, site:4
+INFO:root:Created labware Trough 100ml:2-Vl Lysis Buffer in grid:23, site:5
+INFO:root:Created labware Trough 100ml:7-EtOH80p in grid:23, site:6
+INFO:root:Created serie of 1 Washstation 2Grid DiTi Waste
+INFO:root:Created labware Washstation 2Grid DiTi Waste: in grid:23, site:7
+INFO:root:Created serie of 1 96 Well DeepWell square
+INFO:root:Created labware 96 Well DeepWell square:Plate lysis-1 in grid:25, site:1
+INFO:root:Created labware 96 Well DeepWell square:Plate lysis-2 in grid:25, site:2
+INFO:root:Created labware 96 Well DeepWell square:Plate lysis-3 in grid:25, site:3
+WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.protocol.txt
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.gwl
+INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.txt
+INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
+INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
+INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
+INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
+INFO:root:Pick tip 5 from rack site 1 named: 1000-1 have 1 but need 4
+INFO:root:Pick tip 6 from rack site 1 named: 1000-1 have 2 but need 4
+INFO:root:Pick tip 7 from rack site 1 named: 1000-1 have 3 but need 4
+INFO:root:Pick tip 8 from rack site 1 named: 1000-1 have 4 but need 4
+INFO:root:
+
+************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_3_plate **************
+

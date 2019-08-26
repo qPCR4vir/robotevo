@@ -16,7 +16,7 @@ from protocols.RNAextractionMN_Mag_Vet.RNAextractionMN_Mag_Vet import RNAextr_MN
 from protocols.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VEW1_ElutionBuffer_VEW2 import Prefill_plates_VEW1_ElutionBuffer_VEW2
 from protocols.evo100_f.Prefill_plates_LysisBuffer import Prefill_plates_LysisBuffer
 from protocols.PreKingFisher_RNAextNucleoMag_EtOH80p.PreKingFisher_RNAextNucleoMag_EtOH80p import PreKingFisher_RNAextNucleoMag_EtOH80p
-from protocols.Prefill_plates_LysisBuffer_and_ProtKpreMix.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
+from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
 from EvoScriPy.protocol_steps                         import Pipeline
 from protocols.hello_world.hello_world import HelloWorld
 
