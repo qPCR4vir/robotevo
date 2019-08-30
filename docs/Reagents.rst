@@ -8,5 +8,4 @@ Defines a named homogeneous liquid solution, the wells it occupy, the initial am
 
 .. automodule:: reagent
    :members:
-   :undoc-members:
    :show-inheritance:
