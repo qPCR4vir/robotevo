@@ -1,3 +1,6 @@
+API
+=====
+
 The final goal of RobotEvo is to help you to translate your normal laboratory protocol into an script executable by a robot. Thus, the `class Protocol` offers the base to all the custom protocol classes you will write. You will probably derived from `Protocol` one more intermediary protocol class that will define a few characteristic specific to the concrete robot you are using, probably setting some "sensible defaults" in the constructor of that "robot-specific protocol class". 
 
 Now, in a concrete protocol derived from that intermediary class, you will define concrete arguments in the constructor, and re-implement the `Run()` function. Particularly, you may pass to the constructor the path to the description of the worktable you want to use (this may be an evoware worktable template file or just a working script file). 
@@ -15,7 +18,7 @@ Defines a named homogeneous liquid solution, the wells it occupy, the initial am
  - preMix
 
 
-[Worktable and labwares]
+:doc: ˋWorktable and labwaresˋ
 ============================================
  - Worktable
  - Worktable.Location
@@ -29,16 +32,16 @@ Defines a named homogeneous liquid solution, the wells it occupy, the initial am
      + DitiRack
      + Cuvette
 
-[Principal API: Protocol steps]
+:doc: ˋPrincipal API: Protocol stepsˋ
 ==============================================
 All these functions are member of the base `class Protocol`, from which all user protocols are derived.
 
 
-[High level functions]
+High level functions
 ^^^^^^^^^^^^^^^^^^^^^^
 These are the functions you will use in "every day" protocol programming. They allow you to specify the kind of tips to use and them command the operations you need on your reagents, samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
 
-[Low level functions:]
+Low level functions
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Advanced functions.
@@ -47,9 +50,9 @@ Advanced functions.
 Are you doing some advanced protocol development that cannot be efficiently or clearly expressed using the previous [High level functions](https://github.com/qPCR4vir/robotevo/wiki/Protocol-steps-(principal-API)#high-level-functions)? Then, you may use the following functions. Keep in mind that it is now your responsibility to know what robot/protocol "state" are ignored by these new functions. For example, before `aspirate` you will need to mount "by yourself" the tips in the correct position of the used arm, because `aspirate` ignores the higher level [`with tips`](https://github.com/qPCR4vir/robotevo/wiki/Protocol-steps-(principal-API)#with-protocoltipstip_type). But don't worry, **`RobotEvo`** still keeps track of the ("internal") robot state and will throw errors informing you about most logical mistakes (like in the previous example forgetting to mount the tips). In some cases these functions may be used to construct new high lever functions.
 
 
-[Atomic functions]
+Atomic functions
 ____________________________
 These are functions aimed to isolate what a physical robot would make at once: pick some tips, aspirate some liquid, etc. They are simple to understand, but are harder to use in "every day" protocol programming. They may be a great tool to set up your robot and to get an initial familiarization with all the system. 
 
-[Other low level functions:]
+Other low level functions
 ----------------------------
