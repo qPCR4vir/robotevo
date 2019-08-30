@@ -6,13 +6,7 @@ Defines a named homogeneous liquid solution, the wells it occupy, the initial am
 
 
 
-.. automodule:: reagents
+.. automodule:: reagent
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-## Reagents
- - Reagent
- - preMix
-------------------------
