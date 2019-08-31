@@ -2,7 +2,7 @@
 Why RobotEvo? Programming automation of RNA extraction
 ========================================
 
-(adapted from my ˋPhD Thesis: RNA virus detection and identification using techniques based on DNA hybridization<https://epub.ub.uni-greifswald.de/frontdoor/index/index/docId/2175>ˋ)
+(adapted from my ˋPhD Thesis: RNA virus detection and identification using techniques based on DNA hybridization <https://epub.ub.uni-greifswald.de/frontdoor/index/index/docId/2175>ˋ)
 
 Usually, prior to proceed to the application of the DNA-hybridization-based technique,
 like RT-qPCR, the viral RNA need to be extracted. We used well established methods and
@@ -39,8 +39,7 @@ extraction.  The layers of the implementation are: a parser and a generator
 [Freedom EVOware](http://lifesciences.tecan.com/products/software/freedom_evoware)
 software; a set of “modes” to provide the desired kind of output (human readable
 comments, separated instructions, EVOware scripts, etc., in module
-:doc:ˋEvoModeˋ;
-a model of the state of the robot to detect possible errors prior to
+:file: ˋevo_modeˋ; a model of the state of the robot to detect possible errors prior to
 the generation of the script by tracking what volume of what mix of
 reagents contains at each moment each reservoir or tip (module
 [Robot](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Robot.py) –
