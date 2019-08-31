@@ -2,7 +2,8 @@
 Why RobotEvo? Programming automation of RNA extraction
 ========================================
 
- (adapted from my ˋPhD Thesis: RNA virus detection and identification using techniques based on DNA hybridization<https://epub.ub.uni-greifswald.de/frontdoor/index/index/docId/2175>ˋ)
+(adapted from my ˋPhD Thesis: RNA virus detection and identification using techniques based on DNA hybridization<https://epub.ub.uni-greifswald.de/frontdoor/index/index/docId/2175>ˋ)
+
 Usually, prior to proceed to the application of the DNA-hybridization-based technique,
 like RT-qPCR, the viral RNA need to be extracted. We used well established methods and
 commercially available kits based on columns (RNeasy Mini Kit or QIAamp Viral RNA Mini Kit,
