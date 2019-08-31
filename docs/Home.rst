@@ -2,7 +2,7 @@
 Why RobotEvo? Programming automation of RNA extraction
 ========================================
 
- (adapted from my [PhD Thesis: RNA virus detection and identification using techniques based on DNA hybridization](https://epub.ub.uni-greifswald.de/frontdoor/index/index/docId/2175))
+ (adapted from my ˋPhD Thesis: RNA virus detection and identification using techniques based on DNA hybridization<https://epub.ub.uni-greifswald.de/frontdoor/index/index/docId/2175>ˋ)
 Usually, prior to proceed to the application of the DNA-hybridization-based technique,
 like RT-qPCR, the viral RNA need to be extracted. We used well established methods and
 commercially available kits based on columns (RNeasy Mini Kit or QIAamp Viral RNA Mini Kit,
@@ -34,25 +34,25 @@ scripts for the robot.  This new Python library provide new layers of abstractio
 to offer a higher level programing model to allow a more direct programing of the
 steps needed in a typical biochemical/biological pipetting protocol like RNA
 extraction.  The layers of the implementation are: a parser and a generator
- (module :doc:ˋInstructionsˋ of the “low-level” instruction set directly usable by the provided
-  [Freedom EVOware](http://lifesciences.tecan.com/products/software/freedom_evoware)
-  software; a set of “modes” to provide the desired kind of output (human readable
-  comments, separated instructions, EVOware scripts, etc., in module
-  :doc:ˋEvoModeˋ;
-  a model of the state of the robot to detect possible errors prior to
-  the generation of the script by tracking what volume of what mix of
-  reagents contains at each moment each reservoir or tip (module
-  [Robot](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Robot.py) –
-  this is a **_novel_** functionality impossible to achieve with the original
-  software); low level pipetting instructions (like aspirate a specific liquid
-  volume from a given vial into a tip); a higher level command set (like distribute
-  some reagent into each sample, in module
-  [protocol steps](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/protocol_steps.py))
-  to directly program high-level, more realistic protocol scripts including a
-  base template for a full protocol; and, finally, a set of facilities to declare
-  the reagents (module Reagent) and the labwares (like reaction tubes, racks of
-  tubes, racks of tips, cuvettes, etc. in module
-  [Labware](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Labware.py)).
+(module :doc:ˋInstructionsˋ of the “low-level” instruction set directly usable by the provided
+[Freedom EVOware](http://lifesciences.tecan.com/products/software/freedom_evoware)
+software; a set of “modes” to provide the desired kind of output (human readable
+comments, separated instructions, EVOware scripts, etc., in module
+:doc:ˋEvoModeˋ;
+a model of the state of the robot to detect possible errors prior to
+the generation of the script by tracking what volume of what mix of
+reagents contains at each moment each reservoir or tip (module
+[Robot](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Robot.py) –
+this is a **_novel_** functionality impossible to achieve with the original
+software); low level pipetting instructions (like aspirate a specific liquid
+volume from a given vial into a tip); a higher level command set (like distribute
+some reagent into each sample, in module
+[protocol steps](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/protocol_steps.py))
+to directly program high-level, more realistic protocol scripts including a
+base template for a full protocol; and, finally, a set of facilities to declare
+the reagents (module Reagent) and the labwares (like reaction tubes, racks of
+tubes, racks of tips, cuvettes, etc. in module
+[Labware](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Labware.py)).
 
 For the protocol for RNA extraction (module RNAextractionMN_Mag_Vet) the set
 of used labwares and reagents are declared first. Immediately an automatically
