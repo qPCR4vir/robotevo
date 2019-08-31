@@ -8,7 +8,7 @@ Usually, prior to proceed to the application of the DNA-hybridization-based tech
 like RT-qPCR, the viral RNA need to be extracted. We used well established methods and
 commercially available kits based on columns (RNeasy Mini Kit or QIAamp Viral RNA Mini Kit,
 QIAGEN, Hilden, Germany) or magnetized particles
-([NucleoMag® VET kit](http://www.mn-net.com/tabid/12376/default.aspx) from MACHEREY-NAGEL,
+(ˋNucleoMag® VET kitˋ <http://www.mn-net.com/tabid/12376/default.aspx>ˋ) from MACHEREY-NAGEL,
 Durel, Germany) to achieve the separation, either automatically, using pipetting robots,
 or manually.
 
