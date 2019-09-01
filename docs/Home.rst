@@ -35,10 +35,10 @@ scripts for the robot.  This new Python library provide new layers of abstractio
 to offer a higher level programing model to allow a more direct programing of the
 steps needed in a typical biochemical/biological pipetting protocol like RNA
 extraction.  The layers of the implementation are: a parser and a generator
-(module :file: ˋinstructions.pyˋ of the “low-level” instruction set directly usable by the provided
+(module :file: `instructions.py`_ of the “low-level” instruction set directly usable by the provided
 Freedom EVOware software; a set of “modes” to provide the desired kind of output (human readable
 comments, separated instructions, EVOware scripts, etc., in module
-:file: ˋevo_mode.pyˋ_; a model of the state of the robot to detect possible errors prior to
+:file: `evo_mode.py`_; a model of the state of the robot to detect possible errors prior to
 the generation of the script by tracking what volume of what mix of
 reagents contains at each moment each reservoir or tip (module
 [Robot](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Robot.py) –
