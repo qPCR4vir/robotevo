@@ -8,7 +8,7 @@ Usually, prior to proceed to the application of the DNA-hybridization-based tech
 like RT-qPCR, the viral RNA need to be extracted. We used well established methods and
 commercially available kits based on columns (RNeasy Mini Kit or QIAamp Viral RNA Mini Kit,
 QIAGEN, Hilden, Germany) or magnetized particles
-(`NucleoMag® VET kit<http://www.mn-net.com/tabid/12376/default.aspx>`_) from MACHEREY-NAGEL,
+(`NucleoMag® VET kit <http://www.mn-net.com/tabid/12376/default.aspx>`_) from MACHEREY-NAGEL,
 Durel, Germany) to achieve the separation, either automatically, using pipetting robots,
 or manually.
 
@@ -16,7 +16,7 @@ Especially useful was the combination of magnetized particles with a Freedom EVO
 pipetting robot from TECAN, Mannerdorf, Switzerland. 
 
 Using the provided software
-([Freedom EVOware](http://lifesciences.tecan.com/products/software/freedom_evoware))
+(`Freedom EVOware <http://lifesciences.tecan.com/products/software/freedom_evoware>`_)
 it was comfortable to write simple and specific pipetting protocols in a semi visual way.
 Unfortunately, writing more complex or flexible protocols (for example to
 accommodate arbitrary number of samples or minor modifications of the protocols)
@@ -30,16 +30,15 @@ provided by the script editor are full sopprted only in relativelly lineal and s
 
 
 To overcome these limitations and afford automation, a new software was written in
-Python, “[RobotEvo](https://github.com/qPCR4vir/robotevo)”, which generates the
+Python, “`RobotEvo <https://github.com/qPCR4vir/robotevo>`_”, which generates the
 scripts for the robot.  This new Python library provide new layers of abstraction
 to offer a higher level programing model to allow a more direct programing of the
 steps needed in a typical biochemical/biological pipetting protocol like RNA
 extraction.  The layers of the implementation are: a parser and a generator
 (module :file: ˋinstructions.pyˋ of the “low-level” instruction set directly usable by the provided
-[Freedom EVOware](http://lifesciences.tecan.com/products/software/freedom_evoware)
-software; a set of “modes” to provide the desired kind of output (human readable
+Freedom EVOware software; a set of “modes” to provide the desired kind of output (human readable
 comments, separated instructions, EVOware scripts, etc., in module
-:file: ˋevo_mode.pyˋ; a model of the state of the robot to detect possible errors prior to
+:file: ˋevo_mode.pyˋ_; a model of the state of the robot to detect possible errors prior to
 the generation of the script by tracking what volume of what mix of
 reagents contains at each moment each reservoir or tip (module
 [Robot](https://github.com/qPCR4vir/robotevo/blob/master/EvoScriPy/Robot.py) –
