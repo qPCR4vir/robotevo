@@ -19,13 +19,13 @@ newline = '\r\n'            # windows newline
 
 
 class Mode:
-    """ (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
+    """
+    (Base class) Define how we want to "interact" with the physical robot, or what kind of output we want from
     this script generator. Some options are: A worklist; a full Evoware script; only comments, etc.
-    One import option is to create many of this outputs from a single run.
+    One important option is to create many of this outputs from a single run.
     """
     encoding = encoding
     newline = newline
-    # Tip_tNum = 4
 
     def exec(self, instr):
         pass
@@ -41,8 +41,9 @@ class Mode:
         pass
 
 
-class toString(Mode):
-    """ (Base class) Create an string representation of the instructions.
+class ToString(Mode):
+    """
+    (Base class) Create an string representation of the instructions.
     """
 
     def exec(self, instr):
@@ -50,38 +51,40 @@ class toString(Mode):
         return s
 
 
-
-class StdOut(toString):
-    """ Specially useful during debugging.
+class StdOut(ToString):
+    """
+    Specially useful during debugging.
     """
 
     def exec(self, instr):
-        s = toString.exec(self, instr)
+        s = ToString.exec(self, instr)
         logging.debug(s)
         return s
 
 
-class multiple(Mode):
-    """ A collection (list) of all the "modes" to be generated in a single run
+class Multiple(Mode):
+    """
+    A collection (list) of all the "modes" to be generated in a single run
     """
 
-    def __init__(self, EvoList=None):
-        self.EvoList = EvoList if EvoList is not None else []
+    def __init__(self, modes=None):
+        self.modes = modes if modes is not None else []
 
-    def addMode(self, mode):
-        self.EvoList += [mode]
+    def add_mode(self, mode):
+        self.modes += [mode]
 
     def exec(self, instr):
-        for m in self.EvoList:
+        for m in self.modes:
             instr.exec(m)
 
     def done(self):
-        for m in self.EvoList:
+        for m in self.modes:
             m.done()
 
 
-class inFile(toString):
-    """ (Base class) For modes with uses a file for output
+class ToFile(ToString):
+    """
+    (Base class) For modes with uses a file for output
     """
 
     def __init__(self, filename = None, immediate=None):
@@ -94,7 +97,7 @@ class inFile(toString):
         self.newline = Mode.newline
 
     def exec(self, instr):
-        s = toString.exec(self, instr) + "\n"  # \r
+        s = ToString.exec(self, instr) + "\n"  # \r
         if self.f is not None:
             if self.immediate:
                 self.lines += [s]
@@ -125,8 +128,9 @@ class inFile(toString):
         logging.info("Opened file for script: " + str(filename))
 
 
-class Comments(inFile):
-    """  Create a list with all (and only with) the comments and the Groups.
+class Comments(ToFile):
+    """
+    Create a list with all (and only with) the comments and the Groups.
     Useful to be shown immediately after generation,
     but also to the final user just before the actual physical run.
     """
@@ -136,8 +140,7 @@ class Comments(inFile):
         self.identattion_length = identattion_length or 4
         self.identation_char = identation_char or ' '
         self.comments = []
-        inFile.__init__(self, filename)
-
+        ToFile.__init__(self, filename)
 
     def exec(self, instr):
         from EvoScriPy.instructions import comment, group, group_end
@@ -153,20 +156,17 @@ class Comments(inFile):
                 s = cmt+"\n"
                 self.f.write(s)
 
-
-
         if isinstance(instr, group_end):
             self.current_identation -= 1
 
 
-
-class AdvancedWorkList(inFile):
+class AdvancedWorkList(ToFile):
     def exec(self, instr):
         self.f.write("B;")  # .encode('Latin-1')
-        return inFile.exec(self, instr)
+        return ToFile.exec(self, instr)
 
 
-class ScriptBody(inFile):
+class ScriptBody(ToFile):
     pass
 
 
@@ -203,14 +203,15 @@ class Script(ScriptBody):
 
 
 class iRobot(Mode):
-    """ Used to validate instructions based on an the state of an internal model af the physical robot.
+    """
+    Used to validate instructions based on an the state of an internal model af the physical robot.
     It will check the kind and number of tips, and the volume already aspired in each tips, and the existence
     and current volume in wells in labware, etc.
     One basic use of this, is to guarantee that the robot will be actualized
     once and only once even when multiple modes are used.
     """
-    def __init__(self, index,  nTips , arms=None, tips_type=None):
-        Mode.__init__(self )
+    def __init__(self, index,  nTips, arms=None, tips_type=None):
+        Mode.__init__(self)
         self.robot = Robot(index=index, arms=arms, nTips=nTips, tips_type=tips_type)
         self.set_as_current()
 

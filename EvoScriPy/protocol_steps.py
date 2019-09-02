@@ -1091,7 +1091,7 @@ class Protocol (Executable):
                                   robot        = self.iRobot.robot)
         self.comments_ = mode.Comments(filename= script.with_suffix('.protocol.txt'))
 
-        self.EvoMode = mode.multiple([self.Script,
+        self.EvoMode = mode.Multiple([self.Script,
                                       mode.AdvancedWorkList(script.with_suffix('.gwl')),
                                       mode.ScriptBody(script.with_suffix('.txt')),
                                       mode.StdOut(),
