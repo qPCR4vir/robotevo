@@ -13,7 +13,7 @@ import logging
 
 # todo Revise def values: the binding take place at the moment of first import ???
 import EvoScriPy.evo_mode
-import EvoScriPy.labware as lab
+import EvoScriPy.labware as labware
 import EvoScriPy.robot as robot
 
 def_vol         = [0]*12
@@ -21,7 +21,7 @@ def_LoopOp      = []
 def_AirgapSpeed = 300
 
 
-class EvoTypes:  # OK improve EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
+class EvoTypes:  # EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
     def __init__(self, data):
         self.data = data
 
@@ -152,7 +152,7 @@ class Pipette(Instruction):
     def __init__(self,
                  name,
                  tipMask                    = None,
-                 labware      : lab.Labware = None,
+                 labware      : labware.Labware = None,
                  spacing                    = 1,           # todo how to use in actualize_robot_state, validateArg ?
                  wellSelection              = None,        # todo    use???
                  LoopOptions                = None,        # todo how to model???
@@ -220,23 +220,23 @@ class Pipette(Instruction):
 
         well_selection_str = None                                      # Set selected wells to match labware selection.
         if self.wellSelection is None:                                 # only labware selection.
-            assert isinstance(self.labware, lab.Labware)
+            assert isinstance(self.labware, labware.Labware)
             assert len(self.labware.selected_wells()) > 0, "No well selected for pipetting in " + str(self.labware) + "."
             well_selection_str = self.labware.wellSelectionStr()       # use them
         else:
             if not isinstance(self.wellSelection, list):
                 self.wellSelection = [self.wellSelection]
             if len(self.wellSelection) == 0:
-                assert isinstance(self.labware, lab.Labware)
+                assert isinstance(self.labware, labware.Labware)
                 assert len(self.labware.selected_wells()) > 0, "No well selected to pipette."
                 well_selection_str = self.labware.wellSelectionStr()
             else:
                 w0 = self.wellSelection[0]
-                if isinstance(w0, lab.Well):
+                if isinstance(w0, labware.Well):
                     if self.labware is None:
                         self.labware = w0.labware
                     assert w0.labware is self.labware, "Using a well from another labware"
-                assert isinstance(self.labware, lab.Labware)
+                assert isinstance(self.labware, labware.Labware)
                 self.labware.selectOnly(self.wellSelection)
                 well_selection_str = self.labware.wellSelectionStr(self.wellSelection)
 
