@@ -17,6 +17,7 @@ from EvoScriPy.reagent import Reagent, preMix
 import EvoScriPy.labware as labware
 import EvoScriPy.evo_mode as mode
 
+base_dir = Path(__file__).parent.parent
 
 def not_implemented():
     logging.error('This protocols have yet to be implemented.')
@@ -786,7 +787,7 @@ class Protocol (Executable):
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
-            logging.warning("WARNING !!! The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
+            logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
             pre_mix.Replicas = pre_mix.Replicas[:nrepl]
 
         msg = "preMix: {:.1f} µL of {:s}".format(tVol, pre_mix.name)

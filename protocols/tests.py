@@ -9,12 +9,14 @@ from pathlib import Path
 import logging
 
 test_dir = Path(__file__).parent / 'tests'
+base_dir = Path(__file__).parent.parent
+
 logging.basicConfig(filename=(test_dir / '_tests.log.txt'), filemode='w', level=logging.INFO)
 
 from protocols.demos.hello_world.hello_world import HelloWorld as Prt
 
 p = Prt(output_filename=test_dir / 'hello_world_test_')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -23,14 +25,14 @@ from protocols.evo100_f.Prefill_plates_VEW1_ElutionBuffer_VEW2.Prefill_plates_VE
 p = Prt (num_of_samples    = 96,
          output_filename = test_dir / 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_96s")
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
          run_name        = "_test_6s")
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -40,14 +42,14 @@ p = Prt (num_of_samples    = 96,
          output_filename = test_dir / 'PreKingFisher_RNAextNucleoMag_EtOH80p',
          run_name        = "_test_96s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 6,
          output_filename = test_dir / 'PreKingFisher_RNAextNucleoMag_EtOH80p',
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -58,7 +60,7 @@ p = Prt (num_of_samples    = 48,
          run_name        = "_test_48s_VL-only prefill")
 p.use_version('VL-only prefill')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 6,
@@ -66,7 +68,7 @@ p = Prt (num_of_samples    = 6,
          run_name        = "_test_6s_VL-only prefill")
 p.use_version('VL-only prefill')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 48,
@@ -74,7 +76,7 @@ p = Prt (num_of_samples    = 48,
          run_name        = "_test_48s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 6,
@@ -82,7 +84,7 @@ p = Prt (num_of_samples    = 6,
          run_name        = "_test_6s_VL-pKmix prefill")
 p.use_version('VL-pKmix prefill')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 48,
@@ -90,7 +92,7 @@ p = Prt (num_of_samples    = 48,
          run_name        = "_test_48s_VL-only inactivated")
 p.use_version('VL-only inactivated')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 6,
@@ -98,7 +100,7 @@ p = Prt (num_of_samples    = 6,
          run_name        = "_test_6s_VL-only inactivated")
 p.use_version('VL-only inactivated')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 48,
@@ -106,7 +108,7 @@ p = Prt (num_of_samples    = 48,
          run_name        = "_test_48s_VL-pKmix Inactivated")
 p.use_version('VL-pKmix Inactivated')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 6,
@@ -114,7 +116,7 @@ p = Prt (num_of_samples    = 6,
          run_name        = "_test_6s_VL-pKmix Inactivated")
 p.use_version('VL-pKmix Inactivated')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 48,
@@ -122,7 +124,7 @@ p = Prt (num_of_samples    = 48,
          run_name        = "_test_48s_original samples")
 p.use_version('original samples')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples    = 6,
@@ -130,7 +132,7 @@ p = Prt (num_of_samples    = 6,
          run_name        = "_test_6s_original samples")
 p.use_version('original samples')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -141,7 +143,7 @@ p = Prt(num_of_samples  = 4,
         run_name        = "_test_4s_mix_1_2")
 p.use_version('No version')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -152,7 +154,7 @@ p = Prt (num_of_samples              = 6,
          run_name                    = "_test__6s")
 p.use_version('No version')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples              = 46,
@@ -160,7 +162,7 @@ p = Prt (num_of_samples              = 46,
          run_name                    = "_test__46s")
 p.use_version('No version')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -171,7 +173,7 @@ p = Prt (num_of_samples              = 6,
          run_name                    = "_test__6s")
 p.use_version('No version')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (num_of_samples              = 46,
@@ -179,7 +181,7 @@ p = Prt (num_of_samples              = 46,
          run_name                    = "_test_46s")
 p.use_version('No version')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 
@@ -188,13 +190,13 @@ from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer im
 p = Prt(run_name="_test_1_plate", output_filename = (test_dir / 'Prefill_LysisBuffer'))
 p.use_version('1 plate')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (run_name="_test_3_plate", output_filename = (test_dir / 'Prefill_LysisBuffer'))
 p.use_version('3 plate')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 from protocols.demos.tutorial_HL_RoMa.tutorial_HL_RoMa import Tutorial_HL_RoMa as Prt
@@ -204,7 +206,7 @@ p = Prt (num_of_samples              = 8,
          run_name                    = "_test_6s")
 p.use_version('No version')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix  as Prt
@@ -212,12 +214,12 @@ from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer_an
 p = Prt(run_name="_test_1_plate", output_filename = (test_dir / 'Prefill_LysisBuffer_pK'))
 p.use_version('1 plate')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 p.Run()
 
 p = Prt (run_name="_test_3_plate", output_filename = (test_dir / 'Prefill_LysisBuffer_pK'))
 p.use_version('3 plate')
 p.set_first_tip('A01')
-logging.info("\n\n************ " + str(p.output_filename) + " **************\n")
+logging.info("\n\n************ " + str(p.output_filename.relative_to(base_dir)) + " **************\n")
 # p.Run()
 

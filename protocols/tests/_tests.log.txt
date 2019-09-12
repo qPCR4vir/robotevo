@@ -1,22 +1,22 @@
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\hello_world_test_ **************
+************ protocols\tests\hello_world_test_ **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\hello_world_test_.esc
+INFO:root:Opened file for script: protocols\tests\hello_world_test_.esc
 INFO:root:Detected 99 grids.
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 100: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 100: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\hello_world_test_.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\hello_world_test_.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\hello_world_test_.txt
+INFO:root:Opened file for script: protocols\tests\hello_world_test_.protocol.txt
+INFO:root:Opened file for script: protocols\tests\hello_world_test_.gwl
+INFO:root:Opened file for script: protocols\tests\hello_world_test_.txt
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s **************
+************ protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s **************
 
-INFO:root:Parsing: C:\prog\robotevo\protocols\evo100_f\DefaultLCs.txt
-INFO:root:Parsing: C:\prog\robotevo\protocols\evo100_f\CustomLCs.txt
-INFO:root:Parsing carriers types from C:\prog\robotevo\protocols\evo100_f\Carrier.cfg
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.esc
+INFO:root:Parsing: protocols\evo100_f\DefaultLCs.txt
+INFO:root:Parsing: C:\Prog\RobotEvo\protocols\evo100_f\CustomLCs.txt
+INFO:root:Parsing carriers types from protocols\evo100_f\Carrier.cfg
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Trough 3Pos 25+100ml found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 8
@@ -55,20 +55,20 @@ INFO:root:Created labware 96 Well DeepWell square:Plate VEW1 in grid:25, site:1
 INFO:root:Created serie of 1 96 Well Microplate
 INFO:root:Created labware 96 Well Microplate:Plate ElutB in grid:25, site:2
 INFO:root:Created labware 96 Well DeepWell square:Plate VEW2 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.gwl
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s **************
+************ protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.esc
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Trough 3Pos 25+100ml found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 8
@@ -107,20 +107,20 @@ INFO:root:Created labware 96 Well DeepWell square:Plate VEW1 in grid:25, site:1
 INFO:root:Created serie of 1 96 Well Microplate
 INFO:root:Created labware 96 Well Microplate:Plate ElutB in grid:25, site:2
 INFO:root:Created labware 96 Well DeepWell square:Plate VEW2 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.gwl
+INFO:root:Opened file for script: protocols\tests\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_6s.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill **************
+************ protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.esc
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 9
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 19
@@ -156,11 +156,11 @@ INFO:root:Created labware Washstation 2Grid DiTi Waste: in grid:23, site:7
 INFO:root:Created serie of 1 96 Well DeepWell square
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis in grid:25, site:1
 INFO:root:Created labware 96 Well DeepWell square:Plate EtOH in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.txt
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.protocol.txt
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.gwl
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_96s_VL-pKmix prefill.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
@@ -176,9 +176,9 @@ INFO:root:Pick tip 11 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 12 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill **************
+************ protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.esc
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 9
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 19
@@ -214,11 +214,11 @@ INFO:root:Created labware Washstation 2Grid DiTi Waste: in grid:23, site:7
 INFO:root:Created serie of 1 96 Well DeepWell square
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis in grid:25, site:1
 INFO:root:Created labware 96 Well DeepWell square:Plate EtOH in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.txt
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.protocol.txt
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.gwl
+INFO:root:Opened file for script: protocols\tests\PreKingFisher_RNAextNucleoMag_EtOH80p_test_6s_VL-pKmix prefill.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
@@ -234,9 +234,9 @@ INFO:root:Pick tip 11 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 12 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -287,20 +287,20 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only prefill.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -351,20 +351,20 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only prefill.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -415,11 +415,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix prefill.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
@@ -431,9 +431,9 @@ INFO:root:Pick tip 7 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 8 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -484,11 +484,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix prefill.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
@@ -500,9 +500,9 @@ INFO:root:Pick tip 7 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 8 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -553,11 +553,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-only inactivated.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 WARNING:root:WARNING !! putting more replica of B - Beads  to fit the initial volume list provided
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of B - Beads  that the minimum you need(1 )
@@ -1233,8 +1233,8 @@ INFO:root:Pick tip 93 from rack site 3 named: 1000-3 have 1 but need 4
 INFO:root:Pick tip 94 from rack site 3 named: 1000-3 have 2 but need 4
 INFO:root:Pick tip 95 from rack site 3 named: 1000-3 have 3 but need 4
 INFO:root:Pick tip 96 from rack site 3 named: 1000-3 have 4 but need 4
-WARNING:root:WARNING !! Using DITI rack agains? Put new ?
-WARNING:root:WARNING !!!! USER PROMPT: ReFill Rack 1000-1
+WARNING:root:Using DITI rack agains? Put new ?
+WARNING:root:USER PROMPT: ReFill Rack 1000-1
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
@@ -1289,9 +1289,9 @@ INFO:root:Pick tip 51 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 52 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -1342,11 +1342,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-only inactivated.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 WARNING:root:WARNING !! putting more replica of B - Beads  to fit the initial volume list provided
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of B - Beads  that the minimum you need(1 )
@@ -1446,9 +1446,9 @@ INFO:root:Pick tip 45 from rack site 1 named: 1000-1 have 1 but need 2
 INFO:root:Pick tip 46 from rack site 1 named: 1000-1 have 2 but need 2
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -1499,11 +1499,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_VL-pKmix Inactivated.txt
 WARNING:root:WARNING !! putting more replica of B - Beads  to fit the initial volume list provided
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of B - Beads  that the minimum you need(1 )
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
@@ -2178,8 +2178,8 @@ INFO:root:Pick tip 93 from rack site 3 named: 1000-3 have 1 but need 4
 INFO:root:Pick tip 94 from rack site 3 named: 1000-3 have 2 but need 4
 INFO:root:Pick tip 95 from rack site 3 named: 1000-3 have 3 but need 4
 INFO:root:Pick tip 96 from rack site 3 named: 1000-3 have 4 but need 4
-WARNING:root:WARNING !! Using DITI rack agains? Put new ?
-WARNING:root:WARNING !!!! USER PROMPT: ReFill Rack 1000-1
+WARNING:root:Using DITI rack agains? Put new ?
+WARNING:root:USER PROMPT: ReFill Rack 1000-1
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
@@ -2234,9 +2234,9 @@ INFO:root:Pick tip 51 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 52 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -2287,11 +2287,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_VL-pKmix Inactivated.txt
 WARNING:root:WARNING !! putting more replica of B - Beads  to fit the initial volume list provided
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of B - Beads  that the minimum you need(1 )
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
@@ -2390,9 +2390,9 @@ INFO:root:Pick tip 45 from rack site 1 named: 1000-1 have 1 but need 2
 INFO:root:Pick tip 46 from rack site 1 named: 1000-1 have 2 but need 2
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -2443,11 +2443,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_48s_original samples.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 WARNING:root:WARNING !! putting more replica of B - Beads  to fit the initial volume list provided
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of B - Beads  that the minimum you need(1 )
@@ -3123,8 +3123,8 @@ INFO:root:Pick tip 93 from rack site 3 named: 1000-3 have 1 but need 4
 INFO:root:Pick tip 94 from rack site 3 named: 1000-3 have 2 but need 4
 INFO:root:Pick tip 95 from rack site 3 named: 1000-3 have 3 but need 4
 INFO:root:Pick tip 96 from rack site 3 named: 1000-3 have 4 but need 4
-WARNING:root:WARNING !! Using DITI rack agains? Put new ?
-WARNING:root:WARNING !!!! USER PROMPT: ReFill Rack 1000-1
+WARNING:root:Using DITI rack agains? Put new ?
+WARNING:root:USER PROMPT: ReFill Rack 1000-1
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
@@ -3179,9 +3179,9 @@ INFO:root:Pick tip 51 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 52 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples **************
+************ protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.esc
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.esc
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 2
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 5
@@ -3232,11 +3232,11 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:1000-1 in grid:25, site:1
 INFO:root:Created labware DiTi 1000ul:1000-2 in grid:25, site:2
 INFO:root:Created labware DiTi 1000ul:1000-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 110: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 110: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.protocol.txt
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.gwl
+INFO:root:Opened file for script: protocols\tests\RNAext_MNVet_TeMag_test_6s_original samples.txt
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of Proteinase K  that the minimum you need(1 )
 WARNING:root:WARNING !! putting more replica of B - Beads  to fit the initial volume list provided
 WARNING:root:WARNING !! You may be putting more wells replicas (2) of B - Beads  that the minimum you need(1 )
@@ -3336,12 +3336,12 @@ INFO:root:Pick tip 45 from rack site 1 named: 1000-1 have 1 but need 2
 INFO:root:Pick tip 46 from rack site 1 named: 1000-1 have 2 but need 2
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\demo-two.mixes_test_4s_mix_1_2 **************
+************ protocols\tests\demo-two.mixes_test_4s_mix_1_2 **************
 
-INFO:root:Parsing: C:\prog\robotevo\protocols\evo200_f\DefaultLCs.txt
-INFO:root:Parsing: C:\prog\robotevo\protocols\evo200_f\CustomLCs.txt
-INFO:root:Parsing carriers types from C:\prog\robotevo\protocols\evo200_f\Carrier.cfg
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\demo-two.mixes_test_4s_mix_1_2.esc
+INFO:root:Parsing: protocols\evo200_f\DefaultLCs.txt
+INFO:root:Parsing: C:\Prog\RobotEvo\protocols\evo200_f\CustomLCs.txt
+INFO:root:Parsing carriers types from protocols\evo200_f\Carrier.cfg
+INFO:root:Opened file for script: protocols\tests\demo-two.mixes_test_4s_mix_1_2.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -3414,9 +3414,9 @@ INFO:root:Created serie of 1 DiTi 1000ul
 INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created labware 96 Well Microplate:plate2-moved in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate2 in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\demo-two.mixes_test_4s_mix_1_2.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\demo-two.mixes_test_4s_mix_1_2.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\demo-two.mixes_test_4s_mix_1_2.txt
+INFO:root:Opened file for script: protocols\tests\demo-two.mixes_test_4s_mix_1_2.protocol.txt
+INFO:root:Opened file for script: protocols\tests\demo-two.mixes_test_4s_mix_1_2.gwl
+INFO:root:Opened file for script: protocols\tests\demo-two.mixes_test_4s_mix_1_2.txt
 INFO:root:Check Buffer  in ['well 1 in labware BufferCub:  with 1572.0 uL of reagent Buffer ']
 INFO:root:Check mix1 in ['well 1 in labware mixes:  with 45.0 uL of reagent mix1']
 INFO:root:Check mix2 in ['well 2 in labware mixes:  with 45.0 uL of reagent mix2']
@@ -3437,9 +3437,9 @@ INFO:root:Pick tip 6 from rack site 1 named: DiTi1000/2 have 3 but need 4
 INFO:root:Pick tip 7 from rack site 1 named: DiTi1000/2 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__6s **************
+************ protocols\tests\Tutorial_HLevel_test__6s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__6s.esc
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__6s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -3511,9 +3511,9 @@ INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__6s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__6s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__6s.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__6s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__6s.gwl
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__6s.txt
 INFO:root:Check diluent in ['well 1 in labware BufferCub:  with 561.0 uL of reagent diluent']
 INFO:root:Check mix1 in ['well 1 in labware mixes:  with 62.0 uL of reagent mix1']
 INFO:root:Pick tip 1 from rack site 2 named: DiTi 200 ul have 1 but need 6
@@ -3530,9 +3530,9 @@ INFO:root:Pick tip 5 from rack site 1 named: DiTi1000/2 have 5 but need 6
 INFO:root:Pick tip 6 from rack site 1 named: DiTi1000/2 have 6 but need 6
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__46s **************
+************ protocols\tests\Tutorial_HLevel_test__46s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__46s.esc
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__46s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -3604,9 +3604,9 @@ INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__46s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__46s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HLevel_test__46s.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__46s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__46s.gwl
+INFO:root:Opened file for script: protocols\tests\Tutorial_HLevel_test__46s.txt
 INFO:root:Check diluent in ['well 1 in labware BufferCub:  with 4305.0 uL of reagent diluent']
 INFO:root:Check mix1 in ['well 1 in labware mixes:  with 478.0 uL of reagent mix1']
 INFO:root:Pick tip 1 from rack site 2 named: DiTi 200 ul have 1 but need 8
@@ -3627,9 +3627,9 @@ INFO:root:Pick tip 7 from rack site 1 named: DiTi1000/2 have 7 but need 8
 INFO:root:Pick tip 8 from rack site 1 named: DiTi1000/2 have 8 but need 8
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__6s **************
+************ protocols\tests\Tutorial_LLevel_atomic_test__6s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__6s.esc
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test__6s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -3701,9 +3701,9 @@ INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__6s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__6s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test__6s.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test__6s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test__6s.gwl
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test__6s.txt
 INFO:root:Pick tip 1 from rack site 2 named: DiTi 200 ul have 1 but need 6
 INFO:root:Pick tip 2 from rack site 2 named: DiTi 200 ul have 2 but need 6
 INFO:root:Pick tip 3 from rack site 2 named: DiTi 200 ul have 3 but need 6
@@ -3742,9 +3742,9 @@ WARNING:root:WARNING !!! There is no reagent in well 5 of rack 96 Well Microplat
 WARNING:root:WARNING !!! There is no reagent in well 6 of rack 96 Well Microplate: plate
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s **************
+************ protocols\tests\Tutorial_LLevel_atomic_test_46s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.esc
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test_46s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -3816,9 +3816,9 @@ INFO:root:Created labware DiTi 1000ul:DiTi1000/2 in grid:55, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plate in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_LLevel_atomic_test_46s.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test_46s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test_46s.gwl
+INFO:root:Opened file for script: protocols\tests\Tutorial_LLevel_atomic_test_46s.txt
 INFO:root:Pick tip 1 from rack site 2 named: DiTi 200 ul have 1 but need 8
 INFO:root:Pick tip 2 from rack site 2 named: DiTi 200 ul have 2 but need 8
 INFO:root:Pick tip 3 from rack site 2 named: DiTi 200 ul have 3 but need 8
@@ -3945,9 +3945,9 @@ WARNING:root:WARNING !!! There is no reagent in well 45 of rack 96 Well Micropla
 WARNING:root:WARNING !!! There is no reagent in well 46 of rack 96 Well Microplate: plate
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate **************
+************ protocols\tests\Prefill_LysisBuffer_test_1_plate **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.esc
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_1_plate.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 8
@@ -3984,20 +3984,20 @@ INFO:root:Created serie of 1 96 Well DeepWell square
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-1 in grid:25, site:1
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-2 in grid:25, site:2
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_1_plate.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_1_plate.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_1_plate.gwl
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_1_plate.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 4 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate **************
+************ protocols\tests\Prefill_LysisBuffer_test_3_plate **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.esc
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_3_plate.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 8
@@ -4034,11 +4034,11 @@ INFO:root:Created serie of 1 96 Well DeepWell square
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-1 in grid:25, site:1
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-2 in grid:25, site:2
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_test_3_plate.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_3_plate.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_3_plate.gwl
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_test_3_plate.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
@@ -4053,9 +4053,9 @@ INFO:root:Pick tip 11 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 12 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Tutorial_HL_RoMa_test_6s **************
+************ protocols\tests\Tutorial_HL_RoMa_test_6s **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HL_RoMa_test_6s.esc
+INFO:root:Opened file for script: protocols\tests\Tutorial_HL_RoMa_test_6s.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
 INFO:root:Carrier: AntiCOntaminationFlyway found in line carrier-grid for grid 11
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 12
@@ -4126,9 +4126,9 @@ INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:DiTi 200 ul in grid:55, site:1
 INFO:root:Created labware 96 Well Microplate:plateA in grid:55, site:2
 INFO:root:Created labware 96 Well Microplate:plateB in grid:55, site:3
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HL_RoMa_test_6s.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HL_RoMa_test_6s.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Tutorial_HL_RoMa_test_6s.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_HL_RoMa_test_6s.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Tutorial_HL_RoMa_test_6s.gwl
+INFO:root:Opened file for script: protocols\tests\Tutorial_HL_RoMa_test_6s.txt
 INFO:root:Check buffer in ['well 1 in labware plateA:  with 100.0 uL of reagent buffer', 'well 2 in labware plateA:  with 100.0 uL of reagent buffer', 'well 3 in labware plateA:  with 100.0 uL of reagent buffer', 'well 4 in labware plateA:  with 100.0 uL of reagent buffer', 'well 5 in labware plateA:  with 100.0 uL of reagent buffer', 'well 6 in labware plateA:  with 100.0 uL of reagent buffer', 'well 7 in labware plateA:  with 100.0 uL of reagent buffer', 'well 8 in labware plateA:  with 100.0 uL of reagent buffer']
 INFO:root:Transafering from grid:43, site:3 to grid:55, site:3
 INFO:root:Transafering from grid:43, site:3 to grid:55, site:3
@@ -4145,9 +4145,9 @@ INFO:root:Pick tip 7 from rack site 1 named: DiTi 200 ul have 7 but need 8
 INFO:root:Pick tip 8 from rack site 1 named: DiTi 200 ul have 8 but need 8
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate **************
+************ protocols\tests\Prefill_LysisBuffer_pK_test_1_plate **************
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.esc
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
 INFO:root:Carrier: Tube Eppendorf 16 Sites found in line carrier-grid for grid 7
 INFO:root:Carrier: Tube Eppendorf 6x16=96 Pos found in line carrier-grid for grid 8
@@ -4184,11 +4184,11 @@ INFO:root:Created serie of 1 96 Well DeepWell square
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-1 in grid:25, site:1
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-2 in grid:25, site:2
 INFO:root:Created labware 96 Well DeepWell square:Plate lysis-3 in grid:25, site:3
-WARNING:root:WARNING !! Non ended 2 Grid 99 line 107: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 107: 998;0;
 
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.protocol.txt
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.gwl
-INFO:root:Opened file for script: C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.protocol.txt
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.gwl
+INFO:root:Opened file for script: protocols\tests\Prefill_LysisBuffer_pK_test_1_plate.txt
 INFO:root:Pick tip 1 from rack site 1 named: 1000-1 have 1 but need 4
 INFO:root:Pick tip 2 from rack site 1 named: 1000-1 have 2 but need 4
 INFO:root:Pick tip 3 from rack site 1 named: 1000-1 have 3 but need 4
@@ -4199,5 +4199,5 @@ INFO:root:Pick tip 7 from rack site 1 named: 1000-1 have 3 but need 4
 INFO:root:Pick tip 8 from rack site 1 named: 1000-1 have 4 but need 4
 INFO:root:
 
-************ C:\prog\robotevo\protocols\tests\Prefill_LysisBuffer_pK_test_3_plate **************
+************ protocols\tests\Prefill_LysisBuffer_pK_test_3_plate **************
 

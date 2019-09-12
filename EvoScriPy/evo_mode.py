@@ -10,12 +10,14 @@ __author__ = 'qPCR4vir'
 Implement the "modes" in which RobotEvo execute the low levels instructions, effectively creating the corresponding
 type of "output".
 """
-
+from pathlib import Path
 import logging
 from EvoScriPy.robot import Robot
 
 encoding = 'Latin-1'        # ISO/IEC 8859-1
 newline = '\r\n'            # windows newline
+
+base_dir = Path(__file__).parent.parent
 
 
 class Mode:
@@ -112,7 +114,7 @@ class ToFile(ToString):
                     self.f.write(s)
             self.f.close()
             self.f = None
-            logging.debug(str(self.filename) + " done")
+            logging.debug(str(self.filename.relative_to(base_dir)) + " done")
 
     def open(self):
         if self.f is None:
@@ -125,7 +127,7 @@ class ToFile(ToString):
         self.done()       # ??
         self.filename = filename
         self.f = open(filename, 'w', encoding=self.encoding, newline=self.newline) if filename is not None else None
-        logging.info("Opened file for script: " + str(filename))
+        logging.info("Opened file for script: " + str(filename.relative_to(base_dir)))
 
 
 class Comments(ToFile):

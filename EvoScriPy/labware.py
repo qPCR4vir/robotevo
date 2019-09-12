@@ -9,7 +9,7 @@ __author__ = 'qPCR4vir'
 from pathlib import Path
 import logging
 import xml.etree.ElementTree as ET
-
+base_dir = Path(__file__).parent.parent
 
 class LiquidClass:
 
@@ -62,7 +62,7 @@ class LiquidClasses:
             logging.info("No: {0} found. Will generate a new one.".format(err))
             try:
                 self._read_cus_liq_class_xml_file(custom_file)
-            except  OSError as err:
+            except OSError as err:
                 logging.info("OS error: {0}".format(err))
 
     def _read_cus_liq_class_xml_file(self, custom_file):
@@ -92,7 +92,7 @@ class LiquidClasses:
         tree = ET.parse(default_file)
         root = tree.getroot()
         with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
-            logging.info('Writing: ' + str(default_file.with_suffix('.txt')))
+            logging.info('Writing: ' + str(default_file.with_suffix('.txt').relative_to(base_dir)))
             for lc in root.findall('LiquidClass'):
                 name = lc.get('name')
                 liquid_name = lc.get('liquidName')
@@ -104,7 +104,7 @@ class LiquidClasses:
 
     def _read_def_liq_class_txt_file(self, default_file):
         with open(default_file.with_suffix('.txt'), 'r', encoding='Latin-1') as default:
-            logging.info('Parsing: ' + str(default_file.with_suffix('.txt')))
+            logging.info('Parsing: ' + str(default_file.with_suffix('.txt').relative_to(base_dir)))
             for lc in default:
                 lc = lc.split('\t')
                 lc = LiquidClassDefault(name=lc[0], liquid_name=lc[1])
@@ -143,7 +143,7 @@ class WorkTable:
             self.template = template_file
             logging.debug("Template file is a list.")
         else:
-            logging.debug("Set template file: " + str(template_file))
+            logging.debug("Set template file: " + str(template_file.relative_to(base_dir)))
             self.template = self.parse_worktable_file(template_file, robot_protocol)
             self.template_file_name = template_file
 
@@ -314,7 +314,7 @@ class WorkTable:
             self.carriers_grid += [idx]                   # <--------- set carriers_grid += [idx]
 
             if idx not in robot_protocol.carrier_types().by_index:
-                logging.warning("WARNING !! Unknow carrier index " + str(idx)
+                logging.warning("Unknow carrier index " + str(idx)
                       + " in grid " + str(len(self.carriers_grid) - 1))
             else:
                 logging.info("Carrier: " + robot_protocol.carrier_types().by_index[idx].name
@@ -341,7 +341,7 @@ class WorkTable:
                 # logging.debug("1-with " + str(labware_types) + " labwares")
                 if grid_num >= len(self.carriers_grid):  # len(self.grids):
                     if line[1] != "2":
-                        logging.warning("WARNING !! Non ended 2 Grid " + str(grid_num) \
+                        logging.warning("Non ended 2 Grid " + str(grid_num) \
                                                            + " line " + str(len(template_list)) \
                                                            + ": " + template_list[-1])
                     return template_list
@@ -359,7 +359,7 @@ class WorkTable:
                 for site, (labw_type_name, labw_label) in enumerate(zip(labware_types, line[1:-1])):
                     if not labw_type_name:
                         if labw_label:
-                            logging.warning("WARNING!! Going to ignore entry - The worktable template have a labware label '" +
+                            logging.warning("Going to ignore entry - The worktable template have a labware label '" +
                                       labw_label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                                       " but no labware type")
                         continue  # CONTINUE:
@@ -373,7 +373,7 @@ class WorkTable:
                     if labw:
                         pass  # self.add_labware(labw)
                     else:
-                        logging.warning("Warning! The worktable template have a labware labeled '" +
+                        logging.warning("The worktable template have a labware labeled '" +
                               labw_label + "' in grid, site: " + str(grid_num) + ", " + str(site) +
                               " but there is no registered labware type '" + labw_type_name + "'")
                 labware_types = []
@@ -410,14 +410,14 @@ class WorkTable:
             for labw in labw_series.labwares:                               # loop labwares in that series
 
                 if labw is labware:                                         # already there ??
-                    logging.warning("Warning! The worktable template already have this labware. " +
+                    logging.warning("The worktable template already have this labware. " +
                           labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site + 1))
                     return
 
                 if      labware.location.grid == labw.location.grid and \
                         labware.location.site == labw.location.site:
 
-                    logging.warning("Warning! Trying to add a labware. The worktable template already have a labware with label '"
+                    logging.warning("Trying to add a labware. The worktable template already have a labware with label '"
                           + labw.label + "' in grid, site: " + str(loc.grid) + ", " + str(loc.site + 1))
 
         if labware.type.name not in self.labware_series:              # first time this type of labware is in this worktable
@@ -600,7 +600,7 @@ class WorkTable:
         if rack in self.labware_series:
             return self.labware_series[rack]
 
-        logging.warning("WARNING !! No labware type registered with label: " + rack)
+        logging.warning("No labware type registered with label: " + rack)
 
 
 class Frezeer (WorkTable):
@@ -629,7 +629,7 @@ class Carrier:
             if not carrier_file:
                 return []  # RETURN
             with open(carrier_file, 'r', encoding='Latin-1') as config:
-                logging.info("Parsing carriers types from " + str(carrier_file))
+                logging.info("Parsing carriers types from " + str(carrier_file.relative_to(base_dir)))
                 for line in config:
                     if line.startswith("13;"):  # new Carrier
                         # logging.debug("line-" + line)
@@ -669,7 +669,7 @@ class Carrier:
 
     def add_labware(self, labware, site):
         if labware.type.name not in self.type.allowed_labwares_types:
-            #logging.warning("WARNING!! The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
+            #logging.warning("The labware '" + labware.type.name + ":" + labware.label + "' is not allowed in carrier '"
             #      + self.type.name    + ":" + str(self.label))
             logging.info('            self.allow_labware("' + self.type.name + '", "' + labware.type.name + '")')
 
@@ -684,7 +684,7 @@ class Carrier:
         self.labwares[site] = labware
         if labware.location.grid != self.grid:      # ?????????
             if labware.location.grid is not None:
-                logging.warning("Warning, original grid changed to that of the Rack.")
+                logging.warning("Original grid changed to that of the Rack.")
             labware.location.grid = self.grid
 
 
@@ -963,7 +963,7 @@ class Labware:
                label        : str):
         labw_t = Labware.types.get(labw_t_name)
         if not labw_t:
-            logging.warning("WARNING !! There is not labware type defined with label '" + labw_t_name + "'. ")
+            logging.warning("There is not labware type defined with label '" + labw_t_name + "'. ")
             return None
         assert isinstance(labw_t, Labware.Type)
         labw = labw_t.create_labware(loc, label)
@@ -1290,7 +1290,7 @@ class DITIrackTypeSeries(Labware.Type.Series):
             # we need to find in other rack
             rack, rotated = self.set_next()
             if rack is first:
-                logging.warning("WARNING !! Using DITI rack agains? Put new ?")
+                logging.warning("Using DITI rack agains? Put new ?")
                 rack = self.refill_next_rack()
 
     def refill_next_rack(self, worktable=None):    #  -> DITIrack
@@ -1298,7 +1298,7 @@ class DITIrackTypeSeries(Labware.Type.Series):
         # rack = self.next_rack(worktable)                                      # todo what worktable? another Place ?
 
         next_rack, rotated = self.set_next()
-        logging.warning("WARNING !!!! USER PROMPT: ReFill Rack " + next_rack.label)       # todo ? USER PROMPT: Fill Rack
+        logging.warning("USER PROMPT: ReFill Rack " + next_rack.label)       # todo ? USER PROMPT: Fill Rack
         assert isinstance(next_rack, DITIrack)
         assert self is not next_rack                                            # todo ???   rack empty ??
         next_rack.fill()                                                        # todo check for tips back !!!!!!
