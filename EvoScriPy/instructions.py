@@ -60,11 +60,11 @@ class aspirate(Pipetting):
     def action():
         return EvoScriPy.robot.Arm.Aspirate
 
-    def validateArg(self):
+    def validate_arg(self):
         if isinstance(self.liquidClass, tuple):
             assert len(self.liquidClass) == 2
             self.liquidClass = self.liquidClass[0]
-        return Pipetting.validateArg(self)
+        return Pipetting.validate_arg(self)
 
 
 class dispense(Pipetting):
@@ -96,11 +96,11 @@ class dispense(Pipetting):
     def action():
         return EvoScriPy.robot.Arm.Dispense
 
-    def validateArg(self):
+    def validate_arg(self):
         if isinstance(self.liquidClass, tuple):
             assert len(self.liquidClass) == 2
             self.liquidClass = self.liquidClass[1]
-        return Pipetting.validateArg(self)
+        return Pipetting.validate_arg(self)
 
 
 class mix(Pipetting):
@@ -136,8 +136,8 @@ class mix(Pipetting):
                             arm )
         self.cycles = cycles
 
-    def validateArg(self):
-        Pipetting.validateArg(self)
+    def validate_arg(self):
+        Pipetting.validate_arg(self)
         self.arg[18:18] = [self.cycles]                 # arg 19
         return True
 
@@ -226,21 +226,21 @@ ensures maximum pipetting accuracy.
         self.WashCleaner    = WashCleaner or self.robot.worktable.def_WashCleaner
         #self.WashWaste = WashWaste
 
-    def validateArg(self):
+    def validate_arg(self):
         self.wellSelection = 1
-        Pipette.validateArg(self)
-        self.arg[3:-1] = [integer(self.WashCleaner.location.grid),   # arg 4
-                          integer(self.WashCleaner.location.site),   # arg 5
-                          expression(self.wasteVol),                 # arg 6
-                          integer(self.wasteDelay),
-                          expression(self.cleanerVol),
-                          integer(self.cleanerDelay),
-                          floating_point(self.Airgap),
-                          integer(self.airgapSpeed),
-                          integer(self.retractSpeed),
-                          integer(self.FastWash),
-                          integer(self.lowVolume),
-                          integer(self.atFrequency)]
+        Pipette.validate_arg(self)
+        self.arg[3:-1] = [Integer(self.WashCleaner.location.grid),   # arg 4
+                          Integer(self.WashCleaner.location.site),   # arg 5
+                          Expression(self.wasteVol),                 # arg 6
+                          Integer(self.wasteDelay),
+                          Expression(self.cleanerVol),
+                          Integer(self.cleanerDelay),
+                          FloatingPoint(self.Airgap),
+                          Integer(self.airgapSpeed),
+                          Integer(self.retractSpeed),
+                          Integer(self.FastWash),
+                          Integer(self.lowVolume),
+                          Integer(self.atFrequency)]
         return True
 
 
@@ -273,9 +273,9 @@ class getDITI(DITIs):
         DITIs.__init__(self, "GetDITI", tipMask, options, arm)
         self.type=type # todo Deprecated?? Find the correct rack in the worktable and the current position to pick.
 
-    def validateArg(self):
-        DITIs.validateArg(self)
-        self.arg[1:1] = [integer(self.type)]     # arg 2 is type -an index-
+    def validate_arg(self):
+        DITIs.validate_arg(self)
+        self.arg[1:1] = [Integer(self.type)]     # arg 2 is type -an index-
         return True
 
 
@@ -287,7 +287,7 @@ class getDITI2(DITIs):
     """
     def __init__(self,
                  tipMask         = None,
-                 DITI_series  :(str, lab.DITIrackType, lab.DITIrack, lab.DITIrackTypeSeries)     = None,
+                 DITI_series  :(str, labware_.DITIrackType, labware_.DITIrack, labware_.DITIrackTypeSeries)     = None,
                  options         = 0,
                  arm             = None,
                  AirgapVolume    = 0,
@@ -295,7 +295,7 @@ class getDITI2(DITIs):
         """
 
         :param tipMask:
-        :param DITI_series: string or labware or labware.Type? DiTi labware name
+        :param DITI_series: string or labware or labware_.Type? DiTi labware name
         :param options:
         :param arm:
         :param AirgapVolume: int. used to specify a system trailing airgap (STAG) which will be aspirated after
@@ -310,20 +310,20 @@ class getDITI2(DITIs):
         self.AirgapSpeed  = AirgapSpeed
         self.AirgapVolume = AirgapVolume
 
-    def validateArg(self):
-        DITIs.validateArg(self)
+    def validate_arg(self):
+        DITIs.validate_arg(self)
         if self.AirgapSpeed is None:
             self.AirgapSpeed = def_AirgapSpeed
         self.DITI_series = self.robot.worktable.get_DITI_series(self.DITI_series)
 
-        self.arg[1:1] = [string1(self.DITI_series.type.name)]                 # arg 2 TODO string1 or expression?
-        self.arg += [integer(self.AirgapVolume),
-                     integer(self.AirgapSpeed)]                               # arg 5, 6 (3, 4 are grid, site)
+        self.arg[1:1] = [String1(self.DITI_series.type.name)]                 # arg 2 TODO String1 or Expression?
+        self.arg += [Integer(self.AirgapVolume),
+                     Integer(self.AirgapSpeed)]                               # arg 5, 6 (3, 4 are grid, site)
 
         return True
 
     def actualize_robot_state(self):
-        self.validateArg()
+        self.validate_arg()
         maxVol = None
         self.tipMask, tips = self.robot.get_tips_executed(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
@@ -361,12 +361,12 @@ class dropDITI(Pipette):
 
         self.AirgapVolume = AirgapVolume
 
-    def validateArg(self):
+    def validate_arg(self):
         self.wellSelection = 1
-        Pipette.validateArg(self)
+        Pipette.validate_arg(self)
         if self.AirgapSpeed is None:
             self.AirgapSpeed = def_AirgapSpeed
-        self.arg[3:-1] = [floating_point(self.AirgapVolume), self.AirgapSpeed]
+        self.arg[3:-1] = [FloatingPoint(self.AirgapVolume), self.AirgapSpeed]
         return True
 
     def exec(self, mode=None):
@@ -377,7 +377,7 @@ class dropDITI(Pipette):
         self.tipMask = self.robot.drop_tips_executed(self.tipMask, self.labware)
 
 
-class set_DITI_Counter(Pipette):            # todo help determining the type,set other labware.def_LabW,   deprecated???
+class set_DITI_Counter(Pipette):            # todo help determining the type,set other labware_.def_LabW,   deprecated???
     """A.15.4.7 Set Diti Position (Worklist: Set_DITI_Counter) pag. 15 - 15
         If you are using DITIs, Freedom EVOware remembers the position in the DITI
     rack of the last DITI which was fetched. When starting a new run, the Get DITIs
@@ -413,12 +413,12 @@ class set_DITI_Counter(Pipette):            # todo help determining the type,set
         self.labware   = labware or self.robot.worktable.def_DiTi_type
         self.posInRack = posInRack
 
-    def validateArg(self):
-        assert isinstance(self.labware, lab.DITIrack)
-        self.arg = [integer(self.type),
-                    string1(self.labware.location.grid),
-                    string1(self.labware.location.site),
-                    string1(self.posInRack)] # OK extract from Location
+    def validate_arg(self):
+        assert isinstance(self.labware, labware_.DITIrack)
+        self.arg = [Integer(self.type),
+                    String1(self.labware.location.grid),
+                    String1(self.labware.location.site),
+                    String1(self.posInRack)] # OK extract from Location
         return True
 
     def actualize_robot_state(self):
@@ -459,20 +459,20 @@ class set_DITI_Counter2(Pipette):
         self.labware   = labware or self.robot.worktable.def_DiTi_type
         self.posInRack = posInRack
 
-    def validateArg(self):
-        if not isinstance(self.labware, lab.DITIrack):
+    def validate_arg(self):
+        if not isinstance(self.labware, labware_.DITIrack):
             self.labware  = self.robot.worktable.get_DITI_series(self.labware).current
-        assert isinstance(self.labware, lab.DITIrack)
+        assert isinstance(self.labware, labware_.DITIrack)
 
-        self.arg = [string1(self.labware.type.name),
-                    string1(self.labware.location.grid),
-                    string1(self.labware.location.site+1),
-                    string1(self.labware.offset(self.posInRack)+1),
-                    integer(self.lastPos)]
+        self.arg = [String1(self.labware.type.name),
+                    String1(self.labware.location.grid),
+                    String1(self.labware.location.site + 1),
+                    String1(self.labware.offset(self.posInRack) + 1),
+                    Integer(self.lastPos)]
         return True
 
     def actualize_robot_state(self):
-        self.validateArg()
+        self.validate_arg()
         self.robot.worktable.set_current(self.labware)                     # todo really    ??????????
         self.labware.set_DITI_counter(self.posInRack, self.lastPos)
 
@@ -503,16 +503,16 @@ class pickUp_DITIs(Pipette):
         self.labware = labware  or self.robot.worktable.def_DiTi_type
         self.type = type
 
-    def validateArg(self):
-        Pipette.validateArg(self)
-        assert isinstance(self.labware, lab.DITIrack)
+    def validate_arg(self):
+        Pipette.validate_arg(self)
+        assert isinstance(self.labware, labware_.DITIrack)
 
         self.arg[3:4]   = []
-        self.arg[-1:-1] = [integer(self.type)]
+        self.arg[-1:-1] = [Integer(self.type)]
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, lab.DITIrack)
+        assert isinstance(self.labware, labware_.DITIrack)
         self.tipMask, tips = self.robot.pick_up_tips_executed(self.tipMask, self.labware)
         assert not tips
 
@@ -542,16 +542,16 @@ class pickUp_DITIs2(Pipette):
         self.type    = type
         self.labware = labware or self.robot.worktable.def_DiTi_type
 
-    def validateArg(self):
-        Pipette.validateArg(self)
-        assert isinstance(self.labware, lab.DITIrack)
+    def validate_arg(self):
+        Pipette.validate_arg(self)
+        assert isinstance(self.labware, labware_.DITIrack)
 
         self.arg[3:4]   = []        # delete arg tip spacing
-        self.arg[-1:-1] = [string1(self.labware.type.name)]
+        self.arg[-1:-1] = [String1(self.labware.type.name)]
         return True
 
     def actualize_robot_state(self):
-        assert isinstance(self.labware, lab.DITIrack)
+        assert isinstance(self.labware, labware_.DITIrack)
         self.tipMask, tips = self.robot.pick_up_tips_executed(self.tipMask, self.labware)
         assert not tips
 
@@ -563,14 +563,14 @@ class set_DITIs_Back(Pipette):
     """
     def __init__(self,
                  tipMask,
-                 labware  : lab.DITIrack,
+                 labware: labware_.DITIrack,
                  wellSelection      = None,
                  LoopOptions        = def_LoopOp,
                  arm                = None,
                  RackName           = None,
                  Well               = None):
 
-        assert isinstance(labware, lab.DITIrack)
+        assert isinstance(labware, labware_.DITIrack)
 
         Pipette.__init__(self, 'Set_DITIs_Back',
                          tipMask     = tipMask,
@@ -582,9 +582,9 @@ class set_DITIs_Back(Pipette):
                          arm         = arm)
 
 
-    def validateArg(self):
-        Pipette.validateArg(self)
-        assert isinstance(self.labware, lab.DITIrack)
+    def validate_arg(self):
+        Pipette.validate_arg(self)
+        assert isinstance(self.labware, labware_.DITIrack)
 
         self.arg[3:4] = []
         return True
@@ -644,9 +644,9 @@ class activate_PMP(Instruction):
         Instruction.__init__(self, "Activate_PMP")
         self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg = [integer(self.tipMask)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg = [Integer(self.tipMask)]
         return True
 
     def exec(self, mode=None):
@@ -661,9 +661,9 @@ class deactivate_PMP(Instruction):
         Instruction.__init__(self, "Deactivate_PMP")
         self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg = [integer(self.tipMask)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg = [Integer(self.tipMask)]
         return True
 
     def exec(self, mode=None):
@@ -756,12 +756,12 @@ class moveLiha(Pipette ):
         self.zTarget    = zTarget
         self.zMove      = zMove
 
-    def validateArg(self):
-        Pipette.validateArg(self)
-        self.arg[5:5] = [integer        (self.zMove),
-                         integer        (self.zTarget),       # arg 6, 7
-                         floating_point (self.offset),
-                         floating_point (self.speed)]  # arg 8, 9
+    def validate_arg(self):
+        Pipette.validate_arg(self)
+        self.arg[5:5] = [Integer        (self.zMove),
+                         Integer        (self.zTarget),       # arg 6, 7
+                         FloatingPoint (self.offset),
+                         FloatingPoint (self.speed)]  # arg 8, 9
         return True
 
 
@@ -781,10 +781,10 @@ class waste(Instruction):
         Instruction.__init__(self, "Waste")
         self.action = action
 
-    def validateArg(self):
-        Instruction.validateArg(self)
+    def validate_arg(self):
+        Instruction.validate_arg(self)
         assert self.action in waste.actions
-        self.arg= [integer(self.action)]
+        self.arg= [Integer(self.action)]
         return True
 
 
@@ -798,9 +798,9 @@ class active_Wash(Instruction):
         self.time = time
         self.wait = wait
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [integer(self.wait ),integer(self.time),integer(self.arm)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [Integer(self.wait),Integer(self.time),Integer(self.arm)]
         return True
 
 
@@ -829,14 +829,14 @@ class export(Instruction):
         self.significantStep = significantStep
 
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [integer(self.exportAll), integer(self.formats),
-                   integer(self.delete),    integer(self.compress)]
-        self.arg +=  [integer(len(self.Raks))]                                         # arg 5
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [Integer(self.exportAll), Integer(self.formats),
+                   Integer(self.delete),    Integer(self.compress)]
+        self.arg +=  [Integer(len(self.Raks))]                                         # arg 5
         for rk in self.Raks:
-            self.arg += [integer(rk.location.grid), integer(rk.location.site) ]        # arg 6,7
-        self.arg += [integer( self.significantStep) ]                                  # arg 8
+            self.arg += [Integer(rk.location.grid), Integer(rk.location.site)]        # arg 6,7
+        self.arg += [Integer( self.significantStep)]                                  # arg 8
 
         return True
 
@@ -848,15 +848,15 @@ class startTimer(Instruction):
         """
 
 
-        :type timer: expression
+        :type timer: Expression
         :param timer: expression, 1 - 100. number of timer to re-start. 1-1000?
         """
         Instruction.__init__(self, "StartTimer")
         self.timer = timer
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [expression(self.timer)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [Expression(self.timer)]
 
 
 class waitTimer(Instruction):
@@ -866,16 +866,16 @@ class waitTimer(Instruction):
         """
 
         :param timeSpan: expression, 0.02 - 86400. duration
-        :type timer: expression
+        :type timer: Expression
         :param timer: expression, 1 - 100. number of timer to re-start. 1-1000?
         """
         Instruction.__init__(self, "WaitTimer")
         self.timeSpan = timeSpan
         self.timer = timer
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [expression(self.timer),expression(self.timeSpan)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [Expression(self.timer),Expression(self.timeSpan)]
 
 
 class execute(Instruction): # todo declare const
@@ -891,10 +891,10 @@ class execute(Instruction): # todo declare const
         self.application = application
 
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string1(self.application),      integer(self.options),
-                   string1(self.responseVariable), integer(self.scope)   ]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [String1(self.application),      Integer(self.options),
+                   String1(self.responseVariable), Integer(self.scope)]
 
 
 class comment(Instruction):
@@ -906,9 +906,9 @@ class comment(Instruction):
         Instruction.__init__(self, "Comment")
         self.text = text
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string1(self.text)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [String1(self.text)]
         return True
 
 
@@ -924,9 +924,9 @@ class userPrompt(Instruction):    # todo declare const
         self.sound = sound
         self.text = text
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string1(self.text), integer(self.sound), integer(self.closeTime)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [String1(self.text), Integer(self.sound), Integer(self.closeTime)]
         return True
 
 
@@ -958,9 +958,9 @@ class variable(Instruction):    # OK declare const
         """
 
         :param var_name: string2 ; name of variable
-        :param default: expression ; value assigned to variable or default value if user query
+        :param default: Expression ; value assigned to variable or default value if user query
         :param queryFlag: bool
-        :param queryString: string1 ; text shown in user query
+        :param queryString: String1 ; text shown in user query
         :param checkLimits: bool
         :param lowerLimit:
         :param upperLimit:
@@ -982,19 +982,19 @@ class variable(Instruction):    # OK declare const
         self.default = default
         self.queryFlag = queryFlag
 
-    def validateArg(self):
-        Instruction.validateArg     (self)
-        self.arg =  [string2        (self.var_name),
-                     expression     (self.default),
-                     integer        (self.queryFlag)]
-        self.arg += [string1        (self.queryString),
-                     integer        (self.checkLimits),
-                     floating_point (self.lowerLimit) ]
-        self.arg += [floating_point (self.upperLimit),
-                     integer        (self.type),
-                     integer        (self.scope)  ]
-        self.arg += [integer        (self.InitMode),
-                     integer        (self.QueryAtStart)  ]
+    def validate_arg(self):
+        Instruction.validate_arg     (self)
+        self.arg =  [String2        (self.var_name),
+                     Expression     (self.default),
+                     Integer        (self.queryFlag)]
+        self.arg += [String1        (self.queryString),
+                     Integer        (self.checkLimits),
+                     FloatingPoint (self.lowerLimit)]
+        self.arg += [FloatingPoint (self.upperLimit),
+                     Integer        (self.type),
+                     Integer        (self.scope)]
+        self.arg += [Integer        (self.InitMode),
+                     Integer        (self.QueryAtStart)]
         return True
 
 
@@ -1011,9 +1011,9 @@ class execute_VBscript(Instruction):
         self.action = action
         self.filename = filename
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string1(self.filename), integer(self.action) ]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [String1(self.filename), Integer(self.action)]
         return True
 
 
@@ -1039,13 +1039,13 @@ class notification(Instruction):    # todo declare const
         self.action                 = action
         self.receiverGroup          = receiverGroup
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [ integer(self.AttachScreen_ShotFlag),
-                    string1(self.receiverGroup),
-                    string1(self.emailSubject),
-                    string1(self.emailMessage),
-                    integer(self.action)              ]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [ Integer(self.AttachScreen_ShotFlag),
+                    String1(self.receiverGroup),
+                    String1(self.emailSubject),
+                    String1(self.emailMessage),
+                    Integer(self.action)]
         return True
 
 
@@ -1091,7 +1091,7 @@ class Te_MO_Aspirate(Instruction):
                             tipMask,
                             liquidClass,
                             volume,
-                            labware or labware.def_LabW,
+                            labware or labware_.def_LabW,
                             spacing,
                             wellSelection,
                             LoopOptions,
@@ -1191,8 +1191,8 @@ class RoMa(Instruction):
     def actualize_robot_state(self):
         pass                            # todo  and exec()?
 
-    def validateArg(self):
-        Instruction.validateArg(self)
+    def validate_arg(self):
+        Instruction.validate_arg(self)
         assert    0 > self.action   >   3, "RoMa action must be 0,1, 2 or 3, but passed: " + str(self.action)
         assert   55 > self.distance > 140, "RoMa distance must be 55-140, but passed: " + str(self.distance)
         assert    0 > self.force    > 249, "RoMa force must be 0-249, but passed: " + str(self.force)
@@ -1203,15 +1203,15 @@ class RoMa(Instruction):
         assert    0 > self.xyzMax   >   1, "RoMa xyzMax must be 0 or 1, but passed: " + str(self.xyzMax)
         assert    0 > self.romaNo   >   1, "RoMa romaNo must be 0 or 1, but passed: " + str(self.romaNo) # todo ?
 
-        self.arg= [ integer       (self.action),
-                    floating_point(self.distance),
-                    integer       (self.force),
-                    floating_point(self.xOffset),
-                    floating_point(self.yOffset),
-                    floating_point(self.zOffset),
-                    floating_point(self.xyzSpeed),
-                    integer       (self.xyzMax),
-                    integer       (self.romaNo)
+        self.arg= [ Integer       (self.action),
+                    FloatingPoint(self.distance),
+                    Integer       (self.force),
+                    FloatingPoint(self.xOffset),
+                    FloatingPoint(self.yOffset),
+                    FloatingPoint(self.zOffset),
+                    FloatingPoint(self.xyzSpeed),
+                    Integer       (self.xyzMax),
+                    Integer       (self.romaNo)
                     ]
         return True
 
@@ -1368,12 +1368,12 @@ class transfer_rack(Instruction):
 
     #
     def __init__(self,
-                 labware        : lab.Labware,
-                 destination    : lab.WorkTable.Location,
+                 labware        : labware_.Labware,
+                 destination    : labware_.WorkTable.Location,
                  vectorName     : str         = None,
                  backHome       : bool        = True,
                  slow           : bool        = True,
-                 lid            : lab.Labware = None,
+                 lid            : labware_.Labware = None,
                  cover          : int         = 0,         # todo revise !!!!
                  romaNo         : int         = None
                  ):
@@ -1404,18 +1404,18 @@ class transfer_rack(Instruction):
         self.vectorName      = vectorName
         self.romaNo          = romaNo
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        assert isinstance(self.labware,                  lab.Labware)
-        assert isinstance(self.labware.type,             lab.Labware.Type)
-        assert isinstance(self.labware.location.carrier, lab.Carrier)
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        assert isinstance(self.labware,                  labware_.Labware)
+        assert isinstance(self.labware.type,             labware_.Labware.Type)
+        assert isinstance(self.labware.location.carrier, labware_.Carrier)
 
-        assert isinstance(self.destination,          lab.WorkTable.Location)
-        assert isinstance(self.destination.carrier,  lab.Carrier)
+        assert isinstance(self.destination,          labware_.WorkTable.Location)
+        assert isinstance(self.destination.carrier,  labware_.Carrier)
 
         if self.lid is not None:
-            assert isinstance(self.lid,      lab.WorkTable.Location)
-            assert isinstance(self.lid.carrier, lab.Carrier)
+            assert isinstance(self.lid,      labware_.WorkTable.Location)
+            assert isinstance(self.lid.carrier, labware_.Carrier)
 
         logging.info("Transafering from " + str(self.labware.location) + " to " + str(self.destination))
         assert self.cover in [0, 1]
@@ -1428,29 +1428,29 @@ class transfer_rack(Instruction):
             self.romaNo = RoMa.RoMa_1
         assert self.romaNo in [RoMa.RoMa_1, RoMa.RoMa_2], f"romaNo must be 0 or 1, but passed: {self.romaNo}"
 
-        self.arg = [expression(self.labware.location.grid),  # 1. 1-67, carrier grid position, source                            example: "15"
-                    expression(self.destination.grid),       # 2. 1-67. labware location - carrier grid position,  destination   example: "15"
-                    integer   (1 if self.backHome else 0),   # 3. 1 = move back to home when finished                            example: 0
-                    integer   (1 if self.lid  else 0),       # 4. 0 = no lid handling , 1= lid handling                          example: 1
-                    integer   (1 if self.slow else 0),       # 5. 0 = maximum speed , 1 = slow speed (as defined in RoMa vector) example: 0
-                    integer   (self.romaNo),                 # 6. number of the RoMa : 0 = RoMa 1, 1 = RoMa 2                    example: 0
-                    integer   (self.cover),                  # 7. 0 = cover at source , 1 = uncover at destination               example: 0
-                    expression(self.lid.location.grid if self.lid else 0),  # 8. 1-67. lid location - carrier grid position     ??    example: "15"
-                    string1   (self.labware.type.name),      # 9. labware type (as in the Freedom EVOware configuration)         example: "96 Well Microplate"
-                    string1   (self.vectorName),             # 10. name of RoMa vector to use (as in the Freedom EVOware configuration), example: "Narrow"
-                    string1   (""),                          # 11. unused                                                        example: ""
-                    string1   (""),                          # 12. unused                                                        example: ""
-                    string1   (self.labware.location.carrier.type.name),     # 13. carrier name, source    ?                     example: "MP 3Pos"
-                    string1   (self.lid.carrier.type.name if self.lid else ""),  # 14. carrier name, lid     ?                       example: "MP 3Pos"
-                    string1   (self.destination.carrier.type.name),          # 15. carrier name, destination    ?                               example: "MP 3Pos"
-                    string1   (self.labware.location.site),                  # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
-                    string1   (self.lid.location.site if self.lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
-                    string1   (self.destination.site)                        # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
+        self.arg = [Expression(self.labware.location.grid),  # 1. 1-67, carrier grid position, source                            example: "15"
+                    Expression(self.destination.grid),       # 2. 1-67. labware location - carrier grid position,  destination   example: "15"
+                    Integer   (1 if self.backHome else 0),   # 3. 1 = move back to home when finished                            example: 0
+                    Integer   (1 if self.lid  else 0),       # 4. 0 = no lid handling , 1= lid handling                          example: 1
+                    Integer   (1 if self.slow else 0),       # 5. 0 = maximum speed , 1 = slow speed (as defined in RoMa vector) example: 0
+                    Integer   (self.romaNo),                 # 6. number of the RoMa : 0 = RoMa 1, 1 = RoMa 2                    example: 0
+                    Integer   (self.cover),                  # 7. 0 = cover at source , 1 = uncover at destination               example: 0
+                    Expression(self.lid.location.grid if self.lid else 0),  # 8. 1-67. lid location - carrier grid position     ??    example: "15"
+                    String1   (self.labware.type.name),      # 9. labware type (as in the Freedom EVOware configuration)         example: "96 Well Microplate"
+                    String1   (self.vectorName),             # 10. name of RoMa vector to use (as in the Freedom EVOware configuration), example: "Narrow"
+                    String1   (""),                          # 11. unused                                                        example: ""
+                    String1   (""),                          # 12. unused                                                        example: ""
+                    String1   (self.labware.location.carrier.type.name),     # 13. carrier name, source    ?                     example: "MP 3Pos"
+                    String1   (self.lid.carrier.type.name if self.lid else ""),  # 14. carrier name, lid     ?                       example: "MP 3Pos"
+                    String1   (self.destination.carrier.type.name),          # 15. carrier name, destination    ?                               example: "MP 3Pos"
+                    String1   (self.labware.location.site),                  # 16. 0 - 127 labware location - (site on carrier - 1), source     example: "3",
+                    String1   (self.lid.location.site if self.lid else ""),  # 17. 0 - 127 labware location - (site on carrier - 1), source     example: "2",
+                    String1   (self.destination.site)                        # 18. 0 - 127 labware location - (site on carrier - 1), source     example: "1"
                     ]
         return True
 
     def actualize_robot_state(self):
-        self.validateArg()
+        self.validate_arg()
         # if self.lid:
         #     if self.cover:                       # 1 = uncover at destination
         #         self.lid.location
@@ -1472,9 +1472,9 @@ class subroutine(ScriptONLY):
         self.action = action
         self.filename = filename
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string1(self.filename), integer(self.action) ]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [String1(self.filename), Integer(self.action)]
         return True
 
 
@@ -1487,9 +1487,9 @@ class group(ScriptONLY):
         Instruction.__init__(self, "Group")
         self.titel = titel
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg= [string1(self.titel)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg= [String1(self.titel)]
         return True
 
 
@@ -1501,7 +1501,7 @@ class group_end(ScriptONLY):
         """
         Instruction.__init__(self, "GroupEnd")
 
-    def validateArg(self):
-        Instruction.validateArg(self)
+    def validate_arg(self):
+        Instruction.validate_arg(self)
         return True
 

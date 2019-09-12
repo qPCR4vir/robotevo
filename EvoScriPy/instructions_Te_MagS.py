@@ -14,7 +14,7 @@ from EvoScriPy.Instruction_Base import *
 
 
 
-class Te_MagS_MoveToPosition(T_Mag_Instr):
+class Te_MagS_MoveToPosition(TMagInstr):
     """
     A.15.10.1 MoveToPosition (Worklist: Te-MagS_MoveToPosition)
     """
@@ -37,15 +37,15 @@ class Te_MagS_MoveToPosition(T_Mag_Instr):
         :param needs_allwd_lw:
         :param allowed_labware:
         """
-        T_Mag_Instr.__init__(self, "Te-MagS_MoveToPosition"  )
+        TMagInstr.__init__(self, "Te-MagS_MoveToPosition")
 
         self.allowed_labware = allowed_labware
         self.needs_allwd_lw = needs_allwd_lw
         self.z_pos = z_pos
         self.position = position
 
-    def validateArg(self):
-        T_Mag_Instr.validateArg(self)
+    def validate_arg(self):
+        TMagInstr.validate_arg(self)
         assert self.needs_allwd_lw == 0
         assert self.allowed_labware == ""
 
@@ -53,60 +53,60 @@ class Te_MagS_MoveToPosition(T_Mag_Instr):
         if pos == Te_MagS_MoveToPosition.Aspirate:
             pos = "{:d} {:d}".format( pos, int(self.z_pos) )
 
-        self.arg += [ expression(pos), expression(self.needs_allwd_lw), expression(self.allowed_labware) ]
+        self.arg += [ Expression(pos), Expression(self.needs_allwd_lw), Expression(self.allowed_labware)]
         return True
 
 
-class Te_MagS_ActivateHeater(T_Mag_Instr):
+class Te_MagS_ActivateHeater(TMagInstr):
     """
     A.15.10.2 ActivateHeater (Worklist: Te-MagS_ActivateHeater)
     """
 
     def __init__(self,  temperature, needs_allwd_lw=0, allowed_labware="" ):
 
-        T_Mag_Instr.__init__(self, "Te-MagS_ActivateHeater" )
+        TMagInstr.__init__(self, "Te-MagS_ActivateHeater")
 
         self.temperature = temperature
         self.allowed_labware = allowed_labware
         self.needs_allwd_lw = needs_allwd_lw
 
 
-    def validateArg(self):
-        T_Mag_Instr.validateArg(self)
+    def validate_arg(self):
+        TMagInstr.validate_arg(self)
         assert self.needs_allwd_lw == 0
         assert self.allowed_labware == ""
 
-        self.arg += [ expression(self.temperature), expression(self.needs_allwd_lw), expression(self.allowed_labware) ]
+        self.arg += [ Expression(self.temperature), Expression(self.needs_allwd_lw), Expression(self.allowed_labware)]
         return True
 
 
-class Te_MagS_DeactivateHeater(T_Mag_Instr):
+class Te_MagS_DeactivateHeater(TMagInstr):
     """
     A.15.10.3 DeactivateHeater (Worklist: Te-MagS_DeactivateHeater)
     """
 
     def __init__(self,  exec_parameters="", needs_allwd_lw=0, allowed_labware="" ):
 
-        T_Mag_Instr.__init__(self, "Te-MagS_DeactivateHeater" )
+        TMagInstr.__init__(self, "Te-MagS_DeactivateHeater")
 
         self.exec_parameters = exec_parameters
         self.allowed_labware = allowed_labware
         self.needs_allwd_lw = needs_allwd_lw
 
 
-    def validateArg(self):
-        T_Mag_Instr.validateArg(self)
+    def validate_arg(self):
+        TMagInstr.validate_arg(self)
 
         assert self.needs_allwd_lw == 0
         assert self.allowed_labware == ""
         assert self.exec_parameters == ""
 
-        self.arg += [ expression(self.exec_parameters), expression(self.needs_allwd_lw), expression(self.allowed_labware) ]
+        self.arg += [ Expression(self.exec_parameters), Expression(self.needs_allwd_lw), Expression(self.allowed_labware)]
         return True
 
 
 
-class Te_MagS_Execution(T_Mag_Instr):
+class Te_MagS_Execution(TMagInstr):
     """
     A.15.10.4 Execution (Worklist: Te-MagS_Execution)
     """
@@ -165,15 +165,15 @@ class Te_MagS_Execution(T_Mag_Instr):
 
     def __init__(self,  exec_parameters=[], needs_allwd_lw=0, allowed_labware="" ):
 
-        T_Mag_Instr.__init__(self, "Te-MagS_Execution" )
+        TMagInstr.__init__(self, "Te-MagS_Execution")
 
         self.exec_parameters = exec_parameters
         self.allowed_labware = allowed_labware
         self.needs_allwd_lw = needs_allwd_lw
 
 
-    def validateArg(self):
-        T_Mag_Instr.validateArg(self)
+    def validate_arg(self):
+        TMagInstr.validate_arg(self)
 
         assert self.needs_allwd_lw == 0
         assert self.allowed_labware == ""
@@ -181,5 +181,5 @@ class Te_MagS_Execution(T_Mag_Instr):
         pr=self.exec_parameters     #  + [Te_MagS_Execution.command()]
         pr = ','.join( [str(cm) for cm in pr] )
 
-        self.arg += [ expression(pr) , expression(self.needs_allwd_lw), expression(self.allowed_labware) ]
+        self.arg += [ Expression(pr) , Expression(self.needs_allwd_lw), Expression(self.allowed_labware)]
         return True

@@ -11,35 +11,49 @@ Implement the
 """
 import logging
 
-# todo Revise def values: the binding take place at the moment of first import ???
+
 import EvoScriPy.evo_mode
-import EvoScriPy.labware as labware
+import EvoScriPy.labware as labware_
 import EvoScriPy.robot as robot
 
-def_vol         = [0]*12
+def_vol         = [0]*12  # todo Revise def values: the binding take place at the moment of first import ???
 def_LoopOp      = []
 def_AirgapSpeed = 300
 
 
-class EvoTypes:  # EvoTypes: string1: "V[~i~]", string2: V[~i~], integer, float, expr[12]
+class EvoTypes:
+    """
+    Evoware uses an small set of "types" to write the values into evoware scripts.
+    This class is the base for those types.
+    Example of EvoTypes are:
+    - string1: "V[~i~]",
+    - string2: V[~i~],
+    - integer, float, expr[12]
+    """
     def __init__(self, data):
         self.data = data
 
-    def __str__(self):  # todo implement exceptions
+    def __str__(self):          # todo implement exceptions
         return str(self.data)
 
 
-class string1(EvoTypes):
+class String1(EvoTypes):
+    """
+    Implement the evoware type `string1`
+    """
     def __str__(self):
         s = "{:.2f}".format(self.data) if isinstance(self.data, float) else str(self.data)
         return '"' + s + '"'
 
 
-class expression(string1):
+class Expression(String1):
+    """
+    Implement the evoware type `string1`
+    """
     pass
 
 
-class expr(EvoTypes):
+class Expr(EvoTypes):
     def __init__(self, dim, data):
         EvoTypes.__init__(self, data)
         self.dim = dim
@@ -48,21 +62,31 @@ class expr(EvoTypes):
         if isinstance(self.data, list):
             d = self.dim - len(self.data)
             assert (d >= 0)
-            return [integer(0) if v is None else expression(v) for v in self.data] + [integer(0)] * d
+            return [Integer(0) if v is None else Expression(v) for v in self.data] + [Integer(0)] * d
         else:
-            return [integer(0) if self.data is None else expression(self.data)] * self.dim
+            return [Integer(0) if self.data is None else Expression(self.data)] * self.dim
 
 
-class string2(EvoTypes):
+class String2(EvoTypes):
+    """
+    Implement the evoware type `string2`
+    """
     pass
 
 
-class integer(EvoTypes):  #  implement exceptions ?
+class Integer(EvoTypes):  # implement exceptions ?
+    """
+    Implement the evoware type `integer`
+    """
+
     def __str__(self):
         return str(int(self.data))
 
 
-class floating_point(EvoTypes):  #  implement exceptions ?
+class FloatingPoint(EvoTypes):  # implement exceptions ?
+    """
+    Implement the evoware type `floating_point`
+    """
     def __str__(self):
         return "{:.2f}".format(float(self.data))
 
@@ -91,7 +115,7 @@ class Instruction:
         self.arg = []
         self.robot = robot.Robot.current
 
-    def validateArg(self):
+    def validate_arg(self):
         self.arg = []
         return False
 
@@ -102,16 +126,17 @@ class Instruction:
         pass
 
     def exec(self, mode=None):
-        if mode is None: mode = EvoScriPy.evo_mode.current  # todo revise
+        if mode is None:
+            mode = EvoScriPy.evo_mode.current  # todo revise
         if not self.allowed(mode):
             return
         mode.exec(self)
 
     def __str__(self):
-        self.validateArg()
-        return self.name + "(" + ','.join([          ''   if    a is None
-                                           else '"'+a+'"' if isinstance(a,str)
-                                           else  str(a)       for a in self.arg]) + ");"
+        self.validate_arg()
+        return self.name + "(" + ','.join(['' if a is None
+                                           else '"'+a+'"' if isinstance(a, str)
+                                           else str(a) for a in self.arg]) + ");"
 
 
 class ScriptONLY(Instruction):
@@ -125,13 +150,13 @@ class Device(Instruction):
         self.commandname = commandname
         self.devicename = devicename
 
-    def validateArg(self):
-        Instruction.validateArg(self)
-        self.arg += [string1(self.devicename), string1(self.commandname)]
+    def validate_arg(self):
+        Instruction.validate_arg(self)
+        self.arg += [String1(self.devicename), String1(self.commandname)]
         return False
 
 
-class T_Mag_Instr(Device):
+class TMagInstr(Device):
     """ A.15.10 Advanced Worklist Commands for the Te-MagS. pag. A - 198, pag. 16 - 100
         The Magnetic Bead Separator option (also called Te-MagS) is a magnetic bead
     separator with an optional heating function. It uses a commercially-available liquid
@@ -151,14 +176,14 @@ class Pipette(Instruction):
 
     def __init__(self,
                  name,
-                 tipMask                    = None,
-                 labware      : labware.Labware = None,
-                 spacing                    = 1,           # todo how to use in actualize_robot_state, validateArg ?
-                 wellSelection              = None,        # todo    use???
-                 LoopOptions                = None,        # todo how to model???
-                 RackName                   = None,        # todo I need to this???
-                 Well                       = None,        # todo I need to this???
-                 arm                        = LiHa1):      # set this as def
+                 tipMask                  = None,
+                 labware: labware_.Labware = None,
+                 spacing                  = 1,           # todo how to use in actualize_robot_state, validate_arg ?
+                 wellSelection            = None,        # todo    use???
+                 LoopOptions              = None,        # todo how to model???
+                 RackName                 = None,        # todo I need to this???
+                 Well                     = None,        # todo I need to this???
+                 arm                      = LiHa1):      # set this as def
         """
         Set labware to match wells.
 
@@ -199,14 +224,14 @@ class Pipette(Instruction):
                             # action,
                             # difference,
 
-    def validateArg(self):
+    def validate_arg(self):
         """
         Evoware visual script generator enforce a compatibility between the arguments tipMask and well selection.
         If they are not compatible the robot crash.
         :return:
 
         """
-        Instruction.validateArg(self)
+        Instruction.validate_arg(self)
 
         self.arm = self.robot.curArm(self.arm)
 
@@ -220,45 +245,45 @@ class Pipette(Instruction):
 
         well_selection_str = None                                      # Set selected wells to match labware selection.
         if self.wellSelection is None:                                 # only labware selection.
-            assert isinstance(self.labware, labware.Labware)
+            assert isinstance(self.labware, labware_.Labware)
             assert len(self.labware.selected_wells()) > 0, "No well selected for pipetting in " + str(self.labware) + "."
             well_selection_str = self.labware.wellSelectionStr()       # use them
         else:
             if not isinstance(self.wellSelection, list):
                 self.wellSelection = [self.wellSelection]
             if len(self.wellSelection) == 0:
-                assert isinstance(self.labware, labware.Labware)
+                assert isinstance(self.labware, labware_.Labware)
                 assert len(self.labware.selected_wells()) > 0, "No well selected to pipette."
                 well_selection_str = self.labware.wellSelectionStr()
             else:
                 w0 = self.wellSelection[0]
-                if isinstance(w0, labware.Well):
+                if isinstance(w0, labware_.Well):
                     if self.labware is None:
                         self.labware = w0.labware
                     assert w0.labware is self.labware, "Using a well from another labware"
-                assert isinstance(self.labware, labware.Labware)
+                assert isinstance(self.labware, labware_.Labware)
                 self.labware.selectOnly(self.wellSelection)
                 well_selection_str = self.labware.wellSelectionStr(self.wellSelection)
 
 
 
-        self.arg  =  [integer(self.tipMask)]                                                    # arg 1
-        self.arg +=  [integer(self.labware.location.grid),                                      # arg 2
-                      integer(self.labware.location.site),                                      # arg 3
-                      integer(self.spacing),                                                    # arg 4
-                      string1(well_selection_str) ]                                             # arg 5
-        self.arg +=  [integer(len(self.loopOptions))]                                           # arg 6
+        self.arg  =  [Integer(self.tipMask)]                                                    # arg 1
+        self.arg +=  [Integer(self.labware.location.grid),                                      # arg 2
+                      Integer(self.labware.location.site),                                      # arg 3
+                      Integer(self.spacing),                                                    # arg 4
+                      String1(well_selection_str)]                                             # arg 5
+        self.arg +=  [Integer(len(self.loopOptions))]                                           # arg 6
         for op in self.loopOptions:
-            self.arg +=  [string1(op.name),
-                          integer(op.action),
-                          integer(op.difference) ]                                              # arg 7, 8, 9
-        self.arg +=  [integer(self.arm.index)]                                                  # arg 10
+            self.arg +=  [String1(op.name),
+                          Integer(op.action),
+                          Integer(op.difference)]                                              # arg 7, 8, 9
+        self.arg +=  [Integer(self.arm.index)]                                                  # arg 10
 
         return True
 
     def exec(self, mode=None):
         if not self.tipMask:
-            self.validateArg()
+            self.validate_arg()
         if self.tipMask:
             Instruction.exec(self, mode)
 
@@ -293,23 +318,23 @@ class Pipetting(Pipette):
         self.liquidClass = liquidClass                                     # todo reagent.LC ?
         self.volume      = volume if volume is not None else def_vol
 
-    def validateArg(self):
-        Pipette.validateArg(self)
+    def validate_arg(self):
+        Pipette.validate_arg(self)
         if isinstance(self.liquidClass  , str):
             self.liquidClass   = self.robot.liquid_clases.all[self.liquidClass  ]
         # todo use LiqC of the reagents in wells ?
         assert isinstance(self.liquidClass  .name, str), "Set the liquid class to be used (for the reagent?)"
 
-        self.arg[1:1] =   [string1(self.liquidClass)]                              # arg 2
+        self.arg[1:1] =   [String1(self.liquidClass)]                              # arg 2
 
         nTips = self.robot.curArm().nTips
         if self.action():
-            self.arg[2:2] =  expr   (nTips, self.volume).split()   \
-                           + [int    (0)] * (12 - nTips)                           # arg 3 - 14 todo integer(0) ?
+            self.arg[2:2] = Expr   (nTips, self.volume).split() \
+                            + [int    (0)] * (12 - nTips)                           # arg 3 - 14 todo Integer(0) ?
         return True
 
     def actualize_robot_state(self):
-        self.validateArg()
+        self.validate_arg()
         self.pipette_on_iRobot(self.action())
         pass
 
@@ -335,16 +360,16 @@ class DITIs(Instruction):
         self.tipMask = tipMask if tipMask is not None else robot.tipsMask[self.robot.curArm().nTips]
 
 
-    def validateArg(self):
-        Instruction.validateArg(self)
+    def validate_arg(self):
+        Instruction.validate_arg(self)
 
         self.arm = self.robot.curArm(self.arm)
 
         assert self.arm.tips_type == self.arm.DiTi
 
-        self.arg  = [integer(self.tipMask)]  # arg 1
-        self.arg += [integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
-        self.arg += [integer(self.arm.index)]      # arg 4
+        self.arg  = [Integer(self.tipMask)]  # arg 1
+        self.arg += [Integer(self.options)]  # arg 3 (the arg 2 is type -an index- or labware name)
+        self.arg += [Integer(self.arm.index)]      # arg 4
         return True
 
     def exec(self, mode=None):

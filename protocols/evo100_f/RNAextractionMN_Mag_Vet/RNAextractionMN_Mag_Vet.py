@@ -88,25 +88,25 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         if self.add_VL:
-            LysBuf      = wt.get_labware("2-Vl Lysis Buffer", lab.Trough_100ml)
+            LysBuf      = wt.get_labware("2-Vl Lysis Buffer", labware.Trough_100ml)
 
         if self.do_extraction:
-            BindBuf     = wt.get_labware("3-VEB Binding Buffer", lab.Trough_100ml)
-            ElutBuf     = wt.get_labware("1-VEL-ElutionBuffer", lab.Trough_100ml)
-            Eluat       = wt.get_labware("Eluat", lab.EppRack3x16R)
+            BindBuf     = wt.get_labware("3-VEB Binding Buffer", labware.Trough_100ml)
+            ElutBuf     = wt.get_labware("1-VEL-ElutionBuffer", labware.Trough_100ml)
+            Eluat       = wt.get_labware("Eluat", labware.EppRack3x16R)
 
-        Samples     = wt.get_labware("Proben", lab.EppRack3x16)
+        Samples     = wt.get_labware("Proben", labware.EppRack3x16)
         Lysis       = Samples
 
-        DiTi1000_1  = wt.get_labware("1000-1", lab.DiTi_1000ul)
-        DiTi1000_2  = wt.get_labware("1000-2", lab.DiTi_1000ul)
-        DiTi1000_3  = wt.get_labware("1000-3", lab.DiTi_1000ul)
+        DiTi1000_1  = wt.get_labware("1000-1", labware.DiTi_1000ul)
+        DiTi1000_2  = wt.get_labware("1000-2", labware.DiTi_1000ul)
+        DiTi1000_3  = wt.get_labware("1000-3", labware.DiTi_1000ul)
 
-        Reagents   = wt.get_labware("Reactives", lab.GreinRack16_2mL)
+        Reagents   = wt.get_labware("Reactives", labware.GreinRack16_2mL)
 
         if self.do_extraction:
-            self.TeMg_Heat = wt.get_labware("48 Pos Heat", lab.TeMag48)
-            self.TeMag     = wt.get_labware("48PosMagnet", lab.TeMag48)
+            self.TeMg_Heat = wt.get_labware("48 Pos Heat", labware.TeMag48)
+            self.TeMag     = wt.get_labware("48PosMagnet", labware.TeMag48)
             TeMag          = self.TeMag
             Lysis          = TeMag
 
@@ -199,17 +199,17 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           defLiqClass   = self.B_liquidClass)
 
             VEW1            = Reagent("VEW1 - Wash Buffer ",
-                wt.get_labware("4-VEW1 Wash Buffe", lab.Trough_100ml),
+                wt.get_labware("4-VEW1 Wash Buffe", labware.Trough_100ml),
                                           volpersample  = VEW1Volume,
                                           defLiqClass   = self.B_liquidClass)
 
             VEW2            = Reagent("VEW2 - WashBuffer ",
-                wt.get_labware("5-VEW2-WashBuffer", lab.Trough_100ml),
+                wt.get_labware("5-VEW2-WashBuffer", labware.Trough_100ml),
                                           volpersample  =VEW2Volume,
                                           defLiqClass   =self.B_liquidClass)
 
             EtOH80p         = Reagent("Ethanol 80% ",
-                                          lab.getLabware(lab.Trough_100ml,  "7-EtOH80p"     ),
+                                          labware.getLabware(labware.Trough_100ml,  "7-EtOH80p"     ),
                                           volpersample=EtOH80pVolume, defLiqClass=self.B_liquidClass)
 
             ElutionBuffer   = Reagent("Elution Buffer ",
