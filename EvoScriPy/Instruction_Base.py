@@ -219,10 +219,10 @@ class Pipette(Instruction):
         self.loopOptions        = LoopOptions
         self.RackName           = RackName
         self.Well               = Well
-                            # noOfLoopOptions,
-                            # loopName,
-                            # action,
-                            # difference,
+        # noOfLoopOptions,
+        # loopName,
+        # action,
+        # difference,
 
     def validate_arg(self):
         """
@@ -238,7 +238,7 @@ class Pipette(Instruction):
         max_tip_mask = robot.tipsMask[self.arm.nTips]
         if self.tipMask is None:
             self.tipMask = max_tip_mask
-        assert 0 <= self.tipMask <= max_tip_mask; "Invalid tip mask"
+        assert 0 <= self.tipMask <= max_tip_mask, "Invalid tip mask"
 
         if self.loopOptions is None:
             self.loopOptions = def_LoopOp
@@ -265,19 +265,17 @@ class Pipette(Instruction):
                 self.labware.selectOnly(self.wellSelection)
                 well_selection_str = self.labware.wellSelectionStr(self.wellSelection)
 
-
-
-        self.arg  =  [Integer(self.tipMask)]                                                    # arg 1
-        self.arg +=  [Integer(self.labware.location.grid),                                      # arg 2
-                      Integer(self.labware.location.site),                                      # arg 3
-                      Integer(self.spacing),                                                    # arg 4
-                      String1(well_selection_str)]                                             # arg 5
-        self.arg +=  [Integer(len(self.loopOptions))]                                           # arg 6
+        self.arg  = [Integer(self.tipMask)]                                                    # arg 1
+        self.arg += [Integer(self.labware.location.grid),                                      # arg 2
+                     Integer(self.labware.location.site),                                      # arg 3
+                     Integer(self.spacing),                                                    # arg 4
+                     String1(well_selection_str)]                                             # arg 5
+        self.arg += [Integer(len(self.loopOptions))]                                           # arg 6
         for op in self.loopOptions:
-            self.arg +=  [String1(op.name),
-                          Integer(op.action),
-                          Integer(op.difference)]                                              # arg 7, 8, 9
-        self.arg +=  [Integer(self.arm.index)]                                                  # arg 10
+            self.arg += [String1(op.name),
+                         Integer(op.action),
+                         Integer(op.difference)]                                              # arg 7, 8, 9
+        self.arg += [Integer(self.arm.index)]                                                  # arg 10
 
         return True
 
@@ -294,55 +292,56 @@ class Pipetting(Pipette):
     def action():
         return False
 
-    def __init__(self, name, tipMask     = None,
-                             liquidClass = None,
-                             volume      = None,
-                             labware     = None,                                # todo ??????
-                             spacing     = 1,
-                             wellSelection= None,
-                             LoopOptions = None,
-                             RackName    = None,
-                             Well        = None,
-                             arm         = None):
+    def __init__(self, name,
+                 tipMask     = None,
+                 liquidClass = None,
+                 volume      = None,
+                 labware     = None,                                # todo ??????
+                 spacing     = 1,
+                 wellSelection= None,
+                 LoopOptions = None,
+                 RackName    = None,
+                 Well        = None,
+                 arm         = None):
 
         Pipette.__init__(self, name,
-                             tipMask     = tipMask,
-                             labware     = labware,
-                             spacing     = spacing,
-                             wellSelection= wellSelection,
-                             LoopOptions = LoopOptions,
-                             RackName    = RackName,
-                             Well        = Well,
-                             arm         = arm       )
+                         tipMask     = tipMask,
+                         labware     = labware,
+                         spacing     = spacing,
+                         wellSelection= wellSelection,
+                         LoopOptions = LoopOptions,
+                         RackName    = RackName,
+                         Well        = Well,
+                         arm         = arm)
 
         self.liquidClass = liquidClass                                     # todo reagent.LC ?
         self.volume      = volume if volume is not None else def_vol
 
     def validate_arg(self):
         Pipette.validate_arg(self)
-        if isinstance(self.liquidClass  , str):
-            self.liquidClass   = self.robot.liquid_clases.all[self.liquidClass  ]
+        if isinstance(self.liquidClass, str):
+            self.liquidClass   = self.robot.liquid_clases.all[self.liquidClass]
         # todo use LiqC of the reagents in wells ?
         assert isinstance(self.liquidClass  .name, str), "Set the liquid class to be used (for the reagent?)"
 
-        self.arg[1:1] =   [String1(self.liquidClass)]                              # arg 2
+        self.arg[1:1] = [String1(self.liquidClass)]                              # arg 2
 
-        nTips = self.robot.curArm().nTips
+        n_tips = self.robot.curArm().nTips
         if self.action():
-            self.arg[2:2] = Expr   (nTips, self.volume).split() \
-                            + [int    (0)] * (12 - nTips)                           # arg 3 - 14 todo Integer(0) ?
+            self.arg[2:2] = Expr(n_tips, self.volume).split() \
+                            + [int(0)] * (12 - n_tips)                           # arg 3 - 14 todo Integer(0) ?
         return True
 
     def actualize_robot_state(self):
         self.validate_arg()
-        self.pipette_on_iRobot(self.action())
+        self.pipette_on_i_robot(self.action())
         pass
 
-    def pipette_on_iRobot(self,action):
-        logging.debug("pipette_on_iRobot called with mask= " + str(self.tipMask))
+    def pipette_on_i_robot(self, action):
+        logging.debug("pipette_on_i_robot called with mask= " + str(self.tipMask))
         self.volume, self.tipMask = self.robot.pipette_executed(action, self.volume,
                                                                 self.labware, self.tipMask)
-        logging.debug("pipette_on_iRobot return= " + str(self.tipMask))
+        logging.debug("pipette_on_i_robot return= " + str(self.tipMask))
 
 
 class DITIs(Instruction):
@@ -359,7 +358,6 @@ class DITIs(Instruction):
         self.options = options
         self.tipMask = tipMask if tipMask is not None else robot.tipsMask[self.robot.curArm().nTips]
 
-
     def validate_arg(self):
         Instruction.validate_arg(self)
 
@@ -373,4 +371,5 @@ class DITIs(Instruction):
         return True
 
     def exec(self, mode=None):
-        if self.tipMask: Instruction.exec(self, mode)
+        if self.tipMask:
+            Instruction.exec(self, mode)

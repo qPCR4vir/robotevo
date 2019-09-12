@@ -142,8 +142,8 @@ class mix(Pipetting):
         return True
 
     def actualize_robot_state(self):
-        self.pipette_on_iRobot(aspirate.action())
-        self.pipette_on_iRobot(dispense.action())
+        self.pipette_on_i_robot(aspirate.action())
+        self.pipette_on_i_robot(dispense.action())
         pass
 
 
