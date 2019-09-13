@@ -7,9 +7,9 @@ High level functions:
 ^^^^^^^^^^^^^^^^^^^^
 
 These are the functions you will use in "every day" protocol programming. They allow you to specify the kind of tips to use and them command the operations you need on your reagents, samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
- - `with tips(tip_type)`_
- - `distribute(reagent, to_labware_region)`_
- - `transfer(from_labware_region, to_labware_region)`_
+ - `protocol_steps.with tips(tip_type)`_
+ - `protocol_steps.distribute(reagent, to_labware_region)`_
+ - `~protocol_steps.transfer(from_labware_region, to_labware_region)`_
  - `mix(in_labware_region, using_liquid_class, volume)`_
  - `mix_reagent(reagent, cycles, vol_perc)`_
  - `waste(from_labware_region)`_
