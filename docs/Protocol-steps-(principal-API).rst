@@ -1,24 +1,24 @@
 Principal API: Protocol steps
 =======================================
 
-All these functions are member of the base `class Protocol`, from which all user protocols are derived.
+All these functions are member of the base `Protocol`_, from which all user protocols are derived.
 
 High level functions:
 ^^^^^^^^^^^^^^^^^^^^
 
 These are the functions you will use in "every day" protocol programming. They allow you to specify the kind of tips to use and them command the operations you need on your reagents, samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
- - `with tips(tip_type)`
- - `distribute(reagent, to_labware_region)`
- - `transfer(from_labware_region, to_labware_region)`
- - `mix(in_labware_region, using_liquid_class, volume)`
- - `mix_reagent(reagent, cycles, vol_perc)`
- - `waste(from_labware_region)`
- - `makePreMix(preMix)`
- - `getTips(TIP_MASK, tip_type, selected_samples)`
- - `dropTips(TIP_MASK)`
- - `go_first_pos(first_tip)`
- - `check_reagents_levels()`
- - `check_reagent_level(reagent, LiqClass)`
+ - `with tips(tip_type)`_
+ - `distribute(reagent, to_labware_region)`_
+ - `transfer(from_labware_region, to_labware_region)`_
+ - `mix(in_labware_region, using_liquid_class, volume)`_
+ - `mix_reagent(reagent, cycles, vol_perc)`_
+ - `waste(from_labware_region)`_
+ - `makePreMix(preMix)`_
+ - `getTips(TIP_MASK, tip_type, selected_samples)`_
+ - `dropTips(TIP_MASK)`_
+ - `go_first_pos(first_tip)`_
+ - `check_reagents_levels()`_
+ - `check_reagent_level(reagent, LiqClass)`_
 
 Advanced functions.
 ^^^^^^^^^^^^^^^^^^
