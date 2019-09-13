@@ -41,21 +41,26 @@ In some cases these functions may be used to construct new high lever functions.
 
 Atomic functions
 -----------------------------------------------------------
-These are functions aimed to isolate what a physical robot would make at once: pick some tips, aspirate some liquid, etc. They are simple to understand, but are harder to use in "every day" protocol programming. They may be a great tool to set up your robot and to get an initial familiarization with all the system.
-- `pick_up_tip(tips, tip_type, arm)`
-- `drop_tip(tips, arm)`
-- `aspirate(arm, tips, volume, from_wells)`
-- `dispense(arm, tips, volume, to_wells)`
+
+These are functions aimed to isolate what a physical robot would make at once: pick some tips, aspirate some liquid, etc.
+They are simple to understand, but are harder to use in "every day" protocol programming.
+They may be a great tool to set up your robot and to get an initial familiarization with all the system.
+
+  - :py:meth:`~Protocol.pick_up_tip`
+  - :py:meth:`~Protocol.drop_tip`
+  - :py:meth:`~Protocol.aspirate`
+  - :py:meth:`~Protocol.dispense`
 
 Other low level functions:
 --------------------------
-- `_dispensemultiwells(tips, labware)`
-- `_aspirate_multi_tips(reagent, tips, vol)`
-- `_multidispense_in_replicas(reagent, [vol])`
 
-------------------------
-Protocol steps
-==============
+  - :py:meth:`~Protocol._dispensemultiwells`
+  - :py:meth:`~Protocol._aspirate_multi_tips`
+  - :py:meth:`~Protocol._multidispense_in_replicas`
+
+
+-----------------------------------------
+
 
 """
 
@@ -82,7 +87,7 @@ def not_implemented():
 # output_filename = '../current/AWL'
 class Executable:
     """
-    Each executable need to implement these functions.
+    Each executable will need to implement these methods.
 
     """
 
@@ -90,9 +95,18 @@ class Executable:
     name = "undefined"
 
     def def_versions(self):
+        """
+        Define a 'dictionary' of the versions for this Executable, with a name as key and a method as value,
+        which will initialize the Executable to effectively execute that version.
+        """
         self.versions = {"none": not_implemented}
 
     def use_version(self, version: str):
+        """
+        Select the version to be execute
+
+        :param str version: the name of the desired version
+        """
         assert version in self.versions, \
             version + " is not a valid version. Valid versions are: " + str(self.versions.keys())
         self.version = version
@@ -178,10 +192,7 @@ class Protocol (Executable):
     - App-Structure API:
     - Context-options modifiers:
     - Lower lever API & "private" functions:
-
     - Atomic API:
-    These are functions aimed to isolate what a physical robot would make at once:
-    pick some tips, aspirate some liquid, etc. They are simple to understand.
 
     """
     name = ""
@@ -233,14 +244,8 @@ class Protocol (Executable):
 
         Executable.__init__(self, GUI=GUI, run_name=run_name)
 
-    # High level API -------------------------------------------------------------------------------------
+    # -------------------------------------------------------- High level API ------------------------------------------
 
-    """
-
-    High level functions:
-    ^^^^^^^^^^^^^^^^^^^^^
-    
-    """
     @contextmanager
     def tips(self,
              tips_mask   = None, tip_type      = None,
@@ -249,19 +254,20 @@ class Protocol (Executable):
              drop_first  =False, drop_last     = False,
              allow_air   = None, selected_samples: labware.Labware  = None):
         """
+        A contextmanager function which will manage the how tips will be used during execution of the dependant instructions
 
-        :param tip_type:
         :param tips_mask:
-        :param reuse:         Reuse the tips or drop it and take new BEFORE each individual action
-        :param drop:          Drops the tips AFTER each individual action,
-                              like after one aspiration and distribute of the reagent into various target
-        :param preserve:      puts the tip back into a free place in some rackt of the same type
-        :param use_preserved: pick the tips from the preserved
+        :param tip_type:         the type of the tips to be used
+        :param bool reuse:       Reuse the tips already mounted? or drop and take new BEFORE each individual action
+        :param bool drop:        Drops the tips AFTER each individual action?
+                                 like after one aspiration and distribute of the reagent into various targets
+        :param bool preserve:    puts the tip back into a free place in some rack of the same type
+        :param use_preserved:    pick the tips back from the previously preserved
         :param selected_samples:
         :param allow_air:
-        :param drop_first:    Reuse the tips or drop it and take new once BEFORE the whole action
-        :param drop_last:     Drops the tips at THE END of the whole action
-        :return:
+        :param bool drop_first:  Reuse the tips or drop it and take new once BEFORE the whole action
+        :param bool drop_last:   Drops the tips at THE END of the whole action
+
         """
 
         if selected_samples is not None:
