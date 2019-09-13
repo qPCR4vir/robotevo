@@ -47,7 +47,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                             firstTip                = firstTip,
                             run_name                = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()                       # set_defaults ??
 
         num_of_samples = self.num_of_samples
@@ -95,17 +95,17 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         VEW1            = Reagent("VEW1 - Wash Buffer ",
                                   wt.get_labware("4-VEW1 Wash Buffe", labware.Trough_100ml),
                                   volpersample  = VEW1Volume,
-                                  defLiqClass   = self.B_liquidClass)
+                                  def_liq_class   = self.B_liquidClass)
 
         VEW2            = Reagent("VEW2 - WashBuffer ",
                                   wt.get_labware("5-VEW2-WashBuffer", labware.Trough_100ml),
                                   volpersample  =VEW2Volume,
-                                  defLiqClass   =self.B_liquidClass)
+                                  def_liq_class   =self.B_liquidClass)
 
         ElutionBuffer   = Reagent("Elution Buffer ",
                                   ElutBuf,
                                   volpersample  =ElutionBufferVolume,
-                                  defLiqClass   =self.B_liquidClass)
+                                  def_liq_class   =self.B_liquidClass)
 
                                                         # Show the check_list GUI to the user for posible small changes
 
@@ -165,4 +165,4 @@ if __name__ == "__main__":
 
     p.use_version('Standard')
     # p.set_first_tip('A01')
-    p.Run()
+    p.run()

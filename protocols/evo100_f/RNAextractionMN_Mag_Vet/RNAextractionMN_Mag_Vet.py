@@ -76,7 +76,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             firstTip                = firstTip,
                             run_name                = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()
 
         num_of_samples = self.num_of_samples
@@ -148,7 +148,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                         # Define the Reagents in each labware (Cuvette, eppys, etc.)
 
         # IC2         = Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
-        #                            volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+        #                            volpersample=  IC2Volume ,def_liq_class=W_liquidClass)
 
         if self.add_preMix:
             ProtK = Reagent("Proteinase K ",
@@ -157,32 +157,32 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                 minimize_aliquots   = False,
                                 wells               = [15, 16],  # only 16 ?  pos=16
                                 volpersample        = ProtKVolume,
-                                defLiqClass         = self.Small_vol_disp)
+                                def_liq_class         = self.Small_vol_disp)
 
             cRNA   = Reagent("Carrier RNA ",
                                  Reagents,
                                  wells= 14,
                                  volpersample       = cRNAVolume,
-                                 defLiqClass        = self.Small_vol_disp)
+                                 def_liq_class        = self.Small_vol_disp)
 
             IC_MS2 = Reagent("IC MS2 phage culture ",
                                  Reagents,
                                  wells= 13,
                                  volpersample       = IC_MS2Volume,
-                                 defLiqClass        = self.Small_vol_disp)
+                                 def_liq_class        = self.Small_vol_disp)
 
             pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents,
                                      pos            = 8,
                                      components     = [cRNA, ProtK, IC_MS2],
-                                     defLiqClass    = self.W_liquidClass,
+                                     def_liq_class    = self.W_liquidClass,
                                      excess         = 20)
 
         if self.add_VL:
             LysisBuffer = Reagent("VL - Lysis Buffer ",
                                       LysBuf,
                                       volpersample  =LysisBufferVolume,
-                                      defLiqClass   ='MN VL')
+                                      def_liq_class   ='MN VL')
 
         if self.do_extraction:
             B_Beads         = Reagent("B - Beads ",
@@ -190,32 +190,32 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           wells= [1, 2],
                                           initial_vol  = 1200.0,
                                           volpersample = B_BeadsVolume,
-                                          defLiqClass  = self.Beads_LC_2,
+                                          def_liq_class  = self.Beads_LC_2,
                                           maxFull      = 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                           BindBuf,
                                           volpersample  = BindingBufferVolume,
-                                          defLiqClass   = self.B_liquidClass)
+                                          def_liq_class   = self.B_liquidClass)
 
             VEW1            = Reagent("VEW1 - Wash Buffer ",
                 wt.get_labware("4-VEW1 Wash Buffe", labware.Trough_100ml),
                                           volpersample  = VEW1Volume,
-                                          defLiqClass   = self.B_liquidClass)
+                                          def_liq_class   = self.B_liquidClass)
 
             VEW2            = Reagent("VEW2 - WashBuffer ",
                 wt.get_labware("5-VEW2-WashBuffer", labware.Trough_100ml),
                                           volpersample  =VEW2Volume,
-                                          defLiqClass   =self.B_liquidClass)
+                                          def_liq_class   =self.B_liquidClass)
 
             EtOH80p         = Reagent("Ethanol 80% ",
                                           labware.getLabware(labware.Trough_100ml,  "7-EtOH80p"     ),
-                                          volpersample=EtOH80pVolume, defLiqClass=self.B_liquidClass)
+                                          volpersample=EtOH80pVolume, def_liq_class=self.B_liquidClass)
 
             ElutionBuffer   = Reagent("Elution Buffer ",
                                           ElutBuf,
                                           volpersample  =ElutionBufferVolume,
-                                          defLiqClass   =self.B_liquidClass)            # defLiqClass="Eluat"   ??
+                                          def_liq_class   =self.B_liquidClass)            # def_liq_class="Eluat"   ??
 
                                                         # Show the check_list GUI to the user for possible small changes
         self.check_list()
@@ -227,7 +227,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                         Lysis,
                         initial_vol     = InitLysisVol,
                         wells=par[s] + 1,
-                        defLiqClass     = SampleLiqClass,
+                        def_liq_class     = SampleLiqClass,
                         excess          = 0)
 
             if self.do_extraction:
@@ -235,14 +235,14 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             Eluat,
                             initial_vol = 0.0,
                             wells=s + 1,
-                            defLiqClass = self.Water_free,
+                            def_liq_class = self.Water_free,
                             excess      = 0)
 
                 Reagent("probe_{:02d}".format(s + 1),
                             Samples,
                             single_use  = SampleVolume if self.add_samples else InitLysisVol,
                             wells=s + 1,
-                            defLiqClass = SampleLiqClass,
+                            def_liq_class = SampleLiqClass,
                             excess      = 0)
 
         instructions.wash_tips(wasteVol=30, FastWash=True).exec()
@@ -294,7 +294,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 self.distribute(reagent=EtOH80p, to_labware_region= TeMag.selectOnly(all_samples))
 
                 with parallel_execution_of(mix_mag_sub, repeat=num_of_samples // self.n_tips + 1):
-                    self.mix( TeMag.selectOnly(all_samples), EtOH80p.defLiqClass)
+                    self.mix( TeMag.selectOnly(all_samples), EtOH80p.def_liq_class)
 
                 with incubation(minutes=0.5):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
@@ -321,7 +321,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
             with self.tips(reuse=True, drop=True):
 
                 with parallel_execution_of(mix_mag_eluat, repeat=num_of_samples // self.n_tips + 1):
-                    self.mix(TeMag.selectOnly(all_samples), ElutionBuffer.defLiqClass)
+                    self.mix(TeMag.selectOnly(all_samples), ElutionBuffer.def_liq_class)
 
                 with incubation(minutes=1.0, timer=2):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
@@ -330,7 +330,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                  to_labware_region=     Eluat.selectOnly(all_samples),
                                  volume=                ElutionBufferVolume,
                                  optimizeTo=            False,
-                                 using_liquid_class=(ElutionBuffer.defLiqClass, ElutionBuffer.defLiqClass))
+                                 using_liquid_class=(ElutionBuffer.def_liq_class, ElutionBuffer.def_liq_class))
 
         self.drop_tips()
         self.done()
@@ -345,7 +345,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         """
         wells = wells or reagent.labware.selected() or range(self.num_of_samples)
         if not using_liquid_class:
-            using_liquid_class = reagent.defLiqClass
+            using_liquid_class = reagent.def_liq_class
         with group("Wash in TeMag with " + reagent.name):
 
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
@@ -366,4 +366,4 @@ if __name__ == "__main__":
 
     p.use_version('original samples')
     p.set_first_tip('A01')
-    p.Run()
+    p.run()

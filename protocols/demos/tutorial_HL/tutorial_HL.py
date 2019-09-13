@@ -55,7 +55,7 @@ class Tutorial_HL(Evo200_FLI):
                             firstTip                    = firstTip,
                             run_name                    = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
                                     # which calls GUI.update_parameters() and set_defaults() from Evo200
         self.show_runtime_check_list = True
@@ -70,8 +70,8 @@ class Tutorial_HL(Evo200_FLI):
         vd = vf - v                                   # uL to be distribute from diluent to each dilution_10
 
         # Define the reagents in each labware (Cuvette, eppys, etc.) -
-        diluent = Reagent("diluent", labware="BufferCub", defLiqClass=self.Water_free, volpersample = vd)
-        mix1    = Reagent("mix1",  labware="mixes", defLiqClass=self.Water_free,  volpersample = v)
+        diluent = Reagent("diluent", labware="BufferCub", def_liq_class=self.Water_free, volpersample = vd)
+        mix1    = Reagent("mix1",  labware="mixes", def_liq_class=self.Water_free,  volpersample = v)
 
         self.check_list()                                          # Show the check_list   -------------------------
 
@@ -82,7 +82,7 @@ class Tutorial_HL(Evo200_FLI):
         diluted = Reagent("mix1, diluted 1:10",                    # Define derived reagents  ---------------------
                            plate,
                            replicas         = self.num_of_samples,
-                           defLiqClass      = self.Water_free,
+                           def_liq_class      = self.Water_free,
                            minimize_aliquots= False)
 
         with group("Fill dilutions"):
@@ -102,4 +102,4 @@ class Tutorial_HL(Evo200_FLI):
 if __name__ == "__main__":
     logging.basicConfig(filename=('scripts/Tutorial_HL.log.txt'), filemode='w', level=logging.INFO)
     p = Tutorial_HL(num_of_samples=42, run_name="_42s")
-    p.Run()
+    p.run()

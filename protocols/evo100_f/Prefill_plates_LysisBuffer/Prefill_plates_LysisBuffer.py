@@ -40,7 +40,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
                             output_filename         = output_filename or this / 'scripts' / 'Prefill_LysisBuffer',
                             run_name                = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()
 
         num_of_samples = self.num_of_samples
@@ -69,7 +69,7 @@ class Prefill_plates_LysisBuffer(Evo100_FLI):
         LysisBufferReact = Reagent("VL - Lysis Buffer ",
                                    LysBufCuvette,
                                    volpersample = LysisBufferVolume,
-                                   defLiqClass  = 'MN VL',
+                                   def_liq_class  = 'MN VL',
                                    num_of_samples= self.num_plates * num_of_samples)
 
         # Show the check_list GUI to the user for possible small changes
@@ -109,4 +109,4 @@ if __name__ == "__main__":
     p = Prefill_plates_LysisBuffer(run_name='1 plate')
 
     p.use_version('1 plate')
-    p.Run()
+    p.run()

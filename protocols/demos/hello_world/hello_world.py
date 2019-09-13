@@ -15,11 +15,11 @@ class HelloWorld(Protocol):
                           output_filename               = output_filename or this / 'scripts' / 'hello_world',
                           worktable_template_filename   = worktable_template_filename or this / 'hello_world.ewt')
 
-    def Run(self):
+    def run(self):
         self.check_list()
         self.user_prompt("Hello World!")
         self.done()
 
 
 if __name__ == "__main__":
-    HelloWorld().Run()
+    HelloWorld().run()

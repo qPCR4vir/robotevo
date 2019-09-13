@@ -83,7 +83,7 @@ class App(tkinter.Frame):
 
             def Run(self):
                 self.runb = tkinter.Button(self,  # state=tkinter.DISABLED,
-                                           text='Run', command=self.run_prot)
+                                           text='run', command=self.run_prot)
                 self.runb.grid( row=0, column=2)
                 # self.runb.configure(state='normal')
                 self.runb.mainloop()
@@ -91,7 +91,7 @@ class App(tkinter.Frame):
             def run_prot(self):
                 self.runb.configure(state='disable')
                 self.protocol.run_name = self.ProtName.get()
-                print('For pipeline Run GUI for protocol: '  + self.protocol.name +' run-named '+ self.protocol.run_name)
+                print('For pipeline run GUI for protocol: '  + self.protocol.name +' run-named '+ self.protocol.run_name)
                 App.GUI_protocol(self.protocol)
 
         def __init__(self, pipeline):
@@ -412,13 +412,13 @@ class App(tkinter.Frame):
            #for prot, run_name in pipeline.
            print ('checking pipeline ' + self.protocol.name)
            for GUI_init_prot in self.GUI_init.ProtcolFrames:
-               GUI_init_prot.Run()
+               GUI_init_prot.run()
 
         def run_selected(self):
             # create and run the protocol
             self.GUI_init.update_parameters()
 
-            self.protocol.Run()
+            self.protocol.run()
             if isinstance(self.protocol, App.Pipeline):
                 pass
             else:

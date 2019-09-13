@@ -73,7 +73,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             firstTip                = firstTip,
                             run_name                = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()                       # set_defaults ??
 
         wt           = self.worktable
@@ -135,35 +135,35 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       minimize_aliquots=False,
                                       wells= [15, 16],
                                       volpersample = ProtKVolume,
-                                      defLiqClass  = self.Small_vol_disp)
+                                      def_liq_class  = self.Small_vol_disp)
 
             cRNA        = Reagent("Carrier RNA ",
                                       Reagents,
                                       wells= 14,
                                       volpersample  = cRNAVolume,
-                                      defLiqClass   = self.Small_vol_disp)
+                                      def_liq_class   = self.Small_vol_disp)
 
             IC_MS2      = Reagent("IC MS2 phage culture ",
                                       Reagents,
                                       wells= 13,
                                       volpersample  = IC_MS2Volume,
-                                      defLiqClass   = self.Small_vol_disp)
+                                      def_liq_class   = self.Small_vol_disp)
 
             # IC2         = Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
-            #                           volpersample=  IC2Volume ,defLiqClass=W_liquidClass)
+            #                           volpersample=  IC2Volume ,def_liq_class=W_liquidClass)
 
             pK_cRNA_MS2 = preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
                                        Reagents,
                                        pos          = 8,
                                        components   = [cRNA, ProtK, IC_MS2] ,
-                                       defLiqClass  = self.W_liquidClass,
+                                       def_liq_class  = self.W_liquidClass,
                                        excess       = 20)
 
         if self.add_VL:
             LysisBuffer = Reagent("VL - Lysis Buffer ",
                                       LysBuf,
                                       volpersample  = LysisBufferVolume,
-                                      defLiqClass   = 'MN VL')
+                                      def_liq_class   = 'MN VL')
 
         if self.do_extraction:
             B_Beads         = Reagent("B - Beads ",
@@ -171,18 +171,18 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       wells= [1, 2],
                                       initial_vol  = 1200,
                                       volpersample = B_BeadsVolume,
-                                      defLiqClass  = self.Beads_LC_2,
+                                      def_liq_class  = self.Beads_LC_2,
                                       maxFull      = 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                       BindBuf,
                                       volpersample  = BindingBufferVolume,
-                                      defLiqClass   = self.B_liquidClass)
+                                      def_liq_class   = self.B_liquidClass)
 
         EtOH80p         = Reagent("Ethanol 80% ",
                                   wt.get_labware("7-EtOH80p", labware.Trough_100ml),
                                   volpersample      =EtOH80pVolume,
-                                  defLiqClass       =self.B_liquidClass)
+                                  def_liq_class       =self.B_liquidClass)
 
                                                         # Show the check_list GUI to the user for possible small changes
         self.check_list()
@@ -219,7 +219,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                             Samples,
                             single_use  = SampleVolume,
                             wells=s + 1,
-                            defLiqClass = SampleLiqClass,
+                            def_liq_class = SampleLiqClass,
                             excess      = 0)
 
 
@@ -292,4 +292,4 @@ if __name__ == "__main__":
 
     p.use_version('VL-pKmix Inactivated')
     # p.set_first_tip('A01')
-    p.Run()
+    p.run()

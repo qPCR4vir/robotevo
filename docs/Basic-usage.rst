@@ -13,7 +13,7 @@ Make sure you have a working python3 interprete in your device (PC, tablet, smar
 Now, the simplest way is to run the python script containing the protocol, providing it have a "main" function.
 
 For better control, in a your onw python script, import the desired protocol and just create an instance (python object) of the protocol, 
-possibly setting some of the constructor parameters, and call the `.Run()` method of that object. 
+possibly setting some of the constructor parameters, and call the `.run()` method of that object.
 You can see many examples of this usage in the script robotevo/protocols/test.py 
 This will create a set of files with the generated evoware scripts, a human readable protocol, and comments, possibly including warnings. 
 It may abort with more or less detailed messages about the errors.
@@ -42,7 +42,7 @@ It will also initialize some other characteristics of the used robot (not presen
 Additionally it will set the desired EvoMode: what kind of output we want to produce - normally an evoware script (his generated script will include again all the information for the worktable), 
 but also a human readable protocol, etc.
 
-By running `.Run()` we "create" or "get", from the parsed worktable file, labwares, like multiplates, 
+By running `.run()` we "create" or "get", from the parsed worktable file, labwares, like multiplates,
 tube racks, etc, and "create" the reagents defined there in the script, including location in the worktable, volume, etc. 
 This make possible for the "internal iRobot" to model or track the content of each well, 
 and to detect (and report) potential logical errors in the protocol.
@@ -78,14 +78,14 @@ By running the script:
                               output_filename               = '../current/tests/hello_world',
                               worktable_template_filename   = '../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt')  # set here a valid template
 
-        def Run(self):
+        def run(self):
             self.check_list()
             Itr.userPrompt("Hello World!").exec()     # the actual work.
             self.done()
 
 
     if __name__ == "__main__":
-        HelloWorld().Run()
+        HelloWorld().run()
 
 [IMPORTANT: replace the `worktable_template_filename` argument with a valid -for your very onw robot- worktable template (`.ewt`) or script (`.esc`).]
 
@@ -137,7 +137,7 @@ Now to write a new protocol?
                             firstTip                    = firstTip,
                             run_name                    = run_name)
     
-        def Run(self):
+        def run(self):
             self.initialize()    # if needed calls Executable.initialize() and set_EvoMode
                                  # which calls GUI.update_parameters() and set_defaults() from Evo200
     
@@ -188,20 +188,20 @@ Now to write a new protocol?
             buffer_reag = Rtv.Reagent("Buffer ",
                                       BufCuvette,
                                       volpersample = buf_per_sample,
-                                      # defLiqClass  = 'MN VL',
+                                      # def_liq_class  = 'MN VL',
                                       # num_of_samples= NumOfSamples
                                       )
     
             mix1 =Rtv.Reagent("mix1",
                               master_mixes_,
                               volpersample = dil_mix1_10,
-                              # defLiqClass  = 'MN VL'
+                              # def_liq_class  = 'MN VL'
                               )
     
             mix2 = Rtv.Reagent("mix2",
                                master_mixes_,
                                volpersample  = dil_mix2_10,
-                               # defLiqClass  = 'MN VL'
+                               # def_liq_class  = 'MN VL'
                                )
     
             # Show the check_list GUI to the user for possible small changes
@@ -283,7 +283,7 @@ Now to write a new protocol?
         p = Prefill_plate_in_Evo200(NumOfSamples    = 4,
                                     run_name        = "_4s_mix_1_2")
         p.use_version('No version')
-        p.Run()
+        p.run()
 
 we will have:
 ![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-1.png)

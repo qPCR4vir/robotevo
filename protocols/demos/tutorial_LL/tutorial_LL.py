@@ -56,7 +56,7 @@ class Tutorial_LL(Evo200_FLI):
                             firstTip                    = firstTip,
                             run_name                    = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
                                     # which calls GUI.update_parameters() and set_defaults() from Evo200
 
@@ -181,4 +181,4 @@ if __name__ == "__main__":
     p = Tutorial_LL(num_of_samples= 42, run_name        = "_42s")
 
     p.use_version('No version')
-    p.Run()
+    p.run()

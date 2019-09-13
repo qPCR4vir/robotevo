@@ -58,7 +58,7 @@ class DemoTwoMixes(Evo200_FLI):
                             firstTip                    = first_tip,
                             run_name                    = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()                                               # set_EvoMode and set_defaults() from Evo200
 
         self.check_initial_liquid_level = True
@@ -88,15 +88,15 @@ class DemoTwoMixes(Evo200_FLI):
         # Define the reagents in each labware (Cuvette, eppys, etc.)
 
         buffer = Reagent("Buffer ", buf_cuvette, volpersample   = buf_per_sample,
-                                                 defLiqClass    = self.Water_wet,
+                                                 def_liq_class    = self.Water_wet,
                                                  num_of_samples = 2 * self.num_of_samples)
 
         mix1 = Reagent("mix1", master_mixes_, volpersample   = v_mix_10,
-                                              defLiqClass    = self.Water_wet,
+                                              def_liq_class    = self.Water_wet,
                                               num_of_samples = self.num_of_samples)
 
         mix2 = Reagent("mix2", master_mixes_, volpersample   = v_mix_10,
-                                              defLiqClass    = self.Water_wet,
+                                              def_liq_class    = self.Water_wet,
                                               num_of_samples = self.num_of_samples)
 
         # Show the check_list GUI to the user for possible small changes
@@ -116,14 +116,14 @@ class DemoTwoMixes(Evo200_FLI):
                           plate1,
                           initial_vol = 0.0,
                           replicas    = num_of_samples,
-                          defLiqClass = self.Water_free,
+                          def_liq_class = self.Water_free,
                           excess      = 0)
 
         mix2_10 = Reagent(f"mix2, diluted 1:10",
                           plate2,
                           initial_vol = 0.0,
                           replicas    = num_of_samples,
-                          defLiqClass = self.Water_free,
+                          def_liq_class = self.Water_free,
                           excess      = 0)
 
         mix1_100 = Reagent(f"mix1, diluted 1:100",
@@ -131,7 +131,7 @@ class DemoTwoMixes(Evo200_FLI):
                            wells       = 'A07',
                            initial_vol = 0.0,
                            replicas    = num_of_samples,
-                           defLiqClass = self.Water_free,
+                           def_liq_class = self.Water_free,
                            excess      = 0)
 
         mix2_100 = Reagent(f"mix2, diluted 1:100",
@@ -139,7 +139,7 @@ class DemoTwoMixes(Evo200_FLI):
                            wells       = 'A07',
                            initial_vol = 0.0,
                            replicas    = num_of_samples,
-                           defLiqClass = self.Water_free,
+                           def_liq_class = self.Water_free,
                            excess      = 0)
 
         instructions.transfer_rack(plate2, new_location).exec()                  # just showing how RoMa works.
@@ -187,4 +187,4 @@ if __name__ == "__main__":
 
     p.use_version('No version')
     # p.set_first_tip('A01')
-    p.Run()
+    p.run()

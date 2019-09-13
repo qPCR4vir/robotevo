@@ -54,7 +54,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                         firstTip                    = firstTip,
                         run_name                    = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
                                     # which calls GUI.update_parameters() and set_defaults() from Evo200
 
@@ -80,7 +80,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                                replicas     = self.num_of_samples,
                                volpersample = v,
                                initial_vol  = [100]*self.num_of_samples,
-                               defLiqClass  = self.Water_free,
+                               def_liq_class  = self.Water_free,
                                minimize_aliquots= False)
 
         self.check_list()                                          # Show the check_list   -------------------------
@@ -94,7 +94,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                            labware      = plate_B,
                            wells        = "A1",
                            replicas     = self.num_of_samples,
-                           defLiqClass  = self.Water_free,
+                           def_liq_class  = self.Water_free,
                            minimize_aliquots= False)
 
         with group("Fill column"):
@@ -110,4 +110,4 @@ if __name__ == "__main__":
                          run_name        = "_8s")
 
     p.use_version('No version')
-    p.Run()
+    p.run()

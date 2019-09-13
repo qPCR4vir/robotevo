@@ -65,7 +65,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                             output_filename         = output_filename or (this / 'scripts' / 'Prefill_LysisBuffer_pK'),
                             run_name                = run_name)
 
-    def Run(self):
+    def run(self):
         self.initialize()
 
         num_of_samples = self.num_of_samples
@@ -113,13 +113,13 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             pK_cRNA_MS2 = Reagent(preMixName,
                                       preMixProtKCuvette,
                                       volpersample=preMixVol,
-                                      defLiqClass='MN VL',
+                                      def_liq_class='MN VL',
                                       num_of_samples=self.num_plates * num_of_samples)
         else:
             ProtK = Reagent("Proteinase K ",
                                 Reagents_TubeRack,
                                 volpersample   = ProtKVolume,
-                                defLiqClass    = self.Small_vol_disp,
+                                def_liq_class    = self.Small_vol_disp,
                                 num_of_samples = self.num_plates * num_of_samples,
                                 maxFull        = 90)
             ProtK.maxFull=0.96
@@ -127,21 +127,21 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             cRNA = Reagent("Carrier RNA ",
                                Reagents_TubeRack,
                                volpersample    = cRNAVolume,
-                               defLiqClass     = self.Small_vol_disp,
+                               def_liq_class     = self.Small_vol_disp,
                                num_of_samples  = self.num_plates * num_of_samples,
                                maxFull         = 95)
 
             IC_MS2 = Reagent("IC MS2 phage culture ",
                                  Reagents_TubeRack,
                                  volpersample   = IC_MS2Volume,
-                                 defLiqClass    = self.Small_vol_disp,
+                                 def_liq_class    = self.Small_vol_disp,
                                  num_of_samples = self.num_plates * num_of_samples,
                                  maxFull        = 95)
 
             pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents_TubeRack,
                                      components     = [cRNA, ProtK, IC_MS2],
-                                     defLiqClass    = self.W_liquidClass,
+                                     def_liq_class    = self.W_liquidClass,
                                      excess         = 8,
                                      maxFull        = 90,
                                      num_of_samples = self.num_plates * num_of_samples  )
@@ -151,7 +151,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
             LysisBufferReact = Reagent("VL - Lysis Buffer ",
                                            LysBufCuvette,
                                            volpersample    = LysisBufferVolume,
-                                           defLiqClass     = 'MN VL',
+                                           def_liq_class     = 'MN VL',
                                            num_of_samples  = self.num_plates * num_of_samples)
 
                                                         # Show the check_list GUI to the user for possible small changes
@@ -201,4 +201,4 @@ if __name__ == "__main__":
     p = Prefill_plates_LysisBuffer_and_ProtKpreMix(run_name='1 plate')
 
     p.use_version('1 plate')
-    p.Run()
+    p.run()

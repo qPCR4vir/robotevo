@@ -34,7 +34,7 @@ class Reagent:
                  single_use     : float                     = None,
                  wells          : (int, [int], [lab.Well])  = None,
                  replicas       : int                       = None,
-                 defLiqClass    : (str,(str,str))           = None,
+                 def_liq_class    : (str,(str,str))           = None,
                  excess         : float                     = None,
                  initial_vol    : float                     = 0.0,
                  maxFull        : float                     = None,
@@ -58,7 +58,7 @@ class Reagent:
         :param single_use;      Not a "per sample" multiple use? Set then here the volume for one single use
         :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells
         :param replicas;        def min_num_of_replica(), number of replicas
-        :param defLiqClass;     the name of the Liquid class, as it appears in your own EVOware database.
+        :param def_liq_class;     the name of the Liquid class, as it appears in your own EVOware database.
                                 instructions.def_liquidClass if None
         :param excess;          in %
         :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
@@ -96,7 +96,7 @@ class Reagent:
         self.labware    = labware
         self.maxFull    = 1.0 if maxFull is None else maxFull/100.0
         self.excess     = 1.0 + ex/100.0
-        self.defLiqClass = defLiqClass
+        self.def_liq_class = def_liq_class
         self.name       = name
         self.volpersample = volpersample
         self.components = []                                                            # todo reserved for future use
@@ -161,7 +161,7 @@ class Reagent:
         :param NumSamples:
         :return:
         """
-        return int (self.minVol(NumSamples) / (self.labware.type.maxVol*self.maxFull)) +1
+        return int (self.min_vol(NumSamples) / (self.labware.type.maxVol * self.maxFull)) + 1
 
     @staticmethod
     def set_reagent_list(protocol):
@@ -174,7 +174,7 @@ class Reagent:
     def __str__(self):
         return "{name:s}".format(name=self.name)
 
-    def minVol(self, NumSamples=None)->float:
+    def min_vol(self, NumSamples=None)->float:
         """
         A minimal volume will be calculated based on either the number of samples
         and the volume per sample to use (todo or the volume per single use.)???
@@ -222,9 +222,9 @@ class Reagent:
 
 class Reaction(Reagent):
     def __init__(self, name, track_sample, labware,
-                 pos=None, replicas=None, defLiqClass=None, excess=None, initial_vol=None):
+                 pos=None, replicas=None, def_liq_class=None, excess=None, initial_vol=None):
         Reagent.__init__(self, name, labware, single_use=0,
-                         wells=pos, replicas=replicas, defLiqClass=defLiqClass, excess=excess, initial_vol=initial_vol)
+                         wells=pos, replicas=replicas, def_liq_class=def_liq_class, excess=excess, initial_vol=initial_vol)
         self.track_sample = track_sample
 
 
@@ -237,7 +237,7 @@ class preMix(Reagent):
                  pos        =None,
                  replicas   =None,
                  initial_vol=None,
-                 defLiqClass=None,
+                 def_liq_class=None,
                  excess     =None,
                  maxFull    =None,
                  num_of_samples = None                  ):
@@ -256,7 +256,7 @@ class preMix(Reagent):
                          vol,
                          wells= pos,
                          replicas      = replicas,
-                         defLiqClass   = defLiqClass,
+                         def_liq_class   = def_liq_class,
                          excess        = ex,
                          initial_vol   = initial_vol,
                          maxFull       = maxFull,
@@ -273,8 +273,8 @@ class preMix(Reagent):
             Reagent.init_vol(self, NumSamples=0, initial_vol=initial_vol)
         pass
         # put volume in replicas only at the moment of making  !!
-        # Reagent.init_vol(self, NumSamples)
-        # self.put_min_vol(NumSamples)
+        # Reagent.init_vol(self, num_samples)
+        # self.put_min_vol(num_samples)
 
 
     def make(self, NumSamples=None):      # todo deprecate?
@@ -286,4 +286,4 @@ class preMix(Reagent):
 
     def compVol(self,index, NumSamples=None):
         NumSamples = NumSamples or Reagent.current_protocol.num_of_samples
-        return self.components[index].minVol(NumSamples)
+        return self.components[index].min_vol(NumSamples)

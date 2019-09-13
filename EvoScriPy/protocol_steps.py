@@ -19,13 +19,15 @@ import EvoScriPy.evo_mode as mode
 
 base_dir = Path(__file__).parent.parent
 
+
 def not_implemented():
     logging.error('This protocols have yet to be implemented.')
 
 
 # output_filename = '../current/AWL'
 class Executable:
-    """ Each executable need to implement these functions.
+    """
+    Each executable need to implement these functions.
 
     """
 
@@ -41,8 +43,9 @@ class Executable:
         self.version = version
         self.versions[version]()
 
-    def __init__(self,  GUI       = None,
-                        run_name  = None):
+    def __init__(self,
+                 GUI      = None,
+                 run_name = None):
 
         self.GUI         = GUI
         self.run_name    = run_name
@@ -57,7 +60,7 @@ class Executable:
         Reagent.set_reagent_list(self)
 
     def set_paths(self):
-    	# todo: make private
+        # todo: make private
         self.root_directory = Path(__file__).parent
 
     def set_defaults(self):
@@ -65,7 +68,7 @@ class Executable:
         Set initial values that will not be rest during secondary initializations.
         The "primary initialization" maybe a light one, like defining the list of versions available.
         Here, for example, initialize the list of reagents.
-        	# todo: make private
+        # todo: make private
         """
         logging.debug('set def in Executable')
 
@@ -79,12 +82,13 @@ class Executable:
             self.initialized = True
             self.set_defaults()
 
-    def Run(self):
+    def run(self):
         """
         Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with get_labware().
         Overwrite this function and dont call this basic function. This basic function is provided only as an example
         of "boiled-plate" code
+
         :return:
         """
 
@@ -113,7 +117,7 @@ class Protocol (Executable):
     or from one of already derived. For example from the already adapted to some
     generic type robot like Evo200 or from an even more especially adapted like Evo100_FLI.
     Each newly derived protocol have to optionally override some of the following functions,
-    especially .Run().
+    especially .run().
 
     - High level API:
     - App-Structure API:
@@ -137,7 +141,17 @@ class Protocol (Executable):
                  firstTip                    = None,
                  run_name                    = None,
                  tips_type                   = None):
+        """
 
+        :param n_tips:
+        :param num_of_samples:
+        :param GUI:
+        :param worktable_template_filename:
+        :param output_filename:
+        :param firstTip:
+        :param run_name:
+        :param tips_type:
+        """
         evo_scripts = Path(__file__).parent.parent / 'EvoScripts' / 'scripts'
         output = output_filename or evo_scripts
         assert isinstance(output, Path)
@@ -174,17 +188,17 @@ class Protocol (Executable):
              allow_air   = None, selected_samples: labware.Labware  = None):
         """
 
-        :param tip_type     :
-        :param tips_mask     :
-        :param reuse        : Reuse the tips or drop it and take new BEFORE each individual action
-        :param drop         : Drops the tips AFTER each individual action,
+        :param tip_type:
+        :param tips_mask:
+        :param reuse:         Reuse the tips or drop it and take new BEFORE each individual action
+        :param drop:          Drops the tips AFTER each individual action,
                               like after one aspiration and distribute of the reagent into various target
-        :param preserve     : puts the tip back into a free place in some rackt of the same type
-        :param use_preserved : pick the tips from the preserved
+        :param preserve:      puts the tip back into a free place in some rackt of the same type
+        :param use_preserved: pick the tips from the preserved
         :param selected_samples:
-        :param allow_air    :
-        :param drop_first   : Reuse the tips or drop it and take new once BEFORE the whole action
-        :param drop_last    : Drops the tips at THE END of the whole action
+        :param allow_air:
+        :param drop_first:    Reuse the tips or drop it and take new once BEFORE the whole action
+        :param drop_last:     Drops the tips at THE END of the whole action
         :return:
         """
 
@@ -196,11 +210,11 @@ class Protocol (Executable):
             self.drop_tips()
             self.set_dropTips(droping)
 
-        if reuse         is not None: reuse_old          = self.reuseTips       (reuse        )
-        if drop          is not None: drop_old           = self.set_dropTips    (drop         )
-        if preserve      is not None: preserve_old       = self.preserveTips    (preserve     )
+        if reuse         is not None: reuse_old          = self.reuseTips       (reuse)
+        if drop          is not None: drop_old           = self.set_dropTips    (drop)
+        if preserve      is not None: preserve_old       = self.preserveTips    (preserve)
         if use_preserved is not None: use_preserved_old  = self.usePreservedTips(use_preserved)
-        if allow_air     is not None: allow_air_old      = self.set_allow_air   (allow_air    )
+        if allow_air     is not None: allow_air_old      = self.set_allow_air   (allow_air)
         if tip_type      is not None: tip_type_old       = self.worktable.set_def_DiTi(tip_type)
 
         if tips_mask     is not None:
@@ -208,13 +222,13 @@ class Protocol (Executable):
 
         yield
 
-        if tips_mask     is not None: tips_mask     = self.drop_tips       (tips_mask_old   )
+        if tips_mask     is not None: tips_mask     = self.drop_tips       (tips_mask_old)
         if tip_type      is not None: tip_type      = self.worktable.set_def_DiTi(tip_type_old)
-        if reuse         is not None: reuse         = self.reuseTips       (reuse_old       )
-        if drop          is not None: drop          = self.set_dropTips    (drop_old        )
-        if preserve      is not None: preserve      = self.preserveTips    (preserve_old    )
+        if reuse         is not None: reuse         = self.reuseTips       (reuse_old)
+        if drop          is not None: drop          = self.set_dropTips    (drop_old)
+        if preserve      is not None: preserve      = self.preserveTips    (preserve_old)
         if use_preserved is not None: use_preserved = self.usePreservedTips(use_preserved_old)
-        if allow_air     is not None: allow_air     = self.set_allow_air   (allow_air_old   )
+        if allow_air     is not None: allow_air     = self.set_allow_air   (allow_air_old)
         if drop_last:
             droping = self.set_dropTips(True)
             self.drop_tips()
@@ -225,11 +239,23 @@ class Protocol (Executable):
                    reagent           : Reagent      = None,
                    to_labware_region : labware.Labware  = None,
                    optimize          : bool         = True,
-                   NumSamples        : int          = None,
+                   num_samples       : int          = None,
                    using_liquid_class: (str, tuple) = None,
                    TIP_MASK          : int          = None,        # todo ?? introduce use of this.
                    num_tips          : int          = None):
         """
+
+
+
+        :param volume:            if not, volume is set from the default of the source reagent
+        :param reagent:           Reagent to distribute
+        :param to_labware_region: Labware in which the destine well are selected
+        :param optimize:          minimize zigzag of multi pipetting
+        :param num_samples:        Priorized   !!!! If true reset the selection
+        :param using_liquid_class:
+        :param TIP_MASK:
+        :param num_tips:          the number of tips to be used in each cycle of pipetting = all
+
         To distribute a reagent into some wells.
         This is a high level function with works with the concept of "reagent". This a a concept introduced by
         RobotEvo that don't exist in EVOware and other similar software. It encapsulated the name, wells occupied by
@@ -257,42 +283,41 @@ class Protocol (Executable):
 
         A human readable comment will be automatically added to the script with the details of this operation.
 
-        :param NumSamples       : Priorized   !!!! If true reset the selection
-        :param reagent          : Reagent to distribute
-        :param to_labware_region: Labware in which the destine well are selected
-        :param volume           : if not, volume is set from the default of the source reagent
-        :param optimize         : minimize zigzag of multi pipetting
-        :param num_tips         : the number of tips to be used in each cycle of pipetting = all
         """
         assert isinstance(reagent, Reagent), 'A Reagent expected in reagent to distribute'
         assert isinstance(to_labware_region, labware.Labware), 'A Labware expected in to_labware_region to distribute'
-                          # todo allow wellselection here
-                          # allow tip mask continue y calcule num of tips
+
+        # todo allow wellselection here
+        # allow tip mask continue y calcule num of tips
+
         if num_tips is None:
             num_tips = self.robot.curArm().nTips  # the number of tips to be used in each cycle of pipetting = all
 
-        if NumSamples:
-            to_labware_region.selectOnly(range(NumSamples))
+        if num_samples:
+            to_labware_region.selectOnly(range(num_samples))
         else:
             if not to_labware_region.selected():
                 to_labware_region.selectOnly(range(self.num_of_samples))
 
         to = to_labware_region.selected()        # list of offset of selected wells
-        if optimize: to = to_labware_region.parallelOrder(num_tips, to)
-        NumSamples = len(to)
-        SampleCnt = NumSamples
+        if optimize:
+            to = to_labware_region.parallelOrder(num_tips, to)
+
+        num_samples = len(to)
+        sample_cnt = num_samples
 
         volume = volume or reagent.volpersample
 
-        Asp_liquidClass, Dst_liquidClass = (reagent.defLiqClass, reagent.defLiqClass) if using_liquid_class is None else \
-                                           (using_liquid_class[0] or reagent.defLiqClass, using_liquid_class[1] or reagent.defLiqClass)
+        asp_liquid_class, dst_liquid_class = (reagent.def_liq_class, reagent.def_liq_class) if using_liquid_class is None else \
+                                  (using_liquid_class[0] or reagent.def_liq_class, using_liquid_class[1] or reagent.def_liq_class)
 
         lf = reagent.labware
         lt = to_labware_region
         msg = "Distribute: {v:.1f} µL of {n:s}".format(v=volume, n=reagent.name)
         with group(msg):
-            msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} {fw:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
-                        .format(v  = reagent.minVol(),
+            msg += " ({v:.1f} µL total) from [grid:{fg:d} site:{fs:d} {fw:s} " \
+                   "into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
+                        .format(v  = reagent.min_vol(),
                                 fg = lf.location.grid,
                                 fs = lf.location.site+1,
                                 fw = str([str(well) for well in reagent.Replicas]),
@@ -302,13 +327,13 @@ class Protocol (Executable):
                                 ts = lt.location.site+1)
             instructions.comment(msg).exec()
             availableDisp = 0
-            while SampleCnt:
-                num_tips = min(num_tips, SampleCnt)
+            while sample_cnt:
+                num_tips = min(num_tips, sample_cnt)
                 with self.tips(robot.tipsMask[num_tips], use_preserved=False, preserve=False):  # OK want to use preserved ?? selected=??
                     # todo a function returning max vol in arm tips
                     maxMultiDisp_N = self.robot.curArm().Tips[0].type.maxVol // volume  # assume all tips equal
                     assert maxMultiDisp_N > 0 
-                    dsp, rst = divmod(SampleCnt, num_tips)
+                    dsp, rst = divmod(sample_cnt, num_tips)
                     if dsp >= maxMultiDisp_N:
                         dsp = maxMultiDisp_N
                         vol = [volume * dsp] * num_tips
@@ -317,15 +342,15 @@ class Protocol (Executable):
                         vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (num_tips - rst)
                         availableDisp = dsp + bool(rst)
 
-                    self._aspirate_multi_tips(reagent, num_tips, vol, LiqClass=Asp_liquidClass)
+                    self._aspirate_multi_tips(reagent, num_tips, vol, LiqClass=asp_liquid_class)
 
                     while availableDisp:
-                        if num_tips > SampleCnt: num_tips = SampleCnt
-                        curSample = NumSamples - SampleCnt
+                        if num_tips > sample_cnt: num_tips = sample_cnt
+                        curSample = num_samples - sample_cnt
                         sel = to[curSample: curSample + num_tips]  # todo what if volume > maxVol_tip ?
-                        self._dispensemultiwells(num_tips, Dst_liquidClass, to_labware_region.selectOnly(sel), [volume] * num_tips)
+                        self._dispensemultiwells(num_tips, dst_liquid_class, to_labware_region.selectOnly(sel), [volume] * num_tips)
                         availableDisp -= 1
-                        SampleCnt -= num_tips
+                        sample_cnt -= num_tips
 
     def transfer(self,
                  from_labware_region: labware.Labware,  # todo take list of "samples"
@@ -448,14 +473,14 @@ class Protocol (Executable):
                     if using_liquid_class[0]:
                         Asp.liquidClass = using_liquid_class[0]
                     else:
-                        Asp.liquidClass = sw[0].reagent.defLiqClass
+                        Asp.liquidClass = sw[0].reagent.def_liq_class
                     if using_liquid_class[1]:
                         Dst.liquidClass = using_liquid_class[1]
                     else:
-                        Dst.liquidClass = sw[0].reagent.defLiqClass
+                        Dst.liquidClass = sw[0].reagent.def_liq_class
                 else:
-                    Asp.liquidClass = sw[0].reagent.defLiqClass
-                    Dst.liquidClass = sw[0].reagent.defLiqClass
+                    Asp.liquidClass = sw[0].reagent.def_liq_class
+                    Dst.liquidClass = sw[0].reagent.def_liq_class
 
                 Asp.labware.selectOnly(src)
                 Dst.labware.selectOnly(trg)
@@ -478,12 +503,12 @@ class Protocol (Executable):
         :param reagent:
         :param vol:
         """
-        if vol is None:       vol = reagent.minVol()    # todo: revise !!
+        if vol is None:       vol = reagent.min_vol()    # todo: revise !!
 
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
         reagent.autoselect(offset = offset)                                         # reagent.labware.selectOnly([reagent.pos])
-        instructions.aspirate(robot.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
+        instructions.aspirate(robot.tipMask[tip], reagent.def_liq_class, v, reagent.labware).exec()
 
     def dispense_one(self, tip, reagent, vol=None):                     # OK coordinate with robot
         """
@@ -492,11 +517,11 @@ class Protocol (Executable):
         :param reagent:
         :param vol:
         """
-        vol = vol or reagent.minVol()                                # really ??   # todo: revise !!
+        vol = vol or reagent.min_vol()                                # really ??   # todo: revise !!
         reagent.autoselect()                                         # reagent.labware.selectOnly([reagent.pos])
         v = [0] * self.robot.curArm().nTips
         v[tip] = vol
-        instructions.dispense(robot.tipMask[tip], reagent.defLiqClass, v, reagent.labware).exec()
+        instructions.dispense(robot.tipMask[tip], reagent.def_liq_class, v, reagent.labware).exec()
 
     def mix(self,  in_labware_region  : labware.Labware,
                    using_liquid_class : str        = None,
@@ -554,7 +579,7 @@ class Protocol (Executable):
                     mV = self.robot.curArm().Tips[0].type.maxVol * mix_p
                     if not using_liquid_class:
                         if sel:
-                            mx.liquidClass = mx.labware.selected_wells()[0].reagent.defLiqClass
+                            mx.liquidClass = mx.labware.selected_wells()[0].reagent.def_liq_class
                     if volume:
                         r = volume   # r: Waste_available yet; volume: to be Waste
                     else:
@@ -586,7 +611,7 @@ class Protocol (Executable):
         :return:
         """
         assert isinstance(reagent, Reagent)
-        LiqClass = LiqClass or reagent.defLiqClass
+        LiqClass = LiqClass or reagent.def_liq_class
         v_perc /= 100.0
         vol = []
         reagent.autoselect(maxTips)
@@ -703,7 +728,7 @@ class Protocol (Executable):
 
                 if not using_liquid_class:
                     if sel:
-                        Dst.liquidClass = Asp.labware.selected_wells()[0].reagent.defLiqClass
+                        Dst.liquidClass = Asp.labware.selected_wells()[0].reagent.def_liq_class
 
                 with self.tips(tm, drop=True, preserve=False, selected_samples=Asp.labware):
 
@@ -781,7 +806,7 @@ class Protocol (Executable):
         nt          = min(mxnTips, ncomp)
         NumSamples  = NumSamples or self.num_of_samples
         labw        = pre_mix.labware
-        tVol        = pre_mix.minVol(NumSamples)
+        tVol        = pre_mix.min_vol(NumSamples)
         mxnrepl     = len(pre_mix.Replicas)                        # max number of replies
         mnnrepl     = pre_mix.min_num_of_replica(NumSamples)       # min number of replies
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
@@ -927,7 +952,7 @@ class Protocol (Executable):
         pass
 
     # App-Structure API ---------------------------------------------------------------------------------------
-    def Run(self):
+    def run(self):
         '''
         Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with get_labware()
@@ -973,7 +998,7 @@ class Protocol (Executable):
 
         """
         assert isinstance(reagent, Reagent)
-        LiqClass = LiqClass or reagent.defLiqClass
+        LiqClass = LiqClass or reagent.def_liq_class
 
         tips = 1 if isinstance(reagent.labware, labware.Cuvette) else self.robot.curArm().nTips
         reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
@@ -1155,8 +1180,8 @@ class Protocol (Executable):
         re = reagent.Replicas
         assert len(vol) <= len(re)
         for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
-            instructions.dispense(robot.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.defLiqClass,
-                                  # reagent.defLiqClass,
+            instructions.dispense(robot.tipMask[tip], self.robot.curArm().Tips[tip].origin.reagent.def_liq_class,
+                                  # reagent.def_liq_class,
                                   v, w.labware.selectOnly([w.offset])).exec()
 
     def _aspirate_multi_tips(self, reagent  : Reagent,
@@ -1189,7 +1214,7 @@ class Protocol (Executable):
 
         assert tips <= max_tips, f"Too many tips selected: {tips}. The maximum is {max_tips}."
 
-        LiqClass = LiqClass or reagent.defLiqClass
+        LiqClass = LiqClass or reagent.def_liq_class
 
         mask = robot.tipsMask[tips]                                 # as if we could use so many tips
         n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
@@ -1291,6 +1316,7 @@ class Protocol (Executable):
                  liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
+
         :param arm:      Uses the default Arm (pipette) if None
         :param TIP_MASK: Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
                          If None all tips are used. (see Robot.tipMask[index] and Robot.tipsMask[index])
