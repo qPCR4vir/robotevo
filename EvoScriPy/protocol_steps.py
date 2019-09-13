@@ -16,7 +16,7 @@ High level functions:
 
 These are the functions you will use in "every day" protocol programming. They allow you to specify the kind of tips to use and them command the operations you need on your reagents, samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
 
-:py:method:`Protocol.with tips(tip_type)`
+:py:meth:`Protocol.tips(tip_type)`
 
  - `Protocol.distribute`
 
