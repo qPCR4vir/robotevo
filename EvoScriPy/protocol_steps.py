@@ -237,6 +237,13 @@ class Protocol (Executable):
         Executable.__init__(self, GUI=GUI, run_name=run_name)
 
     # High level API -------------------------------------------------------------------------------------
+
+    """
+
+    High level functions:
+    ^^^^^^^^^^^^^^^^^^^^^
+    
+    """
     @contextmanager
     def tips(self,
              tips_mask   = None, tip_type      = None,
