@@ -1,7 +1,7 @@
 Principal API: Protocol steps
 =======================================
 
-All these functions are member of the base :py:class:`Protocol`_, from which all user protocols are derived.
+All these functions are member of the base :py:class:`protocol_steps.Protocol`, from which all user protocols are derived.
 
 High level functions:
 ^^^^^^^^^^^^^^^^^^^^
