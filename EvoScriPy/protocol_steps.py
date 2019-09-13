@@ -16,13 +16,13 @@ High level functions:
 
 These are the functions you will use in "every day" protocol programming. They allow you to specify the kind of tips to use and them command the operations you need on your reagents, samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
 
-:py:meth:`Protocol.tips(tip_type)`
+:py:meth:`Protocol.tips(tip_type)`_
 
- - `Protocol.distribute`
+ - :py:meth:`Protocol.distribute`
 
- - `~protocol_steps.transfer(from_labware_region, to_labware_region)`
- - `~Protocol.mix(in_labware_region, using_liquid_class, volume)`_
- - `~Protocol.mix_reagent(reagent, cycles, vol_perc)`_
+ - :py:meth:`~Protocol.transfer(from_labware_region, to_labware_region)`
+ - :py:meth:`~Protocol.mix(in_labware_region, using_liquid_class, volume)`_
+ - :py:meth:`~Protocol.mix_reagent(reagent, cycles, vol_perc)`_
  - `~Protocol.waste(from_labware_region)`_
  - `~Protocol.makePreMix(preMix)`_
  - `~Protocol.getTips(TIP_MASK, tip_type, selected_samples)`_
