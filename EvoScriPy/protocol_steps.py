@@ -14,17 +14,19 @@ All these functions are member of the base class :py:class:`Protocol`, from whic
 High level functions:
 ^^^^^^^^^^^^^^^^^^^^
 
-These are the functions you will use in "every day" protocol programming. They allow you to specify the kind of tips to use and them command the operations you need on your reagents, samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
+These are the functions you will use in "every day" protocol programming.
+They allow you to specify the kind of tips to use and them command the operations you need on your reagents,
+samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
 
   - :py:meth:`~Protocol.tips`
   - :py:meth:`~Protocol.distribute`
   - :py:meth:`~Protocol.transfer`
   - :py:meth:`~Protocol.mix`
   - :py:meth:`~Protocol.mix_reagent`
-  - :py:meth:`~Protocol.makePreMix(preMix)`
-  - :py:meth:`~Protocol.getTips`
-  - :py:meth:`~Protocol.dropTips(TIP_MASK)`
-  - :py:meth:`~Protocol.go_first_pos(first_tip)`
+  - :py:meth:`~Protocol.makePreMix`
+  - :py:meth:`~Protocol.get_tips`
+  - :py:meth:`~Protocol.drop_tips`
+  - :py:meth:`~Protocol.go_first_pos`
   - :py:meth:`~Protocol.check_reagents_levels`
   - :py:meth:`~Protocol.check_reagent_level`
 
@@ -35,7 +37,7 @@ Are you doing some advanced protocol development that cannot be efficiently or c
 Keep in mind that it is now your responsibility to know what robot/protocol "state" are ignored by these new functions.
 For example, before `aspirate` you will need to mount "by yourself" the tips in the correct position of the used arm,
 because `aspirate` ignores the higher level with :py:meth:`~Protocol.tips`.
-But don't worry, **`RobotEvo`** still keeps track of the ("internal") robot state and will throw errors informing you about most logical mistakes
+But don't worry, **RobotEvo** still keeps track of the "internal" robot state and will throw errors informing you about most logical mistakes
 (like in the previous example forgetting to mount the tips).
 In some cases these functions may be used to construct new high lever functions.
 
