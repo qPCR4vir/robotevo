@@ -280,7 +280,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             with self.tips(tips_mask=maxMask, reuse=True, drop=False):
                 for p in [40, 50, 60, 65]:
-                    self.mix_reagent(B_Beads, LiqClass=self.Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+                    self.mix_reagent(B_Beads, liq_class=self.Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
             with self.tips(reuse=True, drop=True):
                 self.distribute(reagent=B_Beads, to_labware_region=TeMag.selectOnly(all_samples))
 

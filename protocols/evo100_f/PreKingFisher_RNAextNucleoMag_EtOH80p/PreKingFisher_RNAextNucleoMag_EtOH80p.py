@@ -269,7 +269,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
                 with self.tips(tips_mask=maxMask, reuse=True, drop=False):
                     for p in [40, 50, 60, 65]:
-                        self.mix_reagent(B_Beads, LiqClass=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
+                        self.mix_reagent(B_Beads, liq_class=Beads_LC_1, cycles=1, maxTips=maxTips, v_perc=p)
 
                 with self.tips(reuse=True, drop=False):
                     self.distribute(reagent=B_Beads, to_labware_region=Plate_lysis.selectOnly(all_samples))

@@ -535,16 +535,16 @@ class Protocol (Executable):
                         ts =lt.location.site+1)
             instructions.comment(msg).exec()
             while sample_cnt:                                # loop wells (samples)
-                curSample = num_samples - sample_cnt
+                cur_sample = num_samples - sample_cnt
                 if nt > sample_cnt:                          # only a few samples left
                     nt = sample_cnt                          # don't use all tips
                     tm = robot.mask_tips[nt]                   # todo count for broken tips
                     asp.tipMask = tm
                     dst.tipMask = tm
 
-                src = ori_sel[curSample:curSample + nt]      # only the next nt wells
-                trg = dst_sel[curSample:curSample + nt]
-                spl = range(curSample, curSample + nt)
+                src = ori_sel[cur_sample:cur_sample + nt]      # only the next nt wells
+                trg = dst_sel[cur_sample:cur_sample + nt]
+                spl = range(cur_sample, cur_sample + nt)
 
                 sw = asp.labware.selected_wells()
 
@@ -577,12 +577,15 @@ class Protocol (Executable):
     def aspirate_one(self, tip, reagent, vol=None, offset = None):
         """
         Aspirate vol with ONE tip from reagent
+
         :param self:
         :param tip:
         :param reagent:
         :param vol:
+        :param offset:
         """
-        if vol is None:       vol = reagent.min_vol()    # todo: revise !!
+        if vol is None:
+            vol = reagent.min_vol()    # todo: revise !!
 
         v = [0] * self.robot.cur_arm().n_tips
         v[tip] = vol
@@ -592,6 +595,7 @@ class Protocol (Executable):
     def dispense_one(self, tip, reagent, vol=None):                     # OK coordinate with robot
         """
         Dispense vol with ONE tip to reagent
+
         :param tip:
         :param reagent:
         :param vol:
@@ -609,53 +613,54 @@ class Protocol (Executable):
 
         """
         Mix the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
+
         :param in_labware_region:
         :param using_liquid_class:
         :param volume:
         :param optimize:
-        :return:
         """
         mix_p = 0.9
         in_labware_region = in_labware_region or self.worktable.def_WashWaste    # todo ???????????
         assert isinstance(in_labware_region, labware.Labware), 'A Labware expected in in_labware_region to be mixed'
-        if not volume or volume< 0.0 : volume = 0.0
+        if not volume or volume < 0.0:
+            volume = 0.0
         assert isinstance(volume, (int, float))
-        oriSel = in_labware_region.selected()
+        ori_sel = in_labware_region.selected()
         nt = self.robot.cur_arm().n_tips  # the number of tips to be used in each cycle of pippeting
-        if not oriSel:
-            oriSel = range(self.num_of_samples)
+        if not ori_sel:
+            ori_sel = range(self.num_of_samples)
         if optimize:
-            oriSel = in_labware_region.parallelOrder( nt, oriSel)
-        NumSamples = len(oriSel)
-        SampleCnt = NumSamples
-        if nt > SampleCnt:
-            nt = SampleCnt
+            ori_sel = in_labware_region.parallelOrder( nt, ori_sel)
+        num_samples = len(ori_sel)
+        sample_cnt = num_samples
+        if nt > sample_cnt:
+            nt = sample_cnt
         # mV = robot.Robot.current.cur_arm().Tips[0].type.max_vol * 0.8
-        mV = self.worktable.def_DiTi_type.max_vol * mix_p    # What tip tp use !
+        max_vol = self.worktable.def_DiTi_type.max_vol * mix_p    # What tip tp use !
         if volume:
             v = volume
         else:
-            v = in_labware_region.Wells[oriSel[0]].vol
+            v = in_labware_region.Wells[ori_sel[0]].vol
         v = v * mix_p
-        v = v if v < mV else mV
+        v = v if v < max_vol else max_vol
 
         lf = in_labware_region
         mx = instructions.mix(robot.mask_tips[nt], using_liquid_class, volume, in_labware_region)
         msg = "Mix: {v:.1f} µL of {n:s}".format(v=v, n=lf.label)
         with group(msg):
             msg += " [grid:{fg:d} site:{fs:d}] in order:".format(fg=lf.location.grid, fs=lf.location.site+1) \
-                                        + str([i+1 for i in oriSel])
+                                        + str([i+1 for i in ori_sel])
             instructions.comment(msg).exec()
-            while SampleCnt:
-                curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:
-                    nt = SampleCnt
+            while sample_cnt:
+                cur_sample = num_samples - sample_cnt
+                if nt > sample_cnt:
+                    nt = sample_cnt
                     mx.tipMask = robot.mask_tips[nt]
 
-                sel = oriSel[curSample:curSample + nt]
+                sel = ori_sel[cur_sample:cur_sample + nt]
                 mx.labware.selectOnly(sel)
                 with self.tips(robot.mask_tips[nt], selected_samples = mx.labware):
-                    mV = self.robot.cur_arm().Tips[0].type.max_vol * mix_p
+                    max_vol = self.robot.cur_arm().Tips[0].type.max_vol * mix_p
                     if not using_liquid_class:
                         if sel:
                             mx.liquidClass = mx.labware.selected_wells()[0].reagent.def_liq_class
@@ -667,30 +672,31 @@ class Protocol (Executable):
                         assert r_min == r_max
                         r = r_max
                     r = r * mix_p
-                    r = r if r < mV else mV
+                    r = r if r < max_vol else max_vol
                     mx.volume = r
                     mx.exec()
-                SampleCnt -= nt
-        mx.labware.selectOnly(oriSel)
-        return oriSel
+                sample_cnt -= nt
+        mx.labware.selectOnly(ori_sel)
+        return ori_sel
 
-    def mix_reagent(self,   reagent   : Reagent,
-                            LiqClass  : str  = None,
-                            cycles    : int  = 3,
-                            maxTips   : int  = 1,
-                            v_perc    : int  = 90):
+    def mix_reagent(self,
+                    reagent  : Reagent,
+                    liq_class: str  = None,
+                    cycles   : int  = 3,
+                    maxTips  : int  = 1,
+                    v_perc   : int  = 90):
         """
         Select all possible replica of the given reagent and mix using the given % of the current vol in EACH well
         or the max vol for the tip. Use the given "liquid class" or the reagent default.
         :param reagent:
-        :param LiqClass:
+        :param liq_class:
         :param cycles:
         :param maxTips:
         :param v_perc:  % of the current vol in EACH well to mix
         :return:
         """
         assert isinstance(reagent, Reagent)
-        LiqClass = LiqClass or reagent.def_liq_class
+        liq_class = liq_class or reagent.def_liq_class
         v_perc /= 100.0
         vol = []
         reagent.autoselect(maxTips)
@@ -700,14 +706,14 @@ class Protocol (Executable):
             vol += [min(v, vm)]
 
         instructions.mix(robot.mask_tips[len(vol)],
-                         liquidClass =LiqClass,
+                         liquidClass =liq_class,
                          volume      =vol,
                          labware     =reagent.labware,
                          cycles      =cycles).exec()
 
     def makePreMix(self,
                    pre_mix       : preMix,
-                   NumSamples    : int       = None,
+                   num_samples   : int       = None,
                    force_replies : bool      = False):
         """
         A preMix is just that: a premix of reagents (aka - components)
@@ -715,27 +721,27 @@ class Protocol (Executable):
         Uses one new tip per component.
         It calculates and checks self the minimum and maximum number of replica of the resulting preMix
         :param pre_mix    : what to make, a predefined preMix
-        :param NumSamples:
+        :param num_samples:
         :param force_replies: use all the preMix predefined replicas
         :return:
         """
 
         assert isinstance(pre_mix, preMix)
-        mxnTips     = self.robot.cur_arm().n_tips  # max number of Tips
+        mxn_tips    = self.robot.cur_arm().n_tips  # max number of Tips
         ncomp       = len(pre_mix.components)
-        nt          = min(mxnTips, ncomp)
-        NumSamples  = NumSamples or self.num_of_samples
+        nt          = min(mxn_tips, ncomp)
+        num_samples = num_samples or self.num_of_samples
         labw        = pre_mix.labware
-        tVol        = pre_mix.min_vol(NumSamples)
+        t_vol       = pre_mix.min_vol(num_samples)
         mxnrepl     = len(pre_mix.Replicas)                        # max number of replies
-        mnnrepl     = pre_mix.min_num_of_replica(NumSamples)       # min number of replies
+        mnnrepl     = pre_mix.min_num_of_replica(num_samples)       # min number of replies
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
             logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
             pre_mix.Replicas = pre_mix.Replicas[:nrepl]
 
-        msg = "preMix: {:.1f} µL of {:s}".format(tVol, pre_mix.name)
+        msg = "preMix: {:.1f} µL of {:s}".format(t_vol, pre_mix.name)
         with group(msg):
             msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
                                 .format(labw.location.grid,
@@ -743,14 +749,14 @@ class Protocol (Executable):
                                         str([str(well) for well in pre_mix.Replicas]),
                                         ncomp)
             instructions.comment(msg).exec()
-            samples_per_replicas = [(NumSamples + nrepl - (ridx+1))//nrepl for ridx in range(nrepl)]
-            with self.tips(robot.mask_tips[nt]):   #  want to use preserved ?? selected=??
+            samples_per_replicas = [(num_samples + nrepl - (ridx + 1)) // nrepl for ridx in range(nrepl)]
+            with self.tips(robot.mask_tips[nt]):   # want to use preserved ?? selected=??
                 tip = -1
                 ctips = nt
                 for ridx, reagent_component in enumerate(pre_mix.components):       # iterate reagent components
                     labw = reagent_component.labware
                     sVol = reagent_component.volpersample * pre_mix.excess       # vol we need for each sample
-                    rVol = sVol*NumSamples                        # the total vol we need of this reagent component
+                    rVol = sVol * num_samples                        # the total vol we need of this reagent component
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
                                 .format( idx = ridx + 1,
                                          v   = rVol,
@@ -774,7 +780,7 @@ class Protocol (Executable):
                             current_comp_repl +=1
                         dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
                         self.aspirate_one(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
-                        self._multidispense_in_replicas(ridx, pre_mix, [sp / NumSamples * dV for sp in samples_per_replicas])
+                        self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * dV for sp in samples_per_replicas])
                         rVol -= dV
                 self.mix_reagent(pre_mix, maxTips=ctips)
 
