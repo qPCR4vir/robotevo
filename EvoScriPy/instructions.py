@@ -324,7 +324,7 @@ class getDITI2(DITIs):
 
     def actualize_robot_state(self):
         self.validate_arg()
-        maxVol = None
+        max_vol = None
         self.tipMask, tips = self.robot.get_tips_executed(self.DITI_series, self.tipMask)   # todo what with ,lastPos=False
         assert not tips
 

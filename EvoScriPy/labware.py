@@ -900,7 +900,7 @@ class Labware:
             self.name           = name
             self.nRow           = nRow
             self.nCol           = nCol
-            self.max_vol         = max_vol
+            self.max_vol        = max_vol
             Labware.types[name] = self
 
         def __str__(self):
@@ -913,7 +913,7 @@ class Labware:
             labw = Labware(self, label, loc)
             return labw
 
-        def create_series(self, labware ):
+        def create_series(self, labware):
             return Labware.Type.Series(labware)
 
     class Position:
@@ -921,11 +921,10 @@ class Labware:
             self.row = row
             self.col = col
 
-
     def __init__(self,
-                 type       : Type,
-                 label      : str ,
-                 location   : WorkTable.Location    = None) :
+                 type    : Type,
+                 label   : str,
+                 location: WorkTable.Location = None):
         """
 
         :param type:
@@ -1333,9 +1332,9 @@ class DITIrack (Labware):
     some type Labware.DITIrackType
     """
 
-    def __init__(self, type         : DITIrackType,
-                       location     : WorkTable.Location,
-                       label        : str           ):
+    def __init__(self, type    : DITIrackType,
+                       location: WorkTable.Location,
+                       label   : str):
         """
 
         :param type:

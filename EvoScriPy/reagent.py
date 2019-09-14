@@ -161,7 +161,7 @@ class Reagent:
         :param NumSamples:
         :return:
         """
-        return int (self.min_vol(NumSamples) / (self.labware.type.maxVol * self.maxFull)) + 1
+        return int (self.min_vol(NumSamples) / (self.labware.type.max_vol * self.maxFull)) + 1
 
     @staticmethod
     def set_reagent_list(protocol):
@@ -189,7 +189,7 @@ class Reagent:
             assert isinstance(initial_vol, list)
             for w,v in zip(self.Replicas, initial_vol):
                 w.vol = v
-                assert w.labware.type.maxVol >= w.vol, 'Excess initial volume for '+ str(w)
+                assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for '+ str(w)
         self.put_min_vol(NumSamples)
 
     def put_min_vol(self, NumSamples=None):          # todo create replicas if needed !!!!
@@ -210,7 +210,7 @@ class Reagent:
         for i, w in enumerate(self.Replicas):
             v = V_per_sample * (NumSamples + replicas - (i+1))//replicas
             if v > w.vol:  w.vol += (v-w.vol)
-            assert w.labware.type.maxVol >= w.vol, 'Add one more replica for '+ w.reagent.name
+            assert w.labware.type.max_vol >= w.vol, 'Add one more replica for '+ w.reagent.name
 
     def autoselect(self, maxTips=1, offset=None, replicas = None):
         # todo revise !!!!!!!!! we know the wells = Replicas

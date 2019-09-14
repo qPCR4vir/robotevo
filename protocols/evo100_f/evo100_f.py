@@ -174,7 +174,7 @@ class Evo100_FLI(Protocol):
             nt = SampleCnt
         tm = robot.mask_tips[nt]                           # todo: count for 'broken' tips
         nt = to_waste_labware.autoselect(maxTips=nt)
-        mV = self.worktable.def_DiTi_type.maxVol
+        mV = self.worktable.def_DiTi_type.max_vol
 
         Rest = 50                    # the volume we cannot further aspirate with liquid detection, to small, collisions
         RestPlus = 50

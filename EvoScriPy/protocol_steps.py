@@ -402,7 +402,7 @@ class Protocol (Executable):
 
                 with self.tips(robot.mask_tips[num_tips], use_preserved=False, preserve=False):
                     # todo a function returning max vol in arm tips
-                    max_multi_disp_n = self.robot.cur_arm().Tips[0].type.maxVol // volume  # assume all tips equal
+                    max_multi_disp_n = self.robot.cur_arm().Tips[0].type.max_vol // volume  # assume all tips equal
                     assert max_multi_disp_n > 0
                     dsp, rst = divmod(sample_cnt, num_tips)
                     if dsp >= max_multi_disp_n:
@@ -436,7 +436,7 @@ class Protocol (Executable):
                  volume             : (int, float),
                  using_liquid_class : (str, tuple)  = None,
                  optimize_from      : bool          = True,
-                 optimize_to         : bool          = True,
+                 optimize_to        : bool          = True,
                  num_samples        : int           = None) -> object:
         """
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
@@ -506,7 +506,7 @@ class Protocol (Executable):
                     dst_sel = dst_sel[:n_wells]
 
         if optimize_from: ori_sel = from_labware_region.parallelOrder(nt, ori_sel)   # a list of well offset s
-        if optimize_to   : dst_sel = to_labware_region.parallelOrder  (nt, dst_sel)
+        if optimize_to  : dst_sel = to_labware_region.parallelOrder  (nt, dst_sel)
 
         num_samples = len(dst_sel)
         sample_cnt = num_samples
@@ -514,7 +514,7 @@ class Protocol (Executable):
         assert isinstance(volume, (int, float))
 
         # todo revise !!!
-        assert 0 < volume <= self.worktable.def_DiTi_type.maxVol, \
+        assert 0 < volume <= self.worktable.def_DiTi_type.max_vol, \
             "Invalid volumen to transfer ("+str(volume)+") with tips " + self.worktable.def_DiTi_type
 
         nt = min(sample_cnt, nt)
@@ -631,7 +631,7 @@ class Protocol (Executable):
         if nt > SampleCnt:
             nt = SampleCnt
         # mV = robot.Robot.current.cur_arm().Tips[0].type.max_vol * 0.8
-        mV = self.worktable.def_DiTi_type.maxVol * mix_p    # What tip tp use !
+        mV = self.worktable.def_DiTi_type.max_vol * mix_p    # What tip tp use !
         if volume:
             v = volume
         else:
@@ -655,7 +655,7 @@ class Protocol (Executable):
                 sel = oriSel[curSample:curSample + nt]
                 mx.labware.selectOnly(sel)
                 with self.tips(robot.mask_tips[nt], selected_samples = mx.labware):
-                    mV = self.robot.cur_arm().Tips[0].type.maxVol * mix_p
+                    mV = self.robot.cur_arm().Tips[0].type.max_vol * mix_p
                     if not using_liquid_class:
                         if sel:
                             mx.liquidClass = mx.labware.selected_wells()[0].reagent.def_liq_class
@@ -696,7 +696,7 @@ class Protocol (Executable):
         reagent.autoselect(maxTips)
         for tip, w in enumerate(reagent.labware.selected_wells()):
             v = w.vol * v_perc
-            vm = self.robot.cur_arm().Tips[tip].type.maxVol * 0.9
+            vm = self.robot.cur_arm().Tips[tip].type.max_vol * 0.9
             vol += [min(v, vm)]
 
         instructions.mix(robot.mask_tips[len(vol)],
@@ -765,7 +765,7 @@ class Protocol (Executable):
                         self.drop_tips(robot.mask_tips[ctips])
                         self.get_tips(robot.mask_tips[ctips], tips_type)
                         tip = 0
-                    mV = self.robot.cur_arm().Tips[tip].type.maxVol
+                    mV = self.robot.cur_arm().Tips[tip].type.max_vol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
                     # but also if there is not sufficient reacgent in the current component replica
                     current_comp_repl = 0

@@ -225,7 +225,7 @@ class Arm:
             if tip_mask & (1 << i):
                 assert isinstance(tp, labware.Tip), "No tip in position " + str(i)
                 nv = tp.vol + action * vol[i]
-                if 0-0.001 <= nv <= tp.type.maxVol+0.001:
+                if 0-0.001 <= nv <= tp.type.max_vol+0.001:
                     self.Tips[i].vol = nv                                   # <----  arm state changed
                     continue
                 msg = str(i + 1) + " changing volume from " + str(tp.vol) + " to " + str(nv)
@@ -246,12 +246,13 @@ class Robot:
     """
     current=None # use immediately, for a short time.
 
-    def __init__(self,  index       = None,
-                        arms        = None,
-                        n_tips       = None,
-                        workingTips = None,
-                        tips_type    = Arm.DiTi,
-                        templateFile= None): # index=Pipette.LiHa1
+    def __init__(self,
+                 index       = None,
+                 arms        = None,
+                 n_tips      = None,
+                 workingTips = None,
+                 tips_type   = Arm.DiTi,
+                 templateFile= None): # index=Pipette.LiHa1
         """
         A Robot may have 1 or more Arms, indexes by key index in a dictionary of Arms.
         :param arms:
@@ -474,9 +475,9 @@ class Robot:
                                                               labware_selection.label))
                     nv = wells[w].vol - dv
 
-                    assert  nv <= wells[w].labware.type.maxVol, ("Error trying to change the volume of " + str(wells[w])
+                    assert  nv <= wells[w].labware.type.max_vol, ("Error trying to change the volume of " + str(wells[w])
                                                                  + " to " + str(nv) + " but the maximun volumen is "
-                                                                 + str(wells[w].labware.type.maxVol) )
+                                                                 + str(wells[w].labware.type.max_vol) )
 
                     assert nv > -self.allow_air, "Error !!! trying to change the volume of " + str (wells[w])   \
                             + " to " + str(nv) + "uL. But only " + str(self.allow_air) + "uL of air are allowed"

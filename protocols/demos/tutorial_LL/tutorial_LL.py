@@ -111,7 +111,7 @@ class Tutorial_LL(Evo200_FLI):
             dilution_left = n
             while dilution_left:
                 n_tips = min(dilution_left, m_tips)
-                max_multi_disp_n = arm.Tips[0].type.maxVol // v
+                max_multi_disp_n = arm.Tips[0].type.max_vol // v
                 dsp, rst = divmod(dilution_left, n_tips)
                 if dsp >= max_multi_disp_n:
                     dsp = max_multi_disp_n
@@ -147,7 +147,7 @@ class Tutorial_LL(Evo200_FLI):
             dilution_left = n
             while dilution_left:
                 n_tips = min(dilution_left, m_tips, len(diluent_wells))
-                max_multi_disp_n = arm.Tips[0].type.maxVol // vd
+                max_multi_disp_n = arm.Tips[0].type.max_vol // vd
                 dsp, rst = divmod(dilution_left, n_tips)
                 if dsp >= max_multi_disp_n:
                     dsp = max_multi_disp_n
