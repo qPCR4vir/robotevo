@@ -160,7 +160,7 @@ class Evo100_FLI(Protocol):
         assert isinstance(volume, (int, float))
 
         original_selection = from_labware_region.selected()         # list of the selected well offset
-        nt = self.robot.cur_arm().nTips                  # the number of tips to be used in each cycle of pipetting
+        nt = self.robot.cur_arm().n_tips                  # the number of tips to be used in each cycle of pipetting
 
         if not original_selection:
             original_selection = range(self.num_of_samples)

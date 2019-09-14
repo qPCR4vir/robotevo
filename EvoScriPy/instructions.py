@@ -642,7 +642,7 @@ class activate_PMP(Instruction):
     """
     def __init__(self, tipMask = None ):
         Instruction.__init__(self, "Activate_PMP")
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.cur_arm().nTips]
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.cur_arm().n_tips]
 
     def validate_arg(self):
         Instruction.validate_arg(self)
@@ -659,7 +659,7 @@ class deactivate_PMP(Instruction):
     """
     def __init__(self, tipMask = None ):
         Instruction.__init__(self, "Deactivate_PMP")
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.cur_arm().nTips]
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.cur_arm().n_tips]
 
     def validate_arg(self):
         Instruction.validate_arg(self)

@@ -63,7 +63,7 @@ class Tutorial_LL(Evo200_FLI):
         self.show_runtime_check_list    = True
 
         n = self.num_of_samples
-        assert 1 <= n <= Tutorial_LL.max_s , "In this demo we want to set dilutions in a 96 well plate."
+        assert 1 <= n <= Tutorial_LL.max_s, "In this demo we want to set dilutions in a 96 well plate."
         wt = self.worktable
 
         instructions.comment('Dilute 1:10 mix1 in {:d} wells.'.format(n)).exec()
@@ -76,7 +76,7 @@ class Tutorial_LL(Evo200_FLI):
         assert isinstance(mixes_eppis, labware.Labware)
 
         vf = 100                                      # The final volume of every dilution, uL
-        v  = vf /10                                   # uL to be distribute from original mix1 to each dilution_10
+        v  = vf / 10                                   # uL to be distribute from original mix1 to each dilution_10
         vd = vf - v                                   # uL to be distribute from diluent to each dilution_10
         excess = 1.04                                 # 4%
 
@@ -101,7 +101,7 @@ class Tutorial_LL(Evo200_FLI):
             self.user_prompt("Put the plate for dilutions in " + str(plate.location))
 
             arm = self.robot.cur_arm(instructions.Pipette.LiHa1)
-            m_tips = arm.nTips
+            m_tips = arm.n_tips
 
             n_tips = min(n, m_tips)                                                 # distribute mix1 --------------
             self.pick_up_tip(TIP_MASK = robot.tipsMask[n_tips],                       # using 200 uL tips

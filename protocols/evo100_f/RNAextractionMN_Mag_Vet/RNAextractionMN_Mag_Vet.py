@@ -209,13 +209,13 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           def_liq_class   =self.B_liquidClass)
 
             EtOH80p         = Reagent("Ethanol 80% ",
-                                          labware.getLabware(labware.Trough_100ml,  "7-EtOH80p"     ),
-                                          volpersample=EtOH80pVolume, def_liq_class=self.B_liquidClass)
+                                      labware.getLabware(labware.Trough_100ml,  "7-EtOH80p"     ),
+                                      volpersample=EtOH80pVolume, def_liq_class=self.B_liquidClass)
 
             ElutionBuffer   = Reagent("Elution Buffer ",
-                                          ElutBuf,
-                                          volpersample  =ElutionBufferVolume,
-                                          def_liq_class   =self.B_liquidClass)            # def_liq_class="Eluat"   ??
+                                      ElutBuf,
+                                      volpersample  =ElutionBufferVolume,
+                                      def_liq_class   =self.B_liquidClass)            # def_liq_class="Eluat"   ??
 
                                                         # Show the check_list GUI to the user for possible small changes
         self.check_list()
@@ -225,32 +225,32 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         for s in all_samples:
             Reagent("lysis_{:02d}".format(s + 1),
                         Lysis,
-                        initial_vol     = InitLysisVol,
-                        wells=par[s] + 1,
-                        def_liq_class     = SampleLiqClass,
-                        excess          = 0)
+                        initial_vol    = InitLysisVol,
+                        wells          = par[s] + 1,
+                        def_liq_class  = SampleLiqClass,
+                        excess         = 0)
 
             if self.do_extraction:
                 Reagent("RNA_{:02d}".format(s + 1),
                             Eluat,
-                            initial_vol = 0.0,
-                            wells=s + 1,
+                            initial_vol   = 0.0,
+                            wells         = s + 1,
                             def_liq_class = self.Water_free,
-                            excess      = 0)
+                            excess        = 0)
 
                 Reagent("probe_{:02d}".format(s + 1),
                             Samples,
-                            single_use  = SampleVolume if self.add_samples else InitLysisVol,
-                            wells=s + 1,
+                            single_use    = SampleVolume if self.add_samples else InitLysisVol,
+                            wells         = s + 1,
                             def_liq_class = SampleLiqClass,
-                            excess      = 0)
+                            excess        = 0)
 
         instructions.wash_tips(wasteVol=30, FastWash=True).exec()
         if self.do_extraction:
             Te_MagS_ActivateHeater(50).exec()                                     # set incubation temperature at 50°C
             Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Dispense).exec()
 
-        if self.add_preMix:                                                               #  add  ProtK+cRNA+MS2 mix
+        if self.add_preMix:                                                               # add  ProtK+cRNA+MS2 mix
             with group("Add pre mix Prot K."), self.tips(tips_mask=maxMask, reuse=True, drop=False):
                 self.makePreMix(pK_cRNA_MS2)
                 self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
@@ -261,9 +261,9 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                to_labware_region    = Lysis,
                                volume               = SampleVolume if self.add_samples else InitLysisVol,
                                using_liquid_class   = (SampleLiqClass, "Serum Disp postMix3"),
-                               optimizeFrom         = False,
+                               optimize_from        = False,
                                optimizeTo           = True,
-                               NumSamples           = num_of_samples)
+                               num_samples          = num_of_samples)
             instructions.wash_tips(wasteVol=4, FastWash=True).exec()
 
         if self.add_VL:                                                                     # add  LysisBuffer

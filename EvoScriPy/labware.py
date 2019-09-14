@@ -1126,16 +1126,16 @@ class Labware:
     def newPosition(self, pos, offset):
         return self.position(self.newOffset(pos, offset))
 
-    def posAtParallelMove(self, step, nTips):
+    def posAtParallelMove(self, step, n_tips):
         nR, nC = self.type.nRow, self.type.nCol
         assert step < nC * nR, "too many steps!!"
-        SubPlateSize = nTips * nC
+        SubPlateSize = n_tips * nC
         SubPlate = step // SubPlateSize
-        tN_semiCol = step // nTips
+        tN_semiCol = step // n_tips
         parit = (SubPlate) % 2
         pos_semiCol = nC * parit + (tN_semiCol % nC) * (-1) ** parit + 1 - parit
 
-        p = self.Position(row=SubPlate * nTips + step % nTips + 1, col=pos_semiCol)
+        p = self.Position(row=SubPlate * n_tips + step % n_tips + 1, col=pos_semiCol)
 
         msg = "error in calculation of parallel row {:d}>{:d}".format(p.row, nR)
         assert 0 < p.row <= nR, msg
@@ -1143,17 +1143,17 @@ class Labware:
         assert 0 < p.col <= nC, msg
         return p
 
-    def parallelOrder(self, nTips, original=None):
+    def parallelOrder(self, n_tips, original=None):
         original = original or self.selected()
         assert original
         if isinstance(original, int):
             assert 0 < original <= len(self.Wells)
             original = range(original)
         assert isinstance(original, (list, range))
-        return [self.offset(self.posAtParallelMove(offset, nTips)) for offset in original]
+        return [self.offset(self.posAtParallelMove(offset, n_tips)) for offset in original]
 
-    def offsetAtParallelMove(self, step, nTips):
-        p = self.posAtParallelMove(step, nTips)
+    def offsetAtParallelMove(self, step, n_tips):
+        p = self.posAtParallelMove(step, n_tips)
         return self.offset(p.row, p.col)
 
     def moveParallel(self, pos, offset):  #

@@ -335,7 +335,7 @@ class Protocol (Executable):
 
         By default a number of wells equal to the number of samples set in the protocol will be auto selected in the
         target labware `to_labware_region`, but this selection can be set explicitly (setting `well.selFlag=True`,
-        for example by calling `to_labware_region.selectOnly(self, sel_idx_list)`). If `NumSamples` is set
+        for example by calling `to_labware_region.selectOnly(self, sel_idx_list)`). If `num_samples` is set
         it will rewrite (reset) the selected wells in the target `to_labware_region`.
 
         Please, carefully indicate whether to use "parallel optimization" in the pipetting order
@@ -361,7 +361,7 @@ class Protocol (Executable):
         # allow tip mask continue y calcule num of tips
 
         if num_tips is None:
-            num_tips = self.robot.cur_arm().nTips  # the number of tips to be used in each cycle of pipetting = all
+            num_tips = self.robot.cur_arm().n_tips  # the number of tips to be used in each cycle of pipetting = all
 
         if num_samples:
             to_labware_region.selectOnly(range(num_samples))
@@ -413,7 +413,7 @@ class Protocol (Executable):
                         vol = [volume * (dsp + 1)] * rst + [volume * dsp] * (num_tips - rst)
                         available_disp = dsp + bool(rst)
 
-                    self._aspirate_multi_tips(reagent, num_tips, vol, LiqClass=asp_liquid_class)
+                    self._aspirate_multi_tips(reagent, num_tips, vol, liq_class=asp_liquid_class)
 
                     while available_disp:
 
@@ -434,10 +434,10 @@ class Protocol (Executable):
                  from_labware_region: labware.Labware,  # todo take list of "samples"
                  to_labware_region  : labware.Labware,  # todo take list
                  volume             : (int, float),
-                 using_liquid_class : (str,tuple)   = None,
-                 optimizeFrom       : bool          = True,
+                 using_liquid_class : (str, tuple)  = None,
+                 optimize_from      : bool          = True,
                  optimizeTo         : bool          = True,
-                 NumSamples         : int           = None) -> object:
+                 num_samples        : int           = None) -> object:
         """
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
         the same number of wells in the target labware using the current LiHa arm with maximum number of tips
@@ -474,41 +474,42 @@ class Protocol (Executable):
         :param to_labware_region    : Labware in which the target wells are located and possibly selected
         :param volume               : if not, volume is set from the default of the source reagent
         :param using_liquid_class   : LC or tuple (LC to aspirate, LC to dispense)
-        :param optimizeFrom         : bool - use from_labware_region.parallelOrder(...) to aspirate
+        :param optimize_from         : bool - use from_labware_region.parallelOrder(...) to aspirate
         :param optimizeTo           : bool - use to_labware_region.parallelOrder(...) to aspirate
-        :param NumSamples           : Prioritized. If used reset the well selection
+        :param num_samples           : Prioritized. If used reset the well selection
         :return:
         """
         assert isinstance(from_labware_region, labware.Labware), 'Labware expected in from_labware_region to transfer'
         assert isinstance(to_labware_region,   labware.Labware), 'Labware expected in to_labware_region to transfer'
         # assert isinstance(using_liquid_class, tuple)
-        nt = self.robot.cur_arm().nTips                  # the number of tips to be used in each cycle of pippeting
+        nt = self.robot.cur_arm().n_tips                  # the number of tips to be used in each cycle of pippeting
 
-        if NumSamples:                                  # select convenient def
-            oriSel = range(NumSamples)
-            dstSel = range(NumSamples)
+        if num_samples:                                  # select convenient def
+            ori_sel = range(num_samples)
+            dst_sel = range(num_samples)
         else:
-            oriSel = from_labware_region.selected()
-            dstSel = to_labware_region.selected()
+            ori_sel = from_labware_region.selected()
+            dst_sel = to_labware_region.selected()
 
-            if not dstSel:
-                if not oriSel:
-                    oriSel = range(self.num_of_samples)
-                    dstSel = range(self.num_of_samples)
+            if not dst_sel:
+                if not ori_sel:
+                    ori_sel = range(self.num_of_samples)
+                    dst_sel = range(self.num_of_samples)
                 else:
-                    dstSel = oriSel  # todo ??
+                    dst_sel = ori_sel  # todo ??
             else:
-                if not oriSel:
-                    oriSel = dstSel  # todo ??
+                if not ori_sel:
+                    ori_sel = dst_sel  # todo ??
                 else:
-                    l = min(len(oriSel), len(dstSel))   # transfer the minimum of the selected
-                    oriSel = oriSel[:l]                 # todo Best reise an error ??
-                    dstSel = dstSel[:l]
-        if optimizeFrom: oriSel = from_labware_region.parallelOrder(nt, oriSel)   # a list of well offset s
-        if optimizeTo  : dstSel = to_labware_region.parallelOrder  (nt, dstSel)
+                    n_wells = min(len(ori_sel), len(dst_sel))   # transfer the minimum of the selected
+                    ori_sel = ori_sel[:n_wells]                 # todo Best reise an error ??
+                    dst_sel = dst_sel[:n_wells]
 
-        NumSamples = len(dstSel)
-        SampleCnt = NumSamples
+        if optimize_from: ori_sel = from_labware_region.parallelOrder(nt, ori_sel)   # a list of well offset s
+        if optimizeTo   : dst_sel = to_labware_region.parallelOrder  (nt, dst_sel)
+
+        num_samples = len(dst_sel)
+        sample_cnt = num_samples
 
         assert isinstance(volume, (int, float))
 
@@ -516,7 +517,7 @@ class Protocol (Executable):
         assert 0 < volume <= self.worktable.def_DiTi_type.maxVol, \
             "Invalid volumen to transfer ("+str(volume)+") with tips " + self.worktable.def_DiTi_type
 
-        nt = min(SampleCnt, nt)
+        nt = min(sample_cnt, nt)
         lf = from_labware_region
         lt = to_labware_region
 
@@ -527,22 +528,22 @@ class Protocol (Executable):
             msg += " [grid:{fg:d} site:{fs:d}] in order {oo:s} into {to:s}[grid:{tg:d} site:{ts:d}] in order {do:s}:" \
                 .format(fg =lf.location.grid,
                         fs =lf.location.site+1,
-                        oo =str([i+1 for i in oriSel]),
-                        do =str([i+1 for i in dstSel]),
+                        oo =str([i+1 for i in ori_sel]),
+                        do =str([i+1 for i in dst_sel]),
                         to =lt.label,
                         tg =lt.location.grid,
                         ts =lt.location.site+1)
             instructions.comment(msg).exec()
-            while SampleCnt:                                # loop wells (samples)
-                curSample = NumSamples - SampleCnt
-                if nt > SampleCnt:                          # only a few samples left
-                    nt = SampleCnt                          # don't use all tips
+            while sample_cnt:                                # loop wells (samples)
+                curSample = num_samples - sample_cnt
+                if nt > sample_cnt:                          # only a few samples left
+                    nt = sample_cnt                          # don't use all tips
                     tm = robot.tipsMask[nt]                   # todo count for broken tips
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 
-                src = oriSel[curSample:curSample + nt]      # only the next nt wells
-                trg = dstSel[curSample:curSample + nt]
+                src = ori_sel[curSample:curSample + nt]      # only the next nt wells
+                trg = dst_sel[curSample:curSample + nt]
                 spl = range(curSample, curSample + nt)
 
                 sw = Asp.labware.selected_wells()
@@ -568,10 +569,10 @@ class Protocol (Executable):
                     for s, d in zip(Asp.labware.selected_wells(), Dst.labware.selected_wells()):
                         d.track = s                                     # todo revise !! and .actions []
                         d.actions += s.actions                          # ????
-                SampleCnt -= nt
-        Asp.labware.selectOnly(oriSel)
-        Dst.labware.selectOnly(dstSel)
-        return oriSel, dstSel
+                sample_cnt -= nt
+        Asp.labware.selectOnly(ori_sel)
+        Dst.labware.selectOnly(dst_sel)
+        return ori_sel, dst_sel
 
     def aspirate_one(self, tip, reagent, vol=None, offset = None):
         """
@@ -583,7 +584,7 @@ class Protocol (Executable):
         """
         if vol is None:       vol = reagent.min_vol()    # todo: revise !!
 
-        v = [0] * self.robot.cur_arm().nTips
+        v = [0] * self.robot.cur_arm().n_tips
         v[tip] = vol
         reagent.autoselect(offset = offset)                                         # reagent.labware.selectOnly([reagent.pos])
         instructions.aspirate(robot.tipMask[tip], reagent.def_liq_class, v, reagent.labware).exec()
@@ -597,7 +598,7 @@ class Protocol (Executable):
         """
         vol = vol or reagent.min_vol()                                # really ??   # todo: revise !!
         reagent.autoselect()                                         # reagent.labware.selectOnly([reagent.pos])
-        v = [0] * self.robot.cur_arm().nTips
+        v = [0] * self.robot.cur_arm().n_tips
         v[tip] = vol
         instructions.dispense(robot.tipMask[tip], reagent.def_liq_class, v, reagent.labware).exec()
 
@@ -620,7 +621,7 @@ class Protocol (Executable):
         if not volume or volume< 0.0 : volume = 0.0
         assert isinstance(volume, (int, float))
         oriSel = in_labware_region.selected()
-        nt = self.robot.cur_arm().nTips  # the number of tips to be used in each cycle of pippeting
+        nt = self.robot.cur_arm().n_tips  # the number of tips to be used in each cycle of pippeting
         if not oriSel:
             oriSel = range(self.num_of_samples)
         if optimize:
@@ -720,7 +721,7 @@ class Protocol (Executable):
         """
 
         assert isinstance(pre_mix, preMix)
-        mxnTips     = self.robot.cur_arm().nTips  # max number of Tips
+        mxnTips     = self.robot.cur_arm().n_tips  # max number of Tips
         ncomp       = len(pre_mix.components)
         nt          = min(mxnTips, ncomp)
         NumSamples  = NumSamples or self.num_of_samples
@@ -791,18 +792,18 @@ class Protocol (Executable):
         if self.robot.cur_arm().tips_type == self.robot.cur_arm().Fixed:          # todo call protocol wash ??
             return TIP_MASK
 
-        mask = TIP_MASK = TIP_MASK if TIP_MASK is not None else robot.tipsMask[self.robot.cur_arm().nTips]
+        mask = TIP_MASK = TIP_MASK if TIP_MASK is not None else robot.tipsMask[self.robot.cur_arm().n_tips]
 
         if self.robot.usePreservedtips:
             with self.tips(drop=True, preserve=False):    # drop tips from previous "buffer" in first pipetting
                 self.drop_tips(TIP_MASK)
             where = self.robot.where_are_preserved_tips(selected_samples, TIP_MASK, tip_type)
-            nTips = self.robot.cur_arm().nTips
+            n_tips = self.robot.cur_arm().n_tips
 
             for tip_rack in where:
                 tipsMask = 0
                 tips_in_rack = len(tip_rack.selected())
-                for idx in range(nTips):
+                for idx in range(n_tips):
                     if not tips_in_rack: break
                     tip = (1 << idx)
                     if TIP_MASK & tip:
@@ -825,21 +826,23 @@ class Protocol (Executable):
         """
         if self.robot.preservetips:
             where = self.robot.where_preserve_tips(TIP_MASK)
-            nTips = self.robot.cur_arm().nTips
+            n_tips = self.robot.cur_arm().n_tips
             for tip_rack in where:
                 tipsMask = 0
-                l = len(tip_rack.selected())
-                assert l, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
-                # if not l: continue   #   WORKAROUND  !!!
-                for i in range(nTips):
-                    if not l: break
+                tips_in_rack = len(tip_rack.selected())
+                assert tips_in_rack, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
+
+                for i in range(n_tips):
+                    if not tips_in_rack:
+                        break
                     b = (1 << i)
                     if TIP_MASK & b:
                         tipsMask |= b
                         TIP_MASK ^= b
-                        l -= 1
+                        tips_in_rack -= 1
+
                 instructions.set_DITIs_Back(tipsMask, tip_rack).exec()
-            assert l == 0
+            assert tips_in_rack == 0
             return
         # if not robot.Robot.current.droptips: return 0
         # TIP_MASK = robot.Robot.current.cur_arm().drop(TIP_MASK)
@@ -919,7 +922,7 @@ class Protocol (Executable):
         assert isinstance(reagent, Reagent)
         LiqClass = LiqClass or reagent.def_liq_class
 
-        tips = 1 if isinstance(reagent.labware, labware.Cuvette) else self.robot.cur_arm().nTips
+        tips = 1 if isinstance(reagent.labware, labware.Cuvette) else self.robot.cur_arm().n_tips
         reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
         vol = [w.vol for w in reagent.labware.selected_wells()]
         instructions.comment(f"Check: {str([str(well) for well in reagent.labware.selected_wells()]) }").exec()
@@ -1029,7 +1032,7 @@ class Protocol (Executable):
         script = script_dir / (script_name + '.esc')
         assert isinstance(script, Path)
 
-        self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, tips_type=self.tips_type, nTips=self.n_tips)
+        self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, tips_type=self.tips_type, n_tips=self.n_tips)
         self.Script = mode.Script(template     = self.worktable_template_filename,
                                   robot_protocol = self,
                                   filename     = script,
@@ -1046,7 +1049,7 @@ class Protocol (Executable):
         self.worktable  = self.iRobot.robot.worktable  # shortcut !!
         self.robot      = self.iRobot.robot
         self.robot.liquid_clases = self.liquid_classes()
-        assert (self.iRobot.robot.cur_arm().nTips == self.n_tips)
+        assert (self.iRobot.robot.cur_arm().n_tips == self.n_tips)
 
     def comments(self):
         return self.comments_.comments
@@ -1106,7 +1109,7 @@ class Protocol (Executable):
     def _aspirate_multi_tips(self, reagent  : Reagent,
                                    tips     : int           = None,
                                    vol      : (float, list) = None,
-                                   LiqClass : str           = None):
+                                   liq_class: str           = None):
         """
         Intermediate-level function. Aspirate with multiple tips from multiple wells with different volume.
         Example: you want to aspirate 8 different volume of a reagent into 8 tips, but the reagent
@@ -1116,9 +1119,9 @@ class Protocol (Executable):
         :param tips     : number of tips beginning from #1 to use
         :param reagent  : reagent to aspirate, with some number of wells in use
         :param vol:
-        :param LiqClass:
+        :param liq_class:
         """
-        max_tips = self.robot.cur_arm().nTips
+        max_tips = self.robot.cur_arm().n_tips
 
         if isinstance(vol, list):
             if tips is None:
@@ -1133,11 +1136,11 @@ class Protocol (Executable):
 
         assert tips <= max_tips, f"Too many tips selected: {tips}. The maximum is {max_tips}."
 
-        LiqClass = LiqClass or reagent.def_liq_class
+        liq_class = liq_class or reagent.def_liq_class
 
         mask = robot.tipsMask[tips]                                 # as if we could use so many tips
         n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
-        asp = instructions.aspirate(mask, LiqClass, vol, reagent.labware)
+        asp = instructions.aspirate(mask, liq_class, vol, reagent.labware)
         curTip = 0
         while curTip < tips:                                      # todo what to do with used tips?
             nextTip = curTip + n_wells                            # add tips, one for each well

@@ -26,23 +26,23 @@ class Arm:
     Detect      =  0
     Dispense    = -1
 
-    def __init__(self, nTips, index, workingTips=None, tips_type=None): # index=Pipette.LiHa1
+    def __init__(self, n_tips, index, workingTips=None, tips_type=None): # index=Pipette.LiHa1
         """
-        :param nTips: the number of possible tips
+        :param n_tips: the number of possible tips
         :param index: int. for example: index=Pipette.LiHa1
         :param workingTips: some tips maybe broken or permanently unused.
         :param tips_type: DITI or fixed (not implemented)
         """
 
         self.index = index
-        self.workingTips = workingTips if workingTips is not None else tipsMask[nTips] # todo implement
+        self.workingTips = workingTips if workingTips is not None else tipsMask[n_tips] # todo implement
         self.tips_type = Arm.DiTi if tips_type is None else tips_type
-        self.nTips = nTips
+        self.n_tips = n_tips
         tip = None
         if self.tips_type == Arm.Fixed:
             tip = labware.Tip(labware.Fixed_Tip)
 
-        self.Tips = [tip] * nTips
+        self.Tips = [tip] * n_tips
 
 
     def getTips_test(self, tip_mask=None) -> int:
@@ -57,7 +57,7 @@ class Arm:
             return 0
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.nTips]
+            tip_mask = tipsMask[self.n_tips]
 
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -79,9 +79,9 @@ class Arm:
         if self.tips_type == Arm.Fixed:
             return 0
 
-        if tip_mask is None:  tip_mask = tipsMask[self.nTips]
+        if tip_mask is None:  tip_mask = tipsMask[self.n_tips]
         n = labware.count_tips(tip_mask)
-        assert n <= self.nTips
+        assert n <= self.n_tips
         t = 0
         if tips is None:   # deprecated
 
@@ -109,7 +109,7 @@ class Arm:
             return 0
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.nTips]
+            tip_mask = tipsMask[self.n_tips]
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
                 if tp:  # already in position
@@ -131,9 +131,9 @@ class Arm:
         if self.tips_type == Arm.Fixed:
             return 0
 
-        if tip_mask is None:  tip_mask = tipsMask[self.nTips]
+        if tip_mask is None:  tip_mask = tipsMask[self.n_tips]
         n = labware.count_tips(tip_mask)
-        assert n <= self.nTips
+        assert n <= self.n_tips
         t = 0
         if tips is None:   # deprecated
             assert isinstance(rack_type, labware.Labware.DITIrack)
@@ -165,7 +165,7 @@ class Arm:
             return 0, []
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.nTips]
+            tip_mask = tipsMask[self.n_tips]
         tips_index = []
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -189,7 +189,7 @@ class Arm:
             return 0, []
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.nTips]
+            tip_mask = tipsMask[self.n_tips]
         tips = []
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -213,14 +213,14 @@ class Arm:
         """
 
         if isinstance(volume, (float, int)):
-            vol  = [volume] * self.nTips
+            vol  = [volume] * self.n_tips
         else:
             vol  = list(volume)
-            d    = self.nTips - len(vol)
+            d    = self.n_tips - len(vol)
             vol += [0]*(d if d > 0 else 0 )
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.nTips]
+            tip_mask = tipsMask[self.n_tips]
 
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -249,14 +249,14 @@ class Robot:
 
     def __init__(self,  index       = None,
                         arms        = None,
-                        nTips       = None,
+                        n_tips       = None,
                         workingTips = None,
                         tips_type    = Arm.DiTi,
                         templateFile= None): # index=Pipette.LiHa1
         """
         A Robot may have 1 or more Arms, indexes by key index in a dictionary of Arms.
         :param arms:
-        :param nTips:
+        :param n_tips:
         :param workingTips:
         :param tips_type:
         """
@@ -266,7 +266,7 @@ class Robot:
         Robot.current = self
         self.arms = arms              if isinstance(arms, dict     ) else \
                    {arms.index: arms} if isinstance(arms, Arm) else \
-                   {     index: Arm(nTips, index, workingTips, tips_type=tips_type)}
+                   {     index: Arm(n_tips, index, workingTips, tips_type=tips_type)}
         self.worktable      = None
         #self.set_worktable(templateFile)
         self.def_arm        = index  # or Pipette.LiHa1
@@ -298,7 +298,7 @@ class Robot:
 
         selected_reagents = selected_reagents.selected_wells()
 
-        TIP_MASK        = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().nTips]
+        TIP_MASK        = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().n_tips]
         type            = type if type else self.worktable.def_DiTi_type
         where           = []
         n               = labware.count_tips(TIP_MASK)
@@ -326,7 +326,7 @@ class Robot:
         :return:    list of racks with the tips-wells already selected.
         """                                                                         # todo this in Labware??
 
-        TIP_MASK = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().nTips]
+        TIP_MASK = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().n_tips]
         types    = []
         t_masks  = []
         racks    = []
