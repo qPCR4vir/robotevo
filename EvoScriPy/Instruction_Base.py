@@ -233,7 +233,7 @@ class Pipette(Instruction):
         """
         Instruction.validate_arg(self)
 
-        self.arm = self.robot.curArm(self.arm)
+        self.arm = self.robot.cur_arm(self.arm)
 
         max_tip_mask = robot.tipsMask[self.arm.nTips]
         if self.tipMask is None:
@@ -326,7 +326,7 @@ class Pipetting(Pipette):
 
         self.arg[1:1] = [String1(self.liquidClass)]                              # arg 2
 
-        n_tips = self.robot.curArm().nTips
+        n_tips = self.robot.cur_arm().nTips
         if self.action():
             self.arg[2:2] = Expr(n_tips, self.volume).split() \
                             + [int(0)] * (12 - n_tips)                           # arg 3 - 14 todo Integer(0) ?
@@ -354,14 +354,14 @@ class DITIs(Instruction):
         :param arm:
         """
         Instruction.__init__(self, name)
-        self.arm     = self.robot.curArm(arm)
+        self.arm     = self.robot.cur_arm(arm)
         self.options = options
-        self.tipMask = tipMask if tipMask is not None else robot.tipsMask[self.robot.curArm().nTips]
+        self.tipMask = tipMask if tipMask is not None else robot.tipsMask[self.robot.cur_arm().nTips]
 
     def validate_arg(self):
         Instruction.validate_arg(self)
 
-        self.arm = self.robot.curArm(self.arm)
+        self.arm = self.robot.cur_arm(self.arm)
 
         assert self.arm.tips_type == self.arm.DiTi
 

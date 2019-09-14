@@ -100,7 +100,7 @@ class Tutorial_LL(Evo200_FLI):
 
             self.user_prompt("Put the plate for dilutions in " + str(plate.location))
 
-            arm = self.robot.curArm(instructions.Pipette.LiHa1)
+            arm = self.robot.cur_arm(instructions.Pipette.LiHa1)
             m_tips = arm.nTips
 
             n_tips = min(n, m_tips)                                                 # distribute mix1 --------------

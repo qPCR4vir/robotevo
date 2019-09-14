@@ -642,7 +642,7 @@ class activate_PMP(Instruction):
     """
     def __init__(self, tipMask = None ):
         Instruction.__init__(self, "Activate_PMP")
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.cur_arm().nTips]
 
     def validate_arg(self):
         Instruction.validate_arg(self)
@@ -659,7 +659,7 @@ class deactivate_PMP(Instruction):
     """
     def __init__(self, tipMask = None ):
         Instruction.__init__(self, "Deactivate_PMP")
-        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.curArm().nTips]
+        self.tipMask = tipMask if tipMask is not None else Rbt.tipsMask[self.robot.cur_arm().nTips]
 
     def validate_arg(self):
         Instruction.validate_arg(self)
@@ -794,7 +794,7 @@ class active_Wash(Instruction):
 
     def __init__(self, wait = True, time=None, arm=None   ):
         Instruction.__init__(self, "Active_Wash")
-        self.arm = arm if arm is not None else self.robot.curArm().index
+        self.arm = arm if arm is not None else self.robot.cur_arm().index
         self.time = time
         self.wait = wait
 
@@ -1080,14 +1080,14 @@ class Te_MO_Aspirate(Instruction):
         :param arm:
         """
         Instruction.__init__(self, 'Aspirate')
-        self.robot.curArm(arm)
-        self.tipMask        = tipMask if tipMask is not None else robot.tipsMask[self.robot.curArm().n_tips]
+        self.robot.cur_arm(arm)
+        self.tipMask        = tipMask if tipMask is not None else robot.tipsMask[self.robot.cur_arm().n_tips]
         self.labware        =labware
         self.spacing        = spacing
         self.loopOptions    = LoopOptions
         self.RackName       = RackName
         self.Well           = Well
-        self.arm = self.robot.curArm().index   # current arm can change - keep it here
+        self.arm = self.robot.cur_arm().index   # current arm can change - keep it here
                             tipMask,
                             liquidClass,
                             volume,

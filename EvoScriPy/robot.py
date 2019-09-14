@@ -241,7 +241,7 @@ class Arm:
 class Robot:
     """ Maintain an intern state.
     Can have more than one arm in a dictionary that map an index with the actual arm.
-    One of the arms can be set as "current" and is returned by curArm()
+    One of the arms can be set as "current" and is returned by cur_arm()
     Most of the changes in state are made by the implementation of the low level instructions, while the protocols can
     "observe" the state to make all kind of optimizations and organizations previous to the actual instruction call
     """
@@ -298,7 +298,7 @@ class Robot:
 
         selected_reagents = selected_reagents.selected_wells()
 
-        TIP_MASK        = TIP_MASK if TIP_MASK is not None else tipsMask[self.curArm().nTips]
+        TIP_MASK        = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().nTips]
         type            = type if type else self.worktable.def_DiTi_type
         where           = []
         n               = labware.count_tips(TIP_MASK)
@@ -326,13 +326,13 @@ class Robot:
         :return:    list of racks with the tips-wells already selected.
         """                                                                         # todo this in Labware??
 
-        TIP_MASK = TIP_MASK if TIP_MASK is not None else tipsMask[self.curArm().nTips]
+        TIP_MASK = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().nTips]
         types    = []
         t_masks  = []
         racks    = []
         tips     = []
 
-        for i, tip in enumerate(self.curArm().Tips):       # determine the type of tips in Arm to preserve, to set back
+        for i, tip in enumerate(self.cur_arm().Tips):       # determine the type of tips in Arm to preserve, to set back
             if TIP_MASK & (1 << i):                                                 # this was selected
                 assert tip, "There are no tip mounted in position " + str(i)
                 tips += [tip]
@@ -401,10 +401,10 @@ class Robot:
 
     def getTips_test(self, rack_type, tip_mask=None) -> int:   # todo REVISE
         if self.reusetips:
-            tip_mask = self.curArm().getMoreTips_test(rack_type, tip_mask)
+            tip_mask = self.cur_arm().getMoreTips_test(rack_type, tip_mask)
         else:
             # self.drop_tips(tip_mask)  # todo REVISE  here ???
-            tip_mask = self.curArm().getTips_test(tip_mask)
+            tip_mask = self.cur_arm().getTips_test(tip_mask)
         return tip_mask
 
     # Functions to change the physical status, to model physical actions, or that directly
@@ -428,14 +428,14 @@ class Robot:
 
         if tip_mask:
             tips = rack_series.retire_new_tips(tip_mask)
-        return self.curArm().mount_tips_executed(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
+        return self.cur_arm().mount_tips_executed(rack_type=rack_series.type, tip_mask=tip_mask, tips=tips)
 
     def drop_tips_test(self, TIP_MASK=None):
         logging.debug("drop_tips_test called with mask= " + str(TIP_MASK))
 
         if not self.droptips: return 0
 
-        TIP_MASK, tips = self.curArm().eject_tips_test(TIP_MASK)
+        TIP_MASK, tips = self.cur_arm().eject_tips_test(TIP_MASK)
 
         logging.debug("drop_tips_test return mask= " + str(TIP_MASK))
 
@@ -449,7 +449,7 @@ class Robot:
         waste = waste if waste else self.worktable.def_DiTiWaste
         assert isinstance(waste, labware.DITIwaste)
 
-        TIP_MASK, tips = self.curArm().eject_tips_executed(TIP_MASK)
+        TIP_MASK, tips = self.cur_arm().eject_tips_executed(TIP_MASK)
         waste.waste(tips)
         logging.debug("drop_tips_executed return mask= " + str(TIP_MASK))
 
@@ -457,12 +457,12 @@ class Robot:
 
     def pipette_executed(self, action, volume, labware_selection, tip_mask=None) -> (list, int):
 
-        volume, tip_mask = self.curArm().pipette_executed(action, volume, tip_mask)
+        volume, tip_mask = self.cur_arm().pipette_executed(action, volume, tip_mask)
         w = 0
 
         assert isinstance(labware_selection, labware.Labware)
         wells = labware_selection.selected_wells()
-        for i, tp in enumerate(self.curArm().Tips):
+        for i, tp in enumerate(self.cur_arm().Tips):
                 if tip_mask & (1 << i):
                     dv = action*volume[i]
                     if wells[w].reagent is None:
@@ -486,7 +486,7 @@ class Robot:
                     if wells[w].vol < 0:                                   # don't allow air to fake reagent.
                         wells[w].vol = 0
                     if    action == Arm.Aspirate:
-                        self.curArm().Tips[i] = labware.usedTip(tp, wells[w])  # todo FIX for already used tips
+                        self.cur_arm().Tips[i] = labware.usedTip(tp, wells[w])  # todo FIX for already used tips
                         wells[w].log(-dv)
                     elif  action == Arm.Dispense:
                         assert isinstance(tp, labware.usedTip)
@@ -505,7 +505,7 @@ class Robot:
         # todo what if self.droptips: is False ???
         assert isinstance(labware_selection, labware.DITIrack)
 
-        TIP_MASK, tips = self.curArm().eject_tips_executed(TIP_MASK)
+        TIP_MASK, tips = self.cur_arm().eject_tips_executed(TIP_MASK)
         labware_selection.set_back(TIP_MASK, tips)
         return TIP_MASK
 
@@ -520,16 +520,16 @@ class Robot:
         """
         assert isinstance(labware_selection, labware.DITIrack)
 
-        TIP_MASK = self.curArm().getTips_test(TIP_MASK)
+        TIP_MASK = self.cur_arm().getTips_test(TIP_MASK)
         tips = labware_selection.pick_up(TIP_MASK)
-        return self.curArm().mount_tips_executed(tip_mask=TIP_MASK, tips=tips)
+        return self.cur_arm().mount_tips_executed(tip_mask=TIP_MASK, tips=tips)
 
     def use_tips_executed(self, tipMask, labware_selection):                      # todo Deprecated ??????
 
-        mask, tips = self.curArm().eject_tips_test(tipMask)
+        mask, tips = self.cur_arm().eject_tips_test(tipMask)
         assert len(tips) == len(labware_selection.selected())
         for i, w in enumerate(labware_selection.selected_wells()):
-            self.curArm().Tips[tips[i]] = labware.usedTip(self.curArm().Tips[tips[i]], w)
+            self.cur_arm().Tips[tips[i]] = labware.usedTip(self.cur_arm().Tips[tips[i]], w)
 
     def move_labware_executed(self, labware, destination):
         # assert isinstance(labware, labware.Labware)
@@ -577,7 +577,7 @@ class Robot:
         self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
         return usePreserved
 
-    def curArm(self, arm=None):
+    def cur_arm(self, arm=None):
 
         if isinstance(arm, Arm):
             assert arm.index in self.arms
