@@ -10,11 +10,11 @@ import logging
 import EvoScriPy.labware as labware
 rep_sub = None      # rep_sub = br"C:\Prog\robotevo\EvoScriPy\repeat_subroutine.esc" .decode(mode.Mode.encoding) ??
 
-tipMask = []        # mask for one tip of index ...
-tipsMask = []       # mask for all the first tips
+mask_tip = []        # mask for one tip of index ...
+mask_tips = []       # mask for all the first tips
 for tip in range(13):
-    tipMask += [1 << tip]
-    tipsMask += [2 ** tip - 1]
+    mask_tip += [1 << tip]
+    mask_tips += [2 ** tip - 1]
 
 
 class Arm:
@@ -22,8 +22,8 @@ class Arm:
     DiTi        = 0         # DiTi types
     Fixed       = 1
 
-    Aspirate    =  1        # Actions types
-    Detect      =  0
+    Aspirate    = 1        # Actions types
+    Detect      = 0
     Dispense    = -1
 
     def __init__(self, n_tips, index, workingTips=None, tips_type=None): # index=Pipette.LiHa1
@@ -35,7 +35,7 @@ class Arm:
         """
 
         self.index = index
-        self.workingTips = workingTips if workingTips is not None else tipsMask[n_tips] # todo implement
+        self.workingTips = workingTips if workingTips is not None else mask_tips[n_tips] # todo implement
         self.tips_type = Arm.DiTi if tips_type is None else tips_type
         self.n_tips = n_tips
         tip = None
@@ -43,7 +43,6 @@ class Arm:
             tip = labware.Tip(labware.Fixed_Tip)
 
         self.Tips = [tip] * n_tips
-
 
     def getTips_test(self, tip_mask=None) -> int:
         """ Simple test that the asked positions are free for mounting new tips.
@@ -57,7 +56,7 @@ class Arm:
             return 0
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.n_tips]
+            tip_mask = mask_tips[self.n_tips]
 
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -79,7 +78,7 @@ class Arm:
         if self.tips_type == Arm.Fixed:
             return 0
 
-        if tip_mask is None:  tip_mask = tipsMask[self.n_tips]
+        if tip_mask is None:  tip_mask = mask_tips[self.n_tips]
         n = labware.count_tips(tip_mask)
         assert n <= self.n_tips
         t = 0
@@ -109,14 +108,14 @@ class Arm:
             return 0
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.n_tips]
+            tip_mask = mask_tips[self.n_tips]
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
                 if tp:  # already in position
                     if tp.type is not rack_type:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
                                 " and we need " + rack_type.name
-                    tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
+                    tip_mask ^= (1 << i)  # todo raise if dif max_vol? or if vol not 0?
                 else:
                     pass # self.Tips[i] = labware.Tip(rack_type)
         return tip_mask
@@ -131,7 +130,7 @@ class Arm:
         if self.tips_type == Arm.Fixed:
             return 0
 
-        if tip_mask is None:  tip_mask = tipsMask[self.n_tips]
+        if tip_mask is None:  tip_mask = mask_tips[self.n_tips]
         n = labware.count_tips(tip_mask)
         assert n <= self.n_tips
         t = 0
@@ -147,7 +146,7 @@ class Arm:
                     if tp.type is not tips[t].type:
                         raise "A Tip from rack type " + tp.type.name + " is already in position " + str(i) + \
                                 " and we need " + tips[t].type.name
-                    tip_mask ^= (1 << i)  # todo raise if dif maxVol? or if vol not 0?
+                    tip_mask ^= (1 << i)  # todo raise if dif max_vol? or if vol not 0?
                 else:
                     self.Tips[i] = tips[t]
                     t += 1
@@ -165,7 +164,7 @@ class Arm:
             return 0, []
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.n_tips]
+            tip_mask = mask_tips[self.n_tips]
         tips_index = []
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -189,7 +188,7 @@ class Arm:
             return 0, []
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.n_tips]
+            tip_mask = mask_tips[self.n_tips]
         tips = []
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -220,7 +219,7 @@ class Arm:
             vol += [0]*(d if d > 0 else 0 )
 
         if tip_mask is None:
-            tip_mask = tipsMask[self.n_tips]
+            tip_mask = mask_tips[self.n_tips]
 
         for i, tp in enumerate(self.Tips):
             if tip_mask & (1 << i):
@@ -298,7 +297,7 @@ class Robot:
 
         selected_reagents = selected_reagents.selected_wells()
 
-        TIP_MASK        = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().n_tips]
+        TIP_MASK        = TIP_MASK if TIP_MASK is not None else mask_tips[self.cur_arm().n_tips]
         type            = type if type else self.worktable.def_DiTi_type
         where           = []
         n               = labware.count_tips(TIP_MASK)
@@ -326,7 +325,7 @@ class Robot:
         :return:    list of racks with the tips-wells already selected.
         """                                                                         # todo this in Labware??
 
-        TIP_MASK = TIP_MASK if TIP_MASK is not None else tipsMask[self.cur_arm().n_tips]
+        TIP_MASK = TIP_MASK if TIP_MASK is not None else mask_tips[self.cur_arm().n_tips]
         types    = []
         t_masks  = []
         racks    = []

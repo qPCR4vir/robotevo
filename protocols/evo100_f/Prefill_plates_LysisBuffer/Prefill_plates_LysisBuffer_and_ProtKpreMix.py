@@ -105,7 +105,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
         all_samples = range(num_of_samples)
         maxTips     = min  (self.n_tips, num_of_samples)
-        maxMask     = robot.tipsMask[maxTips]
+        maxMask     = robot.mask_tips[maxTips]
 
                                                         # Define the reagents in each labware (Cuvette, eppys, etc.)
 

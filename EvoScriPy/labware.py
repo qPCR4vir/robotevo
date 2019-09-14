@@ -895,12 +895,12 @@ class Labware:
             def __len__(self):
                 return len(self.labwares)
 
-        def __init__(self, name, nRow, nCol=1, maxVol=None):
+        def __init__(self, name, nRow, nCol=1, max_vol=None):
             assert name not in Labware.types, "Duplicate labware type name: " + name
             self.name           = name
             self.nRow           = nRow
             self.nCol           = nCol
-            self.maxVol         = maxVol
+            self.max_vol         = max_vol
             Labware.types[name] = self
 
         def __str__(self):
@@ -1308,12 +1308,12 @@ class DITIrackTypeSeries(Labware.Type.Series):
 class DITIrackType(Labware.Type):
 
 
-    def __init__(self, name, nRow=8, nCol=12, maxVol=None, portrait=False):
+    def __init__(self, name, nRow=8, nCol=12, max_vol=None, portrait=False):
 
         if portrait:
             nCol, nRow = nRow, nCol                  # todo revise !
 
-        Labware.Type.__init__(self, name, nRow, nCol, maxVol)
+        Labware.Type.__init__(self, name, nRow, nCol, max_vol)
 
         self.preserved_tips = {}        # order:well ??? sample order:tip well ??sample offset:tip well todo in series?
         # self.last_preserved_tips = None              # a tip Well in a DiTi rack
@@ -1534,9 +1534,9 @@ class CuvetteType(Labware.Type):
 
     def __init__(self,   name,
                          nRow,
-                         maxVol,
+                         max_vol,
                          nCol=1):
-        Labware.Type.__init__(self, name, nRow=nRow, maxVol=maxVol, nCol=nCol)
+        Labware.Type.__init__(self, name, nRow=nRow, max_vol=max_vol, nCol=nCol)
 
     def create_labware(self, loc, label):
         labw = Cuvette(self, loc, label)
@@ -1575,81 +1575,81 @@ class Te_Mag (Labware.Type):
 
 #  "predefining" common labwares types:
 
-Trough_100ml    = CuvetteType("Trough 100ml",                8,     maxVol=  100000)
-Trough_25ml_rec = CuvetteType("Trough 25ml Max. Recovery",   8,     maxVol=   25000)
-Trough_300ml_MCA= CuvetteType("Trough 300ml MCA",       8, nCol=12, maxVol=  300000)  # \todo test it works OK
+Trough_100ml    = CuvetteType("Trough 100ml",                8,     max_vol=  100000)
+Trough_25ml_rec = CuvetteType("Trough 25ml Max. Recovery",   8,     max_vol=   25000)
+Trough_300ml_MCA= CuvetteType("Trough 300ml MCA",       8, nCol=12, max_vol=  300000)  # \todo test it works OK
 
-EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     maxVol=    2000)
-GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     maxVol=    2000)
-EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  maxVol=    1500)
-EppRack6x4      = Labware.Type("24 Pos Eppi Tube Rack",              4, 6,  maxVol=    1500)
-EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  maxVol=    1500)
-EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  maxVol=    1500)  # defined in Evoware !!!
-MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  maxVol=    1000)
+EppRack16_2mL   = Labware.Type("Tube Eppendorf 2mL 16 Pos",         16,     max_vol=    2000)
+GreinRack16_2mL = Labware.Type("Tube Greinerconic 2mL 16 Pos",      16,     max_vol=    2000)
+EppRack3x16R    = Labware.Type("Tube Eppendorf 3x 16 PosR",         16, 3,  max_vol=    1500)
+EppRack6x4      = Labware.Type("24 Pos Eppi Tube Rack",              4, 6,  max_vol=    1500)
+EppRack3x16     = Labware.Type("Tube Eppendorf 3x 16 Pos",          16, 3,  max_vol=    1500)
+EppRack6x16     = Labware.Type("Tube Eppendorf 6x 16 Pos",          16, 6,  max_vol=    1500)  # defined in Evoware !!!
+MatrixRack1m8x12= Labware.Type("96 Well Matrix Rack 1ml",            8,12,  max_vol=    1000)
                     # by duplicating and then editing the labware 'Tube Eppendorf 3x 16 Pos' and also the carrier
                     # to have 6 instead of 3 columns. It was needed to change the position X of the last well (96)
                     # It was done by change the grig 6 positions to the right and coping the X pos of the first well,
                     # then come back to the originaL GRID AND SET THE COPIED X FOR the last well. The new, duplicated
                     # carrier was set to X width 150 mm
 EppCarr16sites  = Carrier.Type("Tube Eppendorf 16 Sites", widht_in_grids=1, n_sites=16)
-Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   maxVol=    2000)
-Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   maxVol=    2000)
-Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   maxVol=    1500)
-TubeRack13mmx16 = Labware.Type("Tube 13*100mm 16 Pos",              16,     maxVol=   15000)   # 15 mL ?
-EppRackx16      = Labware.Type("Tube Eppendorf 16 Pos",             16,     maxVol=    1500)
+Greiner2mLx1    = Labware.Type("Tube Greiner conic 2mL 1 Pos",      1, 1,   max_vol=    2000)
+Epp2mLx1        = Labware.Type("Tube Eppendorf 2mL 1 Pos",          1, 1,   max_vol=    2000)
+Eppx1           = Labware.Type("Tube Eppendorf 1 Pos",              1, 1,   max_vol=    1500)
+TubeRack13mmx16 = Labware.Type("Tube 13*100mm 16 Pos",              16,     max_vol=   15000)   # 15 mL ?
+EppRackx16      = Labware.Type("Tube Eppendorf 16 Pos",             16,     max_vol=    1500)
 
-EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  maxVol=     2000)# todo define in Evoware !!!
+EppRack6x16_2mL = Labware.Type("Tube Eppendorf 2m 6x 16 Pos",      16, 6,  max_vol=     2000)# todo define in Evoware !!!
 
 
-DiTi_1000ul     = DITIrackType("DiTi 1000ul",                       maxVol=     940)  # 940 ??
-DiTi_1000ul_SBS = DITIrackType("DiTi 1000ul SBS LiHa",              maxVol=     940)  # 940 ??
-DiTi_200ul_SBS  = DITIrackType("DiTi 200ul SBS LiHa",               maxVol=     200)  # 190 ??
-DiTi_10ul_SBS   = DITIrackType("DiTi 10ul SBS LiHa",                maxVol=      10)  # 0 9,5 ??
-DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              maxVol=     200)  # 190 ?? \todo derived ?
-DiTi_0200ul     = DITIrackType("DiTi 200 ul",                       maxVol=     190)  # ??
-Fixed_Tip       = Labware.Type("fixed tips", 1, maxVol=1500)  # todo ??
+DiTi_1000ul     = DITIrackType("DiTi 1000ul",                       max_vol=     940)  # 940 ??
+DiTi_1000ul_SBS = DITIrackType("DiTi 1000ul SBS LiHa",              max_vol=     940)  # 940 ??
+DiTi_200ul_SBS  = DITIrackType("DiTi 200ul SBS LiHa",               max_vol=     200)  # 190 ??
+DiTi_10ul_SBS   = DITIrackType("DiTi 10ul SBS LiHa",                max_vol=      10)  # 0 9,5 ??
+DiTi_200ul_MCA96= DITIrackType("DiTi 200ul SBS MCA96",              max_vol=     200)  # 190 ?? \todo derived ?
+DiTi_0200ul     = DITIrackType("DiTi 200 ul",                       max_vol=     190)  # ??
+Fixed_Tip       = Labware.Type("fixed tips", 1, max_vol=1500)  # todo ??
 
-Tip_1000maxVol  = DiTi_1000ul.maxVol
+Tip_1000maxVol  = DiTi_1000ul.max_vol
 Tip_200maxVol   = 190                   # TODO revise
 
 # Evo75_FLI
-CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, maxVol=  100000)
-WasteWash       = CuvetteType("Wash Station Waste",              8, maxVol=10000000)  # 10 L
-CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, maxVol=  100000)
+CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, max_vol=  100000)
+WasteWash       = CuvetteType("Wash Station Waste",              8, max_vol=10000000)  # 10 L
+CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, max_vol=  100000)
 DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")                           # TipWaste
 
 # Evo100_FLI
-CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)
-WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # 10 L
-CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)
+CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, max_vol=  100000)
+WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, max_vol=10000000)  # 10 L
+CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, max_vol=  100000)
 DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")
-TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",          8, 6,   maxVol=    1500)
+TeMag48         = Labware.Type("Tube Eppendorf 48 Pos",          8, 6,   max_vol=    1500)
 
 # Evo200_FLI
-# CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, maxVol=  100000)  # Cleaner1
-# WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, maxVol=10000000)  # Waste       10 L
-# CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, maxVol=  100000)  # Cleaner2
+# CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, max_vol=  100000)  # Cleaner1
+# WasteWS         = CuvetteType("Washstation 2Grid Waste",         8, max_vol=10000000)  # Waste       10 L
+# CleanerLWS      = CuvetteType("Washstation 2Grid Cleaner long",  8, max_vol=  100000)  # Cleaner2
 # DiTi_Waste      = DITIwasteType("Washstation 2Grid DiTi Waste")                       # DiTi Waste
-AntiCOntamination = CuvetteType("AntiCOntamination",                     8, maxVol=    00) # fake, to fix LiHa position
-Eppendorfrack     = Labware.Type("Sampletubes Eppendorfrack",           16, maxVol=  1500) # = "Tube Eppendorf 16 Pos"
-TubeRack15mL2x6   = Labware.Type("Tube Falcon 15ml 12 Pos",          2,  6, maxVol= 15000) # ?? Tube 16 mm 10 Pos
-MagSeparatPlt8x9  = Labware.Type("96 Well Separation Plate",         8,  9, maxVol=    00) # Magnetic separation 8x9
-Filterplate       = Labware.Type("FilterplateaufElutionplate flach", 8, 12, maxVol=  2000) # Te-VacS
-MP96MachereyNagel = Labware.Type("96 Well Macherey-Nagel Plate",     8, 12, maxVol=  2000) # Te-VacS
-MP96MNflach       = Labware.Type("96 Well 8er Macherey-Nagel flach", 8, 12, maxVol=  2000) # Te-VacS
+AntiCOntamination = CuvetteType("AntiCOntamination",                     8, max_vol=    00) # fake, to fix LiHa position
+Eppendorfrack     = Labware.Type("Sampletubes Eppendorfrack",           16, max_vol=  1500) # = "Tube Eppendorf 16 Pos"
+TubeRack15mL2x6   = Labware.Type("Tube Falcon 15ml 12 Pos",          2,  6, max_vol= 15000) # ?? Tube 16 mm 10 Pos
+MagSeparatPlt8x9  = Labware.Type("96 Well Separation Plate",         8,  9, max_vol=    00) # Magnetic separation 8x9
+Filterplate       = Labware.Type("FilterplateaufElutionplate flach", 8, 12, max_vol=  2000) # Te-VacS
+MP96MachereyNagel = Labware.Type("96 Well Macherey-Nagel Plate",     8, 12, max_vol=  2000) # Te-VacS
+MP96MNflach       = Labware.Type("96 Well 8er Macherey-Nagel flach", 8, 12, max_vol=  2000) # Te-VacS
 # MP_3Pos              = Carrier.Type("MP 3Pos"                        , width=4, n_sites=3 , idx=12 )
 # ContaminationFlyway  = Carrier.Type("AntiCOntaminationFlyway"        , width=1, n_sites=40, idx=107)
 # EppCarr16po          = Carrier.Type("Tube Eppendorf 16 Pos"          , width=1, n_sites=16, idx=43 )
 # Washs2GridTroughDiTi = Carrier.Type("Washstation 2Grid Trough DiTi"  , width=2, n_sites=8 , idx=104)
 
 
-MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, maxVol= 200)
-MP96deepwell = Labware.Type("96 Well DeepWell square", 8, 12, maxVol=2000)    # todo define in Evoware !!!
-PCR96well    = Labware.Type("96 Well PCR Plate"      , 8, 12, maxVol= 100)
-BioRad96well = Labware.Type("96 Well BioRad"         , 8, 12, maxVol= 100)
+MP96well     = Labware.Type("96 Well Microplate"     , 8, 12, max_vol= 200)
+MP96deepwell = Labware.Type("96 Well DeepWell square", 8, 12, max_vol=2000)    # todo define in Evoware !!!
+PCR96well    = Labware.Type("96 Well PCR Plate"      , 8, 12, max_vol= 100)
+BioRad96well = Labware.Type("96 Well BioRad"         , 8, 12, max_vol= 100)
 
-Box9x9       = Labware.Type("Box 9x9"                , 9,  9, maxVol= 2000)
-Box10x10     = Labware.Type("Box 10x10"              ,10, 10, maxVol= 2000)
+Box9x9       = Labware.Type("Box 9x9"                , 9,  9, max_vol= 2000)
+Box10x10     = Labware.Type("Box 10x10"              ,10, 10, max_vol= 2000)
 
 
 def getLabware(labw_type, label, worktable=None):

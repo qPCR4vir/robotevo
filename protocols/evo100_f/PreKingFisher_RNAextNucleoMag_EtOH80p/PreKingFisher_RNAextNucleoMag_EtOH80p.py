@@ -124,7 +124,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         all_samples = range(self.num_of_samples)
         maxTips     = min  (self.n_tips, self.num_of_samples)
-        maxMask     = robot.tipsMask[maxTips]
+        maxMask     = robot.mask_tips[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
@@ -252,7 +252,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                    volume               = SampleVolume,
                                    using_liquid_class   = (SampleLiqClass, "Serum Disp postMix3"),
                                    optimize_from= False,
-                                   optimizeTo           = True,           # todo Really ??
+                                   optimize_to= True,           # todo Really ??
                                    num_samples          = num_of_samples)
 
                 instructions.wash_tips(wasteVol=4, FastWash=True).exec()

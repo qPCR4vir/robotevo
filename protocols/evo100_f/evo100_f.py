@@ -172,7 +172,7 @@ class Evo100_FLI(Protocol):
 
         if nt > SampleCnt:                              # very few wells selected (less than tips)
             nt = SampleCnt
-        tm = robot.tipsMask[nt]                           # todo: count for 'broken' tips
+        tm = robot.mask_tips[nt]                           # todo: count for 'broken' tips
         nt = to_waste_labware.autoselect(maxTips=nt)
         mV = self.worktable.def_DiTi_type.maxVol
 
@@ -202,7 +202,7 @@ class Evo100_FLI(Protocol):
                 curSample = NumSamples - SampleCnt
                 if nt > SampleCnt:                          # only a few samples left
                     nt = SampleCnt                          # don't use all tips
-                    tm = robot.tipsMask[nt]
+                    tm = robot.mask_tips[nt]
                     Asp.tipMask = tm
                     Dst.tipMask = tm
 

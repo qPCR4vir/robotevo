@@ -142,7 +142,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         all_samples = range(num_of_samples)
         maxTips     = min  (self.n_tips, num_of_samples)
-        maxMask     = robot.tipsMask[maxTips]
+        maxMask     = robot.mask_tips[maxTips]
         par         = Lysis.parallelOrder(self.n_tips, all_samples)
 
                                                         # Define the Reagents in each labware (Cuvette, eppys, etc.)
@@ -262,7 +262,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                volume               = SampleVolume if self.add_samples else InitLysisVol,
                                using_liquid_class   = (SampleLiqClass, "Serum Disp postMix3"),
                                optimize_from        = False,
-                               optimizeTo           = True,
+                               optimize_to= True,
                                num_samples          = num_of_samples)
             instructions.wash_tips(wasteVol=4, FastWash=True).exec()
 
@@ -329,7 +329,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 self.transfer(   from_labware_region=   TeMag.selectOnly(all_samples),
                                  to_labware_region=     Eluat.selectOnly(all_samples),
                                  volume=                ElutionBufferVolume,
-                                 optimizeTo=            False,
+                                 optimize_to=            False,
                                  using_liquid_class=(ElutionBuffer.def_liq_class, ElutionBuffer.def_liq_class))
 
         self.drop_tips()

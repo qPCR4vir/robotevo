@@ -104,7 +104,7 @@ class Tutorial_LL(Evo200_FLI):
             m_tips = arm.n_tips
 
             n_tips = min(n, m_tips)                                                 # distribute mix1 --------------
-            self.pick_up_tip(TIP_MASK = robot.tipsMask[n_tips],                       # using 200 uL tips
+            self.pick_up_tip(TIP_MASK = robot.mask_tips[n_tips],                       # using 200 uL tips
                              tip_type = "DiTi 200 ul",
                              arm      = arm)
 
@@ -122,7 +122,7 @@ class Tutorial_LL(Evo200_FLI):
                     available_disp = dsp + bool(rst)
 
                 for tip in range(n_tips):
-                    self.aspirate(arm=arm, TIP_MASK=robot.tipMask[tip], volume=vol,
+                    self.aspirate(arm=arm, TIP_MASK=robot.mask_tip[tip], volume=vol,
                                   from_wells=mix1, liq_class=self.Water_free)
 
                 while available_disp:
@@ -130,7 +130,7 @@ class Tutorial_LL(Evo200_FLI):
                     cur_sample = n - dilution_left
                     sel = dilution_wells[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
-                                  TIP_MASK = robot.tipsMask[n_tips],
+                                  TIP_MASK = robot.mask_tips[n_tips],
                                   volume   = v,
                                   to_wells = sel,
                                   liq_class=self.Water_free)
@@ -140,7 +140,7 @@ class Tutorial_LL(Evo200_FLI):
             self.drop_tip()
 
             n_tips = min(n, m_tips, len(diluent_wells))                                    # distribute diluent ----------
-            self.pick_up_tip(TIP_MASK = robot.tipsMask[n_tips],                        # using 1000 uL tips
+            self.pick_up_tip(TIP_MASK = robot.mask_tips[n_tips],                        # using 1000 uL tips
                              tip_type = "DiTi 1000ul",
                              arm      = arm)
 
@@ -157,7 +157,7 @@ class Tutorial_LL(Evo200_FLI):
                     vol = [vd * (dsp + 1)] * rst + [vd * dsp] * (n_tips - rst)
                     available_disp = dsp + bool(rst)
 
-                self.aspirate(arm=arm, TIP_MASK=robot.tipsMask[n_tips], volume=vol,
+                self.aspirate(arm=arm, TIP_MASK=robot.mask_tips[n_tips], volume=vol,
                               from_wells=diluent_wells, liq_class=self.Water_free)
 
                 while available_disp:
@@ -165,7 +165,7 @@ class Tutorial_LL(Evo200_FLI):
                     cur_sample = n - dilution_left
                     sel = dilution_wells[cur_sample: cur_sample + n_tips]
                     self.dispense(arm      = arm,
-                                  TIP_MASK = robot.tipsMask[n_tips],
+                                  TIP_MASK = robot.mask_tips[n_tips],
                                   volume   = vd,
                                   to_wells = sel,
                                   liq_class=self.Water_free)

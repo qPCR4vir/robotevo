@@ -226,7 +226,7 @@ class Pipette(Instruction):
 
     def validate_arg(self):
         """
-        Evoware visual script generator enforce a compatibility between the arguments tipMask and well selection.
+        Evoware visual script generator enforce a compatibility between the arguments mask_tip and well selection.
         If they are not compatible the robot crash.
         :return:
 
@@ -235,7 +235,7 @@ class Pipette(Instruction):
 
         self.arm = self.robot.cur_arm(self.arm)
 
-        max_tip_mask = robot.tipsMask[self.arm.n_tips]
+        max_tip_mask = robot.mask_tips[self.arm.n_tips]
         if self.tipMask is None:
             self.tipMask = max_tip_mask
         assert 0 <= self.tipMask <= max_tip_mask, "Invalid tip mask"
@@ -356,7 +356,7 @@ class DITIs(Instruction):
         Instruction.__init__(self, name)
         self.arm     = self.robot.cur_arm(arm)
         self.options = options
-        self.tipMask = tipMask if tipMask is not None else robot.tipsMask[self.robot.cur_arm().n_tips]
+        self.tipMask = tipMask if tipMask is not None else robot.mask_tips[self.robot.cur_arm().n_tips]
 
     def validate_arg(self):
         Instruction.validate_arg(self)
