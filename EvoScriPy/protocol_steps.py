@@ -30,6 +30,9 @@ samples, reactions, etc., almost directly as it states in the steps of your "han
   - :py:meth:`~Protocol.check_reagents_levels`
   - :py:meth:`~Protocol.check_reagent_level`
   - :py:meth:`~Protocol.show_check_list`
+  - :py:meth:`~Protocol.comment`
+  - :py:meth:`~Protocol.user_prompt`
+
 
 Advanced functions.
 ^^^^^^^^^^^^^^^^^^
@@ -63,6 +66,7 @@ Related to initialization:
 
   - :py:meth:`~Executable.def_versions`
   - :py:meth:`~Executable.set_paths`
+  - :py:meth:`~Executable.init_EvoMode`
   - :py:meth:`~Executable.set_defaults`
   - :py:meth:`~Protocol.liquid_classes`
   - :py:meth:`~Protocol.carrier_types`
@@ -86,7 +90,14 @@ Related to state:
   - :py:meth:`~Protocol.get_liquid_class`
   - :py:meth:`~Protocol.get_carrier_type`
   - :py:meth:`~Protocol.get_labware_type`
-
+  - :py:meth:`~Protocol.set_EvoMode`
+  - :py:meth:`~Protocol.set_dropTips`
+  - :py:meth:`~Protocol.set_allow_air`
+  - :py:meth:`~Protocol.reuseTips`
+  - :py:meth:`~Protocol.reuse_tips_and_drop`
+  - :py:meth:`~Protocol.preserveTips`
+  - :py:meth:`~Protocol.preserveingTips`
+  - :py:meth:`~Protocol.usePreservedTips`
 
 
 Other intermediate level functions:
@@ -97,7 +108,7 @@ Other intermediate level functions:
   - :py:meth:`~Protocol._dispensemultiwells`
   - :py:meth:`~Protocol._aspirate_multi_tips`
   - :py:meth:`~Protocol._multidispense_in_replicas`
-
+  - :py:meth:`~Protocol.comments`
 
 -----------------------------------------
 
@@ -477,11 +488,22 @@ class Protocol (Executable):
                  using_liquid_class : (str, tuple)  = None,
                  optimize_from      : bool          = True,
                  optimize_to        : bool          = True,
-                 num_samples        : int           = None) -> object:
+                 num_samples        : int           = None) -> (labware.Labware, labware.Labware):
         """
+
+        :param from_labware_region  : Labware in which the source wells are located and possibly selected
+        :param to_labware_region    : Labware in which the target wells are located and possibly selected
+        :param volume               : if not, volume is set from the default of the source reagent
+        :param using_liquid_class   : LC or tuple (LC to aspirate, LC to dispense)
+        :param optimize_from         : bool - use from_labware_region.parallelOrder(...) to aspirate
+        :param optimize_to           : bool - use to_labware_region.parallelOrder(...) to aspirate
+        :param num_samples           : Prioritized. If used reset the well selection
+        :return: a tuple of the labwares used as origin and target with the involved wells selected.
+
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
         the same number of wells in the target labware using the current LiHa arm with maximum number of tips
-        (of type: `self.worktable.def_DiTi_type`, which can be set `with self.tips(tip_type = myTipsRackType)`).
+        (of type: `self.worktable.def_DiTi_type`,
+        which can be set 'with self.:py:meth:`~Protocol.tips` (tip_type = myTipsRackType)').
         # todo: count for 'broken' tips
 
         The number of "samples" may be explicitly indicated in which case will be assumed to begin from the
@@ -510,14 +532,6 @@ class Protocol (Executable):
         Warning: modify the selection of wells in both source and target labware to reflect the wells actually used
 
 
-        :param from_labware_region  : Labware in which the source wells are located and possibly selected
-        :param to_labware_region    : Labware in which the target wells are located and possibly selected
-        :param volume               : if not, volume is set from the default of the source reagent
-        :param using_liquid_class   : LC or tuple (LC to aspirate, LC to dispense)
-        :param optimize_from         : bool - use from_labware_region.parallelOrder(...) to aspirate
-        :param optimize_to           : bool - use to_labware_region.parallelOrder(...) to aspirate
-        :param num_samples           : Prioritized. If used reset the well selection
-        :return:
         """
         assert isinstance(from_labware_region, labware.Labware), 'Labware expected in from_labware_region to transfer'
         assert isinstance(to_labware_region,   labware.Labware), 'Labware expected in to_labware_region to transfer'
@@ -1243,7 +1257,7 @@ class Protocol (Executable):
         :param arm:      Uses the default Arm (pipette) if None
         :param AirgapSpeed:  int 1-1000. Speed for the airgap in μl/s
         :param AirgapVolume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
-        :return:
+
         """
 
         # not needed here, just to illustrate how is processed
