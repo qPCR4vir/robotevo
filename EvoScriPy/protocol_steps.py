@@ -26,20 +26,16 @@ samples, reactions, etc., almost directly as it states in the steps of your "han
   - :py:meth:`~Protocol.make_pre_mix`
   - :py:meth:`~Protocol.get_tips`
   - :py:meth:`~Protocol.drop_tips`
-  - :py:meth:`~Protocol.go_first_pos`
+  - :py:meth:`~Protocol.set_first_tip`
   - :py:meth:`~Protocol.check_reagents_levels`
   - :py:meth:`~Protocol.check_reagent_level`
+  - :py:meth:`~Protocol.show_check_list`
 
 Advanced functions.
 ^^^^^^^^^^^^^^^^^^
 
-Are you doing some advanced protocol development that cannot be efficiently or clearly expressed using the previous High level functions? Then, you may use the following functions.
-Keep in mind that it is now your responsibility to know what robot/protocol "state" are ignored by these new functions.
-For example, before `aspirate` you will need to mount "by yourself" the tips in the correct position of the used arm,
-because `aspirate` ignores the higher level with :py:meth:`~Protocol.tips`.
-But don't worry, **RobotEvo** still keeps track of the "internal" robot state and will throw errors informing you about most logical mistakes
-(like in the previous example forgetting to mount the tips).
-In some cases these functions may be used to construct new high lever functions.
+Are you doing some advanced protocol development that cannot be efficiently or clearly expressed
+using the previous High level functions? Then, you may use the following functions.
 
 Atomic functions
 -----------------------------------------------------------
@@ -47,15 +43,57 @@ Atomic functions
 These are functions aimed to isolate what a physical robot would make at once: pick some tips, aspirate some liquid, etc.
 They are simple to understand, but are harder to use in "every day" protocol programming.
 They may be a great tool to set up your robot and to get an initial familiarization with all the system.
+Keep in mind that it is now your responsibility to know what robot/protocol "state" are ignored by these new functions.
+For example, before `aspirate` you will need to mount "by yourself" the tips in the correct position of the used arm,
+because `aspirate` ignores the higher level with :py:meth:`~Protocol.tips`.
+But don't worry, **RobotEvo** still keeps track of the "internal" robot state and will throw errors informing you about most logical mistakes
+(like in the previous example forgetting to mount the tips).
+In some cases these functions may be used to construct new high lever functions.
 
   - :py:meth:`~Protocol.pick_up_tip`
   - :py:meth:`~Protocol.drop_tip`
   - :py:meth:`~Protocol.aspirate`
   - :py:meth:`~Protocol.dispense`
 
-Other low level functions:
+
+Protocol-structure or state functions
+-----------------------------------------------------------
+
+Related to initialization:
+
+  - :py:meth:`~Executable.def_versions`
+  - :py:meth:`~Executable.set_paths`
+  - :py:meth:`~Executable.set_defaults`
+  - :py:meth:`~Protocol.liquid_classes`
+  - :py:meth:`~Protocol.carrier_types`
+  - :py:meth:`~Protocol.allow_labware`
+  - :py:meth:`~Protocol.labware_types`
+
+
+Related to execution order:
+
+  - :py:meth:`~Executable.use_version`
+  - :py:meth:`~Executable.initialize`
+  - :py:meth:`~Executable.run`
+  - :py:meth:`~Executable.pre_check`
+  - :py:meth:`~Executable.check_list`
+  - :py:meth:`~Executable.post_check`
+  - :py:meth:`~Executable.done`
+
+
+Related to state:
+
+  - :py:meth:`~Protocol.get_liquid_class`
+  - :py:meth:`~Protocol.get_carrier_type`
+  - :py:meth:`~Protocol.get_labware_type`
+
+
+
+Other intermediate level functions:
 --------------------------
 
+  - :py:meth:`~Protocol.aspirate_one`
+  - :py:meth:`~Protocol.dispense_one`
   - :py:meth:`~Protocol._dispensemultiwells`
   - :py:meth:`~Protocol._aspirate_multi_tips`
   - :py:meth:`~Protocol._multidispense_in_replicas`
@@ -98,8 +136,11 @@ class Executable:
 
     def def_versions(self):
         """
-        Define a 'dictionary' of the versions for this Executable, with a name as key and a method as value,
+        Override this  function to define a 'dictionary' of the versions for your Executable,
+        with a name as key and a method as value,
         which will initialize the Executable to effectively execute that version.
+        You don't need to call this function. It will be used internally during initialization of your
+        derived class.
         """
         self.versions = {"none": not_implemented}
 
@@ -160,7 +201,6 @@ class Executable:
         Overwrite this function and dont call this basic function. This basic function is provided only as an example
         of "boiled-plate" code
 
-        :return:
         """
 
         self.initialize()
@@ -606,10 +646,11 @@ class Protocol (Executable):
         v[tip] = vol
         instructions.dispense(robot.mask_tip[tip], reagent.def_liq_class, v, reagent.labware).exec()
 
-    def mix(self,  in_labware_region  : labware.Labware,
-                   using_liquid_class : str        = None,
-                   volume             : float      = None,
-                   optimize           : bool       = True):
+    def mix(self,
+            in_labware_region : labware.Labware,
+            using_liquid_class: str        = None,
+            volume            : float      = None,
+            optimize          : bool       = True):
 
         """
         Mix the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
@@ -688,12 +729,12 @@ class Protocol (Executable):
         """
         Select all possible replica of the given reagent and mix using the given % of the current vol in EACH well
         or the max vol for the tip. Use the given "liquid class" or the reagent default.
+
         :param reagent:
         :param liq_class:
         :param cycles:
         :param maxTips:
         :param v_perc:  % of the current vol in EACH well to mix
-        :return:
         """
         assert isinstance(reagent, Reagent)
         liq_class = liq_class or reagent.def_liq_class
@@ -712,8 +753,8 @@ class Protocol (Executable):
                          cycles      =cycles).exec()
 
     def make_pre_mix(self,
-                     pre_mix      : preMix,
-                     num_samples  : int = None,
+                     pre_mix: preMix,
+                     num_samples: int = None,
                      force_replies: bool = False):
         """
         A preMix is just that: a premix of reagents (aka - components)
@@ -759,7 +800,7 @@ class Protocol (Executable):
                     v_per_sample = reagent_component.volpersample * pre_mix.excess       # vol we need for each sample
                     reagent_vol = v_per_sample * num_samples                 # the total vol we need of this reagent component
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
-                                .format( idx = ridx + 1,
+                                 .format(idx = ridx + 1,
                                          v   = reagent_vol,
                                          g   = labw.location.grid,
                                          st  = labw.location.site + 1,
@@ -777,10 +818,15 @@ class Protocol (Executable):
                     # but also if there is not sufficient reacgent in the current component replica
                     current_comp_repl = 0
                     while reagent_vol > 0:
-                        while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
-                            current_comp_repl +=1
-                        d_v = min (reagent_vol, max_vol, reagent_component.Replicas[current_comp_repl].vol)
-                        self.aspirate_one(tip, reagent_component, d_v, offset=reagent_component.Replicas[current_comp_repl].offset)
+                        while reagent_component.Replicas[current_comp_repl].vol < 1:      # todo define min vol
+                            current_comp_repl += 1
+                        d_v = min(reagent_vol, max_vol, reagent_component.Replicas[current_comp_repl].vol)
+
+                        self.aspirate_one(tip,
+                                          reagent_component,
+                                          d_v,
+                                          offset=reagent_component.Replicas[current_comp_repl].offset)
+
                         self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
                         reagent_vol -= d_v
                 self.mix_reagent(pre_mix, maxTips=ctips)
@@ -788,13 +834,14 @@ class Protocol (Executable):
     def get_tips(self,
                  TIP_MASK         = None,
                  tip_type         = None,
-                 selected_samples = None):  # todo TIP_MASK=None
+                 selected_samples = None):
         """
         It will decide to get new tips or to pick back the preserved tips for the selected samples
+
         :param TIP_MASK:
         :param tip_type:
         :param selected_samples:
-        :return:
+        :return: the TIP_MASK used
         """
         if self.robot.cur_arm().tips_type == self.robot.cur_arm().Fixed:          # todo call protocol wash ??
             return TIP_MASK
@@ -808,28 +855,29 @@ class Protocol (Executable):
             n_tips = self.robot.cur_arm().n_tips
 
             for tip_rack in where:
-                tipsMask = 0
+                instr_mask = 0
                 tips_in_rack = len(tip_rack.selected())
                 for idx in range(n_tips):
-                    if not tips_in_rack: break
+                    if not tips_in_rack:
+                        break
                     tip = (1 << idx)
                     if TIP_MASK & tip:
-                        tipsMask |= tip
+                        instr_mask |= tip
                         TIP_MASK ^= tip
                         tips_in_rack -= 1
-                instructions.pickUp_DITIs2(tipsMask, tip_rack).exec()
+                instructions.pickUp_DITIs2(instr_mask, tip_rack).exec()
             assert tips_in_rack == 0
         else:
-            tip_type= tip_type or self.worktable.def_DiTi_type
+            tip_type = tip_type or self.worktable.def_DiTi_type
             I = instructions.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm)
             I.exec()
-        return mask                                    # todo REVISE !!   I.mask_tip
+        return mask                                    # todo REVISE !!   I.mask_tip?
 
     def drop_tips(self, TIP_MASK=None):
         """
         It will decide to really drop the tips or to put it back in some DiTi rack
+
         :param TIP_MASK:
-        :return:
         """
         if self.robot.preservetips:
             where = self.robot.where_preserve_tips(TIP_MASK)
@@ -882,11 +930,10 @@ class Protocol (Executable):
 
     # App-Structure API ---------------------------------------------------------------------------------------
     def run(self):
-        '''
+        """
         Here we have accesses to the "internal robot" self.iRobot, with in turn have access to the used Work Table,
         self.iRobot.worktable from where we can obtain labwares with get_labware()
-        :return:
-        '''
+        """
         self.set_EvoMode()
 
         self.initialize()
@@ -922,6 +969,7 @@ class Protocol (Executable):
         Select all possible replica of the given reagent and detect the liquid level,
         contrasting it with the current (expected) volumen in EACH well.
         Use the given liquid class or the reagent default.
+
         :param reagent:
         :param LiqClass:
 
