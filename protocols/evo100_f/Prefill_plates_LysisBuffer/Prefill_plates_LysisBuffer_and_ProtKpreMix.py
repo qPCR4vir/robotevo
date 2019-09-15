@@ -178,7 +178,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
 
             if not (self.preMix_from_Cuvette or self.preMix_from_LysBuf_pK_Cuvette):
                 with self.tips(tips_mask=maxMask, reuse=True, drop=False):
-                    self.makePreMix(pK_cRNA_MS2, num_samples=self.num_plates * num_of_samples)
+                    self.make_pre_mix(pK_cRNA_MS2, num_samples=self.num_plates * num_of_samples)
 
 
             self.user_prompt("Put the plates for LysisBufferReact")

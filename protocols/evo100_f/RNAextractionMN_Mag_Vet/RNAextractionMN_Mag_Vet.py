@@ -252,7 +252,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         if self.add_preMix:                                                               # add  ProtK+cRNA+MS2 mix
             with group("Add pre mix Prot K."), self.tips(tips_mask=maxMask, reuse=True, drop=False):
-                self.makePreMix(pK_cRNA_MS2)
+                self.make_pre_mix(pK_cRNA_MS2)
                 self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Lysis.selectOnly(all_samples))
 
         if self.do_extraction:                                                            # add samples

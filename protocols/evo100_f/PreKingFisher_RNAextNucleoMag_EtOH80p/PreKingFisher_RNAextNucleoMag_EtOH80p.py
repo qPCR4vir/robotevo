@@ -235,7 +235,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             if self.add_preMix:                                          # add  ProtK+cRNA+MS2 mix
 
                 with self.tips(tips_mask=maxMask, reuse=True, drop=False, drop_last=True):
-                    self.makePreMix(pK_cRNA_MS2)
+                    self.make_pre_mix(pK_cRNA_MS2)
                     self.distribute  (reagent=pK_cRNA_MS2, to_labware_region= Plate_lysis.selectOnly(all_samples))
 
             if self.add_VL:                                             # add  LysisBuffer

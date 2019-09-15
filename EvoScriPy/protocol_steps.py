@@ -23,7 +23,7 @@ samples, reactions, etc., almost directly as it states in the steps of your "han
   - :py:meth:`~Protocol.transfer`
   - :py:meth:`~Protocol.mix`
   - :py:meth:`~Protocol.mix_reagent`
-  - :py:meth:`~Protocol.makePreMix`
+  - :py:meth:`~Protocol.make_pre_mix`
   - :py:meth:`~Protocol.get_tips`
   - :py:meth:`~Protocol.drop_tips`
   - :py:meth:`~Protocol.go_first_pos`
@@ -630,7 +630,7 @@ class Protocol (Executable):
         if not ori_sel:
             ori_sel = range(self.num_of_samples)
         if optimize:
-            ori_sel = in_labware_region.parallelOrder( nt, ori_sel)
+            ori_sel = in_labware_region.parallelOrder(nt, ori_sel)
         num_samples = len(ori_sel)
         sample_cnt = num_samples
         if nt > sample_cnt:
@@ -711,19 +711,20 @@ class Protocol (Executable):
                          labware     =reagent.labware,
                          cycles      =cycles).exec()
 
-    def makePreMix(self,
-                   pre_mix       : preMix,
-                   num_samples   : int       = None,
-                   force_replies : bool      = False):
+    def make_pre_mix(self,
+                     pre_mix      : preMix,
+                     num_samples  : int = None,
+                     force_replies: bool = False):
         """
         A preMix is just that: a premix of reagents (aka - components)
         which have been already defined to add some vol per sample.
         Uses one new tip per component.
         It calculates and checks self the minimum and maximum number of replica of the resulting preMix
-        :param pre_mix    : what to make, a predefined preMix
-        :param num_samples:
-        :param force_replies: use all the preMix predefined replicas
-        :return:
+
+        :param preMix pre_mix: what to make, a predefined preMix
+        :param int num_samples:
+        :param bool force_replies: use all the preMix predefined replicas
+
         """
 
         assert isinstance(pre_mix, preMix)
@@ -755,33 +756,33 @@ class Protocol (Executable):
                 ctips = nt
                 for ridx, reagent_component in enumerate(pre_mix.components):       # iterate reagent components
                     labw = reagent_component.labware
-                    sVol = reagent_component.volpersample * pre_mix.excess       # vol we need for each sample
-                    rVol = sVol * num_samples                        # the total vol we need of this reagent component
+                    v_per_sample = reagent_component.volpersample * pre_mix.excess       # vol we need for each sample
+                    reagent_vol = v_per_sample * num_samples                 # the total vol we need of this reagent component
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
                                 .format( idx = ridx + 1,
-                                         v   = rVol,
+                                         v   = reagent_vol,
                                          g   = labw.location.grid,
                                          st  = labw.location.site + 1,
-                                         w   = str([str(well) for well in reagent_component.Replicas])   )
+                                         w   = str([str(well) for well in reagent_component.Replicas]))
                     instructions.comment(msg).exec()
                     tip += 1  # use the next tip
                     if tip >= nt:
-                        ctips = min(nt, ncomp - ridx) # how many tips to use for the next gruop
+                        ctips = min(nt, ncomp - ridx)                    # how many tips to use for the next gruop
                         tips_type = self.robot.cur_arm().Tips[0].type    # only the 0 ??
                         self.drop_tips(robot.mask_tips[ctips])
                         self.get_tips(robot.mask_tips[ctips], tips_type)
                         tip = 0
-                    mV = self.robot.cur_arm().Tips[tip].type.max_vol
+                    max_vol = self.robot.cur_arm().Tips[tip].type.max_vol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
                     # but also if there is not sufficient reacgent in the current component replica
                     current_comp_repl = 0
-                    while rVol > 0:
+                    while reagent_vol > 0:
                         while (reagent_component.Replicas[current_comp_repl].vol < 1):      # todo define sinevoll min vol
                             current_comp_repl +=1
-                        dV = min (rVol, mV, reagent_component.Replicas[current_comp_repl].vol)
-                        self.aspirate_one(tip, reagent_component, dV, offset=reagent_component.Replicas[current_comp_repl].offset)
-                        self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * dV for sp in samples_per_replicas])
-                        rVol -= dV
+                        d_v = min (reagent_vol, max_vol, reagent_component.Replicas[current_comp_repl].vol)
+                        self.aspirate_one(tip, reagent_component, d_v, offset=reagent_component.Replicas[current_comp_repl].offset)
+                        self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
+                        reagent_vol -= d_v
                 self.mix_reagent(pre_mix, maxTips=ctips)
 
     def get_tips(self,
@@ -1173,7 +1174,7 @@ class Protocol (Executable):
         instructions.dispense(om, liq_class, vol, labware).exec()          # will call robot.cur_arm().dispensed(vol, om)  ??
 
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
-            if isinstance(what, preMix): self.makePreMix(what, NumSamples)
+            if isinstance(what, preMix): self.make_pre_mix(what, NumSamples)
 
     # Atomic API ----------------------------------------------------------------------------------------
     def pick_up_tip(self, TIP_MASK    : int        = None,
