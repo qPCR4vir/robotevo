@@ -491,13 +491,13 @@ class Protocol (Executable):
                  num_samples        : int           = None) -> (labware.Labware, labware.Labware):
         """
 
-        :param from_labware_region  : Labware in which the source wells are located and possibly selected
-        :param to_labware_region    : Labware in which the target wells are located and possibly selected
-        :param volume               : if not, volume is set from the default of the source reagent
-        :param using_liquid_class   : LC or tuple (LC to aspirate, LC to dispense)
-        :param optimize_from         : bool - use from_labware_region.parallelOrder(...) to aspirate
-        :param optimize_to           : bool - use to_labware_region.parallelOrder(...) to aspirate
-        :param num_samples           : Prioritized. If used reset the well selection
+        :param Labware from_labware_region:   Labware in which the source wells are located and possibly selected
+        :param Labware to_labware_region:     Labware in which the target wells are located and possibly selected
+        :param (int, float) volume:   if not, volume is set from the default of the source reagent
+        :param using_liquid_class:    LC or tuple (LC to aspirate, LC to dispense)
+        :param bool optimize_from:    use from_labware_region.parallelOrder(...) to aspirate
+        :param bool optimize_to:      use to_labware_region.parallelOrder(...) to aspirate
+        :param int num_samples:       Prioritized. If used reset the well selection
         :return: a tuple of the labwares used as origin and target with the involved wells selected.
 
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
