@@ -493,7 +493,7 @@ class Protocol (Executable):
 
         :param Labware from_labware_region:   Labware in which the source wells are located and possibly selected
         :param Labware to_labware_region:     Labware in which the target wells are located and possibly selected
-        :param (int, float) volume:   if not, volume is set from the default of the source reagent
+        :param int or float volume:   if not, volume is set from the default of the source reagent
         :param using_liquid_class:    LC or tuple (LC to aspirate, LC to dispense)
         :param bool optimize_from:    use from_labware_region.parallelOrder(...) to aspirate
         :param bool optimize_to:      use to_labware_region.parallelOrder(...) to aspirate
