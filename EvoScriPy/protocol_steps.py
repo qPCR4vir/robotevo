@@ -495,15 +495,15 @@ class Protocol (Executable):
         :param Labware to_labware_region:     Labware in which the target wells are located and possibly selected
         :param float volume:   if not, volume is set from the default of the source reagent
         :param using_liquid_class:    LC or tuple (LC to aspirate, LC to dispense)
-        :param bool optimize_from:    use from_labware_region.parallelOrder(...) to aspirate
-        :param bool optimize_to:      use to_labware_region.parallelOrder(...) to aspirate
+        :param bool optimize_from:    use from_labware_region.parallelOrder() to aspirate?
+        :param bool optimize_to:      use to_labware_region.parallelOrder() to aspirate?
         :param int num_samples:       Prioritized. If used reset the well selection
         :return: a tuple of the labwares used as origin and target with the involved wells selected.
 
         To transfer reagents (typically samples or intermediary reactions) from some wells in the source labware to
         the same number of wells in the target labware using the current LiHa arm with maximum number of tips
         (of type: `self.worktable.def_DiTi_type`,
-        which can be set 'with self.:py:meth:`~Protocol.tips` (tip_type = myTipsRackType)').
+        which can be set 'with self. :py:meth:`~Protocol.tips` (tip_type = myTipsRackType)').
         # todo: count for 'broken' tips
 
         The number of "samples" may be explicitly indicated in which case will be assumed to begin from the
