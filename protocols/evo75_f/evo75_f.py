@@ -24,7 +24,7 @@ class Evo75_FLI(Protocol):
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
-                 firstTip                    = None,
+                 first_tip                   = None,
                  run_name                    = None):
 
         Protocol.__init__(self,
@@ -33,7 +33,7 @@ class Evo75_FLI(Protocol):
                           num_of_samples              = num_of_samples,
                           worktable_template_filename = worktable_template_filename,
                           output_filename             = output_filename,
-                          firstTip                    = firstTip,
+                          first_tip= first_tip,
                           run_name                    = run_name)
 
     def set_paths(self):
@@ -46,10 +46,10 @@ def liquid_classes(self):
     if Evo75_FLI._liquid_classes is None:
         Evo75_FLI._liquid_classes = labware.LiquidClasses(self.root_directory)
 
-            # the liquid classes are static members of this robot-specific protocol class
-            # (only one copy shared for all objects of this class).
-            # But just for convenience of typing we want protocol objects to have
-            # a self. object member which reference that liquid class.
+        # the liquid classes are static members of this robot-specific protocol class
+        # (only one copy shared for all objects of this class).
+        # But just for convenience of typing we want protocol objects to have
+        # a self. object member which reference that liquid class.
 
         all = Evo75_FLI._liquid_classes.all
 

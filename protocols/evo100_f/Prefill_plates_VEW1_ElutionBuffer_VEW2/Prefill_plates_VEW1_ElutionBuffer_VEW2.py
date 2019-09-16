@@ -21,18 +21,18 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
     min_s, max_s = 1, 96
 
     def def_versions(self):
-        self.versions = {'Standard': self.V_Standard  }
+        self.versions = {'Standard': self.V_Standard}
 
     def V_Standard(self):
         pass
 
     def __init__(self,
-                 GUI                            = None,
-                 num_of_samples       : int       = None,
-                 worktable_template_filename    = None,
-                 output_filename                = None,
-                 firstTip                       = None,
-                 run_name: str                  = ""):
+                 GUI                        = None,
+                 num_of_samples: int        = None,
+                 worktable_template_filename= None,
+                 output_filename            = None,
+                 first_tip                  = None,
+                 run_name: str              = ""):
 
         this = Path(__file__).parent
 
@@ -44,7 +44,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                                                       this / 'Prefill_VEW1_ElutB_and_VEW2.ewt',
                             output_filename         = output_filename or
                                                       this / 'scripts' / 'Prefill_plates_VEW1_ElutionBuffer_VEW2',
-                            firstTip                = firstTip,
+                            first_tip= first_tip,
                             run_name                = run_name)
 
     def run(self):
@@ -57,7 +57,7 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
                      .format(str(num_of_samples)))
 
 
-                                                            # Get Labwares (Cuvette, eppys, etc.) from the work table
+                                                        # Get Labwares (Cuvette, eppys, etc.) from the work table
 
         ElutBuf     = wt.get_labware(label="1-VEL-ElutionBuffer")
 
@@ -70,24 +70,23 @@ class Prefill_plates_VEW1_ElutionBuffer_VEW2(Evo100_FLI):
         Plate_Eluat = wt.get_labware("Plate ElutB", labware.MP96well)  # Plate 12 x 8 ? MP96well !!
 
 
-                                                            # Set the initial position of the tips
+                                                         # Set the initial position of the tips
 
         self.set_first_tip()
 
-                                                            # Set volumen / sample
+                                                         # Set volumen / sample
 
         VEW1Volume          = 600.0
         VEW2Volume          = 600.0
         ElutionBufferVolume = 100.0
 
-                                                        # Liquid classes used for pippetting.
-                                                        # Others liquidClass names are defined in "protocol_steps.py"
+                                                       # Liquid classes used for pippetting.
+                                                       # Others liquidClass names are defined in "protocol_steps.py"
 
         # SampleLiqClass = "Serum Asp"  # = TissueHomLiqClass   # SerumLiqClass="Serum Asp preMix3"
 
-
         all_samples = range(num_of_samples)
-        maxTips     = min  (self.n_tips, num_of_samples)
+        maxTips     = min(self.n_tips, num_of_samples)
         maxMask     = robot.mask_tips[maxTips]
 
                                                         # Define the reactives in each labware (Cuvette, eppys, etc.)

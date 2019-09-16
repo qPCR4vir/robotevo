@@ -40,19 +40,19 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                  num_of_samples: int         = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
-                 firstTip                    = None,
+                 first_tip                   = None,
                  run_name: str               = ""):
 
         this = Path(__file__).parent
 
         Evo200_FLI.__init__(self,
-                        GUI                         = GUI,
-                        num_of_samples              = num_of_samples or Tutorial_HL_RoMa.max_s,
-                        worktable_template_filename = worktable_template_filename or
-                                                      this / 'tutorial_hl_RoMa_dilution.ewt',
-                        output_filename             = output_filename or this / 'scripts' / 'RoMa_HL',
-                        firstTip                    = firstTip,
-                        run_name                    = run_name)
+                            GUI                         = GUI,
+                            num_of_samples              = num_of_samples or Tutorial_HL_RoMa.max_s,
+                            worktable_template_filename = worktable_template_filename or
+                                                          this / 'tutorial_hl_RoMa_dilution.ewt',
+                            output_filename             = output_filename or this / 'scripts' / 'RoMa_HL',
+                            first_tip= first_tip,
+                            run_name                    = run_name)
 
     def run(self):
         self.initialize()           # if needed calls Executable.initialize() and set_EvoMode
@@ -75,13 +75,13 @@ class Tutorial_HL_RoMa(Evo200_FLI):
         v  = 50                                       # uL to be distribute
 
         buffer_A = Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
-                               labware      = plate_A,
-                               wells        = "A1",
-                               replicas     = self.num_of_samples,
-                               volpersample = v,
-                               initial_vol  = [100]*self.num_of_samples,
-                               def_liq_class  = self.Water_free,
-                               minimize_aliquots= False)
+                           labware      = plate_A,
+                           wells        = "A1",
+                           replicas     = self.num_of_samples,
+                           volpersample = v,
+                           initial_vol  = [100]*self.num_of_samples,
+                           def_liq_class  = self.Water_free,
+                           minimize_aliquots= False)
 
         self.check_list()                                          # Show the check_list   -------------------------
         self.user_prompt("Put the plate B in " + str(plate_B.location))
@@ -104,6 +104,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
                                 to_labware_region = buffer_B.select_all())
 
         self.done()
+
 
 if __name__ == "__main__":
     p = Tutorial_HL_RoMa(num_of_samples= 8,

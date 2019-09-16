@@ -62,7 +62,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                  num_of_samples       : int       = None,
                  worktable_template_filename    = None,
                  output_filename                = None,
-                 firstTip                       = None,
+                 first_tip                       = None,
                  run_name           : str       = ""):
 
         self.versions_defaults()
@@ -73,7 +73,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                             worktable_template_filename = worktable_template_filename or
                                                           this / 'avr_RNAext_MNVet_15TeMag.ewt',
                             output_filename         = output_filename or this / 'scripts' / 'RNAext_MNVet_TeMag',
-                            firstTip                = firstTip,
+                            first_tip= first_tip,
                             run_name                = run_name)
 
     def run(self):

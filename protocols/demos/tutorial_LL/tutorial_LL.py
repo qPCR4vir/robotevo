@@ -42,7 +42,7 @@ class Tutorial_LL(Evo200_FLI):
                  num_of_samples: int         = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
-                 firstTip                    = None,
+                 first_tip                   = None,
                  run_name: str               = ""):
 
         this = Path(__file__).parent
@@ -53,7 +53,7 @@ class Tutorial_LL(Evo200_FLI):
                             worktable_template_filename = worktable_template_filename or
                                                           this.parent / 'tutorial_HL' / 'tutorial_hl_dilution.ewt',
                             output_filename             = output_filename or this / 'scripts' / 'dilutions_LL',
-                            firstTip                    = firstTip,
+                            first_tip= first_tip,
                             run_name                    = run_name)
 
     def run(self):

@@ -57,7 +57,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                  num_of_samples       : int       = None,
                  worktable_template_filename    = None,
                  output_filename                = None,
-                 firstTip                       = None,
+                 first_tip                       = None,
                  run_name           : str       = ""):
 
         self.V_default()
@@ -70,7 +70,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                                       this / 'PreKingFisher_RNAextNucleoMag_EtOH80p.ewt',
                             output_filename         = output_filename or
                                                       this / 'scripts' / 'PreKingFisher_RNAextNucleoMag_EtOH80p',
-                            firstTip                = firstTip,
+                            first_tip= first_tip,
                             run_name                = run_name)
 
     def run(self):

@@ -24,7 +24,7 @@ class Evo100_FLI(Protocol):
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
-                 firstTip                    = None,
+                 first_tip                   = None,
                  run_name                    = None):
 
         Protocol.__init__(self,
@@ -33,7 +33,7 @@ class Evo100_FLI(Protocol):
                           num_of_samples              = num_of_samples or Evo100_FLI.max_s,
                           worktable_template_filename = worktable_template_filename,
                           output_filename             = output_filename,
-                          firstTip                    = firstTip,
+                          first_tip= first_tip,
                           run_name                    = run_name)
 
     def set_paths(self):

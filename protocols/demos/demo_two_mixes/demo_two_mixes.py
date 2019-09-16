@@ -55,7 +55,7 @@ class DemoTwoMixes(Evo200_FLI):
                             worktable_template_filename = worktable_template_filename or
                                                           this / 'demo-two.mixes.Evo200example.ewt',
                             output_filename             = output_filename or this / 'scripts' / 'two.mixes',
-                            firstTip                    = first_tip,
+                            first_tip                   = first_tip,
                             run_name                    = run_name)
 
     def run(self):
@@ -88,15 +88,15 @@ class DemoTwoMixes(Evo200_FLI):
         # Define the reagents in each labware (Cuvette, eppys, etc.)
 
         buffer = Reagent("Buffer ", buf_cuvette, volpersample   = buf_per_sample,
-                                                 def_liq_class    = self.Water_wet,
+                                                 def_liq_class  = self.Water_wet,
                                                  num_of_samples = 2 * self.num_of_samples)
 
         mix1 = Reagent("mix1", master_mixes_, volpersample   = v_mix_10,
-                                              def_liq_class    = self.Water_wet,
+                                              def_liq_class  = self.Water_wet,
                                               num_of_samples = self.num_of_samples)
 
         mix2 = Reagent("mix2", master_mixes_, volpersample   = v_mix_10,
-                                              def_liq_class    = self.Water_wet,
+                                              def_liq_class  = self.Water_wet,
                                               num_of_samples = self.num_of_samples)
 
         # Show the check_list GUI to the user for possible small changes

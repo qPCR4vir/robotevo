@@ -41,7 +41,7 @@ class Tutorial_HL(Evo200_FLI):
                  num_of_samples: int         = 8,
                  worktable_template_filename = None,
                  output_filename             = None,
-                 firstTip                    = None,
+                 first_tip                   = None,
                  run_name: str               = ""):
 
         this = Path(__file__).parent
@@ -52,7 +52,7 @@ class Tutorial_HL(Evo200_FLI):
                             worktable_template_filename = worktable_template_filename or
                                                           this / 'tutorial_hl_dilution.ewt',
                             output_filename             = output_filename or this / 'scripts' / 'dilutions_HL',
-                            firstTip                    = firstTip,
+                            first_tip= first_tip,
                             run_name                    = run_name)
 
     def run(self):
@@ -80,10 +80,10 @@ class Tutorial_HL(Evo200_FLI):
         plate = wt.get_labware("plate")
 
         diluted = Reagent("mix1, diluted 1:10",                    # Define derived reagents  ---------------------
-                           plate,
-                           replicas         = self.num_of_samples,
-                           def_liq_class      = self.Water_free,
-                           minimize_aliquots= False)
+                          plate,
+                          replicas         = self.num_of_samples,
+                          def_liq_class    = self.Water_free,
+                          minimize_aliquots= False)
 
         with group("Fill dilutions"):
 
@@ -98,6 +98,7 @@ class Tutorial_HL(Evo200_FLI):
                                 to_labware_region = diluted.select_all())
 
         self.done()
+
 
 if __name__ == "__main__":
     logging.basicConfig(filename=('scripts/Tutorial_HL.log.txt'), filemode='w', level=logging.INFO)

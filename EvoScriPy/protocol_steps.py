@@ -257,7 +257,7 @@ class Protocol (Executable):
                  GUI                         = None,
                  worktable_template_filename = None,
                  output_filename             = None,
-                 firstTip                    = None,
+                 first_tip                   = None,
                  run_name                    = None,
                  tips_type                   = None):
         """
@@ -267,7 +267,7 @@ class Protocol (Executable):
         :param GUI:
         :param worktable_template_filename:
         :param output_filename:
-        :param firstTip:
+        :param first_tip:
         :param run_name:
         :param tips_type:
         """
@@ -279,7 +279,7 @@ class Protocol (Executable):
         self.worktable_template_filename = worktable_template_filename or ""
         self.carrier_file                = None
         self.output_filename             = output_filename
-        self.firstTip                    = firstTip
+        self.first_tip                    = first_tip
         self.n_tips                      = n_tips
         self.EvoMode                     = None      # mode.multiple
         self.iRobot                      = None      # mode.iRobot
@@ -883,8 +883,7 @@ class Protocol (Executable):
             assert tips_in_rack == 0
         else:
             tip_type = tip_type or self.worktable.def_DiTi_type
-            I = instructions.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm)
-            I.exec()
+            instructions.getDITI2(TIP_MASK, tip_type, arm=self.robot.def_arm).exec()
         return mask                                    # todo REVISE !!   I.mask_tip?
 
     def drop_tips(self, TIP_MASK=None):
@@ -897,7 +896,7 @@ class Protocol (Executable):
             where = self.robot.where_preserve_tips(TIP_MASK)
             n_tips = self.robot.cur_arm().n_tips
             for tip_rack in where:
-                tipsMask = 0
+                tips_mask = 0
                 tips_in_rack = len(tip_rack.selected())
                 assert tips_in_rack, "A rack with no selected tip-wells was returned from robot.where_preserve_tips(TIP_MASK)"
 
@@ -906,32 +905,36 @@ class Protocol (Executable):
                         break
                     b = (1 << i)
                     if TIP_MASK & b:
-                        tipsMask |= b
+                        tips_mask |= b
                         TIP_MASK ^= b
                         tips_in_rack -= 1
 
-                instructions.set_DITIs_Back(tipsMask, tip_rack).exec()
+                instructions.set_DITIs_Back(tips_mask, tip_rack).exec()
             assert tips_in_rack == 0
             return
         # if not robot.Robot.current.droptips: return 0
         # TIP_MASK = robot.Robot.current.cur_arm().drop(TIP_MASK)
         # if TIP_MASK:# todo is this a correct solution or it is best to do a double check? To force drop?
+
         instructions.dropDITI(TIP_MASK).exec()
+
         # return TIP_MASK
 
-    def set_first_tip(self, first_tip: (int, str) = None, tip_type:(str, labware.DITIrackType) = None):
+    def set_first_tip(self, first_tip: (int, str) = None, tip_type: (str, labware.DITIrackType) = None):
         """
-        Optionally set the Protocol.firstTip, a position in rack, like 42 or 'B06'
+        Optionally set the Protocol.first_tip, a position in rack, like 42 or 'B06'
         (optionally including the rack self referenced with a number, like '2-B06', were 2 will be the second
-        rack in the wortable series ofdefault tip type). Currently, for a more precise set, use directly the
-        instructions.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+        rack in the worktable series of the default tip type). Currently, for a more precise set, use directly:
+
+            instructions.set_DITI_Counter2(labware=rack, posInRack=first_tip).exec()
+
         """
         if first_tip is not None:
-            self.firstTip = first_tip                                       # just keep it
+            self.first_tip = first_tip                                       # just keep it
 
-        if self.firstTip is not None and self.worktable is not None:        # set in wt
-            rack, firstTip = self.worktable.set_first_pos(posstr=self.firstTip, labw_type_name=tip_type)
-            instructions.set_DITI_Counter2(labware=rack, posInRack=firstTip).exec()
+        if self.first_tip is not None and self.worktable is not None:        # set in wt
+            rack, first_tip = self.worktable.set_first_pos(posstr=self.first_tip, labw_type_name=tip_type)
+            instructions.set_DITI_Counter2(labware=rack, posInRack=first_tip).exec()
 
     def consolidate(self):              # todo
         """
