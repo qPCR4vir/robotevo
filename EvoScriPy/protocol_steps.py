@@ -335,7 +335,7 @@ class Protocol (Executable):
         if drop          is not None: drop_old           = self.set_drop_tips    (drop)
         if preserve      is not None: preserve_old       = self.preserve_tips    (preserve)
         if use_preserved is not None: use_preserved_old  = self.use_preserved_tips(use_preserved)
-        if allow_air     is not None: allow_air_old      = self.set_allow_air   (allow_air)
+        if allow_air     is not None: allow_air_old      = self.set_allow_air    (allow_air)
         if tip_type      is not None: tip_type_old       = self.worktable.set_def_DiTi(tip_type)
 
         if tips_mask     is not None:
@@ -343,13 +343,13 @@ class Protocol (Executable):
 
         yield
 
-        if tips_mask     is not None: tips_mask     = self.drop_tips       (tips_mask_old)
+        if tips_mask     is not None: tips_mask     = self.drop_tips        (tips_mask_old)
         if tip_type      is not None: tip_type      = self.worktable.set_def_DiTi(tip_type_old)
         if reuse         is not None: reuse         = self.reuse_tips       (reuse_old)
         if drop          is not None: drop          = self.set_drop_tips    (drop_old)
         if preserve      is not None: preserve      = self.preserve_tips    (preserve_old)
         if use_preserved is not None: use_preserved = self.use_preserved_tips(use_preserved_old)
-        if allow_air     is not None: allow_air     = self.set_allow_air   (allow_air_old)
+        if allow_air     is not None: allow_air     = self.set_allow_air    (allow_air_old)
         if drop_last:
             droping = self.set_drop_tips(True)
             self.drop_tips()
@@ -1085,7 +1085,8 @@ class Protocol (Executable):
             self.def_DiTi_check_liquid_level = self.worktable.def_DiTi_type
 
     def set_defaults(self):
-        wt = self.worktable
+        # wt = self.worktable
+        pass
 
     def set_EvoMode(self):
         if not self.EvoMode:
@@ -1212,11 +1213,11 @@ class Protocol (Executable):
         liq_class = liq_class or reagent.def_liq_class
 
         mask = robot.mask_tips[tips]                                 # as if we could use so many tips
-        n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
+        n_wells = reagent.autoselect(tips)                           # the total number of available wells to aspirate from
         asp = instructions.aspirate(mask, liq_class, vol, reagent.labware)
         cur_tip = 0
-        while cur_tip < tips:                                      # todo what to do with used tips?
-            next_tip = cur_tip + n_wells                            # add tips, one for each well
+        while cur_tip < tips:                                        # todo what to do with used tips?
+            next_tip = cur_tip + n_wells                             # add tips, one for each well
             next_tip = next_tip if next_tip <= tips else tips        # but not too much
             mask = robot.mask_tips[cur_tip] ^ robot.mask_tips[next_tip]   # now use only the last tips added
 
@@ -1243,11 +1244,11 @@ class Protocol (Executable):
             if isinstance(what, preMix): self.make_pre_mix(what, NumSamples)
 
     # Atomic API ----------------------------------------------------------------------------------------
-    def pick_up_tip(self, TIP_MASK    : int        = None,
-                          tip_type    :(str, labware.DITIrackType, labware.DITIrack, labware.DITIrackTypeSeries)= None,
-                          arm         : robot.Arm    = None,
-                          AirgapVolume: float      = 0,
-                          AirgapSpeed : int        = None):
+    def pick_up_tip(self, TIP_MASK     : int        = None,
+                          tip_type     :(str, labware.DITIrackType, labware.DITIrack, labware.DITIrackTypeSeries)= None,
+                          arm          : robot.Arm    = None,
+                          airgap_volume: float      = 0,
+                          airgap_speed : int        = None):
         """
         Atomic operation. Get new tips. It take a labware type or name instead of the labware itself (DiTi rack)
         because the real robot take track of the next position to pick, including the rack and the site (the labware).
@@ -1259,31 +1260,31 @@ class Protocol (Executable):
                          If None all tips are used. (see Robot.mask_tip[index] and Robot.mask_tips[index])
         :param tip_type: if None the worktable default DiTi will be used.
         :param arm:      Uses the default Arm (pipette) if None
-        :param AirgapSpeed:  int 1-1000. Speed for the airgap in μl/s
-        :param AirgapVolume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
+        :param airgap_speed:  int 1-1000. Speed for the airgap in μl/s
+        :param airgap_volume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
 
         """
 
         # not needed here, just to illustrate how is processed
         DITI_series = self.robot.worktable.get_DITI_series(tip_type)
 
-        instructions.getDITI2(TIP_MASK, DITI_series, arm=arm, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed).exec()
+        instructions.getDITI2(TIP_MASK, DITI_series, arm=arm, AirgapVolume=airgap_volume, AirgapSpeed=airgap_speed).exec()
 
-    def drop_tip(self,  TIP_MASK    : int         = None,
-                        DITI_waste  : labware.Labware = None,
-                        arm         : robot.Arm     = None,
-                        AirgapVolume: float       = 0,
-                        AirgapSpeed : int         = None):
+    def drop_tip(self,  TIP_MASK     : int         = None,
+                        DITI_waste   : labware.Labware = None,
+                        arm          : robot.Arm     = None,
+                        airgap_volume: float       = 0,
+                        airgap_speed : int         = None):
         """
         :param TIP_MASK:     Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
                              If None all tips are used. (see Robot.mask_tip[index] and Robot.mask_tips[index])
         :param DITI_waste:   Specify the worktable position for the DITI waste you want to use.
                              You must first put a DITI waste in the Worktable at the required position.
         :param arm:          Uses the default Arm (pipette) if None
-        :param AirgapSpeed:  int 1-1000. Speed for the airgap in μl/s
-        :param AirgapVolume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
+        :param airgap_speed:  int 1-1000. Speed for the airgap in μl/s
+        :param airgap_volume: 0 - 100.  Airgap in μl which is aspirated after dropping the DITIs
         """
-        instructions.dropDITI(TIP_MASK, labware=DITI_waste, AirgapVolume=AirgapVolume, AirgapSpeed=AirgapSpeed, arm=arm).exec()
+        instructions.dropDITI(TIP_MASK, labware=DITI_waste, AirgapVolume=airgap_volume, AirgapSpeed=airgap_speed, arm=arm).exec()
 
     def aspirate(self,   arm        : robot.Arm           = None,
                          TIP_MASK   : int               = None,
@@ -1367,20 +1368,20 @@ class Pipeline (Executable):
             protocol.pipeline = self
 
     def check_list(self):
-        if (self.GUI):
+        if self.GUI:
             self.GUI.CheckPipeline(self)
 
-    def RunPi(self):
+    def run_pi(self):
 
         for protocol in self.protocols:
             logging.info(protocol.name + protocol.run_name)
 
 
 @contextmanager
-def group(titel, mode=None):
-    instructions.group(titel).exec(mode)
+def group(titel, emode=None):
+    instructions.group(titel).exec(emode)
     yield
-    instructions.group_end().exec(mode)
+    instructions.group_end().exec(emode)
 
 
 @contextmanager

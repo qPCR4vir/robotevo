@@ -730,8 +730,8 @@ class moveLiha(Pipette ):
                             2 = z-start
                             3 = z-max
                             4 = global z-travel
-        :param offset: float;  in range (-1000, 1000) offset in mm added to z-position (parameter zTarget)
-        :param speed:  float;  in range (0.1, 400)  move speed in mm/s if zMove is x-move, y-move or z-move
+        :param offset: float;  in range (-1000, 1000) offset in mm added to z-position (parameter z_target)
+        :param speed:  float;  in range (0.1, 400)  move speed in mm/s if z_move is x-move, y-move or z-move
         :param tipMask: int; selected tips, bit-coded (tip1 = 1, tip8 = 128)
         :param labware: Labware;
         :param spacing: int; tip spacing
@@ -844,7 +844,7 @@ class export(Instruction):
 class startTimer(Instruction):
     """ A.15.4.18 Start Timer (Worklist: StartTimer)
     """
-    def __init__(self, timer = 1 ):
+    def __init__(self, timer = 1):
         """
 
 
@@ -856,17 +856,16 @@ class startTimer(Instruction):
 
     def validate_arg(self):
         Instruction.validate_arg(self)
-        self.arg= [Expression(self.timer)]
+        self.arg = [Expression(self.timer)]
 
 
 class waitTimer(Instruction):
     """ A.15.4.19 Wait for Timer (Worklist: WaitTimer)
     """
-    def __init__(self, timer =1, timeSpan= None ):
+    def __init__(self, timer =1, timeSpan= None):
         """
 
         :param timeSpan: expression, 0.02 - 86400. duration
-        :type timer: Expression
         :param timer: expression, 1 - 100. number of timer to re-start. 1-1000?
         """
         Instruction.__init__(self, "WaitTimer")
