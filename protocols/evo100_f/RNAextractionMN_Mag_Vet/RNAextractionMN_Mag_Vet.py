@@ -299,7 +299,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                 with incubation(minutes=0.5):
                     Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate, z_pos=24).exec()
 
-                with self.tips(use_preserved=self.preserveingTips()):
+                with self.tips(use_preserved=self.preserveing_tips()):
                     self.waste( from_labware_region=    TeMag.selectOnly(all_samples))
 
                 with incubation(minutes=4):
@@ -356,7 +356,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             with incubation(minutes=0.5, timer=2):
                 Te_MagS_MoveToPosition(Te_MagS_MoveToPosition.Aspirate).exec()
-            with self.tips(use_preserved=self.preserveingTips(), preserve=False, drop=True):
+            with self.tips(use_preserved=self.preserveing_tips(), preserve=False, drop=True):
                 self.waste(self.TeMag.selectOnly(wells), using_liquid_class, vol)
 
 

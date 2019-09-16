@@ -552,7 +552,7 @@ class Robot:
         Robot.current = self
         labware.curWorkTable=self.worktable # todo inconsistent duplication? allow for manuall actions?
 
-    def set_dropTips(self, drop=True)->bool:
+    def set_drop_tips(self, drop=True)->bool:
         '''
         Drops the tips at THE END of the whole action? like after distribute of the reagent into various target?
         :param drop:
@@ -565,15 +565,15 @@ class Robot:
         self.allow_air, allow_air = allow_air, self.allow_air
         return allow_air
 
-    def reuseTips(self, reuse=True)->bool:
+    def reuse_tips(self, reuse=True)->bool:
         self.reusetips, reuse = reuse, self.reusetips
         return reuse
 
-    def preserveTips(self, preserve=True)->bool:
+    def preserve_tips(self, preserve=True)->bool:
         self.preservetips, preserve = preserve, self.preservetips
         return preserve
 
-    def usePreservedTips(self, usePreserved=True)->bool:
+    def use_preserved_tips(self, usePreserved=True)->bool:
         self.usePreservedtips, usePreserved = usePreserved, self.usePreservedtips
         return usePreserved
 

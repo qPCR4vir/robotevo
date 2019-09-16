@@ -91,13 +91,13 @@ Related to state:
   - :py:meth:`~Protocol.get_carrier_type`
   - :py:meth:`~Protocol.get_labware_type`
   - :py:meth:`~Protocol.set_EvoMode`
-  - :py:meth:`~Protocol.set_dropTips`
+  - :py:meth:`~Protocol.set_drop_tips`
   - :py:meth:`~Protocol.set_allow_air`
-  - :py:meth:`~Protocol.reuseTips`
+  - :py:meth:`~Protocol.reuse_tips`
   - :py:meth:`~Protocol.reuse_tips_and_drop`
-  - :py:meth:`~Protocol.preserveTips`
-  - :py:meth:`~Protocol.preserveingTips`
-  - :py:meth:`~Protocol.usePreservedTips`
+  - :py:meth:`~Protocol.preserve_tips`
+  - :py:meth:`~Protocol.preserveing_tips`
+  - :py:meth:`~Protocol.use_preserved_tips`
 
 
 Other intermediate level functions:
@@ -327,14 +327,14 @@ class Protocol (Executable):
             assert isinstance(selected_samples, labware.Labware)      # todo set some current?
 
         if drop_first:
-            droping = self.set_dropTips(True)
+            droping = self.set_drop_tips(True)
             self.drop_tips()
-            self.set_dropTips(droping)
+            self.set_drop_tips(droping)
 
-        if reuse         is not None: reuse_old          = self.reuseTips       (reuse)
-        if drop          is not None: drop_old           = self.set_dropTips    (drop)
-        if preserve      is not None: preserve_old       = self.preserveTips    (preserve)
-        if use_preserved is not None: use_preserved_old  = self.usePreservedTips(use_preserved)
+        if reuse         is not None: reuse_old          = self.reuse_tips       (reuse)
+        if drop          is not None: drop_old           = self.set_drop_tips    (drop)
+        if preserve      is not None: preserve_old       = self.preserve_tips    (preserve)
+        if use_preserved is not None: use_preserved_old  = self.use_preserved_tips(use_preserved)
         if allow_air     is not None: allow_air_old      = self.set_allow_air   (allow_air)
         if tip_type      is not None: tip_type_old       = self.worktable.set_def_DiTi(tip_type)
 
@@ -345,15 +345,15 @@ class Protocol (Executable):
 
         if tips_mask     is not None: tips_mask     = self.drop_tips       (tips_mask_old)
         if tip_type      is not None: tip_type      = self.worktable.set_def_DiTi(tip_type_old)
-        if reuse         is not None: reuse         = self.reuseTips       (reuse_old)
-        if drop          is not None: drop          = self.set_dropTips    (drop_old)
-        if preserve      is not None: preserve      = self.preserveTips    (preserve_old)
-        if use_preserved is not None: use_preserved = self.usePreservedTips(use_preserved_old)
+        if reuse         is not None: reuse         = self.reuse_tips       (reuse_old)
+        if drop          is not None: drop          = self.set_drop_tips    (drop_old)
+        if preserve      is not None: preserve      = self.preserve_tips    (preserve_old)
+        if use_preserved is not None: use_preserved = self.use_preserved_tips(use_preserved_old)
         if allow_air     is not None: allow_air     = self.set_allow_air   (allow_air_old)
         if drop_last:
-            droping = self.set_dropTips(True)
+            droping = self.set_drop_tips(True)
             self.drop_tips()
-            self.set_dropTips(droping)
+            self.set_drop_tips(droping)
 
     def distribute(self,
                    volume            : float        = None,
@@ -972,7 +972,7 @@ class Protocol (Executable):
         Tipically
         """
         self.set_EvoMode()
-        if (self.GUI):
+        if self.GUI:
             self.GUI.check_list()
         self.set_EvoMode()
         Reagent.set_reagent_list(self)
@@ -981,18 +981,18 @@ class Protocol (Executable):
         if self.check_initial_liquid_level:
             self.check_reagents_levels()
 
-    def check_reagent_level(self, reagent, LiqClass=None):
+    def check_reagent_level(self, reagent, liq_class=None):
         """
         Select all possible replica of the given reagent and detect the liquid level,
         contrasting it with the current (expected) volumen in EACH well.
         Use the given liquid class or the reagent default.
 
         :param reagent:
-        :param LiqClass:
+        :param liq_class:
 
         """
         assert isinstance(reagent, Reagent)
-        LiqClass = LiqClass or reagent.def_liq_class
+        liq_class = liq_class or reagent.def_liq_class
 
         tips = 1 if isinstance(reagent.labware, labware.Cuvette) else self.robot.cur_arm().n_tips
         reagent.autoselect(tips)              # todo use even more tips? see self._aspirate_multi_tips
@@ -1004,7 +1004,7 @@ class Protocol (Executable):
                        tips_mask= robot.mask_tips[len(vol)]):
 
             instructions.detect_Liquid(robot.mask_tips[len(vol)],
-                                       liquidClass =LiqClass,
+                                       liquidClass =liq_class,
                                        labware     =reagent.labware).exec()
 
         instructions.userPrompt("").exec()
@@ -1014,7 +1014,6 @@ class Protocol (Executable):
         Will emit a liquid level detection on every well occupied by all the reagents defined so fort.
         Will be executed at the end of self.check_list() but only if self.check_initial_liquid_level is True
         """
-        prompt_msg = ""
         for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
                 reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
@@ -1127,37 +1126,39 @@ class Protocol (Executable):
         return self.comments_.comments
 
     # Context-options modifiers ---------------------------------------------------------------------------
-    def set_dropTips(self, drop=True)->bool:
+    def set_drop_tips(self, drop=True)->bool:
         """
         Drops the tips at THE END of the whole action? like after distribution of a reagent into various targets
         :param drop:
         :return:
         """
-        return self.robot.set_dropTips(drop)
+        return self.robot.set_drop_tips(drop)
 
     def set_allow_air(self, allow_air=0.0)->float:
         return self.robot.set_allow_air(allow_air)
 
-    def reuseTips(self, reuse=True)->bool:
-        """     Reuse the tips or drop it and take new after each action?
-        :param reuse:
+    def reuse_tips(self, reuse=True)->bool:
+        """
+        Reuse the tips or drop it and take new after each action?
+
+        :param bool reuse:
         :return:
         """
-        return self.robot.reuseTips(reuse)
+        return self.robot.reuse_tips(reuse)
 
     def reuse_tips_and_drop(self, reuse=True, drop=True)->(bool, bool):
-        return self.set_dropTips(drop), self.reuseTips(reuse)
+        return self.set_drop_tips(drop), self.reuse_tips(reuse)
 
-    def preserveTips(self, preserve=True)->bool:
-        return self.robot.preserveTips(preserve)
+    def preserve_tips(self, preserve=True)->bool:
+        return self.robot.preserve_tips(preserve)
 
-    def preserveingTips(self)->bool:
+    def preserveing_tips(self)->bool:
         return self.robot.preservetips
 
-    def usePreservedTips(self, usePreserved=True)->bool:
-        return self.robot.usePreservedTips(usePreserved)
+    def use_preserved_tips(self, usePreserved=True)->bool:
+        return self.robot.use_preserved_tips(usePreserved)
 
-    def moveTips(self, zMove, zTarget, offset, speed, TIP_MASK=None):
+    def move_tips(self, z_move, z_target, offset, speed, TIP_MASK=None):
         pass # instructions.moveLiha
 
     # Lower lever API & "private" functions -------------------------------------------------------------
@@ -1213,15 +1214,15 @@ class Protocol (Executable):
         mask = robot.mask_tips[tips]                                 # as if we could use so many tips
         n_wells = reagent.autoselect(tips)                        # the total number of available wells to aspirate from
         asp = instructions.aspirate(mask, liq_class, vol, reagent.labware)
-        curTip = 0
-        while curTip < tips:                                      # todo what to do with used tips?
-            nextTip = curTip + n_wells                            # add tips, one for each well
-            nextTip = nextTip if nextTip <= tips else tips        # but not too much
-            mask = robot.mask_tips[curTip] ^ robot.mask_tips[nextTip]   # now use only the last tips added
+        cur_tip = 0
+        while cur_tip < tips:                                      # todo what to do with used tips?
+            next_tip = cur_tip + n_wells                            # add tips, one for each well
+            next_tip = next_tip if next_tip <= tips else tips        # but not too much
+            mask = robot.mask_tips[cur_tip] ^ robot.mask_tips[next_tip]   # now use only the last tips added
 
             asp.tipMask = mask
             asp.exec()                                           # will call robot.cur_arm().aspirated(vol, mask)  ???
-            curTip = nextTip
+            cur_tip = next_tip
 
     def _dispensemultiwells(self, tips : int, liq_class, labware : labware.Labware, vol : (float, list)):
         """
