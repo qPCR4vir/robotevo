@@ -18,11 +18,11 @@ These are the functions you will use in "every day" protocol programming.
 They allow you to specify the kind of tips to use and them command the operations you need on your reagents,
 samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
 
-  - :py:meth:`~Protocol.tips`: how to use tips during the involved instructions.
-  - :py:meth:`~Protocol.distribute`: some volume of reagent into the wells of the target labware
-  - :py:meth:`~Protocol.transfer`: from some wells into equal number of target wells
-  - :py:meth:`~Protocol.mix`: mix by pipetting the content of wells
-  - :py:meth:`~Protocol.mix_reagent`: mix every aliquot by pipetting
+  - :py:meth:`~Protocol.tips`: *how to use tips during the involved instructions.*
+  - :py:meth:`~Protocol.distribute`: *some volume of reagent into the wells of the target labware*
+  - :py:meth:`~Protocol.transfer`: *from some wells into equal number of target wells*
+  - :py:meth:`~Protocol.mix`: *mix by pipetting the content of wells*
+  - :py:meth:`~Protocol.mix_reagent`: *mix every aliquot by pipetting*
   - :py:meth:`~Protocol.make_pre_mix`
   - :py:meth:`~Protocol.get_tips`
   - :py:meth:`~Protocol.drop_tips`
