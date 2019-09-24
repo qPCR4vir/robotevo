@@ -18,11 +18,11 @@ These are the functions you will use in "every day" protocol programming.
 They allow you to specify the kind of tips to use and them command the operations you need on your reagents,
 samples, reactions, etc., almost directly as it states in the steps of your "hand written" original laboratory protocol.
 
-  - :py:meth:`~Protocol.tips`
-  - :py:meth:`~Protocol.distribute`
-  - :py:meth:`~Protocol.transfer`
-  - :py:meth:`~Protocol.mix`
-  - :py:meth:`~Protocol.mix_reagent`
+  - :py:meth:`~Protocol.tips`: how to use tips during the involved instructions.
+  - :py:meth:`~Protocol.distribute`: some volume of reagent into the wells of the target labware
+  - :py:meth:`~Protocol.transfer`: from some wells into equal number of target wells
+  - :py:meth:`~Protocol.mix`: mix by pipetting the content of wells
+  - :py:meth:`~Protocol.mix_reagent`: mix every aliquot by pipetting
   - :py:meth:`~Protocol.make_pre_mix`
   - :py:meth:`~Protocol.get_tips`
   - :py:meth:`~Protocol.drop_tips`
@@ -43,13 +43,15 @@ using the previous High level functions? Then, you may use the following functio
 Atomic functions
 -----------------------------------------------------------
 
-These are functions aimed to isolate what a physical robot would make at once: pick some tips, aspirate some liquid, etc.
+These are functions aimed to isolate what a physical robot would make at once: pick some tips,
+aspirate some liquid, etc.
 They are simple to understand, but are harder to use in "every day" protocol programming.
 They may be a great tool to set up your robot and to get an initial familiarization with all the system.
 Keep in mind that it is now your responsibility to know what robot/protocol "state" are ignored by these new functions.
 For example, before `aspirate` you will need to mount "by yourself" the tips in the correct position of the used arm,
 because `aspirate` ignores the higher level with :py:meth:`~Protocol.tips`.
-But don't worry, **RobotEvo** still keeps track of the "internal" robot state and will throw errors informing you about most logical mistakes
+But don't worry, **RobotEvo** still keeps track of the "internal" robot state and will throw errors
+informing you about most logical mistakes
 (like in the previous example forgetting to mount the tips).
 In some cases these functions may be used to construct new high lever functions.
 
@@ -166,9 +168,7 @@ class Executable:
         self.version = version
         self.versions[version]()
 
-    def __init__(self,
-                 GUI      = None,
-                 run_name = None):
+    def __init__(self, GUI=None, run_name=None):
 
         self.GUI         = GUI
         self.run_name    = run_name
@@ -1105,10 +1105,10 @@ class Protocol (Executable):
         assert isinstance(script, Path)
 
         self.iRobot = mode.iRobot(instructions.Pipette.LiHa1, tips_type=self.tips_type, n_tips=self.n_tips)
-        self.Script = mode.Script(template     = self.worktable_template_filename,
+        self.Script = mode.Script(template       = self.worktable_template_filename,
                                   robot_protocol = self,
-                                  filename     = script,
-                                  robot        = self.iRobot.robot)
+                                  filename       = script,
+                                  robot          = self.iRobot.robot)
         self.comments_ = mode.Comments(filename= script.with_suffix('.protocol.txt'))
 
         self.EvoMode = mode.Multiple([self.Script,
@@ -1246,7 +1246,7 @@ class Protocol (Executable):
     # Atomic API ----------------------------------------------------------------------------------------
     def pick_up_tip(self, TIP_MASK     : int        = None,
                           tip_type     :(str, labware.DITIrackType, labware.DITIrack, labware.DITIrackTypeSeries)= None,
-                          arm          : robot.Arm    = None,
+                          arm          : robot.Arm  = None,
                           airgap_volume: float      = 0,
                           airgap_speed : int        = None):
         """
@@ -1270,11 +1270,11 @@ class Protocol (Executable):
 
         instructions.getDITI2(TIP_MASK, DITI_series, arm=arm, AirgapVolume=airgap_volume, AirgapSpeed=airgap_speed).exec()
 
-    def drop_tip(self,  TIP_MASK     : int         = None,
+    def drop_tip(self,  TIP_MASK     : int             = None,
                         DITI_waste   : labware.Labware = None,
-                        arm          : robot.Arm     = None,
-                        airgap_volume: float       = 0,
-                        airgap_speed : int         = None):
+                        arm          : robot.Arm       = None,
+                        airgap_volume: float           = 0,
+                        airgap_speed : int             = None):
         """
         :param TIP_MASK:     Binary flag bit-coded (tip1=1, tip8=128) selects tips to use in a multichannel pipette arm.
                              If None all tips are used. (see Robot.mask_tip[index] and Robot.mask_tips[index])
@@ -1286,10 +1286,10 @@ class Protocol (Executable):
         """
         instructions.dropDITI(TIP_MASK, labware=DITI_waste, AirgapVolume=airgap_volume, AirgapSpeed=airgap_speed, arm=arm).exec()
 
-    def aspirate(self,   arm        : robot.Arm           = None,
+    def aspirate(self,   arm        : robot.Arm         = None,
                          TIP_MASK   : int               = None,
                          volume     : (float, list)     = None,
-                         from_wells : [labware.Well]        = None,
+                         from_wells : [labware.Well]    = None,
                          liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to aspirate volume from wells.
@@ -1308,7 +1308,7 @@ class Protocol (Executable):
                  arm        : robot.Arm         = None,
                  TIP_MASK   : int               = None,
                  volume     : (float, list)     = None,
-                 to_wells   : [labware.Well]        = None,
+                 to_wells   : [labware.Well]    = None,
                  liq_class  : str               = None):
         """
         Atomic operation. Use arm (pipette) with masked (selected) tips to dispense volume to wells.
@@ -1336,10 +1336,9 @@ class Protocol (Executable):
 
         :param text: the text in the box
         :param sound: Should add an acustic signal?
-        :param close_time: time to wait for automatic closing the box.
-        The user can close the box at any time, and this will be the only way
-        to close the box if not passed (defoult to -1) with cause no automaticclosingg
-        :return:
+        :param close_time: time to wait for automatic closing the box: the operator can "manually"
+        close this box at any time, and this will be the only way to close it if the default -1 is used,
+         which cause no automatic closing.
         """
         instructions.userPrompt(text, sound=int(sound), closeTime=close_time).exec()
 
