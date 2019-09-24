@@ -23,15 +23,15 @@ samples, reactions, etc., almost directly as it states in the steps of your "han
   - :py:meth:`~Protocol.transfer`: *from some wells into equal number of target wells*
   - :py:meth:`~Protocol.mix`: *mix by pipetting the content of wells*
   - :py:meth:`~Protocol.mix_reagent`: *mix every aliquot by pipetting*
-  - :py:meth:`~Protocol.make_pre_mix`
-  - :py:meth:`~Protocol.get_tips`
-  - :py:meth:`~Protocol.drop_tips`
-  - :py:meth:`~Protocol.set_first_tip`
-  - :py:meth:`~Protocol.check_reagents_levels`
-  - :py:meth:`~Protocol.check_reagent_level`
-  - :py:meth:`~Protocol.show_check_list`
-  - :py:meth:`~Protocol.comment`
-  - :py:meth:`~Protocol.user_prompt`
+  - :py:meth:`~Protocol.make_pre_mix`: *put together the components of a preMix by pipetting*
+  - :py:meth:`~Protocol.get_tips`: *mount new or used tips*
+  - :py:meth:`~Protocol.drop_tips`: *drop or put back tips*
+  - :py:meth:`~Protocol.set_first_tip`: *position of the given tip type to be used next*
+  - :py:meth:`~Protocol.check_reagents_levels`: *generate instruction to check all defined reagents*
+  - :py:meth:`~Protocol.check_reagent_level`: *generate instruction to check reagent volume*
+  - :py:meth:`~Protocol.show_check_list`: *to the operator*
+  - :py:meth:`~Protocol.comment`: *add a comment to the script*
+  - :py:meth:`~Protocol.user_prompt`: *show a text box to the operator*
 
 
 Advanced functions.
@@ -55,10 +55,10 @@ informing you about most logical mistakes
 (like in the previous example forgetting to mount the tips).
 In some cases these functions may be used to construct new high lever functions.
 
-  - :py:meth:`~Protocol.pick_up_tip`
+  - :py:meth:`~Protocol.pick_up_tip`: *pick tips of the given type*
   - :py:meth:`~Protocol.drop_tip`
-  - :py:meth:`~Protocol.aspirate`
-  - :py:meth:`~Protocol.dispense`
+  - :py:meth:`~Protocol.aspirate`: *some volumen from given wells*
+  - :py:meth:`~Protocol.dispense`: *some volumen to given wells*
 
 
 Protocol-structure or state functions
