@@ -6,6 +6,8 @@
 __author__ = 'qPCR4vir'
 
 import logging
+from pathlib import Path
+
 import EvoScriPy.labware as lab
 
 def_reagent_excess = 4
@@ -288,37 +290,128 @@ class preMix(Reagent):
         NumSamples = NumSamples or Reagent.current_protocol.num_of_samples
         return self.components[index].min_vol(NumSamples)
 
+class Primer:
+    ids = {}
+    seqs = {}
+    names = {}
+    key_words = {}
+    ids_synt = {}
 
-class Primer (Reagent):
-    IDs ={}
-    SEQs={}
-    Names={}
-    KWs ={}
-    Excess = def_mix_excess
-
+    excess = def_mix_excess
+    next_internal_id = 0
 
     def __init__(self,
                  name,
                  seq,
-                 ID         =None,
-                 modif      = None,
-                 stk_conc   =100,
-                 PCR_conc   =0.8,
-                 KW         =None,
-                 labware    =None,
-                 pos        =None,
-                 initial_vol=None ):
+                 proposed_stock_conc=100,  # uM
+                 id=None,
+                 mass=None,  # ug
+                 moles=None,  # nmoles
+                 molec_w=None,  # g/mol
+                 mod_5p=None,
+                 mod_3p=None,
+                 id_synt=None,
+                 kws=None):
+        """
 
-        Reagent.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
-
+        :type moles: float
+        """
+        self.proposed_stock_conc = proposed_stock_conc
+        self.mass = mass
+        self.moles = moles
+        self.molec_w = molec_w
+        self.mod_5p = mod_5p
+        self.mod_3p = mod_3p
+        self.id_synt = id_synt
+        self.name = name
         self.seq = seq
-        self.ID  = ID
-        Primer.Names [name]=self   # check duplicate
-        Primer.IDs   [ID  ]=self   # check duplicate
-        Primer.SEQs  [seq ]=self   # check duplicate  ??
-        Primer.SEQs.setdefault(seq, []).append(self)
-        for kw in KW:
-            Primer.KWs.setdefault(kw,[]).append(self)
+        self.id = id
+        self._internal_id = Primer.next_internal_id
+        Primer.next_internal_id += 1
+        Primer.names.setdefault(name, []).append(self)
+        Primer.ids_synt.setdefault(id_synt, []).append(self)
+
+        Primer.ids.setdefault(id, []).append(self)
+        Primer.seqs.setdefault(seq, []).append(self)
+        if isinstance(kws, list):
+            for kw in kws:
+                Primer.key_words.setdefault(kw, []).append(self)
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def load_excel_list(file_name:Path = None):
+        col = {'conc': 0,
+               'id': 2,
+               'name': 5,
+               'moles': 7,
+               'mass': 8,
+               'seq': 15,
+               'mol_w': 11,
+               'mod_5p': 19,
+               'mod_3p': 20,
+               'ido': 22,
+               'virus': 25
+               }
+        logging.debug("opening excel")
+        import openpyxl
+
+        if not file_name:
+            file_name = Path('K:\AG RealtimePCR\Ariel\PCR fli.xlsx')
+
+        if not file_name:
+            from tkinter import filedialog
+            file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
+                                                   defaultextension='fas',
+                                                   title='Select HEV isolate subtyping deta')
+            if not file_name:
+                return
+
+        logging.debug(file_name)
+
+        wb = openpyxl.load_workbook(file_name)
+        logging.debug(wb.sheetnames)
+
+        ws = wb['PCR fli-oligos']
+        first = True
+        p = None
+        for r in ws.iter_rows() :
+            if first:
+                first = False
+            else:
+                p=Primer(name=r[col['name']].value,
+                         seq=r[col['seq']].value,
+                         proposed_stock_conc=r[col['conc']].value,
+                         id=r[col['id']].value,
+                         mass=r[col['mass']].value,
+                         moles=r[col['moles']].value,
+                         molec_w=r[col['mol_w']].value,
+                         mod_5p=r[col['mod_5p']].value,
+                         mod_3p=r[col['mod_3p']].value,
+                         id_synt=r[col['ido']].value,
+                         kws=[r[col['virus']].value]
+                         )
+        pass
+
+
+class PrimerReagent (Reagent):
+
+    def __init__(self,
+                 primer: Primer,
+                 labware,
+                 pos,
+                 initial_vol,
+                 PCR_conc=0.8,
+                 stk_conc=100,
+                 excess=None):
+
+        Reagent.__init__(self,
+                         primer.name,
+                         labware or Lab.stock,
+                         initial_vol=initial_vol,
+                         excess=Primer.excess)
+
 
 
 class PrimerMix(preMix):
@@ -404,4 +497,9 @@ class PCRexperiment:
         self.vol = vol
         self.vol_sample = vol_sample
 
+
+
+if __name__ == '__main__':
+    logging.getLogger(__name__).setLevel(10)
+    Primer.load_excel_list()
 
