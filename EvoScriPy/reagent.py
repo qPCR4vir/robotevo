@@ -287,3 +287,121 @@ class preMix(Reagent):
     def compVol(self,index, NumSamples=None):
         NumSamples = NumSamples or Reagent.current_protocol.num_of_samples
         return self.components[index].min_vol(NumSamples)
+
+
+class Primer (Reagent):
+    IDs ={}
+    SEQs={}
+    Names={}
+    KWs ={}
+    Excess = def_mix_excess
+
+
+    def __init__(self,
+                 name,
+                 seq,
+                 ID         =None,
+                 modif      = None,
+                 stk_conc   =100,
+                 PCR_conc   =0.8,
+                 KW         =None,
+                 labware    =None,
+                 pos        =None,
+                 initial_vol=None ):
+
+        Reagent.__init__(self, name, labware or Lab.stock, pos=pos, initial_vol=initial_vol, excess=Primer.Excess)
+
+        self.seq = seq
+        self.ID  = ID
+        Primer.Names [name]=self   # check duplicate
+        Primer.IDs   [ID  ]=self   # check duplicate
+        Primer.SEQs  [seq ]=self   # check duplicate  ??
+        Primer.SEQs.setdefault(seq, []).append(self)
+        for kw in KW:
+            Primer.KWs.setdefault(kw,[]).append(self)
+
+
+class PrimerMix(preMix):
+    IDs={}
+    Names={}
+    KWs={}
+    Excess = def_mix_excess
+
+
+    def __init__(self, name, labware,  ID=None, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
+        preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
+        vol=0.0
+        for reagent in components:
+            vol += reagent.volpersample
+            reagent.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
+            reagent.put_min_vol()
+
+        if initial_vol is None: initial_vol = 0.0
+
+        Reagent.__init__(self, name, labware, vol, pos=pos, replicas=replicas,
+                         defLiqClass=None, excess=ex, initial_vol=initial_vol)
+        self.components = components
+        #self.init_vol()
+
+
+class PCRMasterMix(preMix):
+    IDs={}
+    Names={}
+    KWs={}
+    Excess = def_mix_excess
+
+
+    def __init__(self,
+                 name,
+                 labware,
+                 conc       =10.0,
+                 pos        =None,
+                 components =None,
+                 replicas   =1,
+                 initial_vol=None,
+                 excess     =None):
+
+        preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
+        vol=0.0
+        for reagent in components:
+            vol += reagent.volpersample
+            reagent.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
+            reagent.put_min_vol()
+
+        if initial_vol is None: initial_vol = 0.0
+
+        Reagent.__init__(self, name, labware, vol, pos=pos, replicas=replicas,
+                         defLiqClass=None, excess=ex, initial_vol=initial_vol)
+        self.components = components
+        #self.init_vol()
+
+
+class PCRMix (preMix):
+    pass
+
+
+class PCReaction (Reaction):
+    vol = 25
+    vol_sample = 5
+    pass
+
+
+class PCRexperiment:
+    def __init__(self, ID, name):
+        self.PCReactions = []   # list of PCRReaction to create
+        self.PCRmixes = []
+        self.samples = []
+        self.vol = PCReaction.vol
+        self.vol_sample = PCReaction.vol_sample
+
+    def addReactions(self, PCRmix: PCRMix, samples, labware: object) -> list:  # of PCRReaction
+        pass
+    def pippete_mix(self):
+        pass
+    def pippete_samples(self):
+        pass
+    def vol (self, vol, vol_sample):
+        self.vol = vol
+        self.vol_sample = vol_sample
+
+
