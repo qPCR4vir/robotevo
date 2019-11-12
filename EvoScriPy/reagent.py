@@ -421,6 +421,7 @@ class PrimerMix:
     ids = {}
     names = {}
     key_words = {}
+    super_mix = True
 
     next_internal_id = 0
 
@@ -431,8 +432,10 @@ class PrimerMix:
                  components = None,
                  ref_vol = None,
                  diluent = None,
-                 kws = None):
+                 kws = None,
+                 super_mix = False):
 
+        self.super_mix = super_mix
         self.diluent = diluent
         self.name = name
         self.id = id
@@ -462,7 +465,8 @@ class PrimerMix:
                'name': 1,
                'vol': 2,
                'final': 6,
-               'virus': 13
+               'virus': 13,
+               'super_mix': 1
                }
         logging.debug("opening excel")
         import openpyxl
@@ -494,6 +498,8 @@ class PrimerMix:
         ref_vol = None
         kws = None
         components = []
+        super_mix = False
+        superm = None
 
         for r in ws.iter_rows():
 
@@ -503,6 +509,8 @@ class PrimerMix:
             elif line == header:
                 id = r[col['id']].value
                 kws = [r[col['virus']].value]
+                superm = r[col['super_mix']].value
+                super_mix = ('SuperMix' == superm)
                 line += 1
 
             elif line == name_l:
@@ -529,7 +537,9 @@ class PrimerMix:
                                      conc=conc,
                                      ref_vol=ref_vol,
                                      kws=kws,
-                                     components=components
+                                     components=components,
+                                     diluent=comp_name,
+                                     super_mix=super_mix
                                      )
                     line = no_l
                     id = None
@@ -538,11 +548,20 @@ class PrimerMix:
                     ref_vol = None
                     kws = None
                     components = []
+                    super_mix = False
+
                 else:
-                    components += [(r[col['id']].value,
-                                    comp_name,
-                                    r[col['conc']].value,
-                                    r[col['final']].value)]
+                    comp_id = r[col['id']].value
+                    final_conc = r[col['final']].value
+                    if final_conc and (comp_id or comp_name):
+                        superc = r[col['conc'] + 1].value
+                        super_c = ('"x"' == superc)
+                        components += [(comp_id,
+                                        comp_name,
+                                        r[col['conc']].value,
+                                        final_conc,
+                                        super_c
+                                        )]
 
         return pmix
 
