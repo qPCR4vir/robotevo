@@ -290,6 +290,7 @@ class preMix(Reagent):
         NumSamples = NumSamples or Reagent.current_protocol.num_of_samples
         return self.components[index].min_vol(NumSamples)
 
+
 class Primer:
     ids = {}
     seqs = {}
@@ -297,7 +298,6 @@ class Primer:
     key_words = {}
     ids_synt = {}
 
-    excess = def_mix_excess
     next_internal_id = 0
 
     def __init__(self,
@@ -340,8 +340,11 @@ class Primer:
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+
     @staticmethod
-    def load_excel_list(file_name:Path = None):
+    def load_excel_list(file_name: Path = None):
         col = {'conc': 0,
                'id': 2,
                'name': 5,
@@ -358,7 +361,7 @@ class Primer:
         import openpyxl
 
         if not file_name:
-            file_name = Path('K:\AG RealtimePCR\Ariel\PCR fli.xlsx')
+            file_name = Path('C:\Prog\exp\PCR fli.xlsx')
 
         if not file_name:
             from tkinter import filedialog
@@ -370,7 +373,7 @@ class Primer:
 
         logging.debug(file_name)
 
-        wb = openpyxl.load_workbook(file_name)
+        wb = openpyxl.load_workbook(str(file_name))
         logging.debug(wb.sheetnames)
 
         ws = wb['PCR fli-oligos']
@@ -392,10 +395,11 @@ class Primer:
                          id_synt=r[col['ido']].value,
                          kws=[r[col['virus']].value]
                          )
-        pass
+        return p
 
 
 class PrimerReagent (Reagent):
+    excess = def_mix_excess
 
     def __init__(self,
                  primer: Primer,
@@ -413,20 +417,163 @@ class PrimerReagent (Reagent):
                          excess=Primer.excess)
 
 
+class PrimerMix:
+    ids = {}
+    names = {}
+    key_words = {}
 
-class PrimerMix(preMix):
-    IDs={}
-    Names={}
-    KWs={}
-    Excess = def_mix_excess
+    next_internal_id = 0
+
+    def __init__(self,
+                 name,
+                 id = None,
+                 conc = 10.0,
+                 components = None,
+                 ref_vol = None,
+                 diluent = None,
+                 kws = None):
+
+        self.diluent = diluent
+        self.name = name
+        self.id = id
+        self.conc = conc
+        self.components = components
+        self.ref_vol = ref_vol
+
+        self._internal_id = PrimerMix.next_internal_id
+        PrimerMix.next_internal_id += 1
+
+        PrimerMix.names.setdefault(name, []).append(self)
+        PrimerMix.ids.setdefault(id, []).append(self)
+        if isinstance(kws, list):
+            for kw in kws:
+                PrimerMix.key_words.setdefault(kw, []).append(self)
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+
+    @staticmethod
+    def load_excel_list(file_name: Path = None):
+        col = {'conc': 2,
+               'id': 0,
+               'name': 1,
+               'vol': 2,
+               'final': 6,
+               'virus': 13
+               }
+        logging.debug("opening excel")
+        import openpyxl
+
+        if not file_name:
+            file_name = Path('C:\Prog\exp\PCR fli.xlsx')
+
+        if not file_name:
+            from tkinter import filedialog
+            file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
+                                                   defaultextension='fas',
+                                                   title='Select HEV isolate subtyping deta')
+            if not file_name:
+                return
+
+        logging.debug(file_name)
+
+        wb = openpyxl.load_workbook(str(file_name))
+        logging.debug(wb.sheetnames)
+
+        ws = wb['Primer mix']
+        no_l, header, name_l, vol_l, sep_l, table_h_l, primer_l, diluter_l = 0, 1, 2, 3, 4, 5, 6, 7
+        diluter = 'TE 0,1 x'
+        line = no_l
+        pmix = None
+        id = None
+        name = None
+        conc = None
+        ref_vol = None
+        kws = None
+        components = []
+
+        for r in ws.iter_rows():
+
+            if line == no_l:
+                line += 1
+
+            elif line == header:
+                id = r[col['id']].value
+                kws = [r[col['virus']].value]
+                line += 1
+
+            elif line == name_l:
+                # assert id == r[col['id']].value
+                name = r[col['name']].value
+                conc = r[col['conc']].value
+                line += 1
+
+            elif line == vol_l:
+                ref_vol = r[col['vol']].value
+                line += 1
+
+            elif line == sep_l:
+                line += 1
+
+            elif line == table_h_l:
+                line += 1
+
+            elif line == primer_l:
+                comp_name = r[col['name']].value
+                if comp_name == diluter:
+                    pmix = PrimerMix(name=name,
+                                     id=id,
+                                     conc=conc,
+                                     ref_vol=ref_vol,
+                                     kws=kws,
+                                     components=components
+                                     )
+                    line = no_l
+                    id = None
+                    name = None
+                    conc = None
+                    ref_vol = None
+                    kws = None
+                    components = []
+                else:
+                    components += [(r[col['id']].value,
+                                    comp_name,
+                                    r[col['conc']].value,
+                                    r[col['final']].value)]
+
+        return pmix
 
 
-    def __init__(self, name, labware,  ID=None, conc=10.0, pos=None, components=None, replicas=1, initial_vol=None, excess=None):
-        preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
+class PrimerMixReagent(preMix):
+    excess = def_mix_excess
+
+    def __init__(self,
+                 name,
+                 labware,
+                 ID=None,
+                 conc=10.0,
+                 pos=None,
+                 components=None,
+                 replicas=1,
+                 initial_vol=None,
+                 excess=None):
+
+        preMix.__init__(self,
+                        name,
+                        labware or Lab.stock,
+                        pos,
+                        components,
+                        replicas=replicas,
+                        initial_vol=initial_vol,
+                        excess=excess or PrimerMix.excess)
+
         vol=0.0
         for reagent in components:
             vol += reagent.volpersample
-            reagent.excess +=  ex/100.0      # todo revise! best to calculate at the moment of making?
+            reagent.excess += excess/100.0      # todo revise! best to calculate at the moment of making?
             reagent.put_min_vol()
 
         if initial_vol is None: initial_vol = 0.0
@@ -502,4 +649,5 @@ class PCRexperiment:
 if __name__ == '__main__':
     logging.getLogger(__name__).setLevel(10)
     Primer.load_excel_list()
+    PrimerMix.load_excel_list()
 
