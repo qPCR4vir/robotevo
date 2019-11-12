@@ -584,10 +584,127 @@ class PrimerMixReagent(preMix):
         #self.init_vol()
 
 
-class PCRMasterMix(preMix):
-    IDs={}
-    Names={}
-    KWs={}
+class PCRMasterMix:
+    ids = {}
+    names = {}
+    next_internal_id = 0
+
+    def __init__(self,
+                 name,
+                 id=None,
+                 vol_per_reaction = 25,  # uL
+                 sample_vol = 5,  # uL
+                 components=None,
+                 title = None):
+
+        self.name = name
+        self.id = id
+        self.vol_per_reaction = vol_per_reaction
+        self.sample_vol = sample_vol
+        self.title = title
+        self.components = components
+        self._internal_id = PCRMasterMix.next_internal_id
+        PCRMasterMix.next_internal_id += 1
+
+        PCRMasterMix.names.setdefault(name, []).append(self)
+        PCRMasterMix.ids.setdefault(id, []).append(self)
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+
+    @staticmethod
+    def load_excel_list(file_name: Path = None):
+        col = {'conc': 16,
+               'id': 14,
+               'name': 14,
+               'vol': 16,
+               'final': 18,
+               'sample_v': 16,
+               'title': 15,
+               'comp_name': 15
+               }
+        logging.debug("opening excel")
+        import openpyxl
+
+        if not file_name:
+            file_name = Path('C:\Prog\exp\PCR fli.xlsx')
+
+        if not file_name:
+            from tkinter import filedialog
+            file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
+                                                   defaultextension='fas',
+                                                   title='Select HEV isolate subtyping deta')
+            if not file_name:
+                return
+
+        logging.debug(file_name)
+
+        wb = openpyxl.load_workbook(str(file_name))
+        logging.debug(wb.sheetnames)
+
+        ws = wb['Druken']
+        no_l, header, name_l, vol_l, sampl_l, table_h_l, comp_l, diluter_l = 0, 0, 0, 1, 2, 5, 6, 7
+        diluter = 'H2O'
+        line = no_l
+        pmix = None
+        id = None
+        name = None
+        vol_per_reaction = 25
+        components = []
+        sample_vol = 5  # uL
+        title = None
+
+        for r in ws.iter_rows():
+
+            if line <= name_l:
+                name = r[col['name']].value
+                if name:
+                    title = r[col['title']].value
+                    line += 1
+
+            elif line == vol_l:
+                id = r[col['id']].value
+                vol_per_reaction = r[col['vol']].value
+                line += 1
+
+            elif line == sampl_l:
+                sample_vol = r[col['sample_v']].value
+                line += 1
+
+            else:
+                comp_name = r[col['comp_name']].value
+                if comp_name == diluter:
+                    pmix = PCRMasterMix( name=name,
+                                         id=id,
+                                         vol_per_reaction=vol_per_reaction,
+                                         sample_vol=sample_vol,
+                                         title=title,
+                                         components=components
+                                         )
+                    line = no_l
+                    id = None
+                    name = None
+                    vol_per_reaction = 25
+                    components = []
+                    sample_vol = 5  # uL
+                    title = None
+
+                elif comp_name:
+                    comp_id = r[col['id']].value
+                    final_conc = r[col['final']].value
+                    if final_conc and (comp_id or comp_name):
+                        components += [(comp_id,
+                                        comp_name,
+                                        r[col['conc']].value,
+                                        final_conc)]
+
+        return pmix
+
+
+class PCRMasterMixReagent(preMix):
     Excess = def_mix_excess
 
 
@@ -648,6 +765,8 @@ class PCRexperiment:
 
 if __name__ == '__main__':
     logging.getLogger(__name__).setLevel(10)
-    Primer.load_excel_list()
-    PrimerMix.load_excel_list()
+    primers = Primer.load_excel_list()
+    mixes = PrimerMix.load_excel_list()
+    pcrs = PCRMasterMix.load_excel_list()
+    pass
 
