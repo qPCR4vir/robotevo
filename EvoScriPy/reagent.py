@@ -624,9 +624,10 @@ class PCRMasterMix:
         self.components = components
         self._internal_id = PCRMasterMix.next_internal_id
         PCRMasterMix.next_internal_id += 1
-
-        PCRMasterMix.names.setdefault(name, []).append(self)
-        PCRMasterMix.ids.setdefault(id, []).append(self)
+        assert name not in PCRMasterMix.names
+        PCRMasterMix.names[name] = self
+        assert id not in PCRMasterMix.ids
+        PCRMasterMix.ids[id] = self
 
     def __str__(self):
         return self.name
@@ -635,7 +636,7 @@ class PCRMasterMix:
         return (self.name or '-') + '[' + str(self.id or '-') + ']'
 
     @staticmethod
-    def load_excel_list(file_name: Path = None):
+    def load_excel_list(file_name: Path = None, page=None):
         col = {'conc': 16,
                'id': 14,
                'name': 14,
@@ -664,7 +665,7 @@ class PCRMasterMix:
         wb = openpyxl.load_workbook(str(file_name))
         logging.debug(wb.sheetnames)
 
-        ws = wb['Druken']
+        ws = wb[page or 'Druken']
         no_l, header, name_l, vol_l, sampl_l, table_h_l, comp_l, diluter_l = 0, 0, 0, 1, 2, 5, 6, 7
         diluter = 'H2O'
         line = no_l
@@ -765,10 +766,12 @@ class PCReaction:
 
     rol = {'':empty, None:empty, 'NTC':ntc, 'Pos':pos, 'Unk':unk, 'Std':std}
 
-    def __init__(self, rol, sample=None, targets=None, mix=None, replica=None):
+    def __init__(self, rol, sample=None, targets=None, mix=None, replica=None, row=None, col=None):
+        self.col = col
+        self.row = row
         self.rol = rol
         self.sample = sample
-        self.targets = targets
+        self.targets = targets or []
         self.mix = mix
         self.replica = replica
 
@@ -776,6 +779,12 @@ class PCReaction:
     def get_rol(rol):
         rol, replica = rol.split('-')
         return rol in PCReaction.rol, rol, replica
+
+    def __str__(self):
+        return self.sample
+
+    def __repr__(self):
+        return (self.sample or '-') + '[' + str(self.targets[0] or '-') + ']'
 
 
 class PCReactionReagent (Reaction):
@@ -785,21 +794,121 @@ class PCReactionReagent (Reaction):
 
 
 class PCRexperiment:
-    def __init__(self, id, name, ncol, nrow):
+    def __init__(self, id=None, name=None, ncol = 0, nrow = 0):
+        self.id = id
+        self.name = name
         self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow   # list of PCRReaction to create
         self.targets = {}
-        self.mixes ={}
+        self.mixes = {}
         self.samples = {}
-        self.vol = PCReaction.vol
-        self.vol_sample = PCReaction.vol_sample
+        # self.vol = PCReaction.vol
+        # self.vol_sample = PCReaction.vol_sample
 
-    def add_reaction(self, pcr_reaction: PCReaction, col, row):
-
+    def add_reaction(self, pcr_reaction: PCReaction):
+        self.pcr_reactions[pcr_reaction.row][pcr_reaction.col] = pcr_reaction
+        self.samples.setdefault(pcr_reaction.sample, []).append(pcr_reaction)
+        for target in pcr_reaction.targets:
+            self.targets.setdefault(target, []).append(pcr_reaction)
+            if target in PCRMasterMix.names:
+                mmix = PCRMasterMix.names[target]
+                if pcr_reaction.mix:
+                    assert pcr_reaction.mix is mmix
+                else:
+                    pcr_reaction.mix = mmix
+        self.mixes.setdefault(pcr_reaction.mix, []).append(pcr_reaction)
         pass
+
+    def load_excel_list(self, file_name: Path = None, page=None, num_col=12, num_row=8, cell_rows=None, sample_line=None):
+        col = {'conc': 16,
+               'id': 14,
+               'name': 14,
+               'vol': 16,
+               'final': 18,
+               'sample_v': 16,
+               'title': 15,
+               'comp_name': 15
+               }
+        logging.debug("opening excel")
+        import openpyxl
+
+        if not file_name:
+            file_name = Path('C:\Prog\exp\PCR fli.xlsx')
+
+        if not file_name:
+            from tkinter import filedialog
+            file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
+                                                   defaultextension='fas',
+                                                   title='Select HEV isolate subtyping deta')
+            if not file_name:
+                return
+
+        logging.debug(file_name)
+
+        self.name = str(str(file_name))
+        wb = openpyxl.load_workbook(self.name)
+
+        logging.debug(wb.sheetnames)
+
+        ws = wb[page or 'Druken']
+        ncol = num_col
+        row = 0
+        cell_rows = cell_rows
+        sample_line = sample_line
+        line = 0
+        reactions = None
+
+        for r in ws.iter_rows():
+
+            if line == 0:
+                line += 1
+
+            elif line == 1:
+                reactions = [PCReaction(PCReaction.empty, row=row, col=col) for col in range(ncol)]
+                for rx in reactions:
+                    rx.rol = PCReaction.rol[r[rx.col + 1].value]
+                line += 1
+
+            elif line < sample_line:
+                for rx in reactions:
+                    target = r[rx.col + 1].value
+                    if target:
+                        assert rx.rol
+                        rx.targets.append(target)
+                line += 1
+                continue
+
+            elif line == sample_line:
+                for rx in reactions:
+                    sample = r[rx.col + 1].value
+                    if sample:
+                        assert rx.rol
+                        rx.sample = sample
+                line += 1
+
+            elif line <= cell_rows:
+                # read cell line
+                line += 1
+
+            if  line >= cell_rows:  # last cell line
+                row += 1
+                if len(self.pcr_reactions) < row:
+                    self.pcr_reactions += [[None]*ncol]
+                for rx in reactions:
+                    self.add_reaction(rx)
+                line = 1
+                if row == num_row:
+                    break
+
+        return self
+
+
+
     def pippete_mix(self):
         pass
+
     def pippete_samples(self):
         pass
+
     def vol (self, vol, vol_sample):
         self.vol = vol
         self.vol_sample = vol_sample
@@ -808,7 +917,8 @@ class PCRexperiment:
 if __name__ == '__main__':
     logging.getLogger(__name__).setLevel(10)
     primers = Primer.load_excel_list()
-    mixes = PrimerMix.load_excel_list()
-    pcrs = PCRMasterMix.load_excel_list()
+    primermixes = PrimerMix.load_excel_list()
+    pcrmixes = PCRMasterMix.load_excel_list(file_name='K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx', page='Druken (2)')
+    exp = PCRexperiment(460, "Exp 462. PF").load_excel_list(cell_rows=3, sample_line=3, file_name='K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx', page='Druken (2)')
     pass
 
