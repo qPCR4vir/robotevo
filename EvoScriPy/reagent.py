@@ -916,9 +916,18 @@ class PCRexperiment:
 
 if __name__ == '__main__':
     logging.getLogger(__name__).setLevel(10)
+
     primers = Primer.load_excel_list()
     primermixes = PrimerMix.load_excel_list()
-    pcrmixes = PCRMasterMix.load_excel_list(file_name='K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx', page='Druken (2)')
-    exp = PCRexperiment(460, "Exp 462. PF").load_excel_list(cell_rows=3, sample_line=3, file_name='K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx', page='Druken (2)')
+
+    # exp_file = 'K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'
+    # page ='Druken (2)'
+
+    exp_file = 'C:\\Users\\Ariel\\Documents\\Exp\\PCR\\Exp 308. WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd.xlsx'
+    page = 'Druken (3)'
+
+    pcrmixes = PCRMasterMix.load_excel_list(file_name=exp_file, page=page)
+    exp = PCRexperiment(460, "Exp 462. PF").load_excel_list(cell_rows=6, sample_line=6, file_name=exp_file, page=page)
+
     pass
 
