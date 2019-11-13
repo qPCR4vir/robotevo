@@ -756,21 +756,45 @@ class PCRMix (preMix):
     pass
 
 
-class PCReaction (Reaction):
+class PCReaction:
+    empty = 0
+    ntc = 1
+    pos = 2
+    std = 3
+    unk = 4
+
+    rol = {'':empty, None:empty, 'NTC':ntc, 'Pos':pos, 'Unk':unk, 'Std':std}
+
+    def __init__(self, rol, sample=None, targets=None, mix=None, replica=None):
+        self.rol = rol
+        self.sample = sample
+        self.targets = targets
+        self.mix = mix
+        self.replica = replica
+
+    @staticmethod
+    def get_rol(rol):
+        rol, replica = rol.split('-')
+        return rol in PCReaction.rol, rol, replica
+
+
+class PCReactionReagent (Reaction):
     vol = 25
     vol_sample = 5
     pass
 
 
 class PCRexperiment:
-    def __init__(self, ID, name):
-        self.PCReactions = []   # list of PCRReaction to create
-        self.PCRmixes = []
-        self.samples = []
+    def __init__(self, id, name, ncol, nrow):
+        self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow   # list of PCRReaction to create
+        self.targets = {}
+        self.mixes ={}
+        self.samples = {}
         self.vol = PCReaction.vol
         self.vol_sample = PCReaction.vol_sample
 
-    def addReactions(self, PCRmix: PCRMix, samples, labware: object) -> list:  # of PCRReaction
+    def add_reaction(self, pcr_reaction: PCReaction, col, row):
+
         pass
     def pippete_mix(self):
         pass
@@ -779,7 +803,6 @@ class PCRexperiment:
     def vol (self, vol, vol_sample):
         self.vol = vol
         self.vol_sample = vol_sample
-
 
 
 if __name__ == '__main__':
