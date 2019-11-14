@@ -7,6 +7,7 @@ __author__ = 'Ariel'
 # this is
 
 from EvoScriPy.protocol_steps import *
+from EvoScriPy.reagent import *
 from protocols.evo75_f.evo75_f import Evo75_FLI
 
 
@@ -27,8 +28,18 @@ class PCR(Evo75_FLI):
     def V_2_plate(self):        self.num_plates = 2
     def V_3_plate(self):        self.num_plates = 3
 
-    def __init__(self, GUI=None, run_name=None, output_filename=None, exp_file=None):
+    def __init__(self,
+                 GUI=None,
+                 run_name=None,
+                 output_filename=None,
+                 exp_file=None,
+                 page=None,
+                 cell_rows=6,
+                 sample_line=6):
 
+        self.sample_line = sample_line
+        self.cell_rows = cell_rows
+        self.page = page
         self.exp_file = exp_file
         this = Path(__file__).parent
 
@@ -38,6 +49,11 @@ class PCR(Evo75_FLI):
                            worktable_template_filename = this / 'Freedom75_FLI_PCR.ewt',
                            output_filename             = output_filename or this / 'scripts' / 'PCR',
                            run_name                    = run_name)
+
+        # call all the "DB" things not directly used.
+
+        Primer.load_excel_list()
+        PrimerMix.load_excel_list()
 
     def run(self):
         self.initialize()
@@ -57,6 +73,24 @@ class PCR(Evo75_FLI):
 
         # Define the reactives in each labware (Cuvette, eppys, etc.)
 
+
+        # exp_file = 'K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'
+        # page ='Druken (2)'
+
+        sheet0 = ExpSheet(
+            file_name=Path('K:\\AG RealtimePCR\\Ariel\\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'),
+            page='Druken (2)',
+            cell_rows=3,
+            sample_line=3)
+
+        sheet1 = ExpSheet(file_name=Path(
+            'C:\\Users\\Ariel\\Documents\\Exp\\PCR\\'
+            'Exp 308. WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd.xlsx'),
+            page='Druken (3)',
+            cell_rows=6,
+            sample_line=6)
+
+        exp = PCRexperiment().load_excel_list(sheet0)
 
         # Show the check_list GUI to the user for possible small changes
 

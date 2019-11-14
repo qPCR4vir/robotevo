@@ -603,6 +603,27 @@ class PrimerMixReagent(preMix):
         #self.init_vol()
 
 
+class ExpSheet:
+    def __init__(self,
+                 file_name: Path,
+                 page,
+                 cell_rows,
+                 sample_line,
+                 num_col=12,
+                 num_row=8,
+                 ):
+
+        self.file_name = file_name
+        self.page = page
+        self.num_col = num_col
+        self.num_row = num_row
+        self.cell_rows = cell_rows
+        self.sample_line = sample_line
+        name = Path(file_name).stem.split('.')
+        self.id = name[0]
+        self.title = '.'.join(name[1:])
+
+
 class PCRMasterMix:
     ids = {}
     names = {}
@@ -636,7 +657,7 @@ class PCRMasterMix:
         return (self.name or '-') + '[' + str(self.id or '-') + ']'
 
     @staticmethod
-    def load_excel_list(file_name: Path = None, page=None):
+    def load_excel_list(exp_sheet: ExpSheet, ws=None):
         col = {'conc': 16,
                'id': 14,
                'name': 14,
@@ -646,26 +667,29 @@ class PCRMasterMix:
                'title': 15,
                'comp_name': 15
                }
-        logging.debug("opening excel")
-        import openpyxl
 
-        if not file_name:
-            file_name = Path('C:\Prog\exp\PCR fli.xlsx')
+        if ws is None:
+            logging.debug("opening excel file")
+            import openpyxl
 
-        if not file_name:
-            from tkinter import filedialog
-            file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
-                                                   defaultextension='fas',
-                                                   title='Select HEV isolate subtyping deta')
-            if not file_name:
-                return
+            if not exp_sheet.file_name:        # deprecate
+                file_name = Path('C:\Prog\exp\PCR fli.xlsx')
 
-        logging.debug(file_name)
+            if not exp_sheet.file_name:       # deprecate
+                from tkinter import filedialog       # deprecate
+                file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
+                                                       defaultextension='fas',
+                                                       title='Select HEV isolate subtyping deta')
+                if not file_name:
+                    return
 
-        wb = openpyxl.load_workbook(str(file_name))
-        logging.debug(wb.sheetnames)
+            logging.debug(exp_sheet.file_name)
 
-        ws = wb[page or 'Druken']
+            wb = openpyxl.load_workbook(str(exp_sheet.file_name))
+            logging.debug(wb.sheetnames)
+
+            ws = wb[exp_sheet.page or 'Druken']       # deprecate
+
         no_l, header, name_l, vol_l, sampl_l, table_h_l, comp_l, diluter_l = 0, 0, 0, 1, 2, 5, 6, 7
         diluter = 'H2O'
         line = no_l
@@ -676,8 +700,14 @@ class PCRMasterMix:
         components = []
         sample_vol = 5  # uL
         title = None
+        to_skeep = 1 + exp_sheet.num_row * exp_sheet.cell_rows
+        skeeped = 0
 
         for r in ws.iter_rows():
+
+            if skeeped < to_skeep:
+                skeeped += 1
+                continue
 
             if line <= name_l:
                 name = r[col['name']].value
@@ -818,7 +848,12 @@ class PCRexperiment:
         self.mixes.setdefault(pcr_reaction.mix, []).append(pcr_reaction)
         pass
 
-    def load_excel_list(self, file_name: Path = None, page=None, num_col=12, num_row=8, cell_rows=None, sample_line=None):
+    def load_excel_list(self, exp_sheet: ExpSheet, load_PCRmix: bool = True):
+        if self.id is None:
+            self.id = exp_sheet.id
+        if self.name is None:
+            self.name = exp_sheet.title
+
         col = {'conc': 16,
                'id': 14,
                'name': 14,
@@ -831,29 +866,35 @@ class PCRexperiment:
         logging.debug("opening excel")
         import openpyxl
 
-        if not file_name:
-            file_name = Path('C:\Prog\exp\PCR fli.xlsx')
+        if not exp_sheet.file_name:
+            exp_sheet.file_name = Path('C:\Prog\exp\PCR fli.xlsx')
 
-        if not file_name:
+        if not exp_sheet.file_name:
             from tkinter import filedialog
-            file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
+            exp_sheet.file_name = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsm"), ("All files", "*.*")),
                                                    defaultextension='fas',
                                                    title='Select HEV isolate subtyping deta')
-            if not file_name:
+            if not exp_sheet.file_name:
                 return
 
-        logging.debug(file_name)
+        if load_PCRmix:
+            PCRMasterMix(exp_sheet)
 
-        self.name = str(str(file_name))
-        wb = openpyxl.load_workbook(self.name)
+        logging.debug(exp_sheet.file_name)
+
+        wb = openpyxl.load_workbook(exp_sheet.file_name)
 
         logging.debug(wb.sheetnames)
 
-        ws = wb[page or 'Druken']
-        ncol = num_col
+        ws = wb[exp_sheet.page or 'Druken']
+
+        if load_PCRmix:
+            PCRMasterMix.load_excel_list(exp_sheet, ws)
+
+        ncol = exp_sheet.num_col
         row = 0
-        cell_rows = cell_rows
-        sample_line = sample_line
+        cell_rows = exp_sheet.cell_rows
+        sample_line = exp_sheet.sample_line
         line = 0
         reactions = None
 
@@ -896,12 +937,10 @@ class PCRexperiment:
                 for rx in reactions:
                     self.add_reaction(rx)
                 line = 1
-                if row == num_row:
+                if row == exp_sheet.num_row:
                     break
 
         return self
-
-
 
     def pippete_mix(self):
         pass
@@ -920,14 +959,17 @@ if __name__ == '__main__':
     primers = Primer.load_excel_list()
     primermixes = PrimerMix.load_excel_list()
 
-    # exp_file = 'K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'
-    # page ='Druken (2)'
+    sheet0 = ExpSheet(file_name=Path('K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'),
+                      page='Druken (2)',
+                      cell_rows=3,
+                      sample_line=3)
 
-    exp_file = 'C:\\Users\\Ariel\\Documents\\Exp\\PCR\\Exp 308. WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd.xlsx'
-    page = 'Druken (3)'
-
-    pcrmixes = PCRMasterMix.load_excel_list(file_name=exp_file, page=page)
-    exp = PCRexperiment(460, "Exp 462. PF").load_excel_list(cell_rows=6, sample_line=6, file_name=exp_file, page=page)
+    sheet1 = ExpSheet(file_name=Path('C:\\Users\\Ariel\\Documents\\Exp\\PCR\\Exp 308. WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd.xlsx'),
+                      page='Druken (3)',
+                      cell_rows=6,
+                      sample_line=6)
+    # pcrmixes = PCRMasterMix.load_excel_list(sheet)
+    exp = PCRexperiment().load_excel_list(sheet0)
 
     pass
 
