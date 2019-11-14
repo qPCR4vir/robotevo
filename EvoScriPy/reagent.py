@@ -942,6 +942,17 @@ class PCRexperiment:
 
         return self
 
+
+class PCRexperimentRtic:
+    def __init__(self, pcr_exp: (PCRexperiment, list), plates: (lab.Labware, list), protocol=None):
+        self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]
+        self.plates = plates if isinstance(plates, list) else [plates]
+        self.protocol = protocol
+        for exp in self.pcr_exp:
+            pass
+
+
+
     def pippete_mix(self):
         pass
 
