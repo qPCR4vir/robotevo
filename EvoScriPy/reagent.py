@@ -30,18 +30,18 @@ class Reagent:
     use_minimal_number_of_aliquots = True
 
     def __init__(self,
-                 name           : str,
-                 labware        : (lab.Labware, str)        = None,
-                 volpersample   : float                     = 0.0,
-                 single_use     : float                     = None,
-                 wells          : (int, [int], [lab.Well])  = None,
-                 replicas       : int                       = None,
-                 def_liq_class    : (str,(str,str))           = None,
-                 excess         : float                     = None,
-                 initial_vol    : float                     = 0.0,
-                 maxFull        : float                     = None,
-                 num_of_samples : int                       = None,
-                 minimize_aliquots : bool                   = None):
+                 name          : str,
+                 labware       : (lab.Labware, str)        = None,
+                 volpersample  : float                     = 0.0,
+                 single_use    : float                     = None,
+                 wells         : (int, [int], [lab.Well])  = None,
+                 replicas      : int                       = None,
+                 def_liq_class : (str, (str, str))         = None,
+                 excess        : float                     = None,
+                 initial_vol   : float                     = 0.0,
+                 fill_limit_aliq : float                   = None,
+                 num_of_samples: int                       = None,
+                 minimize_aliquots: bool                   = None):
         """
         This is a named set of aliquots of an homogeneous solution.
         Put a reagent into labware wells, possible with replicates and set the amount to be used for each sample,
@@ -64,7 +64,7 @@ class Reagent:
                                 instructions.def_liquidClass if None
         :param excess;          in %
         :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
-        :param maxFull;         maximo allowed volume in % of the wells capacity
+        :param fill_limit_aliq;    maximo allowed volume in % of the wells capacity
         :param num_of_samples;  if None, the number of samples of the current protocol will be assumed
         :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
@@ -87,7 +87,7 @@ class Reagent:
 
             worktable = labware.location.worktable
         else:
-            if (Reagent.current_protocol):
+            if Reagent.current_protocol:
                 worktable = Reagent.current_protocol.worktable                               # todo temporal
 
         assert name not in worktable.reagents
@@ -95,11 +95,11 @@ class Reagent:
 
         ex= def_reagent_excess if excess is None else excess
 
-        self.labware    = labware
-        self.maxFull    = 1.0 if maxFull is None else maxFull/100.0
-        self.excess     = 1.0 + ex/100.0
+        self.labware = labware
+        self.fill_limit_aliq = 1.0 if fill_limit_aliq is None else fill_limit_aliq / 100.0
+        self.excess = 1.0 + ex/100.0
         self.def_liq_class = def_liq_class
-        self.name       = name
+        self.name = name
         self.volpersample = volpersample
         self.components = []                                                            # todo reserved for future use
         if minimize_aliquots is not None:
@@ -118,17 +118,17 @@ class Reagent:
             if num_of_samples is None:
                 num_of_samples = Reagent.current_protocol.num_of_samples or 0
 
-        self.minNumRep = self.min_num_of_replica(NumSamples=num_of_samples)
+        self.min_num_aliq = self.min_num_of_replica(num_of_samples=num_of_samples)
 
-        # coordinate: minNumRep, wells, replicas, initial_vol. todo fine-tune warnings.
+        # coordinate: min_num_aliq, wells, replicas, initial_vol. todo fine-tune warnings.
         if replicas is None:
-            replicas = self.minNumRep
-        assert replicas >= self.minNumRep, ("too few wells (" + str(len(wells)) + ") given for the minimum "
-                                                + "number of replica needed (" + str(self.minNumRep) + " )" )
+            replicas = self.min_num_aliq
+        assert replicas >= self.min_num_aliq, ("too few wells (" + str(len(wells)) + ") given for the minimum "
+                                               + "number of replica needed (" + str(self.min_num_aliq) + " )")
 
         if isinstance(wells, list):                         # use len(pos) to correct replicas
-            assert len(wells) >= self.minNumRep, ("too few wells (" + str(len(wells)) + ") given for the minimum "
-                                                + "number of replica needed (" + str(self.minNumRep) + " )" )
+            assert len(wells) >= self.min_num_aliq, ("too few wells (" + str(len(wells)) + ") given for the minimum "
+                                                     + "number of replica needed (" + str(self.min_num_aliq) + " )")
             if replicas < len(wells):
                 logging.warning("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
                 replicas = len(wells)
@@ -136,9 +136,9 @@ class Reagent:
                                                 + "number of replicas (" + str(replicas) + " )" )
             if isinstance(initial_vol, list):
                 assert replicas == len(initial_vol)
-            if replicas > self.minNumRep:                                    # todo revise !! for preMix components
+            if replicas > self.min_num_aliq:                                    # todo revise !! for preMix components
                 logging.warning("WARNING !! You may be putting more wells replicas (" + str(len(wells)) + ") of " + name
-                      + " that the minimum you need("  + str(self.minNumRep) + " )")
+                                + " that the minimum you need(" + str(self.min_num_aliq) + " )")
 
         if not isinstance(initial_vol, list):
             initial_vol = [initial_vol]*replicas
@@ -146,24 +146,24 @@ class Reagent:
         if replicas < len(initial_vol):
             logging.warning("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
             replicas = len(initial_vol)
-            if replicas > self.minNumRep:                                      # todo revise !! for preMix components
+            if replicas > self.min_num_aliq:                                      # todo revise !! for preMix components
                 logging.warning("WARNING !! You may be putting more inital volumens values (" + str(replicas) + ") of " + name
-                      + " that the minimum number of replicas you need("  + str(self.minNumRep) + " )")
+                                + " that the minimum number of replicas you need(" + str(self.min_num_aliq) + " )")
 
-        self.Replicas   = labware.put(self, wells, self.minNumRep if self.minimize_aliquots else replicas)
+        self.Replicas   = labware.put(self, wells, self.min_num_aliq if self.minimize_aliquots else replicas)
         self.pos        = self.Replicas[0].offset                                   # ??
 
         self.init_vol(NumSamples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
         self.include_in_check = True
 
-    def min_num_of_replica(self, NumSamples: int=None)->int:
+    def min_num_of_replica(self, num_of_samples: int = None) -> int:
         """
         A minimal number of replicas (wells, aliquots) will be calculated based on the minimal volume,
         taking into account the maximum allowed volume per well and the excess specified.
-        :param NumSamples:
+        :param num_of_samples:
         :return:
         """
-        return int (self.min_vol(NumSamples) / (self.labware.type.max_vol * self.maxFull)) + 1
+        return int(self.min_vol(num_of_samples) / (self.labware.type.max_vol * self.fill_limit_aliq)) + 1
 
     @staticmethod
     def set_reagent_list(protocol):
@@ -241,7 +241,7 @@ class preMix(Reagent):
                  initial_vol=None,
                  def_liq_class=None,
                  excess     =None,
-                 maxFull    =None,
+                 fill_limit_aliq    =None,
                  num_of_samples = None                  ):
 
         ex= def_mix_excess if excess is None else excess
@@ -261,7 +261,7 @@ class preMix(Reagent):
                          def_liq_class   = def_liq_class,
                          excess        = ex,
                          initial_vol   = initial_vol,
-                         maxFull       = maxFull,
+                         fill_limit_aliq= fill_limit_aliq,
                          num_of_samples = num_of_samples)
 
         self.components = components
@@ -277,7 +277,6 @@ class preMix(Reagent):
         # put volume in replicas only at the moment of making  !!
         # Reagent.init_vol(self, num_samples)
         # self.put_min_vol(num_samples)
-
 
     def make(self, NumSamples=None):      # todo deprecate?
         if self.Replicas[0].vol is None:   # ????
@@ -757,7 +756,6 @@ class PCRMasterMix:
 class PCRMasterMixReagent(preMix):
     Excess = def_mix_excess
 
-
     def __init__(self,
                  pcr_mix: PCRMasterMix,
                  labware: lab.Labware,
@@ -988,8 +986,6 @@ class PCRexperimentRtic:
                 mix = PCRMasterMixReagent(pcr_mix, reag_rack, ns, sv)
                 self.mixes[mix] = sw                              # just samples?
         pass
-
-
 
     def pippete_mix(self):
         pass

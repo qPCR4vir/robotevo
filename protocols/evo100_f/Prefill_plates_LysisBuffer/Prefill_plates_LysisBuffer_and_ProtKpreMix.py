@@ -121,31 +121,31 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                 volpersample   = ProtKVolume,
                                 def_liq_class    = self.Small_vol_disp,
                                 num_of_samples = self.num_plates * num_of_samples,
-                                maxFull        = 90)
-            ProtK.maxFull=0.96
+                                fill_limit_aliq= 90)
+            ProtK.fill_limit_aliq=0.96
 
             cRNA = Reagent("Carrier RNA ",
                                Reagents_TubeRack,
                                volpersample    = cRNAVolume,
                                def_liq_class     = self.Small_vol_disp,
                                num_of_samples  = self.num_plates * num_of_samples,
-                               maxFull         = 95)
+                               fill_limit_aliq= 95)
 
             IC_MS2 = Reagent("IC MS2 phage culture ",
                                  Reagents_TubeRack,
                                  volpersample   = IC_MS2Volume,
                                  def_liq_class    = self.Small_vol_disp,
                                  num_of_samples = self.num_plates * num_of_samples,
-                                 maxFull        = 95)
+                                 fill_limit_aliq= 95)
 
             pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
                                      Reagents_TubeRack,
                                      components     = [cRNA, ProtK, IC_MS2],
                                      def_liq_class    = self.W_liquidClass,
                                      excess         = 8,
-                                     maxFull        = 90,
+                                     fill_limit_aliq= 90,
                                      num_of_samples = self.num_plates * num_of_samples  )
-            pK_cRNA_MS2.maxFull = 0.95
+            pK_cRNA_MS2.fill_limit_aliq = 0.95
 
         if not self.preMix_from_LysBuf_pK_Cuvette:
             LysisBufferReact = Reagent("VL - Lysis Buffer ",

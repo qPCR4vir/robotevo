@@ -172,7 +172,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
                                       initial_vol  = 1200,
                                       volpersample = B_BeadsVolume,
                                       def_liq_class  = self.Beads_LC_2,
-                                      maxFull      = 70)
+                                      fill_limit_aliq= 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                       BindBuf,

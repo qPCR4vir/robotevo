@@ -191,7 +191,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                           initial_vol  = 1200.0,
                                           volpersample = B_BeadsVolume,
                                           def_liq_class  = self.Beads_LC_2,
-                                          maxFull      = 70)
+                                          fill_limit_aliq= 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
                                           BindBuf,
