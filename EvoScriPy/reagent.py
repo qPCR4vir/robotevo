@@ -231,6 +231,9 @@ class Reaction(Reagent):
 
 
 class preMix(Reagent):
+    """
+    A pre-Mix of otherwise independent reagents to be pippeted together.
+    """
 
     def __init__(self,
                  name,
@@ -242,8 +245,20 @@ class preMix(Reagent):
                  def_liq_class=None,
                  excess     =None,
                  fill_limit_aliq    =None,
-                 num_of_samples = None                  ):
+                 num_of_samples = None):
+        """
 
+        :param name:
+        :param labware:
+        :param components: list of reagent components
+        :param pos:
+        :param replicas:
+        :param initial_vol:
+        :param def_liq_class:
+        :param excess:
+        :param fill_limit_aliq:
+        :param num_of_samples:
+        """
         ex= def_mix_excess if excess is None else excess
         vol=0.0
         for reagent in components:
@@ -264,7 +279,7 @@ class preMix(Reagent):
                          fill_limit_aliq= fill_limit_aliq,
                          num_of_samples = num_of_samples)
 
-        self.components = components
+        self.components = components  #: list of reagent components
         #self.init_vol()
 
     def init_vol(self, NumSamples=None, initial_vol=None):
@@ -624,20 +639,24 @@ class ExpSheet:
 
 
 class PCRMasterMix:
-    ids = {}
-    names = {}
+    """
+    Represent abstract information, like an item in some table summarizing PCR Master Mixes for some PCR experiment
+    """
+
+    ids = {}  #: connect each existing PCR master mix ID with the corresponding PCRMasterMix
+    names = {}  #: connect each existing PCR master mix name with the corresponding PCRMasterMix
     next_internal_id = 0
 
     def __init__(self,
                  name,
-                 id=None,
-                 vol_per_reaction = 25,  # uL
-                 sample_vol = 5,  # uL
+                 id_=None,
+                 vol_per_reaction = 25,  #: in uL
+                 sample_vol = 5,  #: in  uL
                  components=None,
                  title = None):
 
         self.name = name
-        self.id = id
+        self.id = id_
         self.vol_per_reaction = vol_per_reaction
         self.sample_vol = sample_vol
         self.title = title
@@ -646,8 +665,8 @@ class PCRMasterMix:
         PCRMasterMix.next_internal_id += 1
         assert name not in PCRMasterMix.names
         PCRMasterMix.names[name] = self
-        assert id not in PCRMasterMix.ids
-        PCRMasterMix.ids[id] = self
+        assert id_ not in PCRMasterMix.ids
+        PCRMasterMix.ids[id_] = self
 
     def __str__(self):
         return self.name
@@ -727,7 +746,7 @@ class PCRMasterMix:
                 comp_name = r[col['comp_name']].value
                 if comp_name == diluter:
                     pmix = PCRMasterMix( name=name,
-                                         id=id,
+                                         id_=id,
                                          vol_per_reaction=vol_per_reaction,
                                          sample_vol=sample_vol,
                                          title=title,
@@ -762,11 +781,18 @@ class PCRMasterMixReagent(preMix):
                  sample_vol,
                  num_samples,
                  excess     =None):
+        """
+        Construct a robot-usable PCRMasterMixReagent from an abstract PCRMasterMix
 
+        :param pcr_mix:
+        :param labware:
+        :param sample_vol:
+        :param num_samples:
+        :param excess:
+        """
         preMix.__init__(self,
                         pcr_mix.name,
                         labware or Lab.stock,
-                        pos,
                         components,
                         replicas=replicas,
                         initial_vol=initial_vol,
@@ -784,11 +810,7 @@ class PCRMasterMixReagent(preMix):
         Reagent.__init__(self, name, labware, vol, pos=pos, replicas=replicas,
                          defLiqClass=None, excess=ex, initial_vol=initial_vol)
         self.components = components
-        #self.init_vol()
-
-
-class PCRMix (preMix):
-    pass
+        # self.init_vol()
 
 
 class PCReaction:
@@ -847,7 +869,7 @@ class PCRexperiment:
         """
         self.id = id_
         self.name = name
-        self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow   #: list of PCRReaction to create
+        self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow  #: list of PCRReaction to create organized in rows with columns
         self.targets = {}  #: connect each target with a list of well reactions
         self.mixes = {}  #: connect each PCR master mix with a list of well reactions
         self.samples = {}  #: connect each sample with a list of well reactions
@@ -964,6 +986,9 @@ class PCRexperiment:
 
 
 class PCRexperimentRtic:
+    """
+    Organize a PCR setup on a robot.
+    """
 
     def __init__(self,
                  pcr_exp: (PCRexperiment, list),
@@ -982,7 +1007,7 @@ class PCRexperimentRtic:
                 assert isinstance(pcr_mix, PCRMasterMix)
                 sv = pcr_mix.sample_vol
                 ns = len(samples)
-                sw = [PCReactionReagent(s, plate).well for s in samples]  # define after checklist?
+                sw = [PCReactionReagent(s, plate).Replicas[0].well for s in samples]  # define after checklist?
                 mix = PCRMasterMixReagent(pcr_mix, reag_rack, ns, sv)
                 self.mixes[mix] = sw                              # just samples?
         pass
