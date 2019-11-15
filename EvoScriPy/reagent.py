@@ -759,16 +759,22 @@ class PCRMasterMixReagent(preMix):
 
 
     def __init__(self,
-                 name,
-                 labware,
-                 conc       =10.0,
-                 pos        =None,
-                 components =None,
-                 replicas   =1,
-                 initial_vol=None,
+                 pcr_mix: PCRMasterMix,
+                 labware: lab.Labware,
+                 sample_vol,
+                 num_samples,
                  excess     =None):
 
-        preMix.__init__(self, name, labware or Lab.stock, pos, components, replicas=replicas, initial_vol=initial_vol, excess=excess or PrimerMix.Excess)
+        preMix.__init__(self,
+                        pcr_mix.name,
+                        labware or Lab.stock,
+                        pos,
+                        components,
+                        replicas=replicas,
+                        initial_vol=initial_vol,
+                        excess=excess or PrimerMix.Excess)
+
+        self.pcr_mix = pcr_mix
         vol=0.0
         for reagent in components:
             vol += reagent.volpersample
@@ -824,13 +830,29 @@ class PCReactionReagent (Reaction):
 
 
 class PCRexperiment:
-    def __init__(self, id=None, name=None, ncol = 0, nrow = 0):
-        self.id = id
+    """
+    Represent abstract information, like an item in some table summarizing PCR experiments
+    """
+
+    def __init__(self,
+                 id_ = None,
+                 name = None,
+                 ncol = 0,
+                 nrow = 0):
+        """
+        A linear rack have just one roe and many columns
+
+        :param id_:
+        :param name:
+        :param ncol:
+        :param nrow:
+        """
+        self.id = id_
         self.name = name
-        self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow   # list of PCRReaction to create
-        self.targets = {}
-        self.mixes = {}
-        self.samples = {}
+        self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow   #: list of PCRReaction to create
+        self.targets = {}  #: connect each target with a list of well reactions
+        self.mixes = {}  #: connect each PCR master mix with a list of well reactions
+        self.samples = {}  #: connect each sample with a list of well reactions
         # self.vol = PCReaction.vol
         # self.vol_sample = PCReaction.vol_sample
 
@@ -944,12 +966,28 @@ class PCRexperiment:
 
 
 class PCRexperimentRtic:
-    def __init__(self, pcr_exp: (PCRexperiment, list), plates: (lab.Labware, list), protocol=None):
+
+    def __init__(self,
+                 pcr_exp: (PCRexperiment, list),
+                 plates: (lab.Labware, list),
+                 reag_rack: lab.Labware,
+                 protocol=None):
+
         self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]
         self.plates = plates if isinstance(plates, list) else [plates]
+        assert len(self.pcr_exp) <= len(plates)
         self.protocol = protocol
-        for exp in self.pcr_exp:
-            pass
+        self.mixes = {}
+        for exp, plate in zip(self.pcr_exp, plates):
+            assert isinstance(exp, PCRexperiment)
+            for pcr_mix, samples in exp.mixes:
+                assert isinstance(pcr_mix, PCRMasterMix)
+                sv = pcr_mix.sample_vol
+                ns = len(samples)
+                sw = [PCReactionReagent(s, plate).well for s in samples]  # define after checklist?
+                mix = PCRMasterMixReagent(pcr_mix, reag_rack, ns, sv)
+                self.mixes[mix] = sw                              # just samples?
+        pass
 
 
 
