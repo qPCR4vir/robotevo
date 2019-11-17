@@ -36,7 +36,7 @@ class Reagent:
                  num_of_aliquots: int                      = None,
                  minimize_aliquots: bool                   = None,
                  def_liq_class : (str, (str, str))         = None,
-                 volpersample  : float                     = None,
+                 volpersample  : float                     = 0.0,
                  num_of_samples: int                       = None,
                  single_use    : float                     = None,
                  excess        : float                     = None,
@@ -73,7 +73,7 @@ class Reagent:
         :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
         """
-        self.min_vol = min_vol
+        self.user_min_vol = min_vol
         self.need_vol = 0.0  #: calculated volume needed during the execution of the protocol
         if labware is None:
             if isinstance(wells, lab.Well):
@@ -182,15 +182,19 @@ class Reagent:
     def __str__(self):
         return "{name:s}".format(name=self.name)
 
-    def min_vol(self, NumSamples=None)->float:
+    def min_vol(self, num_samples=None)->float:
         """
         A minimal volume will be calculated based on either the number of samples
         and the volume per sample to use (todo or the volume per single use.)???
-        :param NumSamples:
+        :param num_samples:
         :return:
         """
-        NumSamples = NumSamples or Reagent.current_protocol.num_of_samples or 0
-        return self.volpersample * NumSamples * self.excess
+
+        if self.volpersample:
+            num_samples = num_samples or Reagent.current_protocol.num_of_samples or 0
+            self.need_vol = self.volpersample * num_samples * self.excess
+
+        return self.need_vol
 
     def init_vol(self, NumSamples=None, initial_vol=None):
         if initial_vol is not None:
@@ -273,28 +277,29 @@ class preMix(Reagent):
         :param fill_limit_aliq:
         :param num_of_samples:
         """
-        ex= def_mix_excess if excess is None else excess
-        vol=0.0
+        ex = def_mix_excess if excess is None else excess
+        vol = 0.0
         for reagent in components:
             vol += reagent.volpersample
             reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
             reagent.put_min_vol(num_of_samples)
 
-        if initial_vol is None: initial_vol = 0.0
+        if initial_vol is None:
+            initial_vol = 0.0
 
         Reagent.__init__(self, name,
                          labware,
-                         vol,
+                         volpersample= vol,
                          wells= pos,
                          num_of_aliquots= num_of_aliquots,
-                         def_liq_class   = def_liq_class,
-                         excess        = ex,
-                         initial_vol   = initial_vol,
+                         def_liq_class = def_liq_class,
+                         excess = ex,
+                         initial_vol = initial_vol,
                          fill_limit_aliq= fill_limit_aliq,
                          num_of_samples = num_of_samples)
 
         self.components = components  #: list of reagent components
-        #self.init_vol()
+        # self.init_vol()
 
     def init_vol(self, NumSamples=None, initial_vol=None):
         if self.components:
@@ -835,7 +840,7 @@ class PCRMasterMixReagent(preMix):
             diluent_vol -= vol_per_reaction
             if component.name in reagents:
                 component_r = reagents[component.name]
-                assert isinstance(component_r, Reagent.)
+                assert isinstance(component_r, Reagent)
                 assert abs(component_r.volpersample - vol_per_reaction) < 0.05  # ??
                 # component_r.put_min_vol()
             else:

@@ -152,12 +152,12 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
             # IC2         = Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
             #                           volpersample=  IC2Volume ,def_liq_class=W_liquidClass)
 
-            pK_cRNA_MS2 = preMix  ("ProtK+cRNA+IC-MS2 mix "  ,
-                                       Reagents,
-                                       pos          = 8,
-                                       components   = [cRNA, ProtK, IC_MS2] ,
-                                       def_liq_class  = self.W_liquidClass,
-                                       excess       = 20)
+            pK_cRNA_MS2 = preMix  ("ProtK+cRNA+IC-MS2 mix ",
+                                   Reagents,
+                                   pos          = 8,
+                                   components   = [cRNA, ProtK, IC_MS2],
+                                   def_liq_class= self.W_liquidClass,
+                                   excess       = 20)
 
         if self.add_VL:
             LysisBuffer = Reagent("VL - Lysis Buffer ",
