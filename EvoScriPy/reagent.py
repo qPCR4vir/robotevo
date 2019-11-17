@@ -236,6 +236,14 @@ class Reaction(Reagent):
         self.track_sample = track_sample
 
 
+class MixComponent:
+    def __init__(self, id_, name, init_conc, final_conc):
+        self.id = id_
+        self.name = name
+        self.init_conc = init_conc
+        self.final_conc = final_conc
+
+
 class preMix(Reagent):
     """
     A pre-Mix of otherwise independent reagents to be pippeted together.
@@ -437,6 +445,12 @@ class PrimerReagent (Reagent):
                          excess=Primer.excess)
 
 
+class PrimerMixComponent(MixComponent):
+    def __init__(self, id_, name, init_conc, final_conc, super_mix: bool):
+        MixComponent.__init__(self, id_, name, init_conc, final_conc)
+        self.super_mix = super_mix
+
+
 class PrimerMix:
     ids = {}
     names = {}
@@ -519,7 +533,7 @@ class PrimerMix:
         kws = None
         components = []
         super_mix = False
-        superm = None
+        comp = PrimerMixComponent(None, None, None, None, None)
 
         for r in ws.iter_rows():
 
@@ -527,7 +541,7 @@ class PrimerMix:
                 line += 1
 
             elif line == header:
-                id = r[col['id']].value
+                id_ = r[col['id']].value
                 kws = [r[col['virus']].value]
                 superm = r[col['super_mix']].value
                 super_mix = ('SuperMix' == superm)
@@ -576,12 +590,12 @@ class PrimerMix:
                     if final_conc and (comp_id or comp_name):
                         superc = r[col['conc'] + 1].value
                         super_c = ('"x"' == superc)
-                        components += [(comp_id,
-                                        comp_name,
-                                        r[col['conc']].value,
-                                        final_conc,
-                                        super_c
-                                        )]
+                        components += [PrimerMixComponent(comp_id,
+                                                          comp_name,
+                                                          r[col['conc']].value,
+                                                          final_conc,
+                                                          super_c
+                                                          )]
 
         return pmix
 
@@ -778,46 +792,75 @@ class PCRMasterMix:
                     comp_id = r[col['id']].value
                     final_conc = r[col['final']].value
                     if final_conc and (comp_id or comp_name):
-                        components += [(comp_id,
-                                        comp_name,
-                                        r[col['conc']].value,
-                                        final_conc)]
+                        components += [MixComponent(comp_id,
+                                                    comp_name,
+                                                    r[col['conc']].value,
+                                                    final_conc)]
 
         return pmix
 
 
 class PCRMasterMixReagent(preMix):
-    Excess = def_mix_excess
+    excess = def_mix_excess
 
     def __init__(self,
                  pcr_mix: PCRMasterMix,
                  labware: lab.Labware,
-                 sample_vol,
-                 num_samples,
-                 excess     =None):
+                 pos=None,
+                 num_of_aliquots=None,
+                 initial_vol=None,
+                 def_liq_class=None,
+                 excess=None,
+                 fill_limit_aliq=None):
         """
         Construct a robot-usable PCRMasterMixReagent from an abstract PCRMasterMix
 
+        :param pos:
+        :param num_of_aliquots:
+        :param initial_vol:
+        :param def_liq_class:
+        :param fill_limit_aliq:
         :param pcr_mix:
         :param labware:
-        :param sample_vol:
-        :param num_samples:
         :param excess:
         """
+        components = []
+        vol = 0
+        reagents = labware.location.worktable.reagents
+        diluent_vol = pcr_mix.reaction_vol - pcr_mix.sample_vol
+        # num_samples = len(exp.mixes[pcr_mix])
+        for component in pcr_mix.components:
+            assert isinstance(component, MixComponent)
+            vol_per_reaction = pcr_mix.reaction_vol * component.init_conc / float (component.final_conc)
+            diluent_vol -= vol_per_reaction
+            if component.name in reagents:
+                component_r = reagents[component.name]
+                assert isinstance(component_r, Reagent.)
+                assert abs(component_r.volpersample - vol_per_reaction) < 0.05  # ??
+                # component_r.put_min_vol()
+            else:
+                component_r = Reagent
+            vol += reagent.volpersample
+            reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
+            reagent.put_min_vol()
+
         preMix.__init__(self,
                         pcr_mix.name,
-                        labware or Lab.stock,
+                        labware,
                         components,
-                        replicas=replicas,
+                        pos=pos,
+                        num_of_aliquots=num_of_aliquots,
                         initial_vol=initial_vol,
-                        excess=excess or PrimerMix.Excess)
+                        def_liq_class=def_liq_class,
+                        excess=excess or PCRMasterMixReagent.excess,
+                        fill_limit_aliq=fill_limit_aliq)
 
         self.pcr_mix = pcr_mix
         vol=0.0
 
         if initial_vol is None: initial_vol = 0.0
 
-        Reagent.__init__(self, name, labware, vol, pos=pos, replicas=replicas,
+        Reagent.__init__(self, name, labware, vol, pos=pos, num_of_aliquots=num_of_aliquots,
                          defLiqClass=None, excess=ex, initial_vol=initial_vol)
         self.components = components
         # self.init_vol()
