@@ -141,7 +141,7 @@ class WorkTable:
     def __init__(self, template_file, robot_protocol=None, grids=67, sites=127):
 
         self.labware_series   = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
-        self.reagents         = {}
+        self.reagents         = {}  # connect each reagent name with the reagent self
         self.carriers_grid    = []
         self.carriers_no_grid = []  # in reality in grid with index > real number of grids?
 
@@ -1064,17 +1064,17 @@ class Labware:
 
         replicas = replicas or reagent.minNumRep
 
-        if pos is None:                                          # find self where to put the replicas of this reagent
+        if pos is None:                                          # find self where to put the num_of_aliquots of this reagent
             continuous, pos = self.find_free_wells(replicas)
             assert replicas == len(pos) , 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
                                           + str(self) + ' different replica number ' + str(replicas) \
                                           + ' and number of positions ' \
-                                          + str(pos)        # replicas = len(pos)   # todo What to do?
+                                          + str(pos)        # num_of_aliquots = len(pos)   # todo What to do?
 
 
         elif isinstance(pos, list):                              # put one replica on each of the given wells position
             if replicas <= len(pos):
-                pass                           # replicas = len(pos)
+                pass                           # num_of_aliquots = len(pos)
             else:                              # todo: revise  !!!!!!!!!!!!!!
                 assert (replicas == len(pos)), self.label + ": Can not put " + reagent.name + " in position " \
                                                + str( w.offset + 1) + " already occupied by " + w.reagent.name
@@ -1083,12 +1083,12 @@ class Labware:
         elif isinstance(pos, Well):                              # put one replica beginning from the given position
                 # assert pos.labware is self, "Trying to put the reagent in another labware?"
                 pos = pos.labware.Wells[pos.offset: pos.offset + replicas]
-                # pos = self.Wells[pos.offset: pos.offset + replicas]
+                # pos = self.Wells[pos.offset: pos.offset + num_of_aliquots]
         else:
                 pos = self.offset(pos)            # todo: revise  !!!!!!!!!!!!!!
                 pos = self.Wells[pos: pos + replicas]
                 # pos = self.offset(pos) + 1
-                # pos = range(pos, pos + replicas)
+                # pos = range(pos, pos + num_of_aliquots)
 
         Replicas = []    # a list of labware-wells, where the replicas for this reagent are.
         for w in pos:

@@ -81,7 +81,7 @@ class Tutorial_HL(Evo200_FLI):
 
         diluted = Reagent("mix1, diluted 1:10",                    # Define derived reagents  ---------------------
                           plate,
-                          replicas         = self.num_of_samples,
+                          num_of_aliquots= self.num_of_samples,
                           def_liq_class    = self.Water_free,
                           minimize_aliquots= False)
 

@@ -153,7 +153,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
         if self.add_preMix:
             ProtK = Reagent("Proteinase K ",
                                 Reagents,
-                                replicas            = 2,
+                                num_of_aliquots= 2,
                                 minimize_aliquots   = False,
                                 wells               = [15, 16],  # only 16 ?  pos=16
                                 volpersample        = ProtKVolume,

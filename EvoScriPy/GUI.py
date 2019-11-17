@@ -377,7 +377,7 @@ class App(tkinter.Frame):
                             rf.Vol.set(rf.react.volpersample)
 
                 self.reagent.init_vol()
-                for rf in self.ReplicaFrames:  # change replicas
+                for rf in self.ReplicaFrames:  # change num_of_aliquots
                     rf.Vol.set(rf.reply.vol)
 
         def check_list(self):

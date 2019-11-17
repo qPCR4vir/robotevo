@@ -131,7 +131,7 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
         if self.add_preMix:                             # we need to add ProtK+cRNA+MS2 mix
             ProtK       = Reagent("Proteinase K ",
                                       Reagents,
-                                      replicas     = 2,
+                                      num_of_aliquots= 2,
                                       minimize_aliquots=False,
                                       wells= [15, 16],
                                       volpersample = ProtKVolume,

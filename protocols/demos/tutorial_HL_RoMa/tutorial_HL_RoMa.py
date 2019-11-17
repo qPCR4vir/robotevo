@@ -77,7 +77,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
         buffer_A = Reagent("buffer",              # Define the reagents in each labware (Cuvette, eppys, etc.) -
                            labware      = plate_A,
                            wells        = "A1",
-                           replicas     = self.num_of_samples,
+                           num_of_aliquots= self.num_of_samples,
                            volpersample = v,
                            initial_vol  = [100]*self.num_of_samples,
                            def_liq_class  = self.Water_free,
@@ -93,7 +93,7 @@ class Tutorial_HL_RoMa(Evo200_FLI):
         buffer_B = Reagent("buffer B",              # Define place for intermediate reactions  ----------
                            labware      = plate_B,
                            wells        = "A1",
-                           replicas     = self.num_of_samples,
+                           num_of_aliquots= self.num_of_samples,
                            def_liq_class  = self.Water_free,
                            minimize_aliquots= False)
 

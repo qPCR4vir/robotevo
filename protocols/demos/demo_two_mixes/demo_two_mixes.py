@@ -115,14 +115,14 @@ class DemoTwoMixes(Evo200_FLI):
         mix1_10 = Reagent(f"mix1, diluted 1:10",
                           plate1,
                           initial_vol = 0.0,
-                          replicas    = num_of_samples,
+                          num_of_aliquots= num_of_samples,
                           def_liq_class = self.Water_free,
                           excess      = 0)
 
         mix2_10 = Reagent(f"mix2, diluted 1:10",
                           plate2,
                           initial_vol = 0.0,
-                          replicas    = num_of_samples,
+                          num_of_aliquots= num_of_samples,
                           def_liq_class = self.Water_free,
                           excess      = 0)
 
@@ -130,7 +130,7 @@ class DemoTwoMixes(Evo200_FLI):
                            plate1,
                            wells       = 'A07',
                            initial_vol = 0.0,
-                           replicas    = num_of_samples,
+                           num_of_aliquots= num_of_samples,
                            def_liq_class = self.Water_free,
                            excess      = 0)
 
@@ -138,7 +138,7 @@ class DemoTwoMixes(Evo200_FLI):
                            plate2,
                            wells       = 'A07',
                            initial_vol = 0.0,
-                           replicas    = num_of_samples,
+                           num_of_aliquots= num_of_samples,
                            def_liq_class = self.Water_free,
                            excess      = 0)
 
