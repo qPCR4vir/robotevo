@@ -46,7 +46,7 @@ class PCR(Evo75_FLI):
         Evo75_FLI.__init__(self,
                            GUI                         = GUI,
                            num_of_samples              = PCR.max_s,
-                           worktable_template_filename = this / 'Freedom75_FLI_PCR.ewt',
+                           worktable_template_filename = this / '../Freedom75_FLI_PCR.ewt',
                            output_filename             = output_filename or this / 'scripts' / 'PCR',
                            run_name                    = run_name)
 
@@ -90,8 +90,10 @@ class PCR(Evo75_FLI):
             cell_rows=6,
             sample_line=6)
 
-        exp = PCRexperiment().load_excel_list(sheet0)
-
+        exp = PCRexperiment().load_excel_list(sheet1)
+        pcr_plates = [wt.get_labware("PCR" + str(i + 1)) for i in range(self.num_plates)]
+        eppis_rack = wt.get_labware("MM + Primer")
+        exp = PCRexperimentRtic(exp, pcr_plates[0], eppis_rack, self)
         # Show the check_list GUI to the user for possible small changes
 
         self.check_list()
@@ -99,7 +101,6 @@ class PCR(Evo75_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-        pcr_plates = [wt.get_labware("PCR" + str(i + 1)) for i in range(self.num_plates)]
 
         # Define place for intermediate reactions
 
@@ -108,6 +109,10 @@ class PCR(Evo75_FLI):
 
 
 if __name__ == "__main__":
+    # from pathlib import Path
+    # import logging
+    this = Path(__file__).parent
+    logging.basicConfig(filename=(this / 'scripts' / 'log.txt'), filemode='w', level=logging.DEBUG)
 
     p = PCR(run_name='1 plate')
 

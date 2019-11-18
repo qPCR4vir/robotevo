@@ -233,10 +233,26 @@ class Reagent:
 
 
 class Reaction(Reagent):
-    def __init__(self, name, track_sample, labware,
-                 pos=None, num_of_aliquots=None, def_liq_class=None, excess=None, initial_vol=None):
-        Reagent.__init__(self, name, labware, single_use=0,
-                         wells=pos, num_of_aliquots=num_of_aliquots, def_liq_class=def_liq_class, excess=excess, initial_vol=initial_vol)
+    def __init__(self,
+                 name,
+                 labware,
+                 components: [Reagent],
+                 track_sample=None, # just one more component?
+                 pos=None,
+                 num_of_aliquots=1,
+                 def_liq_class=None,
+                 excess=None,
+                 initial_vol=0):
+
+        Reagent.__init__(self,
+                         name,
+                         labware,
+                         single_use=0,
+                         wells=pos,
+                         num_of_aliquots=num_of_aliquots,
+                         def_liq_class=def_liq_class,
+                         excess=excess,
+                         initial_vol=initial_vol)
         self.track_sample = track_sample
 
 
@@ -848,10 +864,10 @@ class PCRMasterMixReagent(PreMix):
                 assert abs(component_r.volpersample - vol_per_reaction) < 0.05  # ??
                 # component_r.put_min_vol()
             else:
-                component_r = Reagent
-            vol += reagent.volpersample
-            reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
-            reagent.put_min_vol()
+                component_r = Reagent(component.name,
+                                      labware=labware,
+                                      volpersample=vol_per_reaction)
+            components.append(component_r)
 
         PreMix.__init__(self,
                         pcr_mix.name,
@@ -859,23 +875,18 @@ class PCRMasterMixReagent(PreMix):
                         components,
                         pos=pos,
                         num_of_aliquots=num_of_aliquots,
+
                         initial_vol=initial_vol,
                         def_liq_class=def_liq_class,
                         excess=excess or PCRMasterMixReagent.excess,
                         fill_limit_aliq=fill_limit_aliq)
 
-        self.pcr_mix = pcr_mix
-        vol=0.0
-
-        if initial_vol is None: initial_vol = 0.0
-
-        Reagent.__init__(self, name, labware, vol, pos=pos, num_of_aliquots=num_of_aliquots,
-                         defLiqClass=None, excess=ex, initial_vol=initial_vol)
-        self.components = components
-        # self.init_vol()
-
 
 class PCReaction:
+    """
+    Represent abstract information, like an item in some table summarizing reactions in a PCR experiment
+    """
+
     empty = 0
     ntc = 1
     pos = 2
@@ -884,18 +895,34 @@ class PCReaction:
 
     rol = {'':empty, None:empty, 'NTC':ntc, 'Pos':pos, 'Unk':unk, 'Std':std}
 
-    def __init__(self, rol, sample=None, targets=None, mix=None, replica=None, row=None, col=None):
+    def __init__(self,
+                 rol,
+                 sample=None,
+                 targets=None,
+                 mix: PCRMasterMix=None,
+                 replica=None,
+                 row=None,
+                 col=None,
+                 vol=None):
         self.col = col
         self.row = row
         self.rol = rol
         self.sample = sample
         self.targets = targets or []
         self.mix = mix
+        if not mix:
+            for target in targets:
+                if target in PCRMasterMix.names:
+                    self.mix = PCRMasterMix.names[target]
+                    break
+            else:
+                assert False
+        self.req_vol = vol or mix
         self.replica = replica
 
     @staticmethod
     def get_rol(rol):
-        rol, replica = rol.split('-')
+        rol, replica = rol.split('-')  # todo improve to parse replicas
         return rol in PCReaction.rol, rol, replica
 
     def __str__(self):
@@ -905,10 +932,22 @@ class PCReaction:
         return (self.sample or '-') + '[' + str(self.targets[0] or '-') + ']'
 
 
-class PCReactionReagent (Reaction):
+class PCReactionReagent(Reaction):
     vol = 25
     vol_sample = 5
-    pass
+
+    def __init__(self,
+                 pcr_reaction: PCReaction,
+                 plate: lab.Labware):
+        """
+
+        :param pcr_reaction:
+        :param plates:
+        """
+
+        Reaction.__init__()
+        self.pcr_reaction = pcr_reaction
+        self.plate = plate
 
 
 class PCRexperiment:
@@ -1063,15 +1102,20 @@ class PCRexperimentRtic:
         assert len(self.pcr_exp) <= len(plates)
         self.protocol = protocol
         self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
-        for exp, plate in zip(self.pcr_exp, plates):
+        for exp, plate in zip(self.pcr_exp, self.plates):
             assert isinstance(exp, PCRexperiment)
             for pcr_mix, pcr_reactions in exp.mixes:
                 assert isinstance(pcr_mix, PCRMasterMix)
+                mix = PCRMasterMixReagent(pcr_mix, reag_rack)
                 sv = pcr_mix.sample_vol
                 nw = len(pcr_reactions)
-                sw = [PCReactionReagent(r, plate).Replicas[0].well for r in pcr_reactions]  # define after checklist?
-                mix = PCRMasterMixReagent(pcr_mix, reag_rack, nw, sv)
-                self.mixes[mix] = sw                              # just samples?
+                react_wells = []
+                for rx in pcr_reactions:
+                    r = PCReactionReagent(rx, plate)
+                    react_wells.append(rx.Replicas[0].well)
+                    mix.need_vol += mix.volpersample
+                self.mixes[mix] = react_wells                              # just samples?
+
         pass
 
     def pippete_mix(self):
