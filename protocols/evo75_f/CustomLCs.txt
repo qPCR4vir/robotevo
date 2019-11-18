@@ -1,0 +1,40 @@
+>> Water Detect 250µL << 20	No Name	
+>> Water free dispense  1 << 10	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 11	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 12	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 13	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 14	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 15	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 16	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 17	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 18	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 19	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 7	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 8	General liquid class for most pipetting devices and tip types	
+>> Water free dispense  1 << 9	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 21	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 22	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 23	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 24	General liquid class for most pipetting devices and tip types	
+>> Water free dispense << 25	General liquid class for most pipetting devices and tip types	
+MM	No Name	
+MM_freeDispense	No Name	
+PCRmix	General liquid class for most pipetting devices and tip types	
+PCRsample	General liquid class for most pipetting devices and tip types	
+Probe 3ul	No Name	
+Probe 5ul	No Name	
+TEST 	No Name	
+TEST 250µL	No Name	
+Uebertrag	No Name	
+>> Water wet contact << 26	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 27	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 28	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 29	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 30	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 31	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 32	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 33	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 34	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 35	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 36	General liquid class for most pipetting devices and tip types	
+>> Water wet contact << 37	General liquid class for most pipetting devices and tip types	

@@ -68,7 +68,7 @@ class LiquidClasses:
             self._read_def_liq_class_txt_file(default_file)
 
         except OSError as err:
-            logging.info("No: {0} found. Will generate a new one.".format(err))
+            logging.info("Reading Default LCs: {0} found. Will generate a new one.".format(err))
             try:
                 self._read_def_liq_class_xml_file(default_file)
             except  OSError as err:
@@ -108,6 +108,7 @@ class LiquidClasses:
                 # logging.debug("from txt- name='" + lc.name + " :liquid Name='" + lc.liquid_name + "'")
 
     def _read_def_liq_class_xml_file(self, default_file):
+        logging.info("Going to parse LCs from " + str(default_file))
         tree = ET.parse(default_file)
         root = tree.getroot()
         with open(default_file.with_suffix('.txt'), 'w', encoding='Latin-1', newline='\r\n') as default:
@@ -1634,7 +1635,7 @@ Tip_200maxVol   = 190                   # TODO revise
 CleanerShallow  = CuvetteType("Wash Station Cleaner shallow"   , 8, max_vol=  100000)
 WasteWash       = CuvetteType("Wash Station Waste",              8, max_vol=10000000)  # 10 L
 CleanerDeep     = CuvetteType("Wash Station Cleaner deep",       8, max_vol=  100000)
-DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")                           # TipWaste
+DiTi_Waste_plate= DITIwasteType("DiTi Nested Waste MCA384")  # Tip Waste ?? Washstation 2Grid DiTi Waste ?? DiTi Nested Waste MCA384 ?? DiTi Waste
 
 # Evo100_FLI
 CleanerSWS      = CuvetteType("Washstation 2Grid Cleaner short", 8, max_vol=  100000)
