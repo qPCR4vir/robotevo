@@ -928,7 +928,7 @@ class PCRexperiment:
         self.id = id_
         self.name = name
         self.pcr_reactions = [[PCReaction(PCReaction.empty)]*ncol]*nrow  #: list of PCRReaction to create organized in rows with columns
-        self.targets = {}  #: connect each target with a list of well reactions
+        self.targets = {}  #: connect each target with a list of PCR reactions well
         self.mixes = {}  #: connect each PCR master mix with a list of well reactions
         self.samples = {}  #: connect each sample with a list of well reactions
         # self.vol = PCReaction.vol
@@ -1054,19 +1054,19 @@ class PCRexperimentRtic:
                  reag_rack: lab.Labware,
                  protocol=None):
 
-        self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]
+        self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]  #: abstract info
         self.plates = plates if isinstance(plates, list) else [plates]
         assert len(self.pcr_exp) <= len(plates)
         self.protocol = protocol
-        self.mixes = {}
+        self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
         for exp, plate in zip(self.pcr_exp, plates):
             assert isinstance(exp, PCRexperiment)
-            for pcr_mix, samples in exp.mixes:
+            for pcr_mix, pcr_reactions in exp.mixes:
                 assert isinstance(pcr_mix, PCRMasterMix)
                 sv = pcr_mix.sample_vol
-                ns = len(samples)
-                sw = [PCReactionReagent(s, plate).Replicas[0].well for s in samples]  # define after checklist?
-                mix = PCRMasterMixReagent(pcr_mix, reag_rack, ns, sv)
+                nw = len(pcr_reactions)
+                sw = [PCReactionReagent(r, plate).Replicas[0].well for r in pcr_reactions]  # define after checklist?
+                mix = PCRMasterMixReagent(pcr_mix, reag_rack, nw, sv)
                 self.mixes[mix] = sw                              # just samples?
         pass
 
