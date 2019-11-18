@@ -1,8 +1,8 @@
-B;Comment("Prefill 1 plates with Lysis Buffer and ProtK preMix  for 96 samples.");
+B;Comment("Prefill 1 plates with Lysis Buffer and ProtK PreMix  for 96 samples.");
 B;Set_DITI_Counter2("DiTi 1000ul","1","1","1",0);
 B;Wash(15,23,1,23,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
-B;Comment("preMix: 3525.1 µL of ProtK+cRNA+IC-MS2 mix  into grid:7 site:1 ['well 5 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix ', 'well 6 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
+B;Comment("PreMix: 3525.1 µL of ProtK+cRNA+IC-MS2 mix  into grid:7 site:1 ['well 5 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix ', 'well 6 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
 B;Comment("   1- 414.7 µL from grid:7 site:1:['well 3 in labware Reactives:  with 430.0 uL of reagent Carrier RNA ']");
 B;Aspirate(1,"Water wet","414.72","0","0","0",0,0,0,0,0,0,0,0,7,0,1,"0110400",0,0);
 B;Dispense(1,"Water wet","207.36","207.36","207.36","207.36",0,0,0,0,0,0,0,0,7,0,1,"0110@00",0,0);

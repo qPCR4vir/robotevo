@@ -23,7 +23,7 @@ samples, reactions, etc., almost directly as it states in the steps of your "han
   - :py:meth:`~Protocol.transfer`: *from some wells into equal number of target wells*
   - :py:meth:`~Protocol.mix`: *mix by pipetting the content of wells*
   - :py:meth:`~Protocol.mix_reagent`: *mix every aliquot by pipetting*
-  - :py:meth:`~Protocol.make_pre_mix`: *put together the components of a preMix by pipetting*
+  - :py:meth:`~Protocol.make_pre_mix`: *put together the components of a PreMix by pipetting*
   - :py:meth:`~Protocol.get_tips`: *mount new or used tips*
   - :py:meth:`~Protocol.drop_tips`: *drop or put back tips*
   - :py:meth:`~Protocol.set_first_tip`: *position of the given tip type to be used next*
@@ -126,7 +126,7 @@ import logging
 
 import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instructions
-from EvoScriPy.reagent import Reagent, preMix
+from EvoScriPy.reagent import Reagent, PreMix
 import EvoScriPy.labware as labware
 import EvoScriPy.evo_mode as mode
 
@@ -767,7 +767,7 @@ class Protocol (Executable):
                          cycles      =cycles).exec()
 
     def make_pre_mix(self,
-                     pre_mix: preMix,
+                     pre_mix: PreMix,
                      num_samples: int = None,
                      force_replies: bool = False):
         """
@@ -776,13 +776,13 @@ class Protocol (Executable):
         Uses one new tip per component.
         It calculates and checks self the minimum and maximum number of replica of the resulting preMix
 
-        :param preMix pre_mix: what to make, a predefined preMix
+        :param PreMix pre_mix: what to make, a predefined preMix
         :param int num_samples:
         :param bool force_replies: use all the preMix predefined replicas
 
         """
 
-        assert isinstance(pre_mix, preMix)
+        assert isinstance(pre_mix, PreMix)
         mxn_tips    = self.robot.cur_arm().n_tips  # max number of Tips
         ncomp       = len(pre_mix.components)
         nt          = min(mxn_tips, ncomp)
@@ -797,7 +797,7 @@ class Protocol (Executable):
             logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
             pre_mix.Replicas = pre_mix.Replicas[:nrepl]
 
-        msg = "preMix: {:.1f} µL of {:s}".format(t_vol, pre_mix.name)
+        msg = "PreMix: {:.1f} µL of {:s}".format(t_vol, pre_mix.name)
         with group(msg):
             msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
                                 .format(labw.location.grid,
@@ -1241,7 +1241,7 @@ class Protocol (Executable):
         instructions.dispense(om, liq_class, vol, labware).exec()          # will call robot.cur_arm().dispensed(vol, om)  ??
 
     def make(self,  what, NumSamples=None): # OK coordinate with protocol
-            if isinstance(what, preMix): self.make_pre_mix(what, NumSamples)
+            if isinstance(what, PreMix): self.make_pre_mix(what, NumSamples)
 
     # Atomic API ----------------------------------------------------------------------------------------
     def pick_up_tip(self, TIP_MASK     : int        = None,

@@ -142,7 +142,7 @@ class Reagent:
                                                       + "number of replicas (" + str(num_of_aliquots) + " )")
             if isinstance(initial_vol, list):
                 assert num_of_aliquots == len(initial_vol)
-            if num_of_aliquots > self.min_num_aliq:                                    # todo revise !! for preMix components
+            if num_of_aliquots > self.min_num_aliq:                                    # todo revise !! for PreMix components
                 logging.warning("WARNING !! You may be putting more wells replicas (" + str(len(wells)) + ") of " + name
                                 + " that the minimum you need(" + str(self.min_num_aliq) + " )")
 
@@ -152,7 +152,7 @@ class Reagent:
         if num_of_aliquots < len(initial_vol):
             logging.warning("WARNING !! putting more replica of " + name + " to fit the initial volume list provided")
             num_of_aliquots = len(initial_vol)
-            if num_of_aliquots > self.min_num_aliq:                                      # todo revise !! for preMix components
+            if num_of_aliquots > self.min_num_aliq:                                      # todo revise !! for PreMix components
                 logging.warning("WARNING !! You may be putting more inital volumens values (" + str(num_of_aliquots) + ") of " + name
                                 + " that the minimum number of replicas you need(" + str(self.min_num_aliq) + " )")
 
@@ -248,7 +248,11 @@ class MixComponent:
         self.final_conc = final_conc
 
 
-class preMix(Reagent):
+class Mix(Reagent):
+    pass
+
+
+class PreMix(Reagent):
     """
     A pre-Mix of otherwise independent reagents to be pippeted together.
     """
@@ -605,7 +609,7 @@ class PrimerMix:
         return pmix
 
 
-class PrimerMixReagent(preMix):
+class PrimerMixReagent(PreMix):
     excess = def_mix_excess
 
     def __init__(self,
@@ -619,7 +623,7 @@ class PrimerMixReagent(preMix):
                  initial_vol=None,
                  excess=None):
 
-        preMix.__init__(self,
+        PreMix.__init__(self,
                         name,
                         labware or Lab.stock,
                         pos,
@@ -805,7 +809,7 @@ class PCRMasterMix:
         return pmix
 
 
-class PCRMasterMixReagent(preMix):
+class PCRMasterMixReagent(PreMix):
     excess = def_mix_excess
 
     def __init__(self,
@@ -849,7 +853,7 @@ class PCRMasterMixReagent(preMix):
             reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
             reagent.put_min_vol()
 
-        preMix.__init__(self,
+        PreMix.__init__(self,
                         pcr_mix.name,
                         labware,
                         components,

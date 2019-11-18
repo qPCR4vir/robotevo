@@ -1,9 +1,9 @@
-Prefill 1 plates with Lysis Buffer and ProtK preMix  for 96 samples.
+Prefill 1 plates with Lysis Buffer and ProtK PreMix  for 96 samples.
 
 Prefill plates with LysisBufferReact
 
-    preMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix 
-        preMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix  into grid:7 site:1 ['well 5 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix ', 'well 6 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:
+    PreMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix 
+        PreMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix  into grid:7 site:1 ['well 5 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix ', 'well 6 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:
            1- 414.7 킠 from grid:7 site:1:['well 3 in labware Reactives:  with 430.0 uL of reagent Carrier RNA ']
            2- 2073.6 킠 from grid:7 site:1:['well 1 in labware Reactives:  with 1086.0 uL of reagent Proteinase K ', 'well 2 in labware Reactives:  with 1075.0 uL of reagent Proteinase K ']
            3- 1036.8 킠 from grid:7 site:1:['well 4 in labware Reactives:  with 1075.0 uL of reagent IC MS2 phage culture ']

@@ -2,7 +2,7 @@ B;Comment("VL-pKmix prefillfor extracting RNA from 48 samples with the MN-Vet ki
 B;Set_DITI_Counter2("DiTi 1000ul","25","1","1",0);
 B;Wash(15,23,1,23,0,"30",50,"10",50,0.00,50,100,1,0,0,0);
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
-B;Comment("preMix: 1958.4 µL of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
+B;Comment("PreMix: 1958.4 µL of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
 B;Comment("   1- 230.4 µL from grid:5 site:1:['well 14 in labware Reactives:  with 238.0 uL of reagent Carrier RNA ']");
 B;Aspirate(1,"Water wet","230.40","0","0","0",0,0,0,0,0,0,0,0,5,0,1,"01100p0",0,0);
 B;Dispense(1,"Water wet","230.40","230.40","230.40","230.40",0,0,0,0,0,0,0,0,5,0,1,"0110010",0,0);

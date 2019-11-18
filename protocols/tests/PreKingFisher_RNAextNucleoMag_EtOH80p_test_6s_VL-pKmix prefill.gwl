@@ -8,7 +8,7 @@ B;Aspirate(3,"Water free cuvette","600.00","600.00",0,0,0,0,0,0,0,0,0,0,23,5,1,"
 B;Dispense(3,"Water free cuvette","600.00","600.00",0,0,0,0,0,0,0,0,0,0,25,2,1,"0C0806000000000000",0,0);
 B;DropDITI(15,23,6,0.00,300,0);
 B;GetDITI2(15,"DiTi 1000ul",0,0,0,300);
-B;Comment("preMix: 244.8 µL of ProtK+cRNA+IC-MS2 mix  into grid:19 site:1 ['well 8 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
+B;Comment("PreMix: 244.8 µL of ProtK+cRNA+IC-MS2 mix  into grid:19 site:1 ['well 8 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
 B;Comment("   1- 28.8 µL from grid:19 site:1:['well 14 in labware Reactives:  with 29.0 uL of reagent Carrier RNA ']");
 B;Aspirate(1,"Water wet","28.80","0","0","0",0,0,0,0,0,0,0,0,19,0,1,"01100p0",0,0);
 B;Dispense(1,"Water wet","28.80","28.80","28.80","28.80",0,0,0,0,0,0,0,0,19,0,1,"0110010",0,0);

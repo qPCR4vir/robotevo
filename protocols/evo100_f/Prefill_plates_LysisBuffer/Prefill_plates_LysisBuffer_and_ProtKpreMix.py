@@ -17,19 +17,19 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
     with washes in the Fischer Robot.
     """
 
-    name = "Prefill plates with LysisBuffer and ProtK preMix for KingFisher"
+    name = "Prefill plates with LysisBuffer and ProtK PreMix for KingFisher"
     min_s, max_s = 1, 96
 
     def def_versions(self):
         self.versions = {'3 plate': self.v_3_plate,
                          '2 plate': self.v_2_plate,
                          '1 plate': self.v_1_plate,
-                         '3 plate from Cuvette preMix': self.V_3_plate_Cuvette,
-                         '2 plate from Cuvette preMix': self.V_2_plate_Cuvette,
-                         '1 plate from Cuvette preMix': self.V_1_plate_Cuvette,
-                         '3 plate from Cuvette LysBuf-pK-preMix': self.V_3_plate_LysBuf_pK_Cuvette,
-                         '2 plate from Cuvette LysBuf-pK-preMix': self.V_2_plate_LysBuf_pK_Cuvette,
-                         '1 plate from Cuvette LysBuf-pK-preMix': self.V_1_plate_LysBuf_pK_Cuvette
+                         '3 plate from Cuvette PreMix': self.V_3_plate_Cuvette,
+                         '2 plate from Cuvette PreMix': self.V_2_plate_Cuvette,
+                         '1 plate from Cuvette PreMix': self.V_1_plate_Cuvette,
+                         '3 plate from Cuvette LysBuf-pK-PreMix': self.V_3_plate_LysBuf_pK_Cuvette,
+                         '2 plate from Cuvette LysBuf-pK-PreMix': self.V_2_plate_LysBuf_pK_Cuvette,
+                         '1 plate from Cuvette LysBuf-pK-PreMix': self.V_1_plate_LysBuf_pK_Cuvette
                          }
 
     def v_1_plate(self):        self.def_init(1)
@@ -71,12 +71,12 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
         num_of_samples = self.num_of_samples
         wt           = self.worktable
 
-        self.comment('Prefill {:d} plates with Lysis Buffer and ProtK preMix  for {:d} samples.'\
+        self.comment('Prefill {:d} plates with Lysis Buffer and ProtK PreMix  for {:d} samples.'\
                      .format(self.num_plates, num_of_samples))
 
                                                             # Get Labwares (Cuvette, eppys, etc.) from the work table
 
-        preMixProtKCuvette = wt.get_labware("8-preMix ProtK", labware.Trough_100ml)
+        preMixProtKCuvette = wt.get_labware("8-PreMix ProtK", labware.Trough_100ml)
         LysBufCuvette      = wt.get_labware("2-Vl Lysis Buffer", labware.Trough_100ml)
 
         DiTi1000_1  = wt.get_labware("1000-1", labware.DiTi_1000ul)
@@ -138,13 +138,13 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                  num_of_samples = self.num_plates * num_of_samples,
                                  fill_limit_aliq= 95)
 
-            pK_cRNA_MS2 = preMix("ProtK+cRNA+IC-MS2 mix ",
-                                     Reagents_TubeRack,
-                                     components     = [cRNA, ProtK, IC_MS2],
-                                     def_liq_class    = self.W_liquidClass,
-                                     excess         = 8,
-                                     fill_limit_aliq= 90,
-                                     num_of_samples = self.num_plates * num_of_samples  )
+            pK_cRNA_MS2 = PreMix("ProtK+cRNA+IC-MS2 mix ",
+                                 Reagents_TubeRack,
+                                 components     = [cRNA, ProtK, IC_MS2],
+                                 def_liq_class    = self.W_liquidClass,
+                                 excess         = 8,
+                                 fill_limit_aliq= 90,
+                                 num_of_samples = self.num_plates * num_of_samples)
             pK_cRNA_MS2.fill_limit_aliq = 0.95
 
         if not self.preMix_from_LysBuf_pK_Cuvette:

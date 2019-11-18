@@ -33,7 +33,7 @@ V;200
 998;3;Trough 100ml;Trough 100ml;Trough 100ml;
 998;1-VEL-ElutionBuffer;5-VEW2-WashBuffer;4-VEW1 Wash Buffe;
 998;3;;Trough 100ml;;
-998;;8-preMix ProtK;;
+998;;8-PreMix ProtK;;
 998;0;
 998;8;Washstation 2Grid Cleaner short;Washstation 2Grid Waste;Washstation 2Grid Cleaner long;Trough 100ml;Trough 100ml;Trough 100ml;Washstation 2Grid DiTi Waste;;
 998;;;;3-VEB Binding Buffer;2-Vl Lysis Buffer;7-EtOH80p;;;
@@ -123,13 +123,13 @@ V;200
 998;15;
 996;0;0;
 --{ RPG }--
-Comment("Prefill 1 plates with Lysis Buffer and ProtK preMix  for 96 samples.");
+Comment("Prefill 1 plates with Lysis Buffer and ProtK PreMix  for 96 samples.");
 Set_DITI_Counter2("DiTi 1000ul","1","1","1",0);
 Wash(15,23,1,23,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
 Group("Prefill plates with LysisBufferReact");
 GetDITI2(15,"DiTi 1000ul",0,0,0,300);
-Group("preMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix ");
-Comment("preMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix  into grid:7 site:1 ['well 5 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix ', 'well 6 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
+Group("PreMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix ");
+Comment("PreMix: 3525.1 킠 of ProtK+cRNA+IC-MS2 mix  into grid:7 site:1 ['well 5 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix ', 'well 6 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:");
 Comment("   1- 414.7 킠 from grid:7 site:1:['well 3 in labware Reactives:  with 430.0 uL of reagent Carrier RNA ']");
 Aspirate(1,"Water wet","414.72","0","0","0",0,0,0,0,0,0,0,0,7,0,1,"0110400",0,0);
 Dispense(1,"Water wet","207.36","207.36","207.36","207.36",0,0,0,0,0,0,0,0,7,0,1,"0110@00",0,0);
