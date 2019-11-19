@@ -37,7 +37,9 @@ of each reagent.
 
 Use EVOware to run the script as usually.
 
-## How does it works?
+How does it works?
+------------------
+
 Already the creation of the protocol object will run some "boilerplate" code to setup things we need to run the
 useful part of our protocol.
 
@@ -72,7 +74,9 @@ Each of this low level intructions will interact with the selected EvoMode to ge
 in the EVOware script and to check errors and change the state of the internally modeled `iRobot`, 
 including the liquid volume in each well and tip and many other details.
 
-## A Hello World! example.
+A Hello World! example.
+-----------------------
+
 Let create the classical, in the the world of programming, Hello World! example. 
 It will just shows that message in the screen of the PC controlling the robot and will wait for user
 confirmation producing a typical sound.
@@ -90,7 +94,7 @@ you can load into the Freedom evoware editor. After you agree to use the script 
 check-summe you will see it just contain an instruction for a simple user promt. By using evoware to run
 this script you will get:
 
-.. image:: HelloW.png)
+.. image:: HelloW.png
 
 How to modify an existing protocol?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

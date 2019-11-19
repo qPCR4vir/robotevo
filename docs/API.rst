@@ -77,11 +77,11 @@ Are you doing some advanced protocol development that cannot be efficiently or c
 High level functions? Then, you may use the following functions. Keep in mind that it is now your responsibility
 to know what robot/protocol "state" are ignored by these new functions. For example, before `aspirate`
 you will need to mount "by yourself" the tips in the correct position of the used arm, because `aspirate`
- ignores the higher level
- [`with tips`](https://github.com/qPCR4vir/robotevo/wiki/Protocol-steps-(principal-API)#with-protocoltipstip_type).
- But don't worry, **`RobotEvo`** still keeps track of the ("internal") robot state and will throw errors
- informing you about most logical mistakes (like in the previous example forgetting to mount the tips).
- In some cases these functions may be used to construct new high lever functions.
+ignores the higher level
+[`with tips`](https://github.com/qPCR4vir/robotevo/wiki/Protocol-steps-(principal-API)#with-protocoltipstip_type).
+But don't worry, **`RobotEvo`** still keeps track of the ("internal") robot state and will throw errors
+informing you about most logical mistakes (like in the previous example forgetting to mount the tips).
+In some cases these functions may be used to construct new high lever functions.
 
 
 Atomic functions
