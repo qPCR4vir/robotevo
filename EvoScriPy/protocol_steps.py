@@ -3,8 +3,6 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-__author__ = 'qPCR4vir'
-
 """
 Principal API: Protocol steps
 =============================
@@ -115,6 +113,8 @@ Other intermediate level functions:
 ----------------------------------
 
 """
+
+__author__ = 'qPCR4vir'
 
 
 from pathlib import Path
