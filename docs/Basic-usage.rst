@@ -26,7 +26,7 @@ It will alert you that the check sum have not been set, which in this case just 
 Accept to load it in the EVOware script editor. Here you will have very good assistance to visualize 
 the details of each step and to do a normal, full TECAN validation of the correctness of the script. 
 
-Use the visual worktable map to correctly setup the labware. Use the detailed comments automatically 
+Use the information from the visual worktable map to physically setup the labware. Use the detailed comments automatically
 inserted by RobotEvo in the script or the associated `.protocol.txt` file to fill the expected initial volume of each reagent.
 
 Use EVOware to run the script as usually.
@@ -64,28 +64,7 @@ Let create the classical, in the the world of programming, Hello World! example.
 It will just shows that message in the screen of the PC controlling the robot and will wait for user confirmation producing a typical sound.
 
 By running the script:
-
-    from EvoScriPy.protocol_steps import Protocol
-    import EvoScriPy.Instructions as Itr
-
-    class HelloWorld(Protocol):
-
-        name = "Hello World"
-
-        def __init__(self, GUI = None):
-            Protocol.__init__(self,
-                              GUI                           = GUI,
-                              output_filename               = '../current/tests/hello_world',
-                              worktable_template_filename   = '../EvoScripts/wt_templates/Prefill_VEW1_ElutB_and_VEW2.ewt')  # set here a valid template
-
-        def run(self):
-            self.check_list()
-            Itr.userPrompt("Hello World!").exec()     # the actual work.
-            self.done()
-
-
-    if __name__ == "__main__":
-        HelloWorld().run()
+.. literalinclude:: ../protocols/demos/hello_world/hello_world.py
 
 [IMPORTANT: replace the `worktable_template_filename` argument with a valid -for your very onw robot- worktable template (`.ewt`) or script (`.esc`).]
 
@@ -94,201 +73,14 @@ we will have some files (currently 4) generated with names following the pattern
 
 How to modify an existing protocol?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Now to write a new protocol?
+How to write a new protocol?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
-    from   EvoScriPy.protocol_steps import *
-    import EvoScriPy.Instructions   as     Itr
-    import EvoScriPy.Labware        as     Lab
-    import EvoScriPy.Reagent        as     Rtv
-    
-    from protocols.Evo200 import Evo200
-    
-    
-    class Prefill_plate_in_Evo200(Evo200):
-        """
-        Prefill one plate with Buffer.
-        """
-    
-        name = "Prefill one plate with Buffer."
-        min_s, max_s = 1, 96/6
-    
-        # for now just ignore the variants
-        def def_versions(self):
-            self.versions = {'No version': self.V_def               }
-    
-        def V_def(self):
-            pass
-    
-        def __init__(self,
-                     GUI                         = None,
-                     NumOfSamples: int           = None,
-                     worktable_template_filename = None,
-                     output_filename             = None,
-                     firstTip                    = None,
-                     run_name: str               = ""):
-    
-            Evo200.__init__(self,
-                            GUI                         = GUI,
-                            NumOfSamples                = NumOfSamples or Prefill_plate_in_Evo200.max_s,
-                            worktable_template_filename = worktable_template_filename or
-                                                          '../EvoScripts/wt_templates/demo-two.mixes.Evo200example.ewt',
-                            output_filename             = output_filename or '../current/two.mixes',
-                            firstTip                    = firstTip,
-                            run_name                    = run_name)
-    
-        def run(self):
-            self.initialize()    # if needed calls Executable.initialize() and set_EvoMode
-                                 # which calls GUI.update_parameters() and set_defaults() from Evo200
-    
-            self.check_initial_liquid_level = True
-            self.show_runtime_check_list    = True
-    
-            NumOfSamples = self.NumOfSamples
-            assert 1 <= NumOfSamples <= 96/6 , "In this demo we want to set 6x NumOfSamples in a 96 well plate."
-            wt           = self.worktable
-    
-            Itr.comment('Prefill a plate with some dilutions of two master mix and Buffer Reagent for {:d} samples.'\
-                           .format(NumOfSamples     )).exec()
-    
-                                                                # Get Labwares (Cuvette, eppys, etc.) from the work table
-            BufCuvette   = wt.getLabware(Lab.Trough_100ml, "BufferCub")
-            master_mixes_= wt.getLabware(Lab.Eppendorfrack,    "mixes")
-    
-    
-            self.go_first_pos()                                                     #  Set the initial position of the tips
-    
-                                                                                      # Set volumen / sample
-            all_samples = range(NumOfSamples)
-            maxTips     = min  (self.n_tips, NumOfSamples)
-            maxMask     = Rbt.tipsMask[maxTips]
-    
-            buf_per_sample =0
-            well_v = 100
-    
-            dil_mix1_10 = well_v /10                # to be distribute from original mix1 to mix1_10
-            buf_mix1_10 = well_v - dil_mix1_10
-            buf_per_sample += buf_mix1_10
-    
-            dil_mix2_10 = well_v / 10               # to be distribute from original mix2 to mix2_10
-            buf_mix2_10 = well_v - dil_mix2_10
-            buf_per_sample += buf_mix2_10
-    
-            dil_mix1_100 = well_v / 10              # to be transfered from mix1_10 to mix1_100
-            buf_mix1_100 = well_v - dil_mix1_100
-            buf_per_sample += buf_mix1_100
-    
-            dil_mix2_100 = well_v / 10              # to be transfered from mix2_10 to mix2_100
-            buf_mix2_100 = well_v - dil_mix2_100
-            buf_per_sample += buf_mix2_100
-    
-    
-            # Define the reagents in each labware (Cuvette, eppys, etc.)
-    
-            buffer_reag = Rtv.Reagent("Buffer ",
-                                      BufCuvette,
-                                      volpersample = buf_per_sample,
-                                      # def_liq_class  = 'MN VL',
-                                      # num_of_samples= NumOfSamples
-                                      )
-    
-            mix1 =Rtv.Reagent("mix1",
-                              master_mixes_,
-                              volpersample = dil_mix1_10,
-                              # def_liq_class  = 'MN VL'
-                              )
-    
-            mix2 = Rtv.Reagent("mix2",
-                               master_mixes_,
-                               volpersample  = dil_mix2_10,
-                               # def_liq_class  = 'MN VL'
-                               )
-    
-            # Show the check_list GUI to the user for possible small changes
-    
-            self.check_list()
-    
-            Itr.wash_tips(wasteVol=5, FastWash=True).exec()
-    
-            Plat1 = wt.getLabware(Lab.MP96MachereyNagel, "plate1")
-            Plat2 = wt.getLabware(Lab.MP96well,          "plate2")
-    
-            # Define place for temporal reactions
-            mix1_10 = Rtv.Reagent(f"mix1, diluted 1:10",
-                            Plat1,
-                            initial_vol = 0.0,
-                            replicas    = NumOfSamples,
-                            excess      = 0)
-    
-            mix2_10 = Rtv.Reagent(f"mix2, diluted 1:10",
-                            Plat1,
-                            initial_vol = 0.0,
-                            replicas    = NumOfSamples,
-                            excess      = 0)
-    
-            mix1_100 = Rtv.Reagent(f"mix1, diluted 1:100",
-                                  Plat2,
-                                  initial_vol=0.0,
-                                  replicas=NumOfSamples,
-                                  excess=0)
-    
-            mix2_100 = Rtv.Reagent(f"mix2, diluted 1:100",
-                                  Plat2,
-                                  initial_vol=0.0,
-                                  replicas=NumOfSamples,
-                                  excess=0)
-    
-            loc = Plat2.location               # just showing how to move the plate from one site to the next in the carrier
-            loc.site -= 1
-            car = Lab.Carrier(Lab.Carrier.Type("MP 3Pos", nSite=3), loc.grid, label = "MP 3Pos")
-            loc.rack = car
-            Itr.transfer_rack(Plat2, loc ).exec()                                              # just showing how RoMa works.
-    
-            with group("Fill plate with mixes "):
-    
-                Itr.userPrompt("Put the plates for Buffer ").exec()
-    
-                with self.tips(reuse=True, drop=False):
-                    self.distribute(reagent           = mix1,
-                                to_labware_region = mix1_10.select_all())
-    
-                with self.tips(reuse=True, drop=False):
-                    self.distribute(reagent           = mix2,
-                                to_labware_region = mix2_10.select_all())
-    
-                with self.tips(reuse=True, drop=False):
-                    self.distribute(reagent=buffer_reag, to_labware_region=mix1_10.select_all(), volume=buf_mix1_10)
-                    self.distribute(reagent=buffer_reag, to_labware_region=mix2_10.select_all(), volume=buf_mix2_10)
-    
-                with self.tips(reuse=True, drop=False):
-                    self.transfer(from_labware_region = mix1_10.select_all(),
-                                  to_labware_region   = mix1_100.select_all(),
-                                  volume              = dil_mix1_100)
-    
-                with self.tips(reuse=True, drop=False):
-                    self.transfer(from_labware_region = mix2_10.select_all(),
-                                  to_labware_region   = mix2_100.select_all(),
-                                  volume              = dil_mix2_100)
-    
-                with self.tips(reuse=True, drop=False):
-                    self.distribute(reagent=buffer_reag, to_labware_region=mix1_100.select_all(), volume=buf_mix1_100)
-                    self.distribute(reagent=buffer_reag, to_labware_region=mix2_100.select_all(), volume=buf_mix2_100)
-    
-                self.dropTips()
-    
-            self.done()
-    
-    
-    if __name__ == "__main__":
-        p = Prefill_plate_in_Evo200(NumOfSamples    = 4,
-                                    run_name        = "_4s_mix_1_2")
-        p.use_version('No version')
-        p.run()
+.. literalinclude:: ../protocols/demos/demo_two_mixes/demo_two_mixes.py
 
 we will have:
-![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-1.png)
-![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-2.png)
-![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-3.png)
-![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-4.png)
-![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-5.png)
-![](https://github.com/qPCR4vir/robotevo/blob/master/docs/demo2mix-list-6.png)
+.. image:: demo2mix-list-1.png
+.. image:: demo2mix-list-2.png
+.. image:: demo2mix-list-3.png
+.. image:: demo2mix-list-4.png
+.. image:: demo2mix-list-5.png
+.. image:: demo2mix-list-6.png

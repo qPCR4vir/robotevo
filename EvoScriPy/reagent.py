@@ -3,6 +3,20 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
+
+
+"""
+
+`Reagent` - a fundamental concept
+=================================
+
+A `Reagent` is a fundamental concept in RobotEvo programming. It makes possible to define a protocol in a natural way, matching what a normal laboratory's protocol indicates.
+Defines a named homogeneous liquid solution, the wells it occupy, the initial amount needed to run the protocol (auto calculated), and how much is needed per sample, if applicable. It is also used to define samples, intermediate reactions and products. It makes possible a robust tracking of all actions and a logical error detection, while significantly simplifying the  programming of non trivial protocols.
+
+
+""""""
+
+
 __author__ = 'qPCR4vir'
 
 import logging
@@ -182,6 +196,9 @@ class Reagent:
     def __str__(self):
         return "{name:s}".format(name=self.name)
 
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+
     def min_vol(self, num_samples=None)->float:
         """
         A minimal volume will be calculated based on either the number of samples
@@ -233,6 +250,9 @@ class Reagent:
 
 
 class Reaction(Reagent):
+    """
+    todo: make this a Mix, with diluent too
+    """
     def __init__(self,
                  name,
                  labware,
@@ -257,20 +277,40 @@ class Reaction(Reagent):
 
 
 class MixComponent:
+    """
+    Represent abstract information, like an item in some table summarizing components of some Mix.
+    todo: introduce diluent? - final_conc == None ? final_conc == init_conc ?
+    """
+
     def __init__(self, id_, name, init_conc, final_conc):
         self.id = id_
         self.name = name
         self.init_conc = init_conc
         self.final_conc = final_conc
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+
 
 class Mix(Reagent):
+    """
+    A Reagent composed of other Reagents, that the robot may prepare.
+    todo: introduce diluent? - final_conc == None ? final_conc == init_conc ?
+    todo: make this base class for Reaction and PreMix
+    """
+
     pass
 
 
 class PreMix(Reagent):
     """
-    A pre-Mix of otherwise independent reagents to be pippeted together.
+    A pre-Mix of otherwise independent reagents to be pippeted together for convenience,
+    but that could be pippeted separately.
+    todo: make this a special case of Mix, for which everything ? is calculated on the basis of "number of samples"
+    todo: introduce diluent? - final_conc == None ? final_conc == init_conc ?
     """
 
     def __init__(self,
@@ -345,6 +385,11 @@ class PreMix(Reagent):
 
 
 class Primer:
+    """
+    Represent abstract information, like an item in some table summarizing primer sequences, synthesis, etc.
+    todo: introduce recomended/used diluent?
+    """
+
     ids = {}
     seqs = {}
     names = {}
@@ -856,7 +901,7 @@ class PCRMasterMixReagent(PreMix):
         # num_samples = len(exp.mixes[pcr_mix])
         for component in pcr_mix.components:
             assert isinstance(component, MixComponent)
-            vol_per_reaction = pcr_mix.reaction_vol * component.init_conc / float (component.final_conc)
+            vol_per_reaction = pcr_mix.reaction_vol * component.final_conc / float (component.init_conc)
             diluent_vol -= vol_per_reaction
             if component.name in reagents:
                 component_r = reagents[component.name]
@@ -866,7 +911,8 @@ class PCRMasterMixReagent(PreMix):
             else:
                 component_r = Reagent(component.name,
                                       labware=labware,
-                                      volpersample=vol_per_reaction)
+                                      volpersample=vol_per_reaction,
+                                      num_of_samples=0)
             components.append(component_r)
 
         PreMix.__init__(self,
