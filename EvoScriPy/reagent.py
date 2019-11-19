@@ -911,12 +911,12 @@ class PCReaction:
         self.targets = targets or []
         self.mix = mix
         if not mix:
-            for target in targets:
+            for target in self.targets:
                 if target in PCRMasterMix.names:
                     self.mix = PCRMasterMix.names[target]
                     break
             else:
-                assert False
+                assert not self.rol
         self.req_vol = vol or mix
         self.replica = replica
 
@@ -1025,7 +1025,7 @@ class PCRexperiment:
 
         logging.debug(exp_sheet.file_name)
 
-        wb = openpyxl.load_workbook(exp_sheet.file_name)
+        wb = openpyxl.load_workbook(str(exp_sheet.file_name))
 
         logging.debug(wb.sheetnames)
 
@@ -1099,12 +1099,14 @@ class PCRexperimentRtic:
 
         self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]  #: abstract info
         self.plates = plates if isinstance(plates, list) else [plates]
-        assert len(self.pcr_exp) <= len(plates)
+        assert len(self.pcr_exp) <= len(self.plates)
         self.protocol = protocol
         self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
         for exp, plate in zip(self.pcr_exp, self.plates):
             assert isinstance(exp, PCRexperiment)
-            for pcr_mix, pcr_reactions in exp.mixes:
+            for pcr_mix, pcr_reactions in exp.mixes.items():
+                if not pcr_mix:
+                    continue
                 assert isinstance(pcr_mix, PCRMasterMix)
                 mix = PCRMasterMixReagent(pcr_mix, reag_rack)
                 sv = pcr_mix.sample_vol

@@ -1068,8 +1068,8 @@ class Labware:
         if pos is None:                                          # find self where to put the num_of_aliquots of this reagent
             continuous, pos = self.find_free_wells(replicas)
             assert replicas == len(pos) , 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
-                                          + str(self) + ' different replica number ' + str(replicas) \
-                                          + ' and number of positions ' \
+                                          + str(self) + ' different replica number (' + str(replicas) \
+                                          + ') and number of positions = ' \
                                           + str(pos)        # num_of_aliquots = len(pos)   # todo What to do?
 
 
