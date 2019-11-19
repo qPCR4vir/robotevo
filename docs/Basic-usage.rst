@@ -64,6 +64,7 @@ Let create the classical, in the the world of programming, Hello World! example.
 It will just shows that message in the screen of the PC controlling the robot and will wait for user confirmation producing a typical sound.
 
 By running the script:
+
 .. literalinclude:: ../protocols/demos/hello_world/hello_world.py
 
 [IMPORTANT: replace the `worktable_template_filename` argument with a valid -for your very onw robot- worktable template (`.ewt`) or script (`.esc`).]
@@ -75,12 +76,19 @@ How to modify an existing protocol?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 How to write a new protocol?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. literalinclude:: ../protocols/demos/demo_two_mixes/demo_two_mixes.py
 
 we will have:
+
 .. image:: demo2mix-list-1.png
+
 .. image:: demo2mix-list-2.png
+
 .. image:: demo2mix-list-3.png
+
 .. image:: demo2mix-list-4.png
+
 .. image:: demo2mix-list-5.png
+
 .. image:: demo2mix-list-6.png
