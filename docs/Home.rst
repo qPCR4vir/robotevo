@@ -67,4 +67,5 @@ visualized in the TECAN Freedom EVOware software. The obtained script is very lo
 but structurally very simple and well commented, which facilitates the visual
 control of each instruction prior to real pipetting.
 
-.. image:: modules.jpg
+- modules.jpg
+
