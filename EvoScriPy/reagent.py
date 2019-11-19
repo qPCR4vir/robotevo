@@ -87,6 +87,8 @@ class Reagent:
         :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
         """
+        logging.debug("Creating Reagent " + name)
+
         self.user_min_vol = min_vol
         self.need_vol = 0.0  #: calculated volume needed during the execution of the protocol
         if labware is None:
@@ -110,9 +112,8 @@ class Reagent:
             if Reagent.current_protocol:
                 worktable = Reagent.current_protocol.worktable                               # todo temporal
 
-        assert name not in worktable.reagents
+        assert name not in worktable.reagents, "The reagent " + name + " was already in the worktable"
         worktable.reagents[name] = self
-
         ex= def_reagent_excess if excess is None else excess
 
         self.labware = labware
@@ -175,6 +176,7 @@ class Reagent:
 
         self.init_vol(NumSamples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
         self.include_in_check = True
+        logging.info("Created Reagent " + str(self))
 
     def min_num_of_replica(self, num_of_samples: int = None) -> int:
         """
@@ -925,7 +927,7 @@ class PCRMasterMixReagent(PreMix):
             components.append(component_r)
 
         PreMix.__init__(self,
-                        pcr_mix.name,
+                        pcr_mix.name + "-PCRMMix",
                         labware,
                         components,
                         pos=pos,
@@ -1139,6 +1141,12 @@ class PCRexperiment:
 
         return self
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+
 
 class PCRexperimentRtic:
     """
@@ -1151,6 +1159,7 @@ class PCRexperimentRtic:
                  reag_rack: lab.Labware,
                  protocol=None):
 
+        logging.debug("Creating a PCRexperimentRtic from " + repr(pcr_exp))
         self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]  #: abstract info
         self.plates = plates if isinstance(plates, list) else [plates]
         assert len(self.pcr_exp) <= len(self.plates)
@@ -1170,7 +1179,8 @@ class PCRexperimentRtic:
                     r = PCReactionReagent(rx, plate)
                     react_wells.append(rx.Replicas[0].well)
                     mix.need_vol += mix.volpersample
-                self.mixes[mix] = react_wells                              # just samples?
+                self.mixes.setdefault(mix, []).extend(react_wells)                     # just samples?
+                pass
 
         pass
 
@@ -1183,6 +1193,12 @@ class PCRexperimentRtic:
     def vol (self, vol, vol_sample):
         self.vol = vol
         self.vol_sample = vol_sample
+
+    def __str__(self):
+        return "PCR Exp " + str(self.pcr_exp)
+
+    def __repr__(self):
+        return str(self)  # todo review
 
 
 if __name__ == '__main__':
