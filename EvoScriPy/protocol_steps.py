@@ -3,16 +3,16 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-
+__author__ = 'qPCR4vir'
 
 """
 Principal API: Protocol steps
-=======================================
+=============================
 
 All these functions are member of the base class :py:class:`Protocol`, from which all user protocols are derived.
 
 High level functions:
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
 
 These are the functions you will use in "every day" protocol programming.
 They allow you to specify the kind of tips to use and them command the operations you need on your reagents,
@@ -35,13 +35,13 @@ samples, reactions, etc., almost directly as it states in the steps of your "han
 
 
 Advanced functions.
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
 Are you doing some advanced protocol development that cannot be efficiently or clearly expressed
 using the previous High level functions? Then, you may use the following functions.
 
 Atomic functions
------------------------------------------------------------
+----------------
 
 These are functions aimed to isolate what a physical robot would make at once: pick some tips,
 aspirate some liquid, etc.
@@ -62,7 +62,7 @@ In some cases these functions may be used to construct new high lever functions.
 
 
 Protocol-structure or state functions
------------------------------------------------------------
+------------------------------------- 
 
 Related to initialization:
 
@@ -103,7 +103,7 @@ Related to state:
 
 
 Other intermediate level functions:
---------------------------
+-----------------------------------
 
   - :py:meth:`~Protocol.aspirate_one`
   - :py:meth:`~Protocol.dispense_one`
@@ -112,12 +112,7 @@ Other intermediate level functions:
   - :py:meth:`~Protocol._multidispense_in_replicas`
   - :py:meth:`~Protocol.comments`
 
------------------------------------------
-
-
 """
-
-__author__ = 'qPCR4vir'
 
 
 from pathlib import Path
