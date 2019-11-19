@@ -1055,7 +1055,8 @@ class Labware:
         return continuous, free_wells
 
     def put(self, reagent, pos=None, replicas=None) -> list:
-        """ Put a reagent with replicas in the given wells position of this labware,
+        """
+        Put a reagent with replicas in the given wells position of this labware,
         and return a list of the wells used
 
         :param reagent:
@@ -1068,6 +1069,9 @@ class Labware:
 
         if pos is None:                                          # find self where to put the num_of_aliquots of this reagent
             continuous, pos = self.find_free_wells(replicas)
+            assert len(pos) > 0, 'There are no more free wells in Labware ' + str(self) \
+                                  + ' to put ' + str(replicas) + ' of reagent - ' + str(reagent)   # todo What to do?
+
             assert replicas == len(pos) , 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
                                           + str(self) + ' different replica number (' + str(replicas) \
                                           + ') and number of positions = ' \

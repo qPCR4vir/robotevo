@@ -71,3 +71,66 @@ DEBUG:root:Creating Reagent H2O
 INFO:root:Created Reagent H2O
 DEBUG:root:Creating Reagent MIDV_PA.228-PCRMMix
 INFO:root:Created Reagent MIDV_PA.228-PCRMMix
+DEBUG:root:Creating Reagent MIDVx10-1.PCR1-1
+INFO:root:Created Reagent MIDVx10-1.PCR1-1
+DEBUG:root:Creating Reagent MIDVx10-2.PCR2-1
+INFO:root:Created Reagent MIDVx10-2.PCR2-1
+DEBUG:root:Creating Reagent MIDVx10-3.PCR3-1
+INFO:root:Created Reagent MIDVx10-3.PCR3-1
+DEBUG:root:Creating Reagent MIDVx10-4.PCR4-1
+INFO:root:Created Reagent MIDVx10-4.PCR4-1
+DEBUG:root:Creating Reagent XEEVx10-3.PCR5-1
+INFO:root:Created Reagent XEEVx10-3.PCR5-1
+DEBUG:root:Creating Reagent H2O.PCR6-1
+INFO:root:Created Reagent H2O.PCR6-1
+DEBUG:root:Creating Reagent MIDVNS4.231
+INFO:root:Created Reagent MIDVNS4.231
+DEBUG:root:Creating Reagent MIDVNS4.231-PCRMMix
+INFO:root:Created Reagent MIDVNS4.231-PCRMMix
+DEBUG:root:Creating Reagent MIDVx10-1.PCR1-2
+INFO:root:Created Reagent MIDVx10-1.PCR1-2
+DEBUG:root:Creating Reagent MIDVx10-2.PCR2-2
+INFO:root:Created Reagent MIDVx10-2.PCR2-2
+DEBUG:root:Creating Reagent MIDVx10-3.PCR3-2
+INFO:root:Created Reagent MIDVx10-3.PCR3-2
+DEBUG:root:Creating Reagent MIDVx10-4.PCR4-2
+INFO:root:Created Reagent MIDVx10-4.PCR4-2
+DEBUG:root:Creating Reagent XEEVx10-3.PCR5-2
+INFO:root:Created Reagent XEEVx10-3.PCR5-2
+DEBUG:root:Creating Reagent H2O.PCR6-2
+INFO:root:Created Reagent H2O.PCR6-2
+DEBUG:root:Creating Reagent Quantitect-SYBR RT-PCR Master Mix
+INFO:root:Created Reagent Quantitect-SYBR RT-PCR Master Mix
+DEBUG:root:Creating Reagent PA.Dg+MID.229
+INFO:root:Created Reagent PA.Dg+MID.229
+DEBUG:root:Creating Reagent PA.Dg+MID.229-PCRMMix
+INFO:root:Created Reagent PA.Dg+MID.229-PCRMMix
+DEBUG:root:Creating Reagent MIDVx10-1.PCR1-3
+INFO:root:Created Reagent MIDVx10-1.PCR1-3
+DEBUG:root:Creating Reagent MIDVx10-2.PCR2-3
+INFO:root:Created Reagent MIDVx10-2.PCR2-3
+DEBUG:root:Creating Reagent MIDVx10-3.PCR3-3
+INFO:root:Created Reagent MIDVx10-3.PCR3-3
+DEBUG:root:Creating Reagent MIDVx10-4.PCR4-3
+INFO:root:Created Reagent MIDVx10-4.PCR4-3
+DEBUG:root:Creating Reagent XEEVx10-3.PCR5-3
+INFO:root:Created Reagent XEEVx10-3.PCR5-3
+DEBUG:root:Creating Reagent H2O.PCR6-3
+INFO:root:Created Reagent H2O.PCR6-3
+DEBUG:root:Creating Reagent AlphaEEV Mix
+INFO:root:Created Reagent AlphaEEV Mix
+DEBUG:root:Creating Reagent AlphaEEV Mix-PCRMMix
+INFO:root:Created Reagent AlphaEEV Mix-PCRMMix
+DEBUG:root:Creating Reagent MIDVx10-1.PCR1-4
+INFO:root:Created Reagent MIDVx10-1.PCR1-4
+DEBUG:root:Creating Reagent MIDVx10-2.PCR2-4
+INFO:root:Created Reagent MIDVx10-2.PCR2-4
+DEBUG:root:Creating Reagent MIDVx10-3.PCR3-4
+INFO:root:Created Reagent MIDVx10-3.PCR3-4
+DEBUG:root:Creating Reagent MIDVx10-4.PCR4-4
+INFO:root:Created Reagent MIDVx10-4.PCR4-4
+DEBUG:root:Creating Reagent XEEVx10-3.PCR5-4
+INFO:root:Created Reagent XEEVx10-3.PCR5-4
+DEBUG:root:Creating Reagent H2O.PCR6-4
+INFO:root:Created Reagent H2O.PCR6-4
+DEBUG:root:Creating Reagent PaFl.DgBt.224

@@ -4,7 +4,12 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
 """
+
+GUI
+===
+
 Implement a GUI that automatically detect available protocols.
+
 """
 
 __author__ = 'qPCR4vir'
@@ -23,7 +28,8 @@ av_prot_names = []   # list of "protocol names+: + run names" with the same inde
 
 
 class App(tkinter.Frame):
-    """ GUI orgaization:
+    """
+    GUI orgaization:
 
      app = App(master = tkinter.Tk()), - tkinter.Frame.__init__(self, master). :  new window
          - Logo,
@@ -225,14 +231,15 @@ class App(tkinter.Frame):
     GUI4parameters[HelloWorld.name]=GUI_init_RNAext_parameters
 
     class GUI_protocol(tkinter.Frame):
-        """ Implements a GUI for the selected protocol. Each protocol receive a reference to it in .GUI
-            Opens in a new window. Has:
+        """
+        Implements a GUI for the selected protocol. Each protocol receive a reference to it in .GUI
+        Opens in a new window. Has:
             - GUI_init, to review creation parameters,
             - GUI_parameters for check_list prior to actually running the protocol,
             - Comments that shows the run.
 
-            Alternatively, for Pipelines shows the list of protocols for sequential running
-            """
+        Alternatively, for Pipelines shows the list of protocols for sequential running
+        """
 
         def __init__(self, protocol):
             self.protocol = protocol

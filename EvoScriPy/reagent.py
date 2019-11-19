@@ -122,7 +122,7 @@ class Reagent:
         self.def_liq_class = def_liq_class
         self.name = name
         self.volpersample = volpersample
-        self.components = []                                                            # todo reserved for future use
+        self.components = []                                # todo reserved for future use ??
         if minimize_aliquots is not None:
             self.minimize_aliquots = minimize_aliquots
         else:
@@ -253,12 +253,12 @@ class Reagent:
 
 class Reaction(Reagent):
     """
-    todo: make this a Mix, with diluent too
+    todo: make this a Mix, with diluent too ?
     """
     def __init__(self,
                  name,
                  labware,
-                 components: [Reagent],
+                 components: [Reagent] = None,
                  track_sample=None, # just one more component?
                  pos=None,
                  num_of_aliquots=1,
@@ -917,7 +917,8 @@ class PCRMasterMixReagent(PreMix):
             if component.name in reagents:
                 component_r = reagents[component.name]
                 assert isinstance(component_r, Reagent)
-                assert abs(component_r.volpersample - vol_per_reaction) < 0.05  # ??
+                # if not abs(component_r.volpersample - vol_per_reaction) < 0.05:
+                #    assert False
                 # component_r.put_min_vol()
             else:
                 component_r = Reagent(component.name,
@@ -1001,7 +1002,11 @@ class PCReactionReagent(Reaction):
         :param plates:
         """
 
-        Reaction.__init__()
+        Reaction.__init__(self,
+                          name=pcr_reaction.sample + ".PCR" + str(pcr_reaction.row) + "-" + str(pcr_reaction.col),
+                          labware=plate,
+                          track_sample=pcr_reaction.sample,
+                          pos=plate.Position(pcr_reaction.row, pcr_reaction.col))
         self.pcr_reaction = pcr_reaction
         self.plate = plate
 
@@ -1177,7 +1182,7 @@ class PCRexperimentRtic:
                 react_wells = []
                 for rx in pcr_reactions:
                     r = PCReactionReagent(rx, plate)
-                    react_wells.append(rx.Replicas[0].well)
+                    react_wells.extend(r.Replicas)
                     mix.need_vol += mix.volpersample
                 self.mixes.setdefault(mix, []).extend(react_wells)                     # just samples?
                 pass
