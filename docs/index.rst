@@ -18,11 +18,6 @@ programing of the steps needed in a typical biochemical/biological pipetting pro
    Users-of-RobotEvo
    Basic-usage
    API
-   Protocol-steps-(principal-API)
-   Reagents
-   Worktable-and-labwares
-
-
 
 
 Indices and tables
@@ -31,8 +26,6 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
 
 
 .. autosummary::

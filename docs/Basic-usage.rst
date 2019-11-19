@@ -85,7 +85,7 @@ By running the script:
 
 .. literalinclude:: ../protocols/demos/hello_world/hello_world.py
 
-[IMPORTANT: replace the `worktable_template_filename` argument with a valid -for your very onw robot-
+[IMPORTANT: replace the `worktable_template_filename` argument with any valid -for your very onw robot-
 worktable template (`.ewt`) or script (`.esc`).]
 
 we will have some files (currently 4) generated with names following the pattern of the `output_filename`
