@@ -81,7 +81,7 @@ Create and transfer to RobotEvo as many Liquid classes as you need.
 Examples:
 =========
 
-.. automodule:: ../protocols/demos/demo_two_mixes/demo_two_mixes
+.. automodule:: ../protocols/demos/hello_world/hello_world.py
    :members:
    :undoc-members:
    :show-inheritance:
