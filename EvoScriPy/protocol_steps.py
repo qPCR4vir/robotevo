@@ -112,6 +112,8 @@ Other intermediate level functions:
   - :py:meth:`~Protocol._multidispense_in_replicas`
   - :py:meth:`~Protocol.comments`
 
+----------------------------------
+
 """
 
 
