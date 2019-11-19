@@ -17,8 +17,13 @@ programing of the steps needed in a typical biochemical/biological pipetting pro
    Home
    Users-of-RobotEvo
    Basic-usage
-   ../EvoScriPy/protocol_steps.py
    API
+   protocol_steps
+   reagent
+   labware
+   instructions
+   GUI
+   others
 
 
 Indices and tables

@@ -3,12 +3,12 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-
-__author__ = 'qPCR4vir'
-
 """
 Implement a GUI that automatically detect available protocols.
 """
+
+__author__ = 'qPCR4vir'
+
 
 import tkinter
 from tkinter.filedialog import askopenfilename
