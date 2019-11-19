@@ -17,10 +17,10 @@ programing of the steps needed in a typical biochemical/biological pipetting pro
    Home
    Users-of-RobotEvo
    Basic-usage
-   Protocol-steps-(principal-API)
-   Worktable-and-labwares
    API
+   Protocol-steps-(principal-API)
    Reagents
+   Worktable-and-labwares
 
 
 

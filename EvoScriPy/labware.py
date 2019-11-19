@@ -3,11 +3,10 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
-__author__ = 'qPCR4vir'
-
 """
 Worktable and labwares
 ======================
+
  - Worktable
  - Worktable.Location
  - Labware.Type
@@ -19,10 +18,12 @@ Worktable and labwares
    + Specialized labwares:
      + DitiRack
      + Cuvette
+
 ---------
 
 """
 
+__author__ = 'qPCR4vir'
 
 
 from pathlib import Path

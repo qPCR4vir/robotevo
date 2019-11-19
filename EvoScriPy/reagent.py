@@ -740,10 +740,11 @@ class PCRMasterMix:
     def __init__(self,
                  name,
                  id_=None,
-                 reaction_vol = 25,  #: in uL
-                 sample_vol = 5,  #: in  uL
+                 reaction_vol=25,  #: in uL
+                 sample_vol=5,  #: in  uL
                  components=None,
-                 title = None):
+                 diluent=None,
+                 title=None):
         """
 
         :param name:
@@ -753,6 +754,7 @@ class PCRMasterMix:
         :param components:
         :param title:
         """
+        self.diluent = diluent
         self.name = name
         self.id = id_
         self.reaction_vol = reaction_vol
@@ -806,8 +808,8 @@ class PCRMasterMix:
 
             ws = wb[exp_sheet.page or 'Druken']       # deprecate
 
-        no_l, header, name_l, vol_l, sampl_l, table_h_l, comp_l, diluter_l = 0, 0, 0, 1, 2, 5, 6, 7
-        diluter = 'H2O'
+        no_l, header, name_l, vol_l, sampl_l, table_h_l, comp_l, diluent_l = 0, 0, 0, 1, 2, 5, 6, 7
+        diluent = 'H2O'   # ?
         line = no_l
         pmix = None
         id = None
@@ -841,15 +843,20 @@ class PCRMasterMix:
                 line += 1
 
             else:
-                comp_name = r[col['comp_name']].value
-                if comp_name == diluter:
-                    pmix = PCRMasterMix( name=name,
-                                         id_=id,
-                                         reaction_vol=vol_per_reaction,
-                                         sample_vol=sample_vol,
-                                         title=title,
-                                         components=components
-                                         )
+                component = MixComponent(id_=r[col['id']].value,
+                                         name=r[col['comp_name']].value,
+                                         init_conc=r[col['conc']].value,
+                                         final_conc=r[col['final']].value)
+                if component.name == diluent:
+                    components.append(component)
+                    pmix = PCRMasterMix(name=name,
+                                        id_=id,
+                                        reaction_vol=vol_per_reaction,
+                                        sample_vol=sample_vol,
+                                        title=title,
+                                        components=components,
+                                        diluent=component
+                                        )
                     line = no_l
                     id = None
                     name = None
@@ -858,19 +865,18 @@ class PCRMasterMix:
                     sample_vol = 5  # uL
                     title = None
 
-                elif comp_name:
-                    comp_id = r[col['id']].value
-                    final_conc = r[col['final']].value
-                    if final_conc and (comp_id or comp_name):
-                        components += [MixComponent(comp_id,
-                                                    comp_name,
-                                                    r[col['conc']].value,
-                                                    final_conc)]
+                elif component.name:
+                    if component.final_conc and (component.id or component.name):
+                        components.append(component)
 
         return pmix
 
 
 class PCRMasterMixReagent(PreMix):
+    """
+    Manipulate a PCR Master-Mix Reagent on a robot.
+    """
+
     excess = def_mix_excess
 
     def __init__(self,
@@ -901,8 +907,11 @@ class PCRMasterMixReagent(PreMix):
         # num_samples = len(exp.mixes[pcr_mix])
         for component in pcr_mix.components:
             assert isinstance(component, MixComponent)
-            vol_per_reaction = pcr_mix.reaction_vol * component.final_conc / float (component.init_conc)
-            diluent_vol -= vol_per_reaction
+            if component is pcr_mix.diluent:
+                vol_per_reaction = diluent_vol
+            else:
+                vol_per_reaction = pcr_mix.reaction_vol * component.final_conc / float (component.init_conc)
+                diluent_vol -= vol_per_reaction
             if component.name in reagents:
                 component_r = reagents[component.name]
                 assert isinstance(component_r, Reagent)
@@ -921,7 +930,6 @@ class PCRMasterMixReagent(PreMix):
                         components,
                         pos=pos,
                         num_of_aliquots=num_of_aliquots,
-
                         initial_vol=initial_vol,
                         def_liq_class=def_liq_class,
                         excess=excess or PCRMasterMixReagent.excess,
