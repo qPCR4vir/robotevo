@@ -676,6 +676,12 @@ class Carrier:
             self.allowed_labwares_types = []
             self.name                   = name
 
+        def __str__(self):
+            return self.name
+
+        def __repr__(self):
+            return ((self.name or '-') + '[' + (str(self.idx) or '-') + ']')
+
     def __init__(self,
                  carrier_type : Type,
                  grid         : int,
@@ -707,6 +713,12 @@ class Carrier:
             if labware.location.grid is not None:
                 logging.warning("Original grid changed to that of the Rack.")
             labware.location.grid = self.grid
+
+    def __str__(self):
+        return (self.type.name or '-') + ': ' + (self.label or '-')
+
+    def __repr__(self):
+        return str(self)
 
 
 class Well:
@@ -854,6 +866,9 @@ class Labware:
             def __str__(self):
                 return "serie of {n:d} {type:s}".format(n=len(self.labwares), type=self.type.name)
 
+            def __repr__(self):
+                return str(self.nCol) or '-'
+
             def add(self, labware):                                    # labware : Labware
                 assert self.type is labware.type
                 self.labwares.append(labware)
@@ -927,6 +942,9 @@ class Labware:
         def __str__(self):
             return "{type:s}".format(type=self.type.name)
 
+        def __repr__(self):
+            return str(self.nCol) or '-'
+
         def size(self) -> int:
             return self.nRow * self.nCol
 
@@ -976,6 +994,11 @@ class Labware:
 
     def __str__(self):
         return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
+
+
+    def __repr__(self):
+        return ((self.name or '-') + '[' + (str(self.nRow) or '-')
+                                         + (str(self.nCol) or '-')    + ']')
 
     @staticmethod
     def create(labw_t_name  : str,
@@ -1069,8 +1092,9 @@ class Labware:
 
         if pos is None:                                          # find self where to put the num_of_aliquots of this reagent
             continuous, pos = self.find_free_wells(num_of_aliquots)
-            assert len(pos) > 0, 'There are no more free wells in Labware ' + str(self) \
-                                 + ' to put ' + str(num_of_aliquots) + ' aliquots of reagent - ' + str(reagent)
+            if len(pos) < num_of_aliquots:
+                raise NoFreeWells(labware=self,
+                                  error=' to put ' + str(num_of_aliquots) + ' aliquots of reagent - ' + str(reagent))
 
             assert num_of_aliquots == len(pos), 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
                                                 + str(self) + ' different replica number (' + str(num_of_aliquots) \
@@ -1248,6 +1272,12 @@ class Labware:
             sel.append(null + bitMask)
         from EvoScriPy.evo_mode import encoding
         return "{:02X}{:02X}".format(X, Y) + sel.decode(encoding)
+
+
+class NoFreeWells (Exception):
+    def __init__(self, labware: Labware, error: str):
+        self.labware = labware
+        Exception.__init__(self, "In " + str(labware) + error)
 
 
 class DITIrackTypeSeries(Labware.Type.Series):
