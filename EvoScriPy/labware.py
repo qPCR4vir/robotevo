@@ -1054,60 +1054,64 @@ class Labware:
                             for i in range(len(free_wells)-1))
         return continuous, free_wells
 
-    def put(self, reagent, pos=None, replicas=None) -> list:
+    def put(self, reagent, pos=None, num_of_aliquots=None) -> list:
         """
-        Put a reagent with replicas in the given wells position of this labware,
+        Put a reagent with replicas in the given wells positions of this labware,
         and return a list of the wells used
 
         :param reagent:
         :param pos: [wells]; if int or [int] will be assumed 1-based not 0-based
-        :param replicas: number of replicas
+        :param num_of_aliquots: number of replicas
         :return:
         """
 
-        replicas = replicas or reagent.minNumRep
+        num_of_aliquots = num_of_aliquots or reagent.min_num_aliq
 
         if pos is None:                                          # find self where to put the num_of_aliquots of this reagent
-            continuous, pos = self.find_free_wells(replicas)
+            continuous, pos = self.find_free_wells(num_of_aliquots)
             assert len(pos) > 0, 'There are no more free wells in Labware ' + str(self) \
-                                  + ' to put ' + str(replicas) + ' of reagent - ' + str(reagent)   # todo What to do?
+                                 + ' to put ' + str(num_of_aliquots) + ' aliquots of reagent - ' + str(reagent)
 
-            assert replicas == len(pos) , 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
-                                          + str(self) + ' different replica number (' + str(replicas) \
-                                          + ') and number of positions = ' \
-                                          + str(pos)        # num_of_aliquots = len(pos)   # todo What to do?
-
+            assert num_of_aliquots == len(pos), 'putting reagent - ' + str(reagent) + ' - into Labware: ' \
+                                                + str(self) + ' different replica number (' + str(num_of_aliquots) \
+                                                + ') and number of positions = ' \
+                                                + str(pos)        # num_of_aliquots = len(pos)   # todo What to do?
 
         elif isinstance(pos, list):                              # put one replica on each of the given wells position
-            if replicas <= len(pos):
+            if num_of_aliquots <= len(pos):
                 pass                           # num_of_aliquots = len(pos)
-            else:                              # todo: revise  !!!!!!!!!!!!!!
-                assert (replicas == len(pos)), self.label + ": Can not put " + reagent.name + " in position " \
-                                               + str( w.offset + 1) + " already occupied by " + w.reagent.name
-
+            else:
+                assert (num_of_aliquots == len(pos)), self.label + ": Can not put " + ' aliquots of reagent ' + str(reagent) \
+                                                     + " in " + str(len(pos)) + " positions"
 
         elif isinstance(pos, Well):                              # put one replica beginning from the given position
-                # assert pos.labware is self, "Trying to put the reagent in another labware?"
-                pos = pos.labware.Wells[pos.offset: pos.offset + replicas]
-                # pos = self.Wells[pos.offset: pos.offset + num_of_aliquots]
+            # assert pos.labware is self, "Trying to put the reagent in another labware?"
+            pos = pos.labware.Wells[pos.offset: pos.offset + num_of_aliquots]
+            # pos = self.Wells[pos.offset: pos.offset + num_of_aliquots]
         else:
-                pos = self.offset(pos)            # todo: revise  !!!!!!!!!!!!!!
-                pos = self.Wells[pos: pos + replicas]
-                # pos = self.offset(pos) + 1
-                # pos = range(pos, pos + num_of_aliquots)
+            pos = self.offset(pos)            # todo: revise  !!!!!!!!!!!!!!
+            pos = self.Wells[pos: pos + num_of_aliquots]
+            # pos = self.offset(pos) + 1
+            # pos = range(pos, pos + num_of_aliquots)
 
-        Replicas = []    # a list of labware-wells, where the replicas for this reagent are.
+        aliquots = []    # a list of labware-wells, where the replicas for this reagent are.
         for w in pos:
-            if replicas == 0 :
-                return Replicas
+            if num_of_aliquots == 0:
+                return aliquots
             w = w if isinstance(w, Well) else self.Wells[self.offset(w)]
             assert not w.reagent, self.label + ": Can not put " + reagent.name + " in position " + str(
-                w.offset + 1) + " already occupied by " + w.reagent.name
+                                  w.offset + 1) + " already occupied by " + w.reagent.name
             w.reagent = reagent
             # w.labware = self
-            Replicas += [w]
-            replicas -= 1
-        return Replicas
+            aliquots += [w]
+            num_of_aliquots -= 1
+
+        if not len(aliquots):
+            pass
+        assert len(aliquots) > 0, 'There are no more free wells in Labware ' + str(self) \
+                                  + ' to put aliquots of reagent - ' + str(reagent)
+
+        return aliquots
 
     def clearSelection(self):
         for well in self.Wells:
