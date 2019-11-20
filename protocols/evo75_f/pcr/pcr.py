@@ -91,7 +91,7 @@ class PCR(Evo75_FLI):
             cell_rows=6,
             sample_line=6)
 
-        exp = PCRexperiment().load_excel_list(sheet0)
+        exp = PCRexperiment().load_excel_list(sheet1)
 
         pcr_plates = [wt.get_labware("PCR" + str(i + 1)) for i in range(self.num_plates)]
         eppis_racks = [wt.get_labware(rack) for rack in ["PrimerMix", "Primers-5", "Primers-4"]]

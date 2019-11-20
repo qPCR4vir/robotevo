@@ -1074,7 +1074,7 @@ class PCRexperiment:
         # self.vol_sample = PCReaction.vol_sample
 
     def add_reaction(self, pcr_reaction: PCReaction):
-        self.pcr_reactions[pcr_reaction.row][pcr_reaction.col] = pcr_reaction
+        self.pcr_reactions[pcr_reaction.row-1][pcr_reaction.col-1] = pcr_reaction
         self.samples.setdefault(pcr_reaction.sample, []).append(pcr_reaction)
         for target in pcr_reaction.targets:
             self.targets.setdefault(target, []).append(pcr_reaction)
@@ -1143,14 +1143,14 @@ class PCRexperiment:
                 line += 1
 
             elif line == 1:
-                reactions = [PCReaction(PCReaction.empty, row=row, col=col) for col in range(ncol)]
+                reactions = [PCReaction(PCReaction.empty, row=row + 1, col=col + 1) for col in range(ncol)]
                 for rx in reactions:
-                    rx.rol = PCReaction.rol[r[rx.col + 1].value]
+                    rx.rol = PCReaction.rol[r[rx.col].value]
                 line += 1
 
             elif line < sample_line:
                 for rx in reactions:
-                    target = r[rx.col + 1].value
+                    target = r[rx.col].value
                     if target:
                         assert rx.rol
                         rx.targets.append(target)
@@ -1159,7 +1159,7 @@ class PCRexperiment:
 
             elif line == sample_line:
                 for rx in reactions:
-                    sample = r[rx.col + 1].value
+                    sample = r[rx.col].value
                     if sample:
                         assert rx.rol
                         rx.sample = sample
@@ -1169,7 +1169,7 @@ class PCRexperiment:
                 # read cell line
                 line += 1
 
-            if  line >= cell_rows:  # last cell line
+            if line >= cell_rows:  # last cell line
                 row += 1
                 if len(self.pcr_reactions) < row:
                     self.pcr_reactions += [[None]*ncol]
