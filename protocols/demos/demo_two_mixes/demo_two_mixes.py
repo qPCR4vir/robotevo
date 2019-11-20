@@ -1,6 +1,11 @@
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # this example is free to use at your onw risk
 # 2019-2019
+"""
+Prepare serial dilutions of two mixes.
+--------------------------------------
+"""
+
 __author__ = 'Ariel'
 
 # Tutorial

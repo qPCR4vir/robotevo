@@ -1,9 +1,20 @@
+"""
+Hello World!
+------------
+
+The classical, in the the world of programming, Hello World! example.
+It will just shows that message in the screen of the PC controlling the robot and will wait
+for user confirmation producing a typical sound.
+"""
 
 from EvoScriPy.protocol_steps import *
 
 
 class HelloWorld(Protocol):
-
+    """
+    This is a very general protocol.
+    Normally you will inherit from a Protocol class adapted to your real robot.
+    """
     name = "Hello World"
 
     def __init__(self, GUI                         = None,
