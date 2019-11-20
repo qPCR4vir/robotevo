@@ -17,9 +17,14 @@ INFO:root:Parsing: C:\prog\robotevo\protocols\evo75_f\CustomLCs.txt
 INFO:root:Parsing carriers types from protocols\evo75_f\Carrier.cfg
 DEBUG:root:Setting Evo Modes
 INFO:root:Opened file for script: protocols\evo75_f\pcr\scripts\PCR1 plate.esc
-DEBUG:root:Going to set template: C:\prog\robotevo\protocols\evo75_f\pcr\..\Freedom75_FLI_PCR.ewt
-DEBUG:root:Set template file: protocols\evo75_f\pcr\..\Freedom75_FLI_PCR.ewt
+DEBUG:root:Going to set template: C:\prog\robotevo\protocols\evo75_f\pcr\..\Freedom75_FLI_PCR5xPr.ewt
+DEBUG:root:Set template file: protocols\evo75_f\pcr\..\Freedom75_FLI_PCR5xPr.ewt
 DEBUG:root:Read header.
+INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 1
+INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 3
+INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 5
+INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 7
+INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 9
 INFO:root:Carrier: Tube 13 mm 16 Pos found in line carrier-grid for grid 12
 INFO:root:Carrier: Tube Eppendorf 16 Pos found in line carrier-grid for grid 13
 INFO:root:Carrier: DiTi 3Pos + Waste found in line carrier-grid for grid 14
@@ -28,17 +33,22 @@ INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 21
 INFO:root:Carrier: Wash Station found in line carrier-grid for grid 27
 INFO:root:Detected 99 grids.
 DEBUG:root:Reading grids 
-INFO:root:Created serie of 1 Tube 13*100mm 16 Pos
-INFO:root:Created labware Tube 13*100mm 16 Pos:Reactive tubes in grid:12, site:1
 INFO:root:Created serie of 1 Tube Eppendorf 16 Pos
-INFO:root:Created labware Tube Eppendorf 16 Pos:Reactive Eppis in grid:13, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:Primers-1 in grid:1, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:Primers-2 in grid:3, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:Primers-3 in grid:5, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:Primers-4 in grid:7, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:Primers-5 in grid:9, site:1
+INFO:root:Created serie of 1 Tube 13*100mm 16 Pos
+INFO:root:Created labware Tube 13*100mm 16 Pos:BufferTubes in grid:12, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:PrimerMix in grid:13, site:1
 INFO:root:Created serie of 1 DiTi 200 ul
 INFO:root:Created labware DiTi 200 ul:200-1 in grid:14, site:1
 INFO:root:Created labware DiTi 200 ul:200-2 in grid:14, site:2
 INFO:root:Created labware DiTi 200 ul:200-3 in grid:14, site:3
 INFO:root:Created serie of 1 DiTi Nested Waste MCA384
 INFO:root:Created labware DiTi Nested Waste MCA384:TipWaste in grid:14, site:4
-INFO:root:Created labware Tube Eppendorf 16 Pos:MM + Primer in grid:20, site:1
+INFO:root:Created labware Tube Eppendorf 16 Pos:PCRkits+MMix in grid:20, site:1
 INFO:root:Created serie of 1 96 Well PCR Plate
 INFO:root:Created labware 96 Well PCR Plate:PCR1 in grid:21, site:1
 INFO:root:Created labware 96 Well PCR Plate:PCR2 in grid:21, site:2
@@ -49,88 +59,184 @@ INFO:root:Created serie of 1 Wash Station Waste
 INFO:root:Created labware Wash Station Waste: in grid:27, site:2
 INFO:root:Created serie of 1 Wash Station Cleaner deep
 INFO:root:Created labware Wash Station Cleaner deep: in grid:27, site:3
-WARNING:root:Non ended 2 Grid 99 line 106: 998;0;
+WARNING:root:Non ended 2 Grid 99 line 111: 998;0;
 
 INFO:root:Opened file for script: protocols\evo75_f\pcr\scripts\PCR1 plate.protocol.txt
 INFO:root:Opened file for script: protocols\evo75_f\pcr\scripts\PCR1 plate.gwl
 INFO:root:Opened file for script: protocols\evo75_f\pcr\scripts\PCR1 plate.txt
 DEBUG:root:Creating Reagent Liquid waste
-INFO:root:Created Reagent Liquid waste
+DEBUG:root:Created Reagent Liquid waste
 DEBUG:root:Comment("PCR 1 plates for 96 samples.");
 DEBUG:root:opening excel
 DEBUG:root:K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx
 DEBUG:root:['Druken (2)']
-DEBUG:root:Creating a PCRexperimentRtic from  WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute[Exp 424]
-DEBUG:root:Creating Reagent Quantitect-Probe RT-PCR Master Mix
-INFO:root:Created Reagent Quantitect-Probe RT-PCR Master Mix
-DEBUG:root:Creating Reagent RT-Mix
-INFO:root:Created Reagent RT-Mix
-DEBUG:root:Creating Reagent MIDV_PA.228
-INFO:root:Created Reagent MIDV_PA.228
-DEBUG:root:Creating Reagent H2O
-INFO:root:Created Reagent H2O
-DEBUG:root:Creating Reagent MIDV_PA.228-PCRMMix
-INFO:root:Created Reagent MIDV_PA.228-PCRMMix
-DEBUG:root:Creating Reagent MIDVx10-1.PCR1-1
-INFO:root:Created Reagent MIDVx10-1.PCR1-1
-DEBUG:root:Creating Reagent MIDVx10-2.PCR2-1
-INFO:root:Created Reagent MIDVx10-2.PCR2-1
-DEBUG:root:Creating Reagent MIDVx10-3.PCR3-1
-INFO:root:Created Reagent MIDVx10-3.PCR3-1
-DEBUG:root:Creating Reagent MIDVx10-4.PCR4-1
-INFO:root:Created Reagent MIDVx10-4.PCR4-1
-DEBUG:root:Creating Reagent XEEVx10-3.PCR5-1
-INFO:root:Created Reagent XEEVx10-3.PCR5-1
-DEBUG:root:Creating Reagent H2O.PCR6-1
-INFO:root:Created Reagent H2O.PCR6-1
-DEBUG:root:Creating Reagent MIDVNS4.231
-INFO:root:Created Reagent MIDVNS4.231
-DEBUG:root:Creating Reagent MIDVNS4.231-PCRMMix
-INFO:root:Created Reagent MIDVNS4.231-PCRMMix
-DEBUG:root:Creating Reagent MIDVx10-1.PCR1-2
-INFO:root:Created Reagent MIDVx10-1.PCR1-2
-DEBUG:root:Creating Reagent MIDVx10-2.PCR2-2
-INFO:root:Created Reagent MIDVx10-2.PCR2-2
-DEBUG:root:Creating Reagent MIDVx10-3.PCR3-2
-INFO:root:Created Reagent MIDVx10-3.PCR3-2
-DEBUG:root:Creating Reagent MIDVx10-4.PCR4-2
-INFO:root:Created Reagent MIDVx10-4.PCR4-2
-DEBUG:root:Creating Reagent XEEVx10-3.PCR5-2
-INFO:root:Created Reagent XEEVx10-3.PCR5-2
-DEBUG:root:Creating Reagent H2O.PCR6-2
-INFO:root:Created Reagent H2O.PCR6-2
 DEBUG:root:Creating Reagent Quantitect-SYBR RT-PCR Master Mix
-INFO:root:Created Reagent Quantitect-SYBR RT-PCR Master Mix
+DEBUG:root:Created Reagent Quantitect-SYBR RT-PCR Master Mix
+DEBUG:root:Creating Reagent Quantitect-Probe RT-PCR Master Mix
+DEBUG:root:Created Reagent Quantitect-Probe RT-PCR Master Mix
+DEBUG:root:Creating a PCRexperimentRtic from  WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute[Exp 424]
+DEBUG:root:Creating Reagent RT-Mix
+DEBUG:root:Created Reagent RT-Mix
+DEBUG:root:Creating Reagent MIDV_PA.228
+DEBUG:root:Created Reagent MIDV_PA.228
+DEBUG:root:Creating Reagent H2O
+DEBUG:root:Created Reagent H2O
+DEBUG:root:Creating Reagent MIDV_PA.228-PCRMMix
+DEBUG:root:Created Reagent MIDV_PA.228-PCRMMix
+DEBUG:root:Creating Reagent MIDVx10-1.PCR1-1
+DEBUG:root:Created Reagent MIDVx10-1.PCR1-1
+DEBUG:root:Creating Reagent MIDVx10-2.PCR2-1
+DEBUG:root:Created Reagent MIDVx10-2.PCR2-1
+DEBUG:root:Creating Reagent MIDVx10-3.PCR3-1
+DEBUG:root:Created Reagent MIDVx10-3.PCR3-1
+DEBUG:root:Creating Reagent MIDVx10-4.PCR4-1
+DEBUG:root:Created Reagent MIDVx10-4.PCR4-1
+DEBUG:root:Creating Reagent XEEVx10-3.PCR5-1
+DEBUG:root:Created Reagent XEEVx10-3.PCR5-1
+DEBUG:root:Creating Reagent H2O.PCR6-1
+DEBUG:root:Created Reagent H2O.PCR6-1
+DEBUG:root:Creating Reagent MIDVNS4.231
+DEBUG:root:Created Reagent MIDVNS4.231
+DEBUG:root:Creating Reagent MIDVNS4.231-PCRMMix
+DEBUG:root:Created Reagent MIDVNS4.231-PCRMMix
+DEBUG:root:Creating Reagent MIDVx10-1.PCR1-2
+DEBUG:root:Created Reagent MIDVx10-1.PCR1-2
+DEBUG:root:Creating Reagent MIDVx10-2.PCR2-2
+DEBUG:root:Created Reagent MIDVx10-2.PCR2-2
+DEBUG:root:Creating Reagent MIDVx10-3.PCR3-2
+DEBUG:root:Created Reagent MIDVx10-3.PCR3-2
+DEBUG:root:Creating Reagent MIDVx10-4.PCR4-2
+DEBUG:root:Created Reagent MIDVx10-4.PCR4-2
+DEBUG:root:Creating Reagent XEEVx10-3.PCR5-2
+DEBUG:root:Created Reagent XEEVx10-3.PCR5-2
+DEBUG:root:Creating Reagent H2O.PCR6-2
+DEBUG:root:Created Reagent H2O.PCR6-2
 DEBUG:root:Creating Reagent PA.Dg+MID.229
-INFO:root:Created Reagent PA.Dg+MID.229
+DEBUG:root:Created Reagent PA.Dg+MID.229
 DEBUG:root:Creating Reagent PA.Dg+MID.229-PCRMMix
-INFO:root:Created Reagent PA.Dg+MID.229-PCRMMix
+DEBUG:root:Created Reagent PA.Dg+MID.229-PCRMMix
 DEBUG:root:Creating Reagent MIDVx10-1.PCR1-3
-INFO:root:Created Reagent MIDVx10-1.PCR1-3
+DEBUG:root:Created Reagent MIDVx10-1.PCR1-3
 DEBUG:root:Creating Reagent MIDVx10-2.PCR2-3
-INFO:root:Created Reagent MIDVx10-2.PCR2-3
+DEBUG:root:Created Reagent MIDVx10-2.PCR2-3
 DEBUG:root:Creating Reagent MIDVx10-3.PCR3-3
-INFO:root:Created Reagent MIDVx10-3.PCR3-3
+DEBUG:root:Created Reagent MIDVx10-3.PCR3-3
 DEBUG:root:Creating Reagent MIDVx10-4.PCR4-3
-INFO:root:Created Reagent MIDVx10-4.PCR4-3
+DEBUG:root:Created Reagent MIDVx10-4.PCR4-3
 DEBUG:root:Creating Reagent XEEVx10-3.PCR5-3
-INFO:root:Created Reagent XEEVx10-3.PCR5-3
+DEBUG:root:Created Reagent XEEVx10-3.PCR5-3
 DEBUG:root:Creating Reagent H2O.PCR6-3
-INFO:root:Created Reagent H2O.PCR6-3
+DEBUG:root:Created Reagent H2O.PCR6-3
 DEBUG:root:Creating Reagent AlphaEEV Mix
-INFO:root:Created Reagent AlphaEEV Mix
+DEBUG:root:Created Reagent AlphaEEV Mix
 DEBUG:root:Creating Reagent AlphaEEV Mix-PCRMMix
-INFO:root:Created Reagent AlphaEEV Mix-PCRMMix
+DEBUG:root:Created Reagent AlphaEEV Mix-PCRMMix
 DEBUG:root:Creating Reagent MIDVx10-1.PCR1-4
-INFO:root:Created Reagent MIDVx10-1.PCR1-4
+DEBUG:root:Created Reagent MIDVx10-1.PCR1-4
 DEBUG:root:Creating Reagent MIDVx10-2.PCR2-4
-INFO:root:Created Reagent MIDVx10-2.PCR2-4
+DEBUG:root:Created Reagent MIDVx10-2.PCR2-4
 DEBUG:root:Creating Reagent MIDVx10-3.PCR3-4
-INFO:root:Created Reagent MIDVx10-3.PCR3-4
+DEBUG:root:Created Reagent MIDVx10-3.PCR3-4
 DEBUG:root:Creating Reagent MIDVx10-4.PCR4-4
-INFO:root:Created Reagent MIDVx10-4.PCR4-4
+DEBUG:root:Created Reagent MIDVx10-4.PCR4-4
 DEBUG:root:Creating Reagent XEEVx10-3.PCR5-4
-INFO:root:Created Reagent XEEVx10-3.PCR5-4
+DEBUG:root:Created Reagent XEEVx10-3.PCR5-4
 DEBUG:root:Creating Reagent H2O.PCR6-4
-INFO:root:Created Reagent H2O.PCR6-4
+DEBUG:root:Created Reagent H2O.PCR6-4
 DEBUG:root:Creating Reagent PaFl.DgBt.224
+DEBUG:root:Created Reagent PaFl.DgBt.224
+DEBUG:root:Creating Reagent PaFl.DgBt.224-PCRMMix
+DEBUG:root:Created Reagent PaFl.DgBt.224-PCRMMix
+DEBUG:root:Creating Reagent EDI.Ute-1.PCR1-5
+DEBUG:root:Created Reagent EDI.Ute-1.PCR1-5
+DEBUG:root:Creating Reagent WESSVx10-1.PCR1-10
+DEBUG:root:Created Reagent WESSVx10-1.PCR1-10
+DEBUG:root:Creating Reagent EDI.Ute-2.PCR2-5
+DEBUG:root:Created Reagent EDI.Ute-2.PCR2-5
+DEBUG:root:Creating Reagent WESSVx10-2.PCR2-10
+DEBUG:root:Created Reagent WESSVx10-2.PCR2-10
+DEBUG:root:Creating Reagent EDI.Ute-3.PCR3-5
+DEBUG:root:Created Reagent EDI.Ute-3.PCR3-5
+DEBUG:root:Creating Reagent WESSVx10-3.PCR3-10
+DEBUG:root:Created Reagent WESSVx10-3.PCR3-10
+DEBUG:root:Creating Reagent EDI.Ute-3.PCR4-5
+DEBUG:root:Created Reagent EDI.Ute-3.PCR4-5
+DEBUG:root:Creating Reagent WESSVx10-4.PCR4-10
+DEBUG:root:Created Reagent WESSVx10-4.PCR4-10
+DEBUG:root:Creating Reagent EDI.Ute-2.PCR5-5
+DEBUG:root:Created Reagent EDI.Ute-2.PCR5-5
+DEBUG:root:Creating Reagent WNV.NY-4.PCR5-10
+DEBUG:root:Created Reagent WNV.NY-4.PCR5-10
+DEBUG:root:Creating Reagent EDI.Ute-1.PCR6-5
+DEBUG:root:Created Reagent EDI.Ute-1.PCR6-5
+DEBUG:root:Creating Reagent H2O.PCR6-10
+DEBUG:root:Created Reagent H2O.PCR6-10
+DEBUG:root:Creating Reagent WESSV.226
+DEBUG:root:Created Reagent WESSV.226
+DEBUG:root:Creating Reagent WESSV.226-PCRMMix
+DEBUG:root:Created Reagent WESSV.226-PCRMMix
+DEBUG:root:Creating Reagent WESSVx10-1.PCR1-6
+DEBUG:root:Created Reagent WESSVx10-1.PCR1-6
+DEBUG:root:Creating Reagent WESSVx10-2.PCR2-6
+DEBUG:root:Created Reagent WESSVx10-2.PCR2-6
+DEBUG:root:Creating Reagent WESSVx10-3.PCR3-6
+DEBUG:root:Created Reagent WESSVx10-3.PCR3-6
+DEBUG:root:Creating Reagent WESSVx10-4.PCR4-6
+DEBUG:root:Created Reagent WESSVx10-4.PCR4-6
+DEBUG:root:Creating Reagent WNV.NY-4.PCR5-6
+DEBUG:root:Created Reagent WNV.NY-4.PCR5-6
+DEBUG:root:Creating Reagent H2O.PCR6-6
+DEBUG:root:Created Reagent H2O.PCR6-6
+DEBUG:root:Creating Reagent WESSV_NS5.227
+DEBUG:root:Created Reagent WESSV_NS5.227
+DEBUG:root:Creating Reagent WESSV_NS5.227-PCRMMix
+DEBUG:root:Created Reagent WESSV_NS5.227-PCRMMix
+DEBUG:root:Creating Reagent WESSVx10-1.PCR1-7
+DEBUG:root:Created Reagent WESSVx10-1.PCR1-7
+DEBUG:root:Creating Reagent WESSVx10-2.PCR2-7
+DEBUG:root:Created Reagent WESSVx10-2.PCR2-7
+DEBUG:root:Creating Reagent WESSVx10-3.PCR3-7
+DEBUG:root:Created Reagent WESSVx10-3.PCR3-7
+DEBUG:root:Creating Reagent WESSVx10-4.PCR4-7
+DEBUG:root:Created Reagent WESSVx10-4.PCR4-7
+DEBUG:root:Creating Reagent WNV.NY-4.PCR5-7
+DEBUG:root:Created Reagent WNV.NY-4.PCR5-7
+DEBUG:root:Creating Reagent H2O.PCR6-7
+DEBUG:root:Created Reagent H2O.PCR6-7
+DEBUG:root:Creating Reagent WESSVNS5.225
+WARNING:root:No free wells: In Tube Eppendorf 16 Pos:PrimerMix to put 1 aliquots of reagent - WESSVNS5.225
+DEBUG:root:Created Reagent WESSVNS5.225
+DEBUG:root:Creating Reagent WESSVNS5.225-PCRMMix
+WARNING:root:No free wells: In Tube Eppendorf 16 Pos:PrimerMix to put 1 aliquots of reagent - WESSVNS5.225-PCRMMix
+DEBUG:root:Created Reagent WESSVNS5.225-PCRMMix
+DEBUG:root:Creating Reagent WESSVx10-1.PCR1-8
+DEBUG:root:Created Reagent WESSVx10-1.PCR1-8
+DEBUG:root:Creating Reagent WESSVx10-2.PCR2-8
+DEBUG:root:Created Reagent WESSVx10-2.PCR2-8
+DEBUG:root:Creating Reagent WESSVx10-3.PCR3-8
+DEBUG:root:Created Reagent WESSVx10-3.PCR3-8
+DEBUG:root:Creating Reagent WESSVx10-4.PCR4-8
+DEBUG:root:Created Reagent WESSVx10-4.PCR4-8
+DEBUG:root:Creating Reagent WNV.NY-4.PCR5-8
+DEBUG:root:Created Reagent WNV.NY-4.PCR5-8
+DEBUG:root:Creating Reagent H2O.PCR6-8
+DEBUG:root:Created Reagent H2O.PCR6-8
+DEBUG:root:Creating Reagent PaFl.Dg+WESS.Bt
+WARNING:root:No free wells: In Tube Eppendorf 16 Pos:PrimerMix to put 1 aliquots of reagent - PaFl.Dg+WESS.Bt
+DEBUG:root:Created Reagent PaFl.Dg+WESS.Bt
+DEBUG:root:Creating Reagent PaFl.Dg+WESS.Bt-PCRMMix
+WARNING:root:No free wells: In Tube Eppendorf 16 Pos:PrimerMix to put 1 aliquots of reagent - PaFl.Dg+WESS.Bt-PCRMMix
+DEBUG:root:Created Reagent PaFl.Dg+WESS.Bt-PCRMMix
+DEBUG:root:Creating Reagent WESSVx10-1.PCR1-9
+DEBUG:root:Created Reagent WESSVx10-1.PCR1-9
+DEBUG:root:Creating Reagent WESSVx10-2.PCR2-9
+DEBUG:root:Created Reagent WESSVx10-2.PCR2-9
+DEBUG:root:Creating Reagent WESSVx10-3.PCR3-9
+DEBUG:root:Created Reagent WESSVx10-3.PCR3-9
+DEBUG:root:Creating Reagent WESSVx10-4.PCR4-9
+DEBUG:root:Created Reagent WESSVx10-4.PCR4-9
+DEBUG:root:Creating Reagent WNV.NY-4.PCR5-9
+DEBUG:root:Created Reagent WNV.NY-4.PCR5-9
+DEBUG:root:Creating Reagent H2O.PCR6-9
+DEBUG:root:Created Reagent H2O.PCR6-9
+DEBUG:root:Wash(1,27,1,27,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
