@@ -8,7 +8,7 @@ __author__ = 'qPCR4vir'
 from pathlib import Path
 import logging
 
-test_dir = Path(__file__).parent / 'tests'
+test_dir = Path(__file__).parent / 'tests_output'
 base_dir = Path(__file__).parent.parent
 
 logging.basicConfig(filename=(test_dir / '_tests.log.txt'), filemode='w', level=logging.INFO)
