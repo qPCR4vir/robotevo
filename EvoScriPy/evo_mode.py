@@ -114,7 +114,7 @@ class ToFile(ToString):
                     self.f.write(s)
             self.f.close()
             self.f = None
-            logging.debug(str(self.filename.relative_to(base_dir)) + " done")
+            # logging.debug(str(self.filename.relative_to(base_dir)) + " done")
 
     def open(self):
         if self.f is None:

@@ -1,3 +1,4 @@
+#
 """
 Hello World!
 ------------
@@ -5,6 +6,7 @@ Hello World!
 The classical, in the the world of programming, Hello World! example.
 It will just shows that message in the screen of the PC controlling the robot and will wait
 for user confirmation producing a typical sound.
+
 """
 
 from EvoScriPy.protocol_steps import *
