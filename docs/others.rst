@@ -31,7 +31,7 @@
 Examples:
 =========
 
-.. automodule:: ../protocols/demos/hello_world/hello_world.py
+.. automodule:: ../protocols/demos/hello_world/hello_world
    :members:
    :undoc-members:
    :show-inheritance:

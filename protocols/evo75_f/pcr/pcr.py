@@ -35,7 +35,8 @@ class PCR(Evo75_FLI):
                  exp_file=None,
                  page=None,
                  cell_rows=6,
-                 sample_line=6):
+                 sample_line=6,
+                 worktable=None):
 
         self.sample_line = sample_line
         self.cell_rows = cell_rows
@@ -46,7 +47,7 @@ class PCR(Evo75_FLI):
         Evo75_FLI.__init__(self,
                            GUI                         = GUI,
                            num_of_samples              = PCR.max_s,
-                           worktable_template_filename = this / '../Freedom75_FLI_PCR.ewt',
+                           worktable_template_filename = worktable or (this / '../Freedom75_FLI_PCR.ewt'),
                            output_filename             = output_filename or this / 'scripts' / 'PCR',
                            run_name                    = run_name)
 
@@ -59,7 +60,7 @@ class PCR(Evo75_FLI):
         self.initialize()
 
         num_of_samples = self.num_of_samples
-        wt           = self.worktable
+        wt = self.worktable
 
         self.comment('PCR {:d} plates for {:d} samples.'
                      .format(self.num_plates, num_of_samples))
@@ -91,9 +92,13 @@ class PCR(Evo75_FLI):
             sample_line=6)
 
         exp = PCRexperiment().load_excel_list(sheet0)
+
         pcr_plates = [wt.get_labware("PCR" + str(i + 1)) for i in range(self.num_plates)]
-        eppis_rack = wt.get_labware("MM + Primer")
-        exp = PCRexperimentRtic(exp, pcr_plates[0], eppis_rack, self)
+        eppis_racks = [wt.get_labware(rack) for rack in ["PrimerMix", "Primers-5", "Primers-4"]]
+        Reagent('Quantitect-SYBR RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
+        Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
+
+        exp = PCRexperimentRtic(exp, pcr_plates[0], eppis_racks, self)
         # Show the check_list GUI to the user for possible small changes
 
         self.check_list()
@@ -114,7 +119,11 @@ if __name__ == "__main__":
     this = Path(__file__).parent
     logging.basicConfig(filename=(this / 'scripts' / 'log.txt'), filemode='w', level=logging.DEBUG)
 
-    p = PCR(run_name='1 plate')
+    wt1 = this / '../Freedom75_FLI_PCR.ewt'
+    wt2 = this / '../Freedom75_FLI_PCR2x3Pr.ewt'
+    wt3 = this / '../Freedom75_FLI_PCR5xPr.ewt'
+
+    p = PCR(run_name='1 plate', worktable=wt3)
 
     p.use_version('1 plate')
     p.run()

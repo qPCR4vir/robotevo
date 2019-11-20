@@ -45,7 +45,7 @@ class Reagent:
 
     def __init__(self,
                  name          : str,
-                 labware       : (lab.Labware, str)        = None,
+                 labware       : (lab.Labware, str, [])    = None,
                  wells         : (int, [int], [lab.Well])  = None,
                  num_of_aliquots: int                      = None,
                  minimize_aliquots: bool                   = None,
@@ -96,27 +96,30 @@ class Reagent:
                 labware = wells.labware
             elif isinstance(wells, list) and isinstance(wells[0], lab.Well):
                 labware = wells[0].labware
-        if isinstance(labware, str):
-            labware = Reagent.current_protocol.worktable.get_labware(label=labware)
-        assert isinstance(labware, lab.Labware), "No labware defined for Reagent " + name
+        self.labwares = labware if isinstance(labware, list) else [labware]
+        for idx, lw in enumerate(self.labwares):
+            if isinstance(lw, str):
+                self.labwares[idx] = Reagent.current_protocol.worktable.get_labware(label=lw)
+            else:
+                assert isinstance(lw, lab.Labware), "No labware defined for Reagent " + name
+        self.labware = self.labwares[0]
 
         # add self to the list of reagents of the worktable were the labware is.
         worktable = None
-        assert isinstance(labware.location.worktable, lab.WorkTable)                                   # todo temporal
-        if (    isinstance(labware,                     lab.Labware)
-            and isinstance(labware.location,            lab.WorkTable.Location)
-            and isinstance(labware.location.worktable,  lab.WorkTable)):
+        assert isinstance(self.labware.location.worktable,   lab.WorkTable)                                   # todo temporal
+        if (    isinstance(self.labware,                     lab.Labware)
+            and isinstance(self.labware.location,            lab.WorkTable.Location)
+            and isinstance(self.labware.location.worktable,  lab.WorkTable)):
 
-            worktable = labware.location.worktable
+            worktable = self.labware.location.worktable
         else:
             if Reagent.current_protocol:
-                worktable = Reagent.current_protocol.worktable                               # todo temporal
+                worktable = Reagent.current_protocol.worktable                         # todo temporal
 
         assert name not in worktable.reagents, "The reagent " + name + " was already in the worktable"
         worktable.reagents[name] = self
-        ex= def_reagent_excess if excess is None else excess
+        ex = def_reagent_excess if excess is None else excess
 
-        self.labware = labware
         self.fill_limit_aliq = 1.0 if fill_limit_aliq is None else fill_limit_aliq / 100.0
         self.excess = 1.0 + ex/100.0
         self.def_liq_class = def_liq_class
@@ -157,7 +160,7 @@ class Reagent:
                                                       + "number of replicas (" + str(num_of_aliquots) + " )")
             if isinstance(initial_vol, list):
                 assert num_of_aliquots == len(initial_vol)
-            if num_of_aliquots > self.min_num_aliq:                                    # todo revise !! for PreMix components
+            if num_of_aliquots > self.min_num_aliq:                              # todo revise !! for PreMix components
                 logging.warning("WARNING !! You may be putting more wells replicas (" + str(len(wells)) + ") of " + name
                                 + " that the minimum you need(" + str(self.min_num_aliq) + " )")
 
@@ -171,12 +174,31 @@ class Reagent:
                 logging.warning("WARNING !! You may be putting more inital volumens values (" + str(num_of_aliquots) + ") of " + name
                                 + " that the minimum number of replicas you need(" + str(self.min_num_aliq) + " )")
 
-        self.Replicas   = labware.put(self, wells, self.min_num_aliq if self.minimize_aliquots else num_of_aliquots)
+        try:
+            self.Replicas   = self.labware.put(self, wells, self.min_num_aliq if self.minimize_aliquots else num_of_aliquots)
+        except lab.NoFreeWells as er:
+            logging.warning("No free wells: " + str(er))
+            for lwre in self.labwares:
+                if lwre is self.labware:
+                    continue
+                try:
+                    self.Replicas = lwre.put(self, wells,
+                                                     self.min_num_aliq if self.minimize_aliquots else num_of_aliquots)
+                    self.labware = lwre
+                    break
+                except lab.NoFreeWells as er:
+                    logging.warning("No free wells: " + str(er))
+            else:
+                er = lab.NoFreeWells(labware=self.labware, error=' to put ' + str(num_of_aliquots)
+                                                                 + ' aliquots of reagent - ' + str(self))
+                logging.warning(str(er))
+                raise er
+
         self.pos        = self.Replicas[0].offset                                   # ??
 
         self.init_vol(NumSamples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
         self.include_in_check = True
-        logging.info("Created Reagent " + str(self))
+        logging.debug("Created Reagent " + str(self))
 
     def min_num_of_replica(self, num_of_samples: int = None) -> int:
         """
@@ -317,7 +339,7 @@ class PreMix(Reagent):
 
     def __init__(self,
                  name,
-                 labware,
+                 labware: (lab.Labware, list),
                  components,
                  pos = None,
                  num_of_aliquots = None,
@@ -883,7 +905,7 @@ class PCRMasterMixReagent(PreMix):
 
     def __init__(self,
                  pcr_mix: PCRMasterMix,
-                 labware: lab.Labware,
+                 labware: (lab.Labware, list),
                  pos=None,
                  num_of_aliquots=None,
                  initial_vol=None,
@@ -904,7 +926,8 @@ class PCRMasterMixReagent(PreMix):
         """
         components = []
         vol = 0
-        reagents = labware.location.worktable.reagents
+        lw = labware[0] if isinstance(labware, list) else labware
+        reagents = lw.location.worktable.reagents
         diluent_vol = pcr_mix.reaction_vol - pcr_mix.sample_vol
         # num_samples = len(exp.mixes[pcr_mix])
         for component in pcr_mix.components:
@@ -1161,7 +1184,7 @@ class PCRexperimentRtic:
     def __init__(self,
                  pcr_exp: (PCRexperiment, list),
                  plates: (lab.Labware, list),
-                 reag_rack: lab.Labware,
+                 reag_rack: (lab.Labware, list),
                  protocol=None):
 
         logging.debug("Creating a PCRexperimentRtic from " + repr(pcr_exp))
