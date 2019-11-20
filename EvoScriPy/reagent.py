@@ -427,6 +427,7 @@ class Primer:
                  seq,
                  proposed_stock_conc=100,  # uM
                  id=None,
+                 prepared=None,
                  mass=None,  # ug
                  moles=None,  # nmoles
                  molec_w=None,  # g/mol
@@ -438,6 +439,7 @@ class Primer:
 
         :type moles: float
         """
+        self.prepared = prepared
         self.proposed_stock_conc = proposed_stock_conc
         self.mass = mass
         self.moles = moles
@@ -469,6 +471,7 @@ class Primer:
     def load_excel_list(file_name: Path = None):
         col = {'conc': 0,
                'id': 2,
+               'prepared': 4,
                'name': 5,
                'moles': 7,
                'mass': 8,
@@ -507,6 +510,7 @@ class Primer:
             else:
                 p=Primer(name=r[col['name']].value,
                          seq=r[col['seq']].value,
+                         prepared=r[col['prepared']].value,
                          proposed_stock_conc=r[col['conc']].value,
                          id=r[col['id']].value,
                          mass=r[col['mass']].value,
@@ -557,12 +561,14 @@ class PrimerMix:
                  name,
                  id = None,
                  conc = 10.0,
+                 prepared=None,
                  components = None,
                  ref_vol = None,
                  diluent = None,
                  kws = None,
                  super_mix = False):
 
+        self.prepared = prepared
         self.super_mix = super_mix
         self.diluent = diluent
         self.name = name
@@ -592,6 +598,7 @@ class PrimerMix:
                'id': 0,
                'name': 1,
                'vol': 2,
+               'prepared': 4,
                'final': 6,
                'virus': 13,
                'super_mix': 1
@@ -627,6 +634,8 @@ class PrimerMix:
         kws = None
         components = []
         super_mix = False
+        prepared = None
+
         comp = PrimerMixComponent(None, None, None, None, None)
 
         for r in ws.iter_rows():
@@ -649,6 +658,7 @@ class PrimerMix:
 
             elif line == vol_l:
                 ref_vol = r[col['vol']].value
+                prepared = r[col['prepared']].value
                 line += 1
 
             elif line == sep_l:
@@ -664,6 +674,7 @@ class PrimerMix:
                                      id=id,
                                      conc=conc,
                                      ref_vol=ref_vol,
+                                     prepared=prepared,
                                      kws=kws,
                                      components=components,
                                      diluent=comp_name,
@@ -677,6 +688,7 @@ class PrimerMix:
                     kws = None
                     components = []
                     super_mix = False
+                    prepared = None
 
                 else:
                     comp_id = r[col['id']].value
