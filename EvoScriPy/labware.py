@@ -738,8 +738,9 @@ class Well:
         self.actions = []           # todo transfer actualize this ? how this works?
 
     def __str__(self):
-        return "well {pos:d} in labware {lab:s}: {label:s} with {vol:.1f} uL of reagent {what:s}"\
+        return "well {pos:d}[{p:s}] in labware {lab:s}: {label:s} with {vol:.1f} uL of reagent {what:s}"\
                 .format(pos  =self.offset+1,
+                        p = str(self.labware.position(self.offset)),
                         lab  =self.labware.label,
                         label=self.label,
                         vol  =self.vol,
@@ -956,9 +957,16 @@ class Labware:
             return Labware.Type.Series(labware)
 
     class Position:
+
         def __init__(self, row, col=1):
             self.row = row
             self.col = col
+
+        def to_name(self):
+            return str("-ABCDEFGHIJKLMNOP")[self.row] + '{:02d}'.format(self.col)
+
+        def __str__(self):
+            return self.to_name()
 
     def __init__(self,
                  type    : Type,
@@ -994,7 +1002,6 @@ class Labware:
 
     def __str__(self):
         return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
-
 
     def __repr__(self):
         return ((self.name or '-') + '[' + (str(self.nRow) or '-')
