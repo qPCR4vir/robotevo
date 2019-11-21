@@ -36,7 +36,8 @@ class PCR(Evo75_FLI):
                  page=None,
                  cell_rows=6,
                  sample_line=6,
-                 worktable=None):
+                 worktable=None,
+                 primers_file=None):
 
         self.sample_line = sample_line
         self.cell_rows = cell_rows
@@ -52,9 +53,9 @@ class PCR(Evo75_FLI):
                            run_name                    = run_name)
 
         # call all the "DB" things not directly used.
-
-        Primer.load_excel_list()
-        PrimerMix.load_excel_list()
+        file = primers_file or Path('C:\Prog\exp\PCR fli.xlsx')
+        Primer.load_excel_list(file_name = file)
+        PrimerMix.load_excel_list(file_name = file)
 
     def run(self):
         self.initialize()
@@ -122,8 +123,10 @@ if __name__ == "__main__":
     wt1 = this / '../Freedom75_FLI_PCR.ewt'
     wt2 = this / '../Freedom75_FLI_PCR2x3Pr.ewt'
     wt3 = this / '../Freedom75_FLI_PCR5xPr.ewt'
+    pf1 = Path('C:\Prog\exp\PCR fli.xlsx')
+    pf2 = Path('K:\\AG RealtimePCR\\Ariel\\PCR fli.xlsx')
 
-    p = PCR(run_name='1 plate', worktable=wt3)
+    p = PCR(run_name='1 plate', worktable=wt3, primers_file= pf2)
 
     p.use_version('1 plate')
     p.run()
