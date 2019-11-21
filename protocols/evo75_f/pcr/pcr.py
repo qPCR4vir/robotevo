@@ -84,7 +84,11 @@ class PCR(Evo75_FLI):
 
         # Get Labwares (Cuvette, eppys, etc.) from the work table
         pcr_plates = [wt.get_labware("PCR" + str(i + 1)) for i in range(self.num_plates)]
-        eppis_racks = [wt.get_labware(rack) for rack in ["PrimerMix", "Primers-5", "Primers-4"]]
+        kit_rack = [wt.get_labware(rack) for rack in ["PCRkits+MMix", "PrimerMix"]]
+        mmix_rack = [wt.get_labware(rack) for rack in ["PrimerMix", "PCRkits+MMix", "Primers-5"]]
+        primer_mix_rack = mmix_rack + [wt.get_labware(rack) for rack in ["Primers-4", "Primers-3"]]
+        primer_rack = [wt.get_labware(rack) for rack in ["Primers-1", "Primers-2", "Primers-3",
+                                                         "Primers-4", "Primers-5"]]
 
         self.set_first_tip()                      # Set the initial position of the tips
 
@@ -93,8 +97,16 @@ class PCR(Evo75_FLI):
         # Define the reagents in each labware (Cuvette, eppys, etc.)
         Reagent('Quantitect-SYBR RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
         Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
+        Reagent('H2O', labware='BufferTubes', num_of_aliquots=1)
+        Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
 
-        exp = PCRexperimentRtic(exp, pcr_plates[0], eppis_racks, self)
+        exp = PCRexperimentRtic(exp,
+                                plates=pcr_plates[0],
+                                kit_rack=kit_rack,
+                                mmix_rack=mmix_rack,
+                                primer_mix_rack=primer_mix_rack,
+                                primer_rack=primer_rack,
+                                protocol=self)
         # Show the check_list GUI to the user for possible small changes
 
         self.check_list()

@@ -917,13 +917,15 @@ class PCRMasterMixReagent(PreMix):
 
     def __init__(self,
                  pcr_mix: PCRMasterMix,
-                 labware: (lab.Labware, list),
+                 mmix_rack: (lab.Labware, list),
                  pos=None,
                  num_of_aliquots=None,
                  initial_vol=None,
                  def_liq_class=None,
                  excess=None,
-                 fill_limit_aliq=None):
+                 fill_limit_aliq=None,
+                 kit_rack: (lab.Labware, list) = None
+                 ):
         """
         Construct a robot-usable PCRMasterMixReagent from an abstract PCRMasterMix
 
@@ -933,12 +935,12 @@ class PCRMasterMixReagent(PreMix):
         :param def_liq_class:
         :param fill_limit_aliq:
         :param pcr_mix:
-        :param labware:
+        :param mmix_rack:
         :param excess:
         """
         components = []
         vol = 0
-        lw = labware[0] if isinstance(labware, list) else labware
+        lw = mmix_rack[0] if isinstance(mmix_rack, list) else mmix_rack
         reagents = lw.location.worktable.reagents
         diluent_vol = pcr_mix.reaction_vol - pcr_mix.sample_vol
         # num_samples = len(exp.mixes[pcr_mix])
@@ -955,16 +957,16 @@ class PCRMasterMixReagent(PreMix):
                 # if not abs(component_r.volpersample - vol_per_reaction) < 0.05:
                 #    assert False
                 # component_r.put_min_vol()
-            else:
+            else:  # todo for now let consider this a kit component - but it could be a PrimerMix  !!!!
                 component_r = Reagent(component.name,
-                                      labware=labware,
+                                      labware=kit_rack,
                                       volpersample=vol_per_reaction,
                                       num_of_samples=0)
             components.append(component_r)
 
         PreMix.__init__(self,
                         pcr_mix.name + "-PCRMMix",
-                        labware,
+                        mmix_rack,
                         components,
                         pos=pos,
                         num_of_aliquots=num_of_aliquots,
@@ -1197,7 +1199,10 @@ class PCRexperimentRtic:
     def __init__(self,
                  pcr_exp: (PCRexperiment, list),
                  plates: (lab.Labware, list),
-                 reag_rack: (lab.Labware, list),
+                 kit_rack: (lab.Labware, list),
+                 mmix_rack: (lab.Labware, list) = None,
+                 primer_mix_rack:  (lab.Labware, list) = None,
+                 primer_rack: (lab.Labware, list) = None,
                  protocol=None):
 
         logging.debug("Creating a PCRexperimentRtic from " + repr(pcr_exp))
@@ -1206,14 +1211,20 @@ class PCRexperimentRtic:
         assert len(self.pcr_exp) <= len(self.plates)
         self.protocol = protocol
         self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
-        for exp, plate in zip(self.pcr_exp, self.plates):
+
+        for exp, plate in zip(self.pcr_exp, self.plates):  # iterate each PCR plate for which we have PCR mixes declared
             assert isinstance(exp, PCRexperiment)
-            for pcr_mix, pcr_reactions in exp.mixes.items():
-                if not pcr_mix:
+
+            for pcr_mix, pcr_reactions in exp.mixes.items():  # visit each PCR mix with corresponding list of reactions
+                if not pcr_mix:             # empty reaction wells are market with None mix.
                     continue
                 assert isinstance(pcr_mix, PCRMasterMix)
-                mix = PCRMasterMixReagent(pcr_mix, reag_rack)
-                sv = pcr_mix.sample_vol
+
+                mix = PCRMasterMixReagent(pcr_mix=pcr_mix,
+                                          mmix_rack=mmix_rack,
+                                          kit_rack=kit_rack)  # todo: it could be reused from another plate !!???????
+
+                sv = pcr_mix.sample_vol  # all reactions prepared with this mix have the same reaction and sample volume
                 nw = len(pcr_reactions)
                 react_wells = []
                 for rx in pcr_reactions:
