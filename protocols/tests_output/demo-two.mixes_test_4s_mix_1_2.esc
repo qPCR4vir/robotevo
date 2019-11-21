@@ -141,18 +141,18 @@ V;200
 996;0;0;
 --{ RPG }--
 Comment("Prefill a plate with some dilutions of two master mix and Buffer Reagent for 4 samples.");
-UserPrompt("Check Buffer  in ['well 1 in labware BufferCub:  with 1572.0 uL of reagent Buffer ']Check mix1 in ['well 1 in labware mixes:  with 45.0 uL of reagent mix1']Check mix2 in ['well 2 in labware mixes:  with 45.0 uL of reagent mix2']",1,-1);
-Comment("Check: ['well 4 in labware BufferCub:  with 1572.0 uL of reagent Buffer ']");
+UserPrompt("Check Buffer  in ['well 1[A01] in labware BufferCub:  with 1572.0 uL of reagent Buffer ']Check mix1 in ['well 1[A01] in labware mixes:  with 45.0 uL of reagent mix1']Check mix2 in ['well 2[B01] in labware mixes:  with 45.0 uL of reagent mix2']",1,-1);
+Comment("Check: ['well 4[D01] in labware BufferCub:  with 1572.0 uL of reagent Buffer ']");
 GetDITI2(1,"DiTi 1000ul",0,0,0,300);
 Detect_Liquid(1,"Water wet contact",53,0,1,"010880",0,0);
 DropDITI(1,19,6,0.00,300,0);
 UserPrompt("",1,-1);
-Comment("Check: ['well 1 in labware mixes:  with 45.0 uL of reagent mix1']");
+Comment("Check: ['well 1[A01] in labware mixes:  with 45.0 uL of reagent mix1']");
 GetDITI2(1,"DiTi 1000ul",0,0,0,300);
 Detect_Liquid(1,"Water wet contact",12,0,1,"0110100",0,0);
 DropDITI(1,19,6,0.00,300,0);
 UserPrompt("",1,-1);
-Comment("Check: ['well 2 in labware mixes:  with 45.0 uL of reagent mix2']");
+Comment("Check: ['well 2[B01] in labware mixes:  with 45.0 uL of reagent mix2']");
 GetDITI2(1,"DiTi 1000ul",0,0,0,300);
 Detect_Liquid(1,"Water wet contact",12,0,1,"0110200",0,0);
 DropDITI(1,19,6,0.00,300,0);
@@ -162,7 +162,7 @@ Transfer_Rack("55","55",1,0,1,0,0,"0","96 Well Microplate","Narrow","","","MP 3P
 Group("Fill plate with mixes ");
 UserPrompt("Put the plates for Buffer ",1,-1);
 Group("Distribute: 11.0 킠 of mix1");
-Comment("Distribute: 11.0 킠 of mix1 (45.8 킠 total) from [grid:12 site:1 ['well 1 in labware mixes:  with 45.0 uL of reagent mix1'] into plate1[grid:33 site:1] in order [1, 2, 3, 4]:");
+Comment("Distribute: 11.0 킠 of mix1 (45.8 킠 total) from [grid:12 site:1 ['well 1[A01] in labware mixes:  with 45.0 uL of reagent mix1'] into plate1[grid:33 site:1] in order [1, 2, 3, 4]:");
 GetDITI2(15,"DiTi 1000ul",0,0,0,300);
 Aspirate(1,"Water wet contact","11.00","11.00","11.00","11.00",0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
 Aspirate(2,"Water wet contact","11.00","11.00","11.00","11.00","0","0","0","0",0,0,0,0,12,0,1,"0110100",0,0);
@@ -171,7 +171,7 @@ Aspirate(8,"Water wet contact","11.00","11.00","11.00","11.00","0","0","0","0",0
 Dispense(15,"Water wet contact","11.00","11.00","11.00","11.00",0,0,0,0,0,0,0,0,33,0,1,"0C08?0000000000000",0,0);
 GroupEnd();
 Group("Distribute: 11.0 킠 of mix2");
-Comment("Distribute: 11.0 킠 of mix2 (45.8 킠 total) from [grid:12 site:1 ['well 2 in labware mixes:  with 45.0 uL of reagent mix2'] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:");
+Comment("Distribute: 11.0 킠 of mix2 (45.8 킠 total) from [grid:12 site:1 ['well 2[B01] in labware mixes:  with 45.0 uL of reagent mix2'] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:");
 Aspirate(1,"Water wet contact","11.00","11.00","11.00","11.00",0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
 Aspirate(2,"Water wet contact","11.00","11.00","11.00","11.00","0","0","0","0",0,0,0,0,12,0,1,"0110200",0,0);
 Aspirate(4,"Water wet contact","11.00","11.00","11.00","11.00","0","0","0","0",0,0,0,0,12,0,1,"0110200",0,0);
@@ -179,12 +179,12 @@ Aspirate(8,"Water wet contact","11.00","11.00","11.00","11.00","0","0","0","0",0
 Dispense(15,"Water wet contact","11.00","11.00","11.00","11.00",0,0,0,0,0,0,0,0,55,1,1,"0C08?0000000000000",0,0);
 GroupEnd();
 Group("Distribute: 99.0 킠 of Buffer ");
-Comment("Distribute: 99.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 1572.0 uL of reagent Buffer '] into plate1[grid:33 site:1] in order [1, 2, 3, 4]:");
+Comment("Distribute: 99.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1[A01] in labware BufferCub:  with 1572.0 uL of reagent Buffer '] into plate1[grid:33 site:1] in order [1, 2, 3, 4]:");
 Aspirate(15,"Water wet contact","99.00","99.00","99.00","99.00",0,0,0,0,0,0,0,0,53,0,1,"0108l0",0,0);
 Dispense(15,"Water wet contact","99.00","99.00","99.00","99.00",0,0,0,0,0,0,0,0,33,0,1,"0C08?0000000000000",0,0);
 GroupEnd();
 Group("Distribute: 99.0 킠 of Buffer ");
-Comment("Distribute: 99.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 1176.0 uL of reagent Buffer '] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:");
+Comment("Distribute: 99.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1[A01] in labware BufferCub:  with 1176.0 uL of reagent Buffer '] into plate2[grid:55 site:2] in order [1, 2, 3, 4]:");
 Aspirate(15,"Water wet contact","99.00","99.00","99.00","99.00",0,0,0,0,0,0,0,0,53,0,1,"0108l0",0,0);
 Dispense(15,"Water wet contact","99.00","99.00","99.00","99.00",0,0,0,0,0,0,0,0,55,1,1,"0C08?0000000000000",0,0);
 GroupEnd();
@@ -199,12 +199,12 @@ Aspirate(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00"
 Dispense(15,"Water free","10.00","10.00","10.00","10.00","10.00","10.00","10.00","10.00",0,0,0,0,55,1,1,"0C08?0000000000000",0,0);
 GroupEnd();
 Group("Distribute: 90.0 킠 of Buffer ");
-Comment("Distribute: 90.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 780.0 uL of reagent Buffer '] into plate1[grid:33 site:1] in order [49, 50, 51, 52]:");
+Comment("Distribute: 90.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1[A01] in labware BufferCub:  with 780.0 uL of reagent Buffer '] into plate1[grid:33 site:1] in order [49, 50, 51, 52]:");
 Aspirate(15,"Water wet contact","90.00","90.00","90.00","90.00",0,0,0,0,0,0,0,0,53,0,1,"0108l0",0,0);
 Dispense(15,"Water wet contact","90.00","90.00","90.00","90.00",0,0,0,0,0,0,0,0,33,0,1,"0C08000000p7000000",0,0);
 GroupEnd();
 Group("Distribute: 90.0 킠 of Buffer ");
-Comment("Distribute: 90.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 420.0 uL of reagent Buffer '] into plate2[grid:55 site:2] in order [49, 50, 51, 52]:");
+Comment("Distribute: 90.0 킠 of Buffer  (786.2 킠 total) from [grid:53 site:1 ['well 1[A01] in labware BufferCub:  with 420.0 uL of reagent Buffer '] into plate2[grid:55 site:2] in order [49, 50, 51, 52]:");
 Aspirate(15,"Water wet contact","90.00","90.00","90.00","90.00",0,0,0,0,0,0,0,0,53,0,1,"0108l0",0,0);
 Dispense(15,"Water wet contact","90.00","90.00","90.00","90.00",0,0,0,0,0,0,0,0,55,1,1,"0C08000000p7000000",0,0);
 GroupEnd();

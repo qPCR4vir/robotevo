@@ -3,29 +3,29 @@ original samplesfor extracting RNA from 6 samples with the MN-Vet kit
 Add pre mix Prot K.
 
     PreMix: 244.8 킠 of ProtK+cRNA+IC-MS2 mix 
-        PreMix: 244.8 킠 of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8 in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:
-           1- 28.8 킠 from grid:5 site:1:['well 14 in labware Reactives:  with 29.0 uL of reagent Carrier RNA ']
-           2- 144.0 킠 from grid:5 site:1:['well 15 in labware Reactives:  with 86.0 uL of reagent Proteinase K ', 'well 16 in labware Reactives:  with 74.0 uL of reagent Proteinase K ']
-           3- 72.0 킠 from grid:5 site:1:['well 13 in labware Reactives:  with 74.0 uL of reagent IC MS2 phage culture ']
+        PreMix: 244.8 킠 of ProtK+cRNA+IC-MS2 mix  into grid:5 site:1 ['well 8[H01] in labware Reactives:  with 0.0 uL of reagent ProtK+cRNA+IC-MS2 mix '] from 3 components:
+           1- 28.8 킠 from grid:5 site:1:['well 14[N01] in labware Reactives:  with 29.0 uL of reagent Carrier RNA ']
+           2- 144.0 킠 from grid:5 site:1:['well 15[O01] in labware Reactives:  with 86.0 uL of reagent Proteinase K ', 'well 16[P01] in labware Reactives:  with 74.0 uL of reagent Proteinase K ']
+           3- 72.0 킠 from grid:5 site:1:['well 13[M01] in labware Reactives:  with 74.0 uL of reagent IC MS2 phage culture ']
 
     Distribute: 34.0 킠 of ProtK+cRNA+IC-MS2 mix 
-        Distribute: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:5 site:1 ['well 8 in labware Reactives:  with 244.8 uL of reagent ProtK+cRNA+IC-MS2 mix '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 34.0 킠 of ProtK+cRNA+IC-MS2 mix  (244.8 킠 total) from [grid:5 site:1 ['well 8[H01] in labware Reactives:  with 244.8 uL of reagent ProtK+cRNA+IC-MS2 mix '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Transfer: 200.0 킠 from Proben
     Transfer: 200.0 킠 from Proben [grid:9 site:1] in order [1, 2, 3, 4, 5, 6] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Distribute: 180.0 킠 of VL - Lysis Buffer 
-    Distribute: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1 in labware 2-Vl Lysis Buffer:  with 1123.0 uL of reagent VL - Lysis Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+    Distribute: 180.0 킠 of VL - Lysis Buffer  (1123.2 킠 total) from [grid:20 site:2 ['well 1[A01] in labware 2-Vl Lysis Buffer:  with 1123.0 uL of reagent VL - Lysis Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Add B-Beads
 
     Distribute: 20.0 킠 of B - Beads 
-        Distribute: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1 in labware Reactives:  with 1200.0 uL of reagent B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 20.0 킠 of B - Beads  (124.8 킠 total) from [grid:5 site:1 ['well 1[A01] in labware Reactives:  with 1200.0 uL of reagent B - Beads '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
 Wash in TeMag with VEB - Binding Buffer 
 
     Distribute: 600.0 킠 of VEB - Binding Buffer 
-        Distribute: 600.0 킠 of VEB - Binding Buffer  (3744.0 킠 total) from [grid:20 site:3 ['well 1 in labware 3-VEB Binding Buffer:  with 3744.0 uL of reagent VEB - Binding Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 600.0 킠 of VEB - Binding Buffer  (3744.0 킠 total) from [grid:20 site:3 ['well 1[A01] in labware 3-VEB Binding Buffer:  with 3744.0 uL of reagent VEB - Binding Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 846.0 킠 of 48PosMagnet
         Mix: 846.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -36,7 +36,7 @@ Wash in TeMag with VEB - Binding Buffer
 Wash in TeMag with VEW1 - Wash Buffer 
 
     Distribute: 600.0 킠 of VEW1 - Wash Buffer 
-        Distribute: 600.0 킠 of VEW1 - Wash Buffer  (3744.0 킠 total) from [grid:23 site:4 ['well 1 in labware 4-VEW1 Wash Buffe:  with 3744.0 uL of reagent VEW1 - Wash Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 600.0 킠 of VEW1 - Wash Buffer  (3744.0 킠 total) from [grid:23 site:4 ['well 1[A01] in labware 4-VEW1 Wash Buffe:  with 3744.0 uL of reagent VEW1 - Wash Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 540.0 킠 of 48PosMagnet
         Mix: 540.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -47,7 +47,7 @@ Wash in TeMag with VEW1 - Wash Buffer
 Wash in TeMag with VEW2 - WashBuffer 
 
     Distribute: 600.0 킠 of VEW2 - WashBuffer 
-        Distribute: 600.0 킠 of VEW2 - WashBuffer  (3744.0 킠 total) from [grid:23 site:5 ['well 1 in labware 5-VEW2-WashBuffer:  with 3744.0 uL of reagent VEW2 - WashBuffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 600.0 킠 of VEW2 - WashBuffer  (3744.0 킠 total) from [grid:23 site:5 ['well 1[A01] in labware 5-VEW2-WashBuffer:  with 3744.0 uL of reagent VEW2 - WashBuffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 540.0 킠 of 48PosMagnet
         Mix: 540.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -58,7 +58,7 @@ Wash in TeMag with VEW2 - WashBuffer
 Wash in TeMag with Ethanol 80% 
 
     Distribute: 600.0 킠 of Ethanol 80% 
-        Distribute: 600.0 킠 of Ethanol 80%  (3744.0 킠 total) from [grid:21 site:1 ['well 1 in labware 7-EtOH80p:  with 3744.0 uL of reagent Ethanol 80% '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 600.0 킠 of Ethanol 80%  (3744.0 킠 total) from [grid:21 site:1 ['well 1[A01] in labware 7-EtOH80p:  with 3744.0 uL of reagent Ethanol 80% '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 540.0 킠 of 48PosMagnet
         Mix: 540.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]
@@ -69,7 +69,7 @@ Wash in TeMag with Ethanol 80%
 Elution
 
     Distribute: 100.0 킠 of Elution Buffer 
-        Distribute: 100.0 킠 of Elution Buffer  (624.0 킠 total) from [grid:20 site:1 ['well 1 in labware 1-VEL-ElutionBuffer:  with 624.0 uL of reagent Elution Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
+        Distribute: 100.0 킠 of Elution Buffer  (624.0 킠 total) from [grid:20 site:1 ['well 1[A01] in labware 1-VEL-ElutionBuffer:  with 624.0 uL of reagent Elution Buffer '] into 48PosMagnet[grid:12 site:2] in order [1, 2, 3, 4, 9, 10]:
 
     Mix: 90.0 킠 of 48PosMagnet
         Mix: 90.0 킠 of 48PosMagnet [grid:12 site:2] in order:[1, 2, 3, 4, 9, 10]

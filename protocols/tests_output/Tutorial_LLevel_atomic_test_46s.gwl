@@ -1,6 +1,6 @@
 B;Comment("Dilute 1:10 mix1 in 46 wells.");
-B;UserPrompt("Put diluent in well 1 in labware BufferCub:  with 4305.6 uL of reagent ",1,-1);
-B;UserPrompt("Put mix1 in well 1 in labware mixes:  with 478.4 uL of reagent ",1,-1);
+B;UserPrompt("Put diluent in well 1[A01] in labware BufferCub:  with 4305.6 uL of reagent ",1,-1);
+B;UserPrompt("Put mix1 in well 1[A01] in labware mixes:  with 478.4 uL of reagent ",1,-1);
 B;Wash(255,19,1,19,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
 B;UserPrompt("Put the plate for dilutions in grid:55, site:3",1,-1);
 B;GetDITI2(255,"DiTi 200 ul",0,0,0,300);

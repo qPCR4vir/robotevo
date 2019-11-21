@@ -54,30 +54,10 @@ class PCR(Evo75_FLI):
 
         # call all the "DB" things not directly used.
         file = primers_file or Path('C:\Prog\exp\PCR fli.xlsx')
-        Primer.load_excel_list(file_name = file)
-        PrimerMix.load_excel_list(file_name = file)
+        Primer.load_excel_list(file_name=file)
+        PrimerMix.load_excel_list(file_name=file)
 
     def run(self):
-        self.initialize()
-
-        num_of_samples = self.num_of_samples
-        wt = self.worktable
-
-        self.comment('PCR {:d} plates for {:d} samples.'
-                     .format(self.num_plates, num_of_samples))
-
-                                                       # Get Labwares (Cuvette, eppys, etc.) from the work table
-
-        self.set_first_tip()                      #  Set the initial position of the tips
-
-        # Set volumen / sample
-
-
-        # Define the reactives in each labware (Cuvette, eppys, etc.)
-
-
-        # exp_file = 'K:\AG RealtimePCR\Ariel\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'
-        # page ='Druken (2)'
 
         sheet0 = ExpSheet(
             file_name=Path('K:\\AG RealtimePCR\\Ariel\\Exp 424. WESSV.MID.NewRNAbis-4. AVRvsSAfr.PanFlav-224.Ute.xlsx'),
@@ -92,10 +72,25 @@ class PCR(Evo75_FLI):
             cell_rows=6,
             sample_line=6)
 
-        exp = PCRexperiment().load_excel_list(sheet1)
+        exp = PCRexperiment().load_excel_list(sheet0)
 
+        self.initialize()
+
+        num_of_samples = self.num_of_samples
+        wt = self.worktable
+
+        self.comment('PCR {:d} plates for {:d} samples.'
+                     .format(self.num_plates, num_of_samples))
+
+        # Get Labwares (Cuvette, eppys, etc.) from the work table
         pcr_plates = [wt.get_labware("PCR" + str(i + 1)) for i in range(self.num_plates)]
         eppis_racks = [wt.get_labware(rack) for rack in ["PrimerMix", "Primers-5", "Primers-4"]]
+
+        self.set_first_tip()                      # Set the initial position of the tips
+
+        # Set volume / sample
+
+        # Define the reagents in each labware (Cuvette, eppys, etc.)
         Reagent('Quantitect-SYBR RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
         Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
 
@@ -107,9 +102,7 @@ class PCR(Evo75_FLI):
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
-
         # Define place for intermediate reactions
-
 
         self.done()
 
@@ -126,7 +119,7 @@ if __name__ == "__main__":
     pf1 = Path('C:\Prog\exp\PCR fli.xlsx')
     pf2 = Path('K:\\AG RealtimePCR\\Ariel\\PCR fli.xlsx')
 
-    p = PCR(run_name='1 plate', worktable=wt3, primers_file= pf2)
+    p = PCR(run_name='1 plate', worktable=wt3, primers_file=pf2)
 
     p.use_version('1 plate')
     p.run()

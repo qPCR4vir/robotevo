@@ -1065,7 +1065,7 @@ class Labware:
         return self.offset(row, col)
 
     def position(self, offset):
-        return self.Position(offset % self.type.nCol + 1, offset // self.type.nCol + 1)
+        return self.Position((offset % self.type.nRow) + 1, (offset // self.type.nRow) + 1)
 
     def find_free_wells(self, n=1, init_pos=0) -> (bool, [Well]):
         continuous = True
@@ -1392,6 +1392,10 @@ class DITIrackType(Labware.Type):
         return DITIrackTypeSeries(labware)
 
 
+class ProtocolLogicPippetingError(Exception):
+    pass
+
+
 class DITIrack (Labware):
     """
     Objects of this class represent physical objects (with location) of
@@ -1525,14 +1529,16 @@ class DITIrack (Labware):
         """
         n = count_tips(TIP_MASK)
         assert isinstance(self.type, DITIrackType)
-        assert n == len(self.selected()), "Too much or too few wells selected to put tip back"
+        if n != len(self.selected()):
+            ProtocolLogicPippetingError("Too much or too few wells selected to put tip back")
 
         for i, w in enumerate(self.selected_wells()):
             tp = tips[i]
 
             logging.info("Set back " + str(tp) + " in " + str(w) + " of " + self.label)
-            assert w.reagent is not Tip, ("Another tip " + w.reagent.type.name + "is already in position "
-                                          + str(self.position(i)) + " of " + self.label)
+            if w.reagent is Tip:
+                ProtocolLogicPippetingError("Another tip " + w.reagent.type.name + " is already in position "
+                                            + str(self.position(i)) + " of " + self.label)
             assert isinstance(tp, usedTip)
 
             w.reagent = tp

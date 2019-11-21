@@ -3,7 +3,7 @@ Dilute 1:10 mix1 in 46 wells.
 Fill dilutions
 
     Distribute: 10.0 킠 of mix1
-        Distribute: 10.0 킠 of mix1 (478.4 킠 total) from [grid:12 site:1 ['well 1 in labware mixes:  with 478.0 uL of reagent mix1'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]:
+        Distribute: 10.0 킠 of mix1 (478.4 킠 total) from [grid:12 site:1 ['well 1[A01] in labware mixes:  with 478.0 uL of reagent mix1'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]:
 
     Distribute: 90.0 킠 of diluent
-        Distribute: 90.0 킠 of diluent (4305.6 킠 total) from [grid:53 site:1 ['well 1 in labware BufferCub:  with 4305.0 uL of reagent diluent'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]:
+        Distribute: 90.0 킠 of diluent (4305.6 킠 total) from [grid:53 site:1 ['well 1[A01] in labware BufferCub:  with 4305.0 uL of reagent diluent'] into plate[grid:55 site:3] in order [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]:

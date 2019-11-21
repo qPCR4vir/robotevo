@@ -1,6 +1,6 @@
 Comment("Dilute 1:10 mix1 in 6 wells.");
-UserPrompt("Put diluent in well 1 in labware BufferCub:  with 561.6 uL of reagent ",1,-1);
-UserPrompt("Put mix1 in well 1 in labware mixes:  with 62.4 uL of reagent ",1,-1);
+UserPrompt("Put diluent in well 1[A01] in labware BufferCub:  with 561.6 uL of reagent ",1,-1);
+UserPrompt("Put mix1 in well 1[A01] in labware mixes:  with 62.4 uL of reagent ",1,-1);
 Wash(255,19,1,19,0,"5",50,"10",50,0.00,50,100,1,0,0,0);
 Group("Fill dilutions");
 UserPrompt("Put the plate for dilutions in grid:55, site:3",1,-1);
