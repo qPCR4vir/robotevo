@@ -1037,11 +1037,12 @@ class PCReactionReagent(Reaction):
         :param plates:
         """
 
+        pos = plate.Position(pcr_reaction.row, pcr_reaction.col)
         Reaction.__init__(self,
-                          name=pcr_reaction.sample + ".PCR" + str(pcr_reaction.row) + "-" + str(pcr_reaction.col),
+                          name=pcr_reaction.sample + ".PCR" + str(pos),
                           labware=plate,
                           track_sample=pcr_reaction.sample,
-                          pos=plate.Position(pcr_reaction.row, pcr_reaction.col))
+                          pos=pos)
         self.pcr_reaction = pcr_reaction
         self.plate = plate
 
@@ -1218,7 +1219,7 @@ class PCRexperimentRtic:
                 for rx in pcr_reactions:
                     r = PCReactionReagent(rx, plate)
                     react_wells.extend(r.Replicas)
-                    mix.need_vol += mix.volpersample
+                    mix.need_vol += mix.volpersample              # ?? num_aliq
                 self.mixes.setdefault(mix, []).extend(react_wells)                     # just samples?
                 pass
 
