@@ -72,7 +72,7 @@ class PCR(Evo75_FLI):
             cell_rows=6,
             sample_line=6)
 
-        exp = PCRexperiment().load_excel_list(sheet0)
+        exp = PCRexperiment().load_excel_list(sheet1)
 
         self.initialize()
 
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     pf1 = Path('C:\Prog\exp\PCR fli.xlsx')
     pf2 = Path('K:\\AG RealtimePCR\\Ariel\\PCR fli.xlsx')
 
-    p = PCR(run_name='1 plate', worktable=wt3, primers_file=pf2)
+    p = PCR(run_name='1 plate', worktable=wt3, primers_file=pf1)
 
     p.use_version('1 plate')
     p.run()

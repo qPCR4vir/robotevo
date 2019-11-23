@@ -273,6 +273,12 @@ class Reagent:
         return self.labware.selectOnly([w.offset for w in self.Replicas])
 
 
+class NoReagentFound(Exception):
+    def __init__(self, reagent_name: str, error: str):
+        self.reagent_name = reagent_name
+        Exception.__init__(self, "No reagent named " + str(reagent_name) + error)  # todo redaction
+
+
 class Reaction(Reagent):
     """
     todo: make this a Mix, with diluent too ?
@@ -530,29 +536,51 @@ class PrimerReagent (Reagent):
     def __init__(self,
                  primer: Primer,
                  labware,
-                 pos,
-                 initial_vol,
+                 pos=None,
+                 initial_vol=None,
                  PCR_conc=0.8,
                  stk_conc=100,
                  excess=None):
 
         Reagent.__init__(self,
                          primer.name,
-                         labware or Lab.stock,
+                         labware or lab.stock,
                          initial_vol=initial_vol,
                          excess=Primer.excess)
 
 
 class PrimerMixComponent(MixComponent):
-    def __init__(self, id_, name, init_conc, final_conc, super_mix: bool):
+    """
+    Represent abstract information, like an item in a table describing Primer Mixes for some PCRs.
+    It can be a primer, another primer mix or the diluent
+    """
+
+    def __init__(self,
+                 id_ = None,
+                 name = None,
+                 init_conc = None,
+                 final_conc = None,
+                 super_mix: bool = False):
+        """
+
+        :param id_:
+        :param name:
+        :param init_conc:
+        :param final_conc:
+        :param super_mix:
+        """
         MixComponent.__init__(self, id_, name, init_conc, final_conc)
         self.super_mix = super_mix
 
 
 class PrimerMix:
-    ids = {}
-    names = {}
-    key_words = {}
+    """
+    Represent abstract information, like a table describing Primer Mixes for some PCRs
+    """
+
+    ids = {}  #: connect each existing Primer mix ID with the corresponding PrimerMix
+    names = {}  #: connect each existing Primer mix name with the corresponding PrimerMix
+    key_words = {}  #: connect each existing Primer mix key_word with the corresponding PrimerMix
     super_mix = True
 
     next_internal_id = 0
@@ -567,7 +595,18 @@ class PrimerMix:
                  diluent = None,
                  kws = None,
                  super_mix = False):
+        """
 
+        :param name:
+        :param id:
+        :param conc:
+        :param prepared:
+        :param components:
+        :param ref_vol:
+        :param diluent:
+        :param kws:
+        :param super_mix:
+        """
         self.prepared = prepared
         self.super_mix = super_mix
         self.diluent = diluent
@@ -622,21 +661,24 @@ class PrimerMix:
         wb = openpyxl.load_workbook(str(file_name))
         logging.debug(wb.sheetnames)
 
-        ws = wb['Primer mix']
+        ws = wb['Primer mix']  # todo argument
+
+        # todo another dic
         no_l, header, name_l, vol_l, sep_l, table_h_l, primer_l, diluter_l = 0, 1, 2, 3, 4, 5, 6, 7
-        diluter = 'TE 0,1 x'
+
         line = no_l
+        components = []
+
+        diluent = 'TE 0,1 x'  # todo ????
+
         pmix = None
         id = None
         name = None
         conc = None
         ref_vol = None
         kws = None
-        components = []
         super_mix = False
         prepared = None
-
-        comp = PrimerMixComponent(None, None, None, None, None)
 
         for r in ws.iter_rows():
 
@@ -668,8 +710,14 @@ class PrimerMix:
                 line += 1
 
             elif line == primer_l:
-                comp_name = r[col['name']].value
-                if comp_name == diluter:
+                comp = PrimerMixComponent(id_ = r[col['id']].value,
+                                          name = r[col['name']].value,
+                                          init_conc = r[col['conc']].value,
+                                          final_conc = r[col['final']].value,
+                                          super_mix = ('"x"' == r[col['conc'] + 1].value))
+
+                if comp.name == diluent:  # todo diluent always last?
+                    components.append(comp)
                     pmix = PrimerMix(name=name,
                                      id=id,
                                      conc=conc,
@@ -677,70 +725,122 @@ class PrimerMix:
                                      prepared=prepared,
                                      kws=kws,
                                      components=components,
-                                     diluent=comp_name,
+                                     diluent=comp,
                                      super_mix=super_mix
                                      )
                     line = no_l
+                    components = []
+
                     id = None
                     name = None
                     conc = None
                     ref_vol = None
                     kws = None
-                    components = []
                     super_mix = False
                     prepared = None
 
-                else:
-                    comp_id = r[col['id']].value
-                    final_conc = r[col['final']].value
-                    if final_conc and (comp_id or comp_name):
-                        superc = r[col['conc'] + 1].value
-                        super_c = ('"x"' == superc)
-                        components += [PrimerMixComponent(comp_id,
-                                                          comp_name,
-                                                          r[col['conc']].value,
-                                                          final_conc,
-                                                          super_c
-                                                          )]
+                elif comp.final_conc and (comp.id or comp.name):
+                    components += [comp]
 
         return pmix
 
 
 class PrimerMixReagent(PreMix):
+    """
+    Manipulate a Primer-Mix Reagent on a robot.
+    """
+
     excess = def_mix_excess
 
     def __init__(self,
-                 name,
-                 labware,
-                 ID=None,
-                 conc=10.0,
+                 primer_mix: PrimerMix,
+                 primer_mix_rack: (lab.Labware, list),
                  pos=None,
-                 components=None,
-                 num_of_aliquots=1,
+                 num_of_aliquots=None,
                  initial_vol=None,
-                 excess=None):
+                 def_liq_class=None,
+                 excess=None,
+                 fill_limit_aliq=None,
+                 primer_rack: (lab.Labware, list) = None):
+        """
+        Construct a robot-usable PrimerMixReagent from an abstract PrimerMix.
+        You can reuse "old" aliquots by passing primer_mix.prepared volume > 0.
+        If no  primer_mix.prepared volume is passed, or if it is not sufficient,
+        a set of primer reagents will be created.
+
+
+        :param primer_mix:
+        :param primer_mix_rack:
+        :param pos:
+        :param num_of_aliquots:
+        :param initial_vol:
+        :param def_liq_class:
+        :param excess:
+        :param fill_limit_aliq:
+        :param primer_rack:
+        """
+        self.primer_mix = primer_mix
+
+        initial_vol = initial_vol or self.primer_mix.prepared
+
+        components = []
+        vol = 0
+        lw = primer_mix_rack[0] if isinstance(primer_mix_rack, list) else primer_mix_rack
+        reagents = lw.location.worktable.reagents
+        diluent_vol = self.primer_mix.ref_vol             # todo ??
+
+        for component in self.primer_mix.components:
+            assert isinstance(component, PrimerMixComponent)
+            if component is self.primer_mix.diluent:
+                vol_per_mix = diluent_vol
+            else:
+                vol_per_mix = self.primer_mix.ref_vol * component.final_conc / float(component.init_conc)
+                diluent_vol -= vol_per_mix
+            if component.name in reagents:  # for example an existing primer
+                component_r = reagents[component.name]
+                assert isinstance(component_r, Reagent)
+                # if not abs(component_r.volpersample - vol_per_reaction) < 0.05:
+                #    assert False
+                # component_r.put_min_vol()
+            else:
+                if component.name in PrimerMix.names:
+
+                    for prmx in PrimerMix.names[component.name]:
+                        assert isinstance(prmx, PrimerMix)
+                        if component.id == prmx.id:
+                            c_primer_mix = prmx
+                            break
+                    else:
+                        raise NoReagentFound(component.name, " as primer mix with ID:" + str(component.id)
+                                                             + ". Alternatives are: " + str(PrimerMix.names[component.name]))
+
+                    component_r = PrimerMixReagent(c_primer_mix,
+                                                   primer_mix_rack=primer_mix_rack,
+                                                   primer_rack=primer_rack)
+                elif component.name in Primer.names:
+
+                    for pr in Primer.names[component.name]:
+                        assert isinstance(pr, Primer)
+                        if component.id == pr.id:
+                            c_primer = pr
+                            break
+                    else:
+                        raise NoReagentFound(component.name, " as primer with ID:" + str(component.id)
+                                                             + ". Alternatives are: " + str(Primer.names[component.name]))
+
+                    component_r = PrimerReagent(c_primer_mix,
+                                                primer_rack=primer_rack)
+
+            components.append(component_r)
 
         PreMix.__init__(self,
-                        name,
-                        labware or Lab.stock,
+                        primer_mix.name,
+                        primer_mix_rack,
                         pos,
                         components,
                         num_of_aliquots=num_of_aliquots,
                         initial_vol=initial_vol,
                         excess=excess or PrimerMix.excess)
-
-        vol=0.0
-        for reagent in components:
-            vol += reagent.volpersample
-            reagent.excess += excess/100.0      # todo revise! best to calculate at the moment of making?
-            reagent.put_min_vol()
-
-        if initial_vol is None: initial_vol = 0.0
-
-        Reagent.__init__(self, name, labware, vol, pos=pos, num_of_aliquots=num_of_aliquots,
-                         defLiqClass=None, excess=ex, initial_vol=initial_vol)
-        self.components = components
-        #self.init_vol()
 
 
 class ExpSheet:
@@ -901,8 +1001,7 @@ class PCRMasterMix:
                     sample_vol = 5  # uL
                     title = None
 
-                elif component.name:
-                    if component.final_conc and (component.id or component.name):
+                elif component.final_conc and (component.id or component.name):
                         components.append(component)
 
         return pmix
@@ -924,11 +1023,15 @@ class PCRMasterMixReagent(PreMix):
                  def_liq_class=None,
                  excess=None,
                  fill_limit_aliq=None,
-                 kit_rack: (lab.Labware, list) = None
-                 ):
+                 kit_rack: (lab.Labware, list) = None,
+                 primer_mix_rack: (lab.Labware, list) = None,
+                 primer_rack: (lab.Labware, list) = None):
         """
-        Construct a robot-usable PCRMasterMixReagent from an abstract PCRMasterMix
+        Construct a robot-usable PCRMasterMixReagent from an abstract PCRMasterMix.
+        It is always constructed - no reuse of old aliquots: contains instable components.
 
+        :param primer_mix_rack:
+        :param primer_rack:
         :param pos:
         :param num_of_aliquots:
         :param initial_vol:
@@ -936,8 +1039,10 @@ class PCRMasterMixReagent(PreMix):
         :param fill_limit_aliq:
         :param pcr_mix:
         :param mmix_rack:
+        :param kit_rack:
         :param excess:
         """
+        self.pcr_mix = pcr_mix
         components = []
         vol = 0
         lw = mmix_rack[0] if isinstance(mmix_rack, list) else mmix_rack
@@ -949,7 +1054,7 @@ class PCRMasterMixReagent(PreMix):
             if component is pcr_mix.diluent:
                 vol_per_reaction = diluent_vol
             else:
-                vol_per_reaction = pcr_mix.reaction_vol * component.final_conc / float (component.init_conc)
+                vol_per_reaction = pcr_mix.reaction_vol * component.final_conc / float(component.init_conc)
                 diluent_vol -= vol_per_reaction
             if component.name in reagents:
                 component_r = reagents[component.name]
@@ -957,11 +1062,27 @@ class PCRMasterMixReagent(PreMix):
                 # if not abs(component_r.volpersample - vol_per_reaction) < 0.05:
                 #    assert False
                 # component_r.put_min_vol()
-            else:  # todo for now let consider this a kit component - but it could be a PrimerMix  !!!!
-                component_r = Reagent(component.name,
-                                      labware=kit_rack,
-                                      volpersample=vol_per_reaction,
-                                      num_of_samples=0)
+            else:
+                if component.name in PrimerMix.names:
+
+                    for prmx in PrimerMix.names[component.name]:
+                        assert isinstance(prmx, PrimerMix)
+                        if component.id == prmx.id:
+                            primer_mix = prmx
+                            break
+                    else:
+                        raise NoReagentFound(component.name, " as primer mix with ID:" + str(component.id)
+                                             + ". Alternatives are: " + str(PrimerMix.names[component.name]))
+
+                    component_r = PrimerMixReagent(primer_mix,
+                                                   primer_mix_rack=primer_mix_rack,
+                                                   primer_rack=primer_rack)
+
+                else:  # todo for now let consider this a kit component - but it could be a Primer  !!!!
+                    component_r = Reagent(component.name,
+                                          labware=kit_rack,
+                                          volpersample=vol_per_reaction,
+                                          num_of_samples=0)
             components.append(component_r)
 
         PreMix.__init__(self,
