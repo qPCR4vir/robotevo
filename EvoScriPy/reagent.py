@@ -587,7 +587,7 @@ class PrimerMix:
 
     def __init__(self,
                  name,
-                 id = None,
+                 id_ = None,
                  conc = 10.0,
                  prepared=None,
                  components = None,
@@ -598,7 +598,7 @@ class PrimerMix:
         """
 
         :param name:
-        :param id:
+        :param id_:
         :param conc:
         :param prepared:
         :param components:
@@ -611,7 +611,7 @@ class PrimerMix:
         self.super_mix = super_mix
         self.diluent = diluent
         self.name = name
-        self.id = id
+        self.id = id_
         self.conc = conc
         self.components = components
         self.ref_vol = ref_vol
@@ -620,7 +620,7 @@ class PrimerMix:
         PrimerMix.next_internal_id += 1
 
         PrimerMix.names.setdefault(name, []).append(self)
-        PrimerMix.ids.setdefault(id, []).append(self)
+        PrimerMix.ids.setdefault(id_, []).append(self)
         if isinstance(kws, list):
             for kw in kws:
                 PrimerMix.key_words.setdefault(kw, []).append(self)
@@ -672,7 +672,7 @@ class PrimerMix:
         diluent = 'TE 0,1 x'  # todo ????
 
         pmix = None
-        id = None
+        id_ = None
         name = None
         conc = None
         ref_vol = None
@@ -719,7 +719,7 @@ class PrimerMix:
                 if comp.name == diluent:  # todo diluent always last?
                     components.append(comp)
                     pmix = PrimerMix(name=name,
-                                     id=id,
+                                     id_=id_,
                                      conc=conc,
                                      ref_vol=ref_vol,
                                      prepared=prepared,
@@ -731,7 +731,7 @@ class PrimerMix:
                     line = no_l
                     components = []
 
-                    id = None
+                    id_ = None
                     name = None
                     conc = None
                     ref_vol = None
@@ -828,7 +828,7 @@ class PrimerMixReagent(PreMix):
                         raise NoReagentFound(component.name, " as primer with ID:" + str(component.id)
                                                              + ". Alternatives are: " + str(Primer.names[component.name]))
 
-                    component_r = PrimerReagent(c_primer_mix,
+                    component_r = PrimerReagent(c_primer,
                                                 primer_rack=primer_rack)
 
             components.append(component_r)
@@ -1343,6 +1343,7 @@ class PCRexperimentRtic:
 
                 mix = PCRMasterMixReagent(pcr_mix=pcr_mix,
                                           mmix_rack=mmix_rack,
+                                          primer_mix_rack=primer_mix_rack,
                                           kit_rack=kit_rack)  # todo: it could be reused from another plate !!???????
 
                 sv = pcr_mix.sample_vol  # all reactions prepared with this mix have the same reaction and sample volume
