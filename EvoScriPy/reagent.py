@@ -101,7 +101,7 @@ class Reagent:
             if isinstance(lw, str):
                 self.labwares[idx] = Reagent.current_protocol.worktable.get_labware(label=lw)
             else:
-                assert isinstance(lw, lab.Labware), "No labware defined for Reagent " + name
+                assert isinstance(lw, lab.Labware), "No labware defined for Reagent " + str(self)
         self.labware = self.labwares[0]
 
         # add self to the list of reagents of the worktable were the labware is.
@@ -417,34 +417,47 @@ class PreMix(Reagent):
 class Primer:
     """
     Represent abstract information, like an item in some table summarizing primer sequences, synthesis, etc.
-    todo: introduce recomended/used diluent?
     """
 
-    ids = {}
-    seqs = {}
-    names = {}
-    key_words = {}
-    ids_synt = {}
+    ids = {}  #: connect each existing Primer ID with the corresponding Primer
+    seqs = {}  #: connect each existing Primer sequence with the corresponding list of Primer
+    names = {}  #: connect each existing Primer name with the corresponding list of Primer
+    key_words = {}  #: connect each existing Primer key_word with the corresponding list of Primer
+    ids_synt = {}  #: connect each existing Primer synthesis ID with the corresponding Primer
 
     next_internal_id = 0
 
     def __init__(self,
-                 name,
-                 seq,
-                 proposed_stock_conc=100,  # uM
-                 id=None,
-                 prepared=None,
-                 mass=None,  # ug
-                 moles=None,  # nmoles
-                 molec_w=None,  # g/mol
-                 mod_5p=None,
-                 mod_3p=None,
-                 id_synt=None,
-                 kws=None):
+                 name: str,
+                 seq: str,
+                 proposed_stock_conc: float=100,  # uM
+                 id_: str=None,
+                 prepared: float=None,
+                 mass: float=None,  # ug
+                 moles: float=None,  # nmoles
+                 molec_w: float=None,  # g/mol
+                 mod_5p: str=None,
+                 mod_3p: str=None,
+                 id_synt: str=None,
+                 kws: list=None,
+                 diluent: str='TE 1x'):
         """
 
-        :type moles: float
+        :param name:
+        :param seq:
+        :param proposed_stock_conc:
+        :param id_:
+        :param prepared:
+        :param mass:
+        :param moles:
+        :param molec_w:
+        :param mod_5p:
+        :param mod_3p:
+        :param id_synt:
+        :param kws:
+        :param diluent:
         """
+        self.diluent = diluent
         self.prepared = prepared
         self.proposed_stock_conc = proposed_stock_conc
         self.mass = mass
@@ -455,13 +468,25 @@ class Primer:
         self.id_synt = id_synt
         self.name = name
         self.seq = seq
-        self.id = id
+        self.id = id_
         self._internal_id = Primer.next_internal_id
         Primer.next_internal_id += 1
         Primer.names.setdefault(name, []).append(self)
-        Primer.ids_synt.setdefault(id_synt, []).append(self)
 
-        Primer.ids.setdefault(id, []).append(self)
+        if id_ and id_ in Primer.ids:
+            wrn = 'Duplicate primer ID: ' + str(id_)
+            logging.warning(wrn)
+            # raise Warning(wrn)
+        Primer.ids.setdefault(id_, []).append(self)
+
+        if not id_synt:
+            id_synt = 'FakeID-' + str(self._internal_id)
+        if id_synt in Primer.ids_synt:
+            err = 'Duplicate primer synthesis ID: ' + str(id_synt)
+            logging.error(err)
+            raise Exception(err)
+        Primer.ids_synt[id_synt] = self
+
         Primer.seqs.setdefault(seq, []).append(self)
         if isinstance(kws, list):
             for kw in kws:
@@ -486,7 +511,8 @@ class Primer:
                'mod_5p': 19,
                'mod_3p': 20,
                'ido': 22,
-               'virus': 25
+               'virus': 25,
+               'diluent': 1
                }
         logging.debug("opening excel")
         import openpyxl
@@ -512,41 +538,77 @@ class Primer:
         p = None
         for r in ws.iter_rows() :
             if first:
+                diluent = r[col['diluent']].value
                 first = False
             else:
                 p=Primer(name=r[col['name']].value,
                          seq=r[col['seq']].value,
                          prepared=r[col['prepared']].value,
                          proposed_stock_conc=r[col['conc']].value,
-                         id=r[col['id']].value,
+                         id_=r[col['id']].value,
                          mass=r[col['mass']].value,
                          moles=r[col['moles']].value,
                          molec_w=r[col['mol_w']].value,
                          mod_5p=r[col['mod_5p']].value,
                          mod_3p=r[col['mod_3p']].value,
                          id_synt=r[col['ido']].value,
-                         kws=[r[col['virus']].value]
+                         kws=[r[col['virus']].value],
+                         diluent=diluent
                          )
         return p
 
 
 class PrimerReagent (Reagent):
+    """
+    Manipulate a Primer Reagent on a robot.
+    """
     excess = def_mix_excess
 
     def __init__(self,
                  primer: Primer,
-                 labware,
+                 primer_rack: (lab.Labware, list),
                  pos=None,
                  initial_vol=None,
                  PCR_conc=0.8,
                  stk_conc=100,
+                 def_liq_class=None,
+                 fill_limit_aliq=None,
                  excess=None):
+        """
+        Construct a robot-usable PrimerReagent from an abstract Primer.
+        You can reuse "old" aliquots by passing primer.prepared volume > 0.
+        If no  primer.prepared volume is passed, it will be prepared.
+
+        :param primer:
+        :param primer_rack:
+        :param pos:
+        :param initial_vol:
+        :param PCR_conc:
+        :param stk_conc:
+        :param def_liq_class:
+        :param fill_limit_aliq:
+        :param excess:
+        """
+
+        self.stk_conc = stk_conc
+        self.primer = primer
 
         Reagent.__init__(self,
-                         primer.name,
-                         labware or lab.stock,
-                         initial_vol=initial_vol,
-                         excess=Primer.excess)
+                         name=primer.name,
+                         labware=primer_rack or lab.stock,
+                         wells=pos,
+                         initial_vol=initial_vol or primer.prepared,
+                         excess=excess or PrimerReagent.excess,
+                         fill_limit_aliq=fill_limit_aliq,
+                         def_liq_class=def_liq_class)
+
+        # todo prepare unprepared Primers  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    def __str__(self):
+        return self.primer.name
+
+    def __repr__(self):
+        return (self.primer.name or '-') + '[' + str(self.primer.id or '-') + ']'
 
 
 class PrimerMixComponent(MixComponent):
@@ -579,8 +641,8 @@ class PrimerMix:
     """
 
     ids = {}  #: connect each existing Primer mix ID with the corresponding PrimerMix
-    names = {}  #: connect each existing Primer mix name with the corresponding PrimerMix
-    key_words = {}  #: connect each existing Primer mix key_word with the corresponding PrimerMix
+    names = {}  #: connect each existing Primer mix name with the corresponding list of PrimerMix
+    key_words = {}  #: connect each existing Primer mix key_word with the corresponding list of PrimerMix
     super_mix = True
 
     next_internal_id = 0

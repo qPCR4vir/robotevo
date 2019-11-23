@@ -1,6 +1,21 @@
 DEBUG:root:opening excel
 DEBUG:root:C:\Prog\exp\PCR fli.xlsx
 DEBUG:root:['Index', 'PCR fli-oligos', 'Primer mix', 'Druken', 'PCR-1plex', '0', 'Tabelle1', 'HEV.RingT.QCMD.2012', 'Curva']
+WARNING:root:Duplicate primer ID: 154a
+WARNING:root:Duplicate primer ID: 155a
+WARNING:root:Duplicate primer ID: 469
+WARNING:root:Duplicate primer ID: 470
+WARNING:root:Duplicate primer ID: 471
+WARNING:root:Duplicate primer ID: 459
+WARNING:root:Duplicate primer ID: 465
+WARNING:root:Duplicate primer ID: 460
+WARNING:root:Duplicate primer ID: 466
+WARNING:root:Duplicate primer ID: 461
+WARNING:root:Duplicate primer ID: 467
+WARNING:root:Duplicate primer ID: 462
+WARNING:root:Duplicate primer ID: 468
+WARNING:root:Duplicate primer ID: 463
+WARNING:root:Duplicate primer ID: 464
 DEBUG:root:opening excel
 DEBUG:root:C:\Prog\exp\PCR fli.xlsx
 DEBUG:root:['Index', 'PCR fli-oligos', 'Primer mix', 'Druken', 'PCR-1plex', '0', 'Tabelle1', 'HEV.RingT.QCMD.2012', 'Curva']
@@ -70,6 +85,9 @@ DEBUG:root:Creating Reagent H2O
 DEBUG:root:Created Reagent H2O
 DEBUG:root:Creating Reagent TE 0,1 x
 DEBUG:root:Created Reagent TE 0,1 x
+DEBUG:root:Creating Reagent TE 1x
+DEBUG:root:Created Reagent TE 1x
 DEBUG:root:Creating a PCRexperimentRtic from  WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd[Exp 308]
 DEBUG:root:Creating Reagent RT-Mix
 DEBUG:root:Created Reagent RT-Mix
+DEBUG:root:Creating Reagent INEID-WNf1.5nc
