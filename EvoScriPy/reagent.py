@@ -22,35 +22,28 @@ Main classes and functions:
 Abstract information classes:
 -----------------------------
 
-:py:class:`MixComponent`: like an item in some table summarizing components of some Mix.
-
-:py:class:`PreMixComponent`: like an item in some table summarizing components of some PreMix.
-
-:py:class:`Primer`: like an item in some table summarizing primer sequences, synthesis, etc.
-
-:py:class:`PrimerMixComponent`: like an item in a table describing Primer Mixes for some PCRs.
-
-:py:class:`PrimerMix`
-
-:py:class:`PCRMasterMix`
-
-:py:class:`PCReaction`
-
-:py:class:`PCRexperiment`
+ - :py:class:`MixComponent`: like an item in some table summarizing components of some Mix.
+ - :py:class:`PreMixComponent`: like an item in some table summarizing components of some PreMix.
+ - :py:class:`Primer`: like an item in some table summarizing primer sequences, synthesis, etc.
+ - :py:class:`PrimerMixComponent`: like an item in a table describing Primer Mixes for some PCRs.
+ - :py:class:`PrimerMix`: like a table describing Primer Mixes for some PCRs
+ - :py:class:`PCRMasterMix`: like an item in some table summarizing PCR Master Mixes for some PCR experiment
+ - :py:class:`PCReaction`: like an item in some table summarizing reactions in a PCR experiment
+ - :py:class:`PCRexperiment`: like an item in some table summarizing PCR experiments
 
 
 Robot classes:
 --------------
 
- - :py:class:`Reagent`
- - :py:class:`Mix`
+ - :py:class:`Reagent`: homogeneous liquid solution in some wells
+ - :py:class:`Mix`: a Reagent composed of other Reagents
  - :py:class:`Dilution`
- - :py:class:`PreMix`
- - :py:class:`PrimerReagent`
- - :py:class:`PrimerMixReagent`
- - :py:class:`PCRMasterMixReagent`
+ - :py:class:`PreMix`: A pre-Mix of otherwise independent reagents
+ - :py:class:`PrimerReagent`: Manipulate a Primer Reagent on a robot.
+ - :py:class:`PrimerMixReagent`: Manipulate a Primer-Mix Reagent on a robot.
+ - :py:class:`PCRMasterMixReagent`: Manipulate a PCR Master-Mix Reagent on a robot.
  - :py:class:`PCReactionReagent`
- - :py:class:`PCRexperimentRticv`
+ - :py:class:`PCRexperimentRticv`: Organize a PCR setup on a robot.
 
 
 """
