@@ -377,26 +377,71 @@ class MixComponent:
 class Mix(Reagent):
     """
     A Reagent composed of other Reagents, that the robot may prepare.
-    todo: introduce diluent? - final_conc == None ? final_conc == init_conc ?
-    todo: make this base class for Reaction and PreMix
     """
 
     def __init__(self,
-                 name          : str,
+                 name          : str,  # todo introduce abstract info class Mix and rename this MixReagent?
                  labware       : (lab.Labware, str, [])    = None,
                  wells         : (int, [int], [lab.Well])  = None,
+                 components    : [Reagent]                 = None,
                  num_of_aliquots: int                      = None,
                  minimize_aliquots: bool                   = None,
                  def_liq_class : (str, (str, str))         = None,
-                 volpersample  : float                     = 0.0,
-                 num_of_samples: int                       = None,
-                 single_use    : float                     = None,
                  excess        : float                     = None,
                  initial_vol   : float                     = 0.0,
                  min_vol       : float                     = 0.0,
                  fill_limit_aliq : float                   = 100,
                  concentration : float                     = None
                  ):
+        """
+
+        :param name:
+        :param labware:
+        :param wells:
+        :param components:
+        :param num_of_aliquots:
+        :param minimize_aliquots:
+        :param def_liq_class:
+        :param excess:
+        :param initial_vol:
+        :param min_vol:
+        :param fill_limit_aliq:
+        :param concentration:
+        """
+        ex = def_mix_excess if excess is None else excess
+        vol = 0.0
+        for reagent in components:
+            vol += reagent.volpersample
+            reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
+            reagent.put_min_vol()
+
+        if initial_vol is None:
+            initial_vol = 0.0
+
+        Reagent.__init__(self, name,
+                         labware,
+                         volpersample= vol,
+                         wells= wells,
+                         num_of_aliquots= num_of_aliquots,
+                         def_liq_class = def_liq_class,
+                         excess = ex,
+                         initial_vol = initial_vol,
+                         fill_limit_aliq= fill_limit_aliq)
+
+        self.components = components  #: list of reagent components
+        # self.init_vol()
+
+    def __str__(self):  # todo ?
+        return "{name:s}".format(name=self.name)
+
+    def __repr__(self):  # todo ?
+        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+
+    def make(self, protocol, volume=None):      # todo deprecate?
+        if self.Replicas[0].vol is None:   # ????
+            self.put_min_vol(volume)
+            assert False
+        protocol.make_mix(self, volume)
 
 
 class Dilution(Mix):
@@ -415,7 +460,7 @@ class PreMixComponent(MixComponent):
                  name: str,
                  init_conc: float,
                  final_conc: float,
-                 volpersample  : float= 0.0):
+                 volpersample: float = 0.0):
         """
 
         :param id_:
@@ -424,25 +469,22 @@ class PreMixComponent(MixComponent):
         :param final_conc:
         """
         self.volpersample = volpersample
-        self.id
-        self.
+        self.id = id_
+        self.name = name
         self.init_conc = init_conc
         self.final_conc = final_conc
 
         MixComponent.__init__(self,
                               id_= id_,
                               name= name,
-                              init_conc= init_conc ,
+                              init_conc= init_conc,
                               final_conc= final_conc)
-
 
     def __str__(self):
         return self.name
 
     def __repr__(self):
         return (self.name or '-') + '[' + str(self.id or '-') + ']'
-
-
 
 
 class PreMix(Mix):
@@ -463,7 +505,8 @@ class PreMix(Mix):
                  def_liq_class = None,
                  excess = None,
                  fill_limit_aliq =None,
-                 num_of_samples = None):
+                 num_of_samples = None  # todo here?
+                 ):
         """
 
         :param name:
@@ -512,12 +555,11 @@ class PreMix(Mix):
         # Reagent.init_vol(self, num_samples)
         # self.put_min_vol(num_samples)
 
-    def make(self, NumSamples=None):      # todo deprecate?
+    def make(self, protocol, NumSamples=None):      # todo deprecate?
         if self.Replicas[0].vol is None:   # ????
             self.put_min_vol(NumSamples)
             assert False
-        from EvoScriPy.protocol_steps import makePreMix
-        makePreMix(self, NumSamples)
+        protocol.make_pre_mix(self, NumSamples)
 
     def compVol(self,index, NumSamples=None):
         NumSamples = NumSamples or Reagent.current_protocol.num_of_samples

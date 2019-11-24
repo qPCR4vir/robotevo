@@ -1346,6 +1346,7 @@ class Protocol (Executable):
         """
         instructions.comment(text).exec()
 
+
 class Pipeline (Executable):
     """ Each custom Pipeline need to implement these functions.
 
