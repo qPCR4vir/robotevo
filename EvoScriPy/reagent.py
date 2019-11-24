@@ -22,33 +22,28 @@ Main classes and functions:
 Abstract information classes:
 -----------------------------
 
- - :py:class:`MixComponent`: like an item in some table summarizing components of some Mix.
- - :py:class:`~PreMixComponent` like an item in some table summarizing components of some PreMix.
- - :py:class::Primer
- - :py:class::PrimerMixComponent
- - :py:class::PrimerMix
- - :py:class::PCRMasterMix
- - :py:class::PCReaction
- - :py:class::PCRexperiment
- - :py:class::
- - :py:class::
- - :py:class::
+:py:class:`MixComponent`: like an item in some table summarizing components of some Mix.
+:py:class:`PreMixComponent`: like an item in some table summarizing components of some PreMix.
+:py:class:`Primer`
+:py:class:`PrimerMixComponent`
+:py:class:`PrimerMix`
+:py:class:`PCRMasterMix`
+:py:class:`PCReaction`
+:py:class:`PCRexperiment`
+
 
 Robot classes:
 --------------
 
- - :py:class::Reagent
- - :py:class::Mix
- - :py:class::Dilution
- - :py:class::PreMix
- - :py:class::PrimerReagent
- - :py:class::PrimerMixReagent
- - :py:class::PCRMasterMixReagent
- - :py:class::PCReactionReagent
- - :py:class::PCRexperimentRtic
- - :py:class::
- - :py:class::
- - :py:class::
+ - :py:class:`Reagent`
+ - :py:class:`Mix`
+ - :py:class:`Dilution`
+ - :py:class:`PreMix`
+ - :py:class:`PrimerReagent`
+ - :py:class:`PrimerMixReagent`
+ - :py:class:`PCRMasterMixReagent`
+ - :py:class:`PCReactionReagent`
+ - :py:class:`PCRexperimentRticv`
 
 
 """
