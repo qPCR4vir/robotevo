@@ -290,7 +290,7 @@ class Reagent:
         if initial_vol is not None:
             assert isinstance(initial_vol, list)
             for w, v in zip(self.Replicas, initial_vol):
-                w.vol = v
+                w.vol = v if v else 0
                 assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for '+ str(w)
         self.put_min_vol(num_samples)
 
@@ -425,7 +425,7 @@ class MixReagent(Reagent):
                  name          : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
                  labware       : (lab.Labware, str, [])    = None,
                  wells         : (int, [int], [lab.Well])  = None,
-                 components    : [Reagent]                 = None,
+                 components    : [MixComponentReagent]     = None,
                  num_of_aliquots: int                      = None,
                  minimize_aliquots: bool                   = None,
                  def_liq_class : (str, (str, str))         = None,
@@ -452,17 +452,18 @@ class MixReagent(Reagent):
         """
         ex = def_mix_excess if excess is None else excess
         vol = 0.0
-        for reagent in components:
-            vol += reagent.volpersample
-            reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
-            reagent.put_min_vol()
+        for comp in components:
+            assert isinstance(comp, MixComponentReagent)
+            vol += comp.volume
+            comp.reagent.min_vol(add_volume=comp.volume)
+            comp.reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
+            comp.reagent.put_min_vol()
 
         if initial_vol is None:
             initial_vol = 0.0
 
         Reagent.__init__(self, name,
                          labware,
-                         volpersample= vol,
                          wells= wells,
                          num_of_aliquots= num_of_aliquots,
                          def_liq_class = def_liq_class,
@@ -799,10 +800,10 @@ class PrimerReagent (Reagent):
         # todo prepare unprepared Primers  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def __str__(self):
-        return self.primer.name
+        return "primer " + self.primer.name
 
     def __repr__(self):
-        return (self.primer.name or '-') + '[' + str(self.primer.id or '-') + ']'
+        return "primer " + (self.primer.name or '-') + '[' + str(self.primer.id or '-') + ']'
 
 
 class PrimerMixComponent(MixComponent):
@@ -882,10 +883,10 @@ class PrimerMix:
                 PrimerMix.key_words.setdefault(kw, []).append(self)
 
     def __str__(self):
-        return self.name
+        return "primer mix " + self.name
 
     def __repr__(self):
-        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+        return "primer mix " + (self.name or '-') + '[' + str(self.id or '-') + ']'
 
     @staticmethod
     def load_excel_list(file_name: Path = None):
@@ -1096,7 +1097,14 @@ class PrimerMixReagent(PreMixReagent):
                         components,
                         num_of_aliquots=num_of_aliquots,
                         initial_vol=initial_vol,
-                        excess=excess or PrimerMix.excess)
+                        excess=excess or PrimerMixReagent.excess)
+
+
+    def __str__(self):
+        return "primer mix " + self.primer_mix.name
+
+    def __repr__(self):
+        return "primer mix " + (self.primer_mix.name or '-') + '[' + str(self.primer_mix.id or '-') + ']'
 
 
 class ExpSheet:

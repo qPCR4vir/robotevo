@@ -91,3 +91,10 @@ DEBUG:root:Creating a PCRexperimentRtic from  WNV.ZKU.10-1 10-10. WN-INNT-133, W
 DEBUG:root:Creating Reagent RT-Mix
 DEBUG:root:Created Reagent RT-Mix
 DEBUG:root:Creating Reagent INEID-WNf1.5nc
+DEBUG:root:Created Reagent primer INEID-WNf1.5nc
+DEBUG:root:Creating Reagent INEID-WNr1.5nc
+DEBUG:root:Created Reagent primer INEID-WNr1.5nc
+DEBUG:root:Creating Reagent INEID-WNs2.5nc
+DEBUG:root:Created Reagent primer INEID-WNs2.5nc
+DEBUG:root:Creating Reagent INNT-WN5nV.Cy5
+DEBUG:root:Created Reagent primer INNT-WN5nV.Cy5
