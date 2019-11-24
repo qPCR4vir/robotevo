@@ -23,12 +23,19 @@ Abstract information classes:
 -----------------------------
 
 :py:class:`MixComponent`: like an item in some table summarizing components of some Mix.
+
 :py:class:`PreMixComponent`: like an item in some table summarizing components of some PreMix.
-:py:class:`Primer`
-:py:class:`PrimerMixComponent`
+
+:py:class:`Primer`: like an item in some table summarizing primer sequences, synthesis, etc.
+
+:py:class:`PrimerMixComponent`: like an item in a table describing Primer Mixes for some PCRs.
+
 :py:class:`PrimerMix`
+
 :py:class:`PCRMasterMix`
+
 :py:class:`PCReaction`
+
 :py:class:`PCRexperiment`
 
 
