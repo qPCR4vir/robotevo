@@ -59,10 +59,10 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
     def __init__(self,
                  GUI                            = None,
-                 num_of_samples       : int       = None,
+                 num_of_samples     : int       = None,
                  worktable_template_filename    = None,
                  output_filename                = None,
-                 first_tip                       = None,
+                 first_tip                      = None,
                  run_name           : str       = ""):
 
         self.versions_defaults()
@@ -152,61 +152,61 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
         if self.add_preMix:
             ProtK = Reagent("Proteinase K ",
-                                Reagents,
-                                num_of_aliquots= 2,
-                                minimize_aliquots   = False,
-                                wells               = [15, 16],  # only 16 ?  pos=16
-                                volpersample        = ProtKVolume,
-                                def_liq_class         = self.Small_vol_disp)
+                            Reagents,
+                            num_of_aliquots= 2,
+                            minimize_aliquots   = False,
+                            wells               = [15, 16],  # only 16 ?  pos=16
+                            volpersample        = ProtKVolume,
+                            def_liq_class       = self.Small_vol_disp)
 
             cRNA   = Reagent("Carrier RNA ",
-                                 Reagents,
-                                 wells= 14,
-                                 volpersample       = cRNAVolume,
-                                 def_liq_class        = self.Small_vol_disp)
+                             Reagents,
+                             wells= 14,
+                             volpersample       = cRNAVolume,
+                             def_liq_class      = self.Small_vol_disp)
 
             IC_MS2 = Reagent("IC MS2 phage culture ",
-                                 Reagents,
-                                 wells= 13,
-                                 volpersample       = IC_MS2Volume,
-                                 def_liq_class        = self.Small_vol_disp)
+                             Reagents,
+                             wells= 13,
+                             volpersample       = IC_MS2Volume,
+                             def_liq_class      = self.Small_vol_disp)
 
             pK_cRNA_MS2 = PreMixReagent("ProtK+cRNA+IC-MS2 mix ",
-                                 Reagents,
-                                 pos            = 8,
-                                 components     = [cRNA, ProtK, IC_MS2],
-                                 def_liq_class    = self.W_liquidClass,
-                                 excess         = 20)
+                                        Reagents,
+                                        pos            = 8,
+                                        components     = [cRNA, ProtK, IC_MS2],
+                                        def_liq_class  = self.W_liquidClass,
+                                        excess         = 20)
 
         if self.add_VL:
             LysisBuffer = Reagent("VL - Lysis Buffer ",
-                                      LysBuf,
-                                      volpersample  =LysisBufferVolume,
-                                      def_liq_class   ='MN VL')
+                                  LysBuf,
+                                  volpersample  =LysisBufferVolume,
+                                  def_liq_class   ='MN VL')
 
         if self.do_extraction:
             B_Beads         = Reagent("B - Beads ",
-                                          Reagents,
-                                          wells= [1, 2],
-                                          initial_vol  = 1200.0,
-                                          volpersample = B_BeadsVolume,
-                                          def_liq_class  = self.Beads_LC_2,
-                                          fill_limit_aliq= 70)
+                                      Reagents,
+                                      wells= [1, 2],
+                                      initial_vol    = 1200.0,
+                                      volpersample   = B_BeadsVolume,
+                                      def_liq_class  = self.Beads_LC_2,
+                                      fill_limit_aliq= 70)
 
             BindingBuffer   = Reagent("VEB - Binding Buffer ",
-                                          BindBuf,
-                                          volpersample  = BindingBufferVolume,
-                                          def_liq_class   = self.B_liquidClass)
+                                      BindBuf,
+                                      volpersample  = BindingBufferVolume,
+                                      def_liq_class = self.B_liquidClass)
 
             VEW1            = Reagent("VEW1 - Wash Buffer ",
-                wt.get_labware("4-VEW1 Wash Buffe", labware.Trough_100ml),
-                                          volpersample  = VEW1Volume,
-                                          def_liq_class   = self.B_liquidClass)
+                                      wt.get_labware("4-VEW1 Wash Buffe", labware.Trough_100ml),
+                                      volpersample    = VEW1Volume,
+                                      def_liq_class   = self.B_liquidClass)
 
             VEW2            = Reagent("VEW2 - WashBuffer ",
-                wt.get_labware("5-VEW2-WashBuffer", labware.Trough_100ml),
-                                          volpersample  =VEW2Volume,
-                                          def_liq_class   =self.B_liquidClass)
+                                      wt.get_labware("5-VEW2-WashBuffer", labware.Trough_100ml),
+                                      volpersample  =VEW2Volume,
+                                      def_liq_class =self.B_liquidClass)
 
             EtOH80p         = Reagent("Ethanol 80% ",
                                       labware.getLabware(labware.Trough_100ml,  "7-EtOH80p"     ),
@@ -224,11 +224,11 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                                         # Define samples and the place for intermediate reactions
         for s in all_samples:
             Reagent("lysis_{:02d}".format(s + 1),
-                        Lysis,
-                        initial_vol    = InitLysisVol,
-                        wells          = par[s] + 1,
-                        def_liq_class  = SampleLiqClass,
-                        excess         = 0)
+                    Lysis,
+                    initial_vol    = InitLysisVol,
+                    wells          = par[s] + 1,
+                    def_liq_class  = SampleLiqClass,
+                    excess         = 0)
 
             if self.do_extraction:
                 Reagent("RNA_{:02d}".format(s + 1),

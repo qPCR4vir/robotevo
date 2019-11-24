@@ -166,13 +166,13 @@ class Reagent:
         if single_use:
             assert not volpersample, str(name) + \
                                      ": this is a single use-reagent. Please, don't set any volume per sample."
-            if num_of_samples is None:
-                num_of_samples = 1
-            assert num_of_samples == 1, "this is a single use-reagent, don't set num_of_samples " + str(num_of_samples)
+            # if num_of_samples is None:
+            #     num_of_samples = 1
+            assert num_of_samples is None, "this is a single use-reagent, don't set num_of_samples " + str(num_of_samples)
 
-            self.volpersample = single_use
+            self.need_vol = single_use
         else:
-            if num_of_samples is None:
+            if volpersample and num_of_samples is None:
                 num_of_samples = Reagent.current_protocol.num_of_samples or 0
 
         self.min_num_aliq = self.min_num_of_replica(num_of_samples=num_of_samples)
@@ -229,7 +229,7 @@ class Reagent:
 
         self.pos        = self.Replicas[0].offset                                   # ??
 
-        self.init_vol(NumSamples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
+        self.init_vol(num_samples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
         self.include_in_check = True
         logging.debug("Created Reagent " + str(self))
 
@@ -279,33 +279,46 @@ class Reagent:
 
         return self.need_vol
 
-    def init_vol(self, NumSamples=None, initial_vol=None):
+    def init_vol(self, num_samples=None, initial_vol=None):
+        """
+        To initialize the among of reagent in each well first put what the user inform he had put, then
+        put additionally the minimum the protocol need.
+        :param num_samples:
+        :param initial_vol:
+        :return:
+        """
         if initial_vol is not None:
             assert isinstance(initial_vol, list)
-            for w,v in zip(self.Replicas, initial_vol):
+            for w, v in zip(self.Replicas, initial_vol):
                 w.vol = v
                 assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for '+ str(w)
-        self.put_min_vol(NumSamples)
+        self.put_min_vol(num_samples)
 
-    def put_min_vol(self, NumSamples=None):          # todo create num_of_aliquots if needed !!!!
+    def put_min_vol(self, num_samples=None):          # todo create num_of_aliquots if needed !!!!
         """
         Force you to put an initial volume of reagent that can be used to distribute into samples,
         aspiring equal number of complete doses for each sample from each replica,
         exept the firsts replicas that can be used to aspirate one more dose for the last/rest of samples.
         That is: all replica have equal volumen (number) of doses or the firsts have one more dose
-        :param NumSamples:
+        :param num_samples:
         :return:
         """
-        if NumSamples is None:
-            NumSamples = Reagent.current_protocol.num_of_samples
-        if not NumSamples:
-            return
-        V_per_sample = self.volpersample * self.excess
-        replicas=len(self.Replicas)
-        for i, w in enumerate(self.Replicas):
-            v = V_per_sample * (NumSamples + replicas - (i+1))//replicas
-            if v > w.vol:  w.vol += (v-w.vol)
-            assert w.labware.type.max_vol >= w.vol, 'Add one more replica for '+ w.reagent.name
+        if self.volpersample:
+            if num_samples is None:
+                num_samples = Reagent.current_protocol.num_of_samples
+            if not num_samples:
+                return
+            v_per_sample = self.volpersample * self.excess
+            replicas=len(self.Replicas)
+            for i, w in enumerate(self.Replicas):
+                v = v_per_sample * (num_samples + replicas - (i + 1)) // replicas
+                if v > w.vol:  w.vol += (v-w.vol)
+                assert w.labware.type.max_vol >= w.vol, 'Add one more replica for ' + w.reagent.name
+        else:
+            vr = self.need_vol / len(self.Replicas)
+            for w in self.Replicas:
+                if vr > w.vol:  w.vol += (vr-w.vol)
+                assert w.labware.type.max_vol >= w.vol, 'Add one more replica for ' + w.reagent.name
 
     def autoselect(self, maxTips=1, offset=None, replicas = None):
         # todo revise !!!!!!!!! we know the wells = Replicas
@@ -573,12 +586,12 @@ class PreMixReagent(MixReagent):
         self.components = components  #: list of reagent components
         # self.init_vol()
 
-    def init_vol(self, NumSamples=None, initial_vol=None):
+    def init_vol(self, num_samples=None, initial_vol=None):
         if self.components:
             self.volpersample = 0
             for reagent in self.components:
                 self.volpersample += reagent.volpersample
-            Reagent.init_vol(self, NumSamples=0, initial_vol=initial_vol)
+            Reagent.init_vol(self, num_samples=0, initial_vol=initial_vol)
         pass
         # put volume in num_of_aliquots only at the moment of making  !!
         # Reagent.init_vol(self, num_samples)

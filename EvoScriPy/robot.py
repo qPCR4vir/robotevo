@@ -466,9 +466,9 @@ class Robot:
                 if tip_mask & (1 << i):
                     dv = action*volume[i]
                     if wells[w].reagent is None:
-                        logging.warning("WARNING !!! There is no reagent in well {:d} of rack {:s}".format(wells[w].offset+1,
-                                                                   labware_selection.type.name + ": " + labware_selection.label))
-                    assert wells[w].vol is not None, (  "Volume of "
+                        logging.warning("There is no reagent in well {:d} of rack {:s}"
+                                        .format(wells[w].offset+1, labware_selection.type.name + ": " + labware_selection.label))
+                    assert wells[w].vol is not None, ("Volume of "
                                                       + wells[w].reagent.name
                                                       + " in well {:d} of rack {:s} not initialized."
                                                       .format(wells[w].offset + 1,
@@ -476,8 +476,8 @@ class Robot:
                     nv = wells[w].vol - dv
 
                     assert  nv <= wells[w].labware.type.max_vol, ("Error trying to change the volume of " + str(wells[w])
-                                                                 + " to " + str(nv) + " but the maximun volumen is "
-                                                                 + str(wells[w].labware.type.max_vol) )
+                                                                  + " to " + str(nv) + " but the maximun volumen is "
+                                                                  + str(wells[w].labware.type.max_vol) )
 
                     assert nv > -self.allow_air, "Error !!! trying to change the volume of " + str (wells[w])   \
                             + " to " + str(nv) + "uL. But only " + str(self.allow_air) + "uL of air are allowed"
