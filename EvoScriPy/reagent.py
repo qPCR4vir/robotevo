@@ -14,6 +14,43 @@ Defines a named homogeneous liquid solution, the wells it occupy, the initial am
 intermediate reactions and products. It makes possible a robust tracking of all actions and a logical error
 detection, while significantly simplifying the  programming of non trivial protocols.
 
+todo: implement units for volume, concentration, etc.
+
+Main classes and functions:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Abstract information classes:
+-----------------------------
+
+ - :py:class::MixComponent
+ - :py:class::PreMixComponent
+ - :py:class::Primer
+ - :py:class::PrimerMixComponent
+ - :py:class::PrimerMix
+ - :py:class::PCRMasterMix
+ - :py:class::PCReaction
+ - :py:class::PCRexperiment
+ - :py:class::
+ - :py:class::
+ - :py:class::
+
+Robot classes:
+--------------
+
+ - :py:class::Reagent
+ - :py:class::Mix
+ - :py:class::Dilution
+ - :py:class::PreMix
+ - :py:class::PrimerReagent
+ - :py:class::PrimerMixReagent
+ - :py:class::PCRMasterMixReagent
+ - :py:class::PCReactionReagent
+ - :py:class::PCRexperimentRtic
+ - :py:class::
+ - :py:class::
+ - :py:class::
+
+
 """
 
 __author__ = 'qPCR4vir'
@@ -50,13 +87,14 @@ class Reagent:
                  num_of_aliquots: int                      = None,
                  minimize_aliquots: bool                   = None,
                  def_liq_class : (str, (str, str))         = None,
-                 volpersample  : float                     = 0.0,
-                 num_of_samples: int                       = None,
-                 single_use    : float                     = None,
-                 excess        : float                     = None,
+                 volpersample  : float                     = 0.0,  # todo move to PreMixComponent
+                 num_of_samples: int                       = None, # todo move to Exp? to prepare?
+                 single_use    : float                     = None, # todo move to MixComponent
+                 excess        : float                     = None, # todo move to MixComponent
                  initial_vol   : float                     = 0.0,
                  min_vol       : float                     = 0.0,
-                 fill_limit_aliq : float                   = 100
+                 fill_limit_aliq : float                   = 100,
+                 concentration : float                     = None  # todo implement use. Absolut vs. relative? Units?
                  ):
         """
         This is a named set of aliquots of an homogeneous solution.
@@ -312,7 +350,18 @@ class MixComponent:
     todo: introduce diluent? - final_conc == None ? final_conc == init_conc ?
     """
 
-    def __init__(self, id_, name, init_conc, final_conc):
+    def __init__(self,
+                 id_: str,
+                 name: str,
+                 init_conc: float,
+                 final_conc: float):
+        """
+
+        :param id_:
+        :param name:
+        :param init_conc:  todo Really??
+        :param final_conc:
+        """
         self.id = id_
         self.name = name
         self.init_conc = init_conc
@@ -332,10 +381,71 @@ class Mix(Reagent):
     todo: make this base class for Reaction and PreMix
     """
 
+    def __init__(self,
+                 name          : str,
+                 labware       : (lab.Labware, str, [])    = None,
+                 wells         : (int, [int], [lab.Well])  = None,
+                 num_of_aliquots: int                      = None,
+                 minimize_aliquots: bool                   = None,
+                 def_liq_class : (str, (str, str))         = None,
+                 volpersample  : float                     = 0.0,
+                 num_of_samples: int                       = None,
+                 single_use    : float                     = None,
+                 excess        : float                     = None,
+                 initial_vol   : float                     = 0.0,
+                 min_vol       : float                     = 0.0,
+                 fill_limit_aliq : float                   = 100,
+                 concentration : float                     = None
+                 ):
+
+
+class Dilution(Mix):
     pass
 
 
-class PreMix(Reagent):
+class PreMixComponent(MixComponent):
+    """
+    Represent abstract information, like an item in some table summarizing components of some PreMix.
+    An special case of MixComponent, for which volume is calculated on the basis of "number of samples"
+    and volume_per_sample
+    """
+
+    def __init__(self,
+                 id_: str,
+                 name: str,
+                 init_conc: float,
+                 final_conc: float,
+                 volpersample  : float= 0.0):
+        """
+
+        :param id_:
+        :param name:
+        :param init_conc:  todo Really??
+        :param final_conc:
+        """
+        self.volpersample = volpersample
+        self.id
+        self.
+        self.init_conc = init_conc
+        self.final_conc = final_conc
+
+        MixComponent.__init__(self,
+                              id_= id_,
+                              name= name,
+                              init_conc= init_conc ,
+                              final_conc= final_conc)
+
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return (self.name or '-') + '[' + str(self.id or '-') + ']'
+
+
+
+
+class PreMix(Mix):
     """
     A pre-Mix of otherwise independent reagents to be pippeted together for convenience,
     but that could be pippeted separately.
@@ -1406,7 +1516,8 @@ class PCRexperimentRtic:
                 mix = PCRMasterMixReagent(pcr_mix=pcr_mix,
                                           mmix_rack=mmix_rack,
                                           primer_mix_rack=primer_mix_rack,
-                                          kit_rack=kit_rack)  # todo: it could be reused from another plate !!???????
+                                          kit_rack=kit_rack,
+                                          primer_rack=primer_rack)  # todo: it could be reused from another plate !!???????
 
                 sv = pcr_mix.sample_vol  # all reactions prepared with this mix have the same reaction and sample volume
                 nw = len(pcr_reactions)
