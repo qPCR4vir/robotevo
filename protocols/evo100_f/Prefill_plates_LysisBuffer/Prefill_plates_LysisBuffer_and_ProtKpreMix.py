@@ -138,7 +138,7 @@ class Prefill_plates_LysisBuffer_and_ProtKpreMix(Evo100_FLI):
                                  num_of_samples = self.num_plates * num_of_samples,
                                  fill_limit_aliq= 95)
 
-            pK_cRNA_MS2 = PreMix("ProtK+cRNA+IC-MS2 mix ",
+            pK_cRNA_MS2 = PreMixReagent("ProtK+cRNA+IC-MS2 mix ",
                                  Reagents_TubeRack,
                                  components     = [cRNA, ProtK, IC_MS2],
                                  def_liq_class    = self.W_liquidClass,

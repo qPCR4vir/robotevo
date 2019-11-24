@@ -171,7 +171,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
                                  volpersample       = IC_MS2Volume,
                                  def_liq_class        = self.Small_vol_disp)
 
-            pK_cRNA_MS2 = PreMix("ProtK+cRNA+IC-MS2 mix ",
+            pK_cRNA_MS2 = PreMixReagent("ProtK+cRNA+IC-MS2 mix ",
                                  Reagents,
                                  pos            = 8,
                                  components     = [cRNA, ProtK, IC_MS2],
