@@ -22,8 +22,8 @@ Main classes and functions:
 Abstract information classes:
 -----------------------------
 
- - :py:class: `MixComponent`: like an item in some table summarizing components of some Mix.
- - :py:class::PreMixComponent
+ - :py:class:`MixComponent`: like an item in some table summarizing components of some Mix.
+ - :py:class:`~PreMixComponent` like an item in some table summarizing components of some PreMix.
  - :py:class::Primer
  - :py:class::PrimerMixComponent
  - :py:class::PrimerMix
