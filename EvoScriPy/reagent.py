@@ -22,7 +22,7 @@ Main classes and functions:
 Abstract information classes:
 -----------------------------
 
- - :py:class::MixComponent
+ - :py:class: `MixComponent`: like an item in some table summarizing components of some Mix.
  - :py:class::PreMixComponent
  - :py:class::Primer
  - :py:class::PrimerMixComponent
