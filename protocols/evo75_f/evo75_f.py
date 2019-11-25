@@ -74,6 +74,7 @@ class Evo75_FLI(Protocol):
             self.allow_labware("Tube Eppendorf 16 Pos", "Tube Eppendorf 16 Pos")
             self.allow_labware("DiTi 3Pos + Waste", "DiTi 200 ul")
             self.allow_labware("DiTi 3Pos + Waste", "DiTi Nested Waste MCA384")
+            self.allow_labware("DiTi 3Pos + Waste", "DiTi Waste")
             self.allow_labware("MP 3Pos", "96 Well PCR Plate")
             self.allow_labware("Wash Station", "Wash Station Cleaner shallow")
             self.allow_labware("Wash Station", "Wash Station Waste")
@@ -91,7 +92,7 @@ class Evo75_FLI(Protocol):
         WashCleanerS = wt.get_labware("", labware.CleanerShallow)
         WashWaste    = wt.get_labware("", labware.WasteWash)
         WashCleanerL = wt.get_labware("", labware.CleanerDeep)
-        DiTiWaste    = wt.get_labware("TipWaste", labware.DiTi_Waste_plate)  # DiTi_Waste ??
+        DiTiWaste    = wt.get_labware("DiTi Waste")
 
         wt.def_WashWaste   = WashWaste
         wt.def_WashCleaner = WashCleanerS
