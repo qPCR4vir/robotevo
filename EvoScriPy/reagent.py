@@ -86,7 +86,7 @@ class Reagent:
                  num_of_samples: int                       = None,  #: todo move to Exp? to prepare?
                  single_use    : float                     = None,  #: todo move to MixComponent
                  excess        : float                     = None,  #: todo move to MixComponent
-                 initial_vol   : float                     = 0.0,
+                 initial_vol   : (float, list)             = 0.0,
                  min_vol       : float                     = 0.0,
                  fill_limit_aliq : float                   = 100,
                  concentration : float                     = None   # todo implement use. Absolut vs. relative? Units?
@@ -229,6 +229,7 @@ class Reagent:
 
         self.pos        = self.Replicas[0].offset                                   # ??
 
+        self.initial_vol = None
         self.init_vol(num_samples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
         self.include_in_check = True
         logging.debug("Created Reagent " + str(self))
@@ -281,7 +282,7 @@ class Reagent:
 
     def init_vol(self, num_samples=None, initial_vol=None):
         """
-        To initialize the among of reagent in each well first put what the user inform he had put, then
+        To initialize the among of reagent in each well. First put what the user inform he had put, then
         put additionally the minimum the protocol need.
         :param num_samples:
         :param initial_vol:
@@ -289,9 +290,16 @@ class Reagent:
         """
         if initial_vol is not None:
             assert isinstance(initial_vol, list)
-            for w, v in zip(self.Replicas, initial_vol):
+            self.initial_vol = []
+            for w, v in zip(self.Replicas, initial_vol):  # todo and the rest wells? 0?
                 w.vol = v if v else 0
-                assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for '+ str(w)
+                assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for ' + str(w)
+                self.initial_vol.append(w.vol)
+        else:
+            for w, v in zip(self.Replicas, self.initial_vol):  # todo and the rest wells? 0?
+                w.vol = v if v else 0
+                assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for ' + str(w)
+
         self.put_min_vol(num_samples)
 
     def put_min_vol(self, num_samples=None):          # todo create num_of_aliquots if needed !!!!
@@ -334,33 +342,6 @@ class NoReagentFound(Exception):
         Exception.__init__(self, "No reagent named " + str(reagent_name) + error)  # todo redaction
 
 
-class Reaction(Reagent):
-    """
-    todo: make this a MixReagent, with diluent too ?
-    """
-    def __init__(self,
-                 name,
-                 labware,
-                 components: [Reagent] = None,
-                 track_sample=None, # just one more component?
-                 pos=None,
-                 num_of_aliquots=1,
-                 def_liq_class=None,
-                 excess=None,
-                 initial_vol=0):
-
-        Reagent.__init__(self,
-                         name,
-                         labware,
-                         single_use=0,
-                         wells=pos,
-                         num_of_aliquots=num_of_aliquots,
-                         def_liq_class=def_liq_class,
-                         excess=excess,
-                         initial_vol=initial_vol)
-        self.track_sample = track_sample
-
-
 class MixComponent:
     """
     Represent abstract information, like an item in some table summarizing components of some MixReagent.
@@ -368,10 +349,11 @@ class MixComponent:
     """
 
     def __init__(self,
-                 id_: str,
                  name: str,
-                 init_conc: float,
-                 final_conc: float):
+                 id_: str = None,
+                 init_conc: float = None,
+                 final_conc: float = None,
+                 volume: float = None):
         """
 
         :param id_:
@@ -383,6 +365,7 @@ class MixComponent:
         self.name = name
         self.init_conc = init_conc
         self.final_conc = final_conc
+        self.volume = volume
 
     def __str__(self):
         return self.name
@@ -406,14 +389,21 @@ class MixComponentReagent:
         :param volume:
         """
         self.reagent = reagent
-        self.volume = volume
-        reagent.need_vol += volume
+        self.vol = 0.0
+        self.volume(volume)
 
     def __str__(self):
         return self.reagent.name
 
     def __repr__(self):
         return (self.reagent.name or '-') + '[' + str(self.volume or '-') + ']'
+
+    def volume(self, vol: float = None):  # todo put_min_vol in reagent?
+        if vol is not None:
+            self.reagent.min_vol(vol - self.vol)
+            self.vol = vol
+        self.reagent.init_vol()
+        return self.vol
 
 
 class MixReagent(Reagent):
@@ -499,11 +489,12 @@ class PreMixComponent(MixComponent):
     """
 
     def __init__(self,
-                 id_: str,
                  name: str,
-                 init_conc: float,
-                 final_conc: float,
-                 volpersample: float = 0.0):
+                 volpersample: float,
+                 id_: str = None,
+                 init_conc: float = None,
+                 final_conc: float = None,
+                 volume: float = None):
         """
 
         :param id_:
@@ -512,16 +503,12 @@ class PreMixComponent(MixComponent):
         :param final_conc:
         """
         self.volpersample = volpersample
-        self.id = id_
-        self.name = name
-        self.init_conc = init_conc
-        self.final_conc = final_conc
-
         MixComponent.__init__(self,
-                              id_= id_,
-                              name= name,
-                              init_conc= init_conc,
-                              final_conc= final_conc)
+                              id_=id_,
+                              name=name,
+                              init_conc=init_conc,
+                              final_conc=final_conc,
+                              volume=volume)
 
     def __str__(self):
         return self.name
@@ -530,12 +517,11 @@ class PreMixComponent(MixComponent):
         return (self.name or '-') + '[' + str(self.id or '-') + ']'
 
 
-class PreMixReagent(MixReagent):
+class PreMixReagent(Reagent):  # todo rewrite to be a MixReagent
     """
     A pre-MixReagent of otherwise independent reagents to be pippeted together for convenience,
     but that could be pippeted separately.
     todo: make this a special case of MixReagent, for which everything ? is calculated on the basis of "number of samples"
-    todo: introduce diluent? - final_conc == None ? final_conc == init_conc ?
     """
 
     def __init__(self,
@@ -588,7 +574,14 @@ class PreMixReagent(MixReagent):
         # self.init_vol()
 
     def init_vol(self, num_samples=None, initial_vol=None):
-        if self.components:
+        """
+        update my self.volpersample from the already updated self.components.volpersample,
+        possibly with updated num_samples and initial_vol
+        WARNING !! call this only after the update of the components (if need)
+        :param num_samples:
+        :param initial_vol:
+        """
+        if self.components:  # todo ??
             self.volpersample = 0
             for reagent in self.components:
                 self.volpersample += reagent.volpersample
@@ -598,15 +591,42 @@ class PreMixReagent(MixReagent):
         # Reagent.init_vol(self, num_samples)
         # self.put_min_vol(num_samples)
 
-    def make(self, protocol, NumSamples=None):      # todo deprecate?
-        if self.Replicas[0].vol is None:   # ????
-            self.put_min_vol(NumSamples)
+    def make(self, protocol, NumSamples=None):      # todo deprecate? not used
+        if self.Replicas[0].vol is None:   # todo ????
+            self.put_min_vol(NumSamples)   # todo ????
             assert False
-        protocol.make_pre_mix(self, NumSamples)
+        protocol.make_pre_mix(self, NumSamples)  # used directly?
 
     def compVol(self,index, NumSamples=None):
         NumSamples = NumSamples or Reagent.current_protocol.num_of_samples
         return self.components[index].min_vol(NumSamples)
+
+
+class Reaction(Reagent):
+    """
+    todo: make this a MixReagent, with diluent too ?
+    """
+    def __init__(self,
+                 name,
+                 labware,
+                 components: [Reagent] = None,
+                 track_sample=None, # just one more component?
+                 pos=None,
+                 num_of_aliquots=1,
+                 def_liq_class=None,
+                 excess=None,
+                 initial_vol=0):
+
+        Reagent.__init__(self,
+                         name,
+                         labware,
+                         single_use=0,
+                         wells=pos,
+                         num_of_aliquots=num_of_aliquots,
+                         def_liq_class=def_liq_class,
+                         excess=excess,
+                         initial_vol=initial_vol)
+        self.track_sample = track_sample
 
 
 class Primer:
@@ -753,7 +773,7 @@ class Primer:
         return p
 
 
-class PrimerReagent (Reagent):
+class PrimerReagent(MixReagent):
     """
     Manipulate a Primer Reagent on a robot.
     """

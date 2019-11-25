@@ -785,7 +785,7 @@ class Protocol (Executable):
         nt          = min(mxn_tips, ncomp)
         num_samples = num_samples or self.num_of_samples
         labw        = pre_mix.labware
-        t_vol       = pre_mix.min_vol(num_samples)
+        t_vol       = pre_mix.min_vol(num_samples)  # todo ???
         mxnrepl     = len(pre_mix.Replicas)                        # max number of replies
         mnnrepl     = pre_mix.min_num_of_replica(num_samples)       # min number of replies
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
@@ -802,14 +802,27 @@ class Protocol (Executable):
                                         str([str(well) for well in pre_mix.Replicas]),
                                         ncomp)
             instructions.comment(msg).exec()
+            # todo substrate the among already in aliquots wells (from initial_vol for example)
+            # with can be : - replica.vol // volumepersample
             samples_per_replicas = [(num_samples + nrepl - (ridx + 1)) // nrepl for ridx in range(nrepl)]
+            # the real num of samples to prepare will be:
+            # for ns in samples_per_replicas:
+            #    num_samples += ns
+            samples_to_prepare = 0
+            samples_per_replicas_to_prepare = []
+            for ridx, rp in enumerate(pre_mix.Replicas):
+                ns = (num_samples + nrepl - (ridx + 1)) // nrepl
+                ns -= rp.vol // pre_mix.volpersample
+                samples_per_replicas_to_prepare.append(ns)
+                samples_to_prepare += ns
+
             with self.tips(robot.mask_tips[nt]):   # want to use preserved ?? selected=??
                 tip = -1
                 ctips = nt
                 for ridx, reagent_component in enumerate(pre_mix.components):       # iterate reagent components
                     labw = reagent_component.labware
                     v_per_sample = reagent_component.volpersample * pre_mix.excess       # vol we need for each sample
-                    reagent_vol = v_per_sample * num_samples                 # the total vol we need of this reagent component
+                    reagent_vol = v_per_sample * num_samples  # the total vol we need of this reagent component. todo use to_prepare only
                     msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
                                  .format(idx = ridx + 1,
                                          v   = reagent_vol,
@@ -826,7 +839,7 @@ class Protocol (Executable):
                         tip = 0
                     max_vol = self.robot.cur_arm().Tips[tip].type.max_vol
                     # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
-                    # but also if there is not sufficient reacgent in the current component replica
+                    # but also if there is not sufficient reagent in the current component replica
                     current_comp_repl = 0
                     while reagent_vol > 0:
                         while reagent_component.Replicas[current_comp_repl].vol < 1:      # todo define min vol
