@@ -1,6 +1,6 @@
 DEBUG:root:opening excel
-DEBUG:root:C:\Prog\exp\PCR fli.xlsx
-DEBUG:root:['Index', 'PCR fli-oligos', 'Primer mix', 'Druken', 'PCR-1plex', '0', 'Tabelle1', 'HEV.RingT.QCMD.2012', 'Curva']
+DEBUG:root:PCR.xlsx
+DEBUG:root:['Index', 'Primers', 'Primer mix', 'PCR-SYBR', 'PCR-1plex', 'Exp 308']
 WARNING:root:Duplicate primer ID: 154a
 WARNING:root:Duplicate primer ID: 155a
 WARNING:root:Duplicate primer ID: 469
@@ -17,11 +17,11 @@ WARNING:root:Duplicate primer ID: 468
 WARNING:root:Duplicate primer ID: 463
 WARNING:root:Duplicate primer ID: 464
 DEBUG:root:opening excel
-DEBUG:root:C:\Prog\exp\PCR fli.xlsx
-DEBUG:root:['Index', 'PCR fli-oligos', 'Primer mix', 'Druken', 'PCR-1plex', '0', 'Tabelle1', 'HEV.RingT.QCMD.2012', 'Curva']
+DEBUG:root:PCR.xlsx
+DEBUG:root:['Index', 'Primers', 'Primer mix', 'PCR-SYBR', 'PCR-1plex', 'Exp 308']
 DEBUG:root:opening excel
-DEBUG:root:C:\Users\Ariel\Documents\Exp\PCR\Exp 308. WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd.xlsx
-DEBUG:root:['Druken (3)', 'Sheet1']
+DEBUG:root:PCR.xlsx
+DEBUG:root:['Index', 'Primers', 'Primer mix', 'PCR-SYBR', 'PCR-1plex', 'Exp 308']
 INFO:root:Parsing: protocols\evo75_f\DefaultLCs.txt
 INFO:root:Parsing: C:\Prog\RobotEvo\protocols\evo75_f\CustomLCs.txt
 INFO:root:Parsing carriers types from protocols\evo75_f\Carrier.cfg
@@ -87,7 +87,7 @@ DEBUG:root:Creating Reagent TE 0,1 x
 DEBUG:root:Created Reagent TE 0,1 x
 DEBUG:root:Creating Reagent TE 1x
 DEBUG:root:Created Reagent TE 1x
-DEBUG:root:Creating a PCRexperimentRtic from  WNV.ZKU.10-1 10-10. WN-INNT-133, WN.Hoff, PanFlav.116.pltd[Exp 308]
+DEBUG:root:Creating a PCRexperimentRtic from -[PCR]
 DEBUG:root:Creating Reagent RT-Mix
 DEBUG:root:Created Reagent RT-Mix
 DEBUG:root:Creating Reagent INEID-WNf1.5nc

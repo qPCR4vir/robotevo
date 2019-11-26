@@ -728,7 +728,7 @@ class Primer:
         wb = openpyxl.load_workbook(str(file_name))
         logging.debug(wb.sheetnames)
 
-        ws = wb['PCR fli-oligos']
+        ws = wb['Primers']
         first = True
         p = None
         for r in ws.iter_rows() :
