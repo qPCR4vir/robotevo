@@ -103,23 +103,23 @@ class PCR(Evo75_FLI):
         # Define the reagents in each labware (Cuvette, eppys, etc.)
         Reagent('Quantitect-SYBR RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2, concentration=2)
         Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2, concentration=2)
-        h2o = Reagent('H2O', labware='BufferTubes', num_of_aliquots=2, minimize_aliquots=False)
+        h2o = Reagent('H2O', labware='BufferTubes', num_of_aliquots=5, minimize_aliquots=False)
         te100x = Reagent('TE 100x', labware='BufferTubes', num_of_aliquots=1, concentration=100)
         TE_10x_fixed = MixReagent('TE 10x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                   components=[MixComponentReagent(te100x, volume=1000),
-                               MixComponentReagent(h2o, volume=9000)])
+                   components=[MixComponentReagent(te100x, volume=300),
+                               MixComponentReagent(h2o, volume=2700)])
         a = 1
         TE_1x_fixed = MixReagent('TE 1x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                   components=[MixComponentReagent(TE_10x_fixed, volume=1000),
-                               MixComponentReagent(h2o, volume=9000)])
-
+                   components=[MixComponentReagent(TE_10x_fixed, volume=300),
+                               MixComponentReagent(h2o, volume=2700)])
+        """
         te10x = Dilution('TE 10x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                 components=[DilutionComponentReagent(te100x, final_conc=10)], diluent=h2o, concentration=10)
+                 components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
 
         Dilution('TE 1x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                 components=[DilutionComponentReagent(te10x, final_conc=10)], diluent=h2o)
-
-        # Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
+                 components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
+        """
+        Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
         Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
 
         expr = PCRexperimentRtic(exp,

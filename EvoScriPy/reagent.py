@@ -1538,6 +1538,7 @@ class PCRMasterMixReagent(PreMixReagent):
     def __init__(self,
                  pcr_mix: PCRMasterMix,
                  mmix_rack: (lab.Labware, list),
+                 num_of_samples: int,
                  pos=None,
                  num_of_aliquots=None,
                  initial_vol=None,
@@ -1546,7 +1547,8 @@ class PCRMasterMixReagent(PreMixReagent):
                  fill_limit_aliq=None,
                  kit_rack: (lab.Labware, list) = None,
                  primer_mix_rack: (lab.Labware, list) = None,
-                 primer_rack: (lab.Labware, list) = None):
+                 primer_rack: (lab.Labware, list) = None
+                 ):
         """
         Construct a robot-usable PCRMasterMixReagent from an abstract PCRMasterMix.
         It is always constructed - no reuse of old aliquots: contains instable components.
@@ -1615,7 +1617,8 @@ class PCRMasterMixReagent(PreMixReagent):
                         initial_vol=initial_vol,
                         def_liq_class=def_liq_class,
                         excess=excess or PCRMasterMixReagent.excess,
-                        fill_limit_aliq=fill_limit_aliq)
+                        fill_limit_aliq=fill_limit_aliq,
+                        num_of_samples=num_of_samples)
 
 
 class PCReaction:
@@ -1857,37 +1860,34 @@ class PCRexperimentRtic:
         assert len(self.pcr_exp) <= len(self.plates)
         self.protocol = protocol
         self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
+        mixes = {}
         for pcr_mix, pcr_reactions in PCRexperiment.mixes.items():
-
+            if not pcr_mix:  # empty reaction wells are market with None mix.
+                continue
+            assert isinstance(pcr_mix, PCRMasterMix)
             mix = PCRMasterMixReagent(pcr_mix=pcr_mix,
-                                      min_vol= pcr_mix.
                                       mmix_rack=mmix_rack,
+                                      num_of_samples=pcr_reactions,
                                       primer_mix_rack=primer_mix_rack,
                                       kit_rack=kit_rack,
                                       primer_rack=primer_rack)  # todo: it could be reused from another plate !!???????
             self.mixes[mix]=[]
+            mixes[pcr_mix] = mix
 
         for exp, plate in zip(self.pcr_exp, self.plates):  # iterate each PCR plate for which we have PCR mixes declared
             assert isinstance(exp, PCRexperiment)
-
             for pcr_mix, pcr_reactions in exp.mixes.items():  # visit each PCR mix with corresponding list of reactions
-                if not pcr_mix:             # empty reaction wells are market with None mix.
+                if not pcr_mix:  # empty reaction wells are market with None mix.
                     continue
                 assert isinstance(pcr_mix, PCRMasterMix)
 
-                mix = PCRMasterMixReagent(pcr_mix=pcr_mix,
-                                          mmix_rack=mmix_rack,
-                                          primer_mix_rack=primer_mix_rack,
-                                          kit_rack=kit_rack,
-                                          primer_rack=primer_rack)  # todo: it could be reused from another plate !!???????
-
+                mix = mixes[pcr_mix]
                 sv = pcr_mix.sample_vol  # all reactions prepared with this mix have the same reaction and sample volume
                 nw = len(pcr_reactions)
                 react_wells = []
                 for rx in pcr_reactions:
                     r = PCReactionReagent(rx, plate)
                     react_wells.extend(r.Replicas)
-                    mix.need_vol += mix.volpersample              # ?? num_aliq
                 self.mixes.setdefault(mix, []).extend(react_wells)                     # just samples?
                 pass
 
