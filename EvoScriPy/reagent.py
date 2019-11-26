@@ -120,6 +120,7 @@ class Reagent:
         :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
         """
+        self.concentration = concentration
         logging.debug("Creating Reagent " + name)
 
         self.user_min_vol = min_vol
@@ -273,10 +274,10 @@ class Reagent:
             assert not num_samples
             if volume:
                 assert not add_volume
-                self.need_vol = volume
+                self.need_vol = volume * self.excess
             elif add_volume:
                 assert not volume
-                self.need_vol += add_volume
+                self.need_vol += add_volume * self.excess
 
         return self.need_vol
 
@@ -377,12 +378,13 @@ class MixComponent:
 class MixComponentReagent:
     """
     Components of some MixReagent.
+    This is not just a Reagent, but some "reserved" volume of some Reagent.
 
     """
 
     def __init__(self,
                  reagent: Reagent,
-                 volume: float):
+                 volume: float = None):
         """
 
         :param reagent:
@@ -390,6 +392,7 @@ class MixComponentReagent:
         """
         self.reagent = reagent
         self.vol = 0.0
+        self.excess = None
         self.volume(volume)
 
     def __str__(self):
@@ -398,12 +401,215 @@ class MixComponentReagent:
     def __repr__(self):
         return (self.reagent.name or '-') + '[' + str(self.volume or '-') + ']'
 
-    def volume(self, vol: float = None):  # todo put_min_vol in reagent?
-        if vol is not None:
-            self.reagent.min_vol(vol - self.vol)
-            self.vol = vol
-        self.reagent.init_vol()
+    def volume(self, vol: float = None, excess: float = 1.0):  # todo put_min_vol in reagent?
+        if excess is not None:
+            excess = 1.0
+            assert self.excess is None, "Define an excess only once!"
+        else:
+            if vol is None:
+                vol = self.vol
+        if vol is not None:  # we are changing the volume needed to make the mix
+            self.vol = vol * excess
+            self.reagent.min_vol(vol- self.vol)
+            self.reagent.init_vol()
+        else:
+            if
         return self.vol
+
+
+class MixReagent(Reagent):
+    """
+    A Reagent composed of other Reagents, that the robot may prepare.
+    This is just a mix of fixed volume of the mixed components, with in turn fixes the total volume
+    of this reagent.
+    """
+
+    def __init__(self,
+                 name          : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
+                 labware       : (lab.Labware, str, [])    = None,
+                 wells         : (int, [int], [lab.Well])  = None,
+                 components    : [MixComponentReagent]     = None,
+                 num_of_aliquots: int                      = None,
+                 minimize_aliquots: bool                   = None,
+                 def_liq_class : (str, (str, str))         = None,
+                 excess        : float                     = None,
+                 initial_vol   : float                     = 0.0,
+                 min_vol       : float                     = 0.0,  # todo ??
+                 fill_limit_aliq : float                   = 100,
+                 concentration : float                     = None
+                 ):
+        """
+
+        :param name:
+        :param labware:
+        :param wells:
+        :param components:
+        :param num_of_aliquots:
+        :param minimize_aliquots:
+        :param def_liq_class:
+        :param excess:
+        :param initial_vol:
+        :param min_vol:
+        :param fill_limit_aliq:
+        :param concentration:
+        """
+        ex = def_mix_excess if excess is None else excess
+        vol = 0.0
+        for comp in components:
+            assert isinstance(comp, MixComponentReagent)
+            vol += comp.volume()
+            comp.reagent.min_vol(add_volume=comp.volume)
+            comp.reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
+            comp.reagent.put_min_vol()
+
+        if initial_vol is None:
+            initial_vol = 0.0
+
+        Reagent.__init__(self, name,
+                         labware,
+                         wells= wells,
+                         num_of_aliquots= num_of_aliquots,
+                         def_liq_class = def_liq_class,
+                         excess = ex,
+                         initial_vol = initial_vol,
+                         fill_limit_aliq= fill_limit_aliq,
+                         concentration=concentration,
+                         min_vol=min_vol,
+                         minimize_aliquots=minimize_aliquots)
+
+        self.components = components  #: list of reagent components
+        # self.init_vol()
+
+    def __str__(self):  # todo ?
+        return "{name:s}".format(name=self.name)
+
+    def __repr__(self):  # todo ?
+        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+
+    def make(self, protocol, volume=None):      # todo deprecate?
+        if self.Replicas[0].vol is None:   # ????
+            self.put_min_vol(volume)
+            assert False
+        protocol.make_mix(self, volume)
+
+
+class DilutionComponentReagent(MixComponentReagent):
+    """
+    Components of some Dilution.
+
+    """
+
+    def __init__(self,
+                 reagent: Reagent,
+                 dilution: float = None,
+                 final_conc: float = None):
+        """
+
+        :param reagent:
+        :param dilution:
+        :param final_conc:
+        """
+        self.dilution = dilution
+        self.final_conc = final_conc
+        if dilution:
+            assert not final_conc
+        else:
+            assert reagent.concentration
+            self.dilution = final_conc / reagent.concentration
+        assert dilution >= 1.0
+        # vol = final_vol / dilution
+        MixComponentReagent.__init__(self, reagent)  # , volume=vol
+
+    def __str__(self):
+        return self.reagent.name
+
+    def __repr__(self):
+        return (self.reagent.name or '-') + '[1/' + str(self.dilution or '-') + ']'
+
+    def volume(self, vol: float = None):
+        if vol is not None:
+            if not self.dilution:
+                assert self.reagent.concentration
+                self.dilution = self.final_conc / self.reagent.concentration
+            assert self.dilution >= 1.0
+            vol = vol / self.dilution
+            MixComponentReagent.volume(self, vol=vol)
+        return self.vol
+
+
+class Dilution(MixReagent):
+    """
+    A Reagent composed of others, diluted Reagents, that the robot may prepare.
+    """
+
+    def __init__(self,
+                 name: str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
+                 labware: (lab.Labware, str, []) = None,
+                 wells: (int, [int], [lab.Well]) = None,
+                 components: [DilutionComponentReagent] = None,
+                 num_of_aliquots: int = None,
+                 minimize_aliquots: bool = None,
+                 def_liq_class: (str, (str, str)) = None,
+                 excess: float = None,
+                 initial_vol: float = 0.0,
+                 min_vol: float = 0.0,
+                 fill_limit_aliq: float = 100,
+                 concentration: float = None
+                 ):
+        """
+
+        :param name:
+        :param labware:
+        :param wells:
+        :param components:
+        :param num_of_aliquots:
+        :param minimize_aliquots:
+        :param def_liq_class:
+        :param excess:
+        :param initial_vol:
+        :param min_vol:
+        :param fill_limit_aliq:
+        :param concentration:
+        """
+        ex = def_mix_excess if excess is None else excess
+        vol = 0.0
+        for comp in components:
+            assert isinstance(comp, DilutionComponentReagent)
+            vol += comp.volume
+            comp.reagent.min_vol(add_volume=comp.volume)
+            comp.reagent.excess += ex / 100.0  # todo revise! best to calculate at the moment of making?
+            comp.reagent.put_min_vol()
+
+        if initial_vol is None:
+            initial_vol = 0.0
+
+        MixReagent.__init__(self, name,
+                         labware,
+                         wells=wells,
+                         num_of_aliquots=num_of_aliquots,
+                         def_liq_class=def_liq_class,
+                         excess=ex,
+                         initial_vol=initial_vol,
+                         fill_limit_aliq=fill_limit_aliq,
+                         concentration=concentration,
+                         min_vol=min_vol,
+                         minimize_aliquots=minimize_aliquots)
+        )
+
+        self.components = components  #: list of reagent components
+        # self.init_vol()
+
+    def __str__(self):  # todo ?
+        return "{name:s}".format(name=self.name)
+
+    def __repr__(self):  # todo ?
+        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+
+    def make(self, protocol, volume=None):  # todo deprecate?
+        if self.Replicas[0].vol is None:  # ????
+            self.put_min_vol(volume)
+            assert False
+        protocol.make_mix(self, volume)
 
 
 class MixReagent(Reagent):
@@ -475,10 +681,6 @@ class MixReagent(Reagent):
             self.put_min_vol(volume)
             assert False
         protocol.make_mix(self, volume)
-
-
-class Dilution(MixReagent):
-    pass
 
 
 class PreMixComponent(MixComponent):
