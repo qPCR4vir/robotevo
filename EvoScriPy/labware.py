@@ -1004,8 +1004,8 @@ class Labware:
         return "{type:s}:{label:s}".format(type=self.type.name, label=self.label)
 
     def __repr__(self):
-        return ((self.name or '-') + '[' + (str(self.nRow) or '-')
-                                         + (str(self.nCol) or '-')    + ']')
+        return ((self.label or '-') + '[' + (str(self.type.nRow) or '-')
+                                          + (str(self.type.nCol) or '-')    + ']')
 
     @staticmethod
     def create(labw_t_name  : str,
