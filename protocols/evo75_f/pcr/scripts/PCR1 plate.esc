@@ -1,5 +1,5 @@
-F8C53150
-20191120_114836 Admin           
+09F9C735
+20191125_135937 Admin           
                                                                                                                                 
 Administrator                                                                                                                   
 --{ RES }--
@@ -29,7 +29,7 @@ V;200
 998;1;Tube Eppendorf 16 Pos;
 998;PrimerMix;
 998;4;DiTi 200 ul;DiTi 200 ul;DiTi 200 ul;DiTi Nested Waste MCA384;
-998;200-1;200-2;200-3;TipWaste;
+998;200-1;200-2;200-3;DiTi Waste;
 998;0;
 998;0;
 998;0;
@@ -125,3 +125,4 @@ V;200
 996;0;0;
 --{ RPG }--
 Comment("PCR 1 plates for 96 samples.");
+Wash(1,27,1,27,0,"5",50,"10",50,0.00,50,100,1,0,0,0);

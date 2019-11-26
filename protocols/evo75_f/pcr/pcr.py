@@ -72,13 +72,13 @@ class PCR(Evo75_FLI):
             cell_rows=6,
             sample_line=6)
 
-        sheet2 = ExpSheet(file_name=Path('PCR.xlsx'), page='PCR-SYBR', cell_rows=6, sample_line=6)
-        sheet3 = ExpSheet(file_name=Path('PCR.xlsx'), page='PCR-1plex', cell_rows=6, sample_line=6)
+        sheet2 = ExpSheet(file_name=Path('PCR.xlsx'), page='PCR-SYBR', cell_rows=4, sample_line=3)
+        sheet3 = ExpSheet(file_name=Path('PCR.xlsx'), page='PCR-1plex', cell_rows=3, sample_line=3)
         sheet4 = ExpSheet(file_name=Path('PCR.xlsx'), page='Exp 308', cell_rows=6, sample_line=6)
-        sheet5 = ExpSheet(file_name=Path('PCR.xlsx'), page='PCR-SYBR', cell_rows=6, sample_line=6)
+        sheet5 = ExpSheet(file_name=Path('PCR.xlsx'), page='Exp 424', cell_rows=3, sample_line=3)
 
 
-        exp = PCRexperiment().load_excel_list(sheet4)
+        exp = PCRexperiment().load_excel_list(sheet5)
 
         self.initialize()
 
@@ -109,13 +109,13 @@ class PCR(Evo75_FLI):
         Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
         Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
 
-        exp = PCRexperimentRtic(exp,
-                                plates=pcr_plates[0],
-                                kit_rack=kit_rack,
-                                mmix_rack=mmix_rack,
-                                primer_mix_rack=primer_mix_rack,
-                                primer_rack=primer_rack,
-                                protocol=self)
+        expr = PCRexperimentRtic(exp,
+                                 plates=pcr_plates[0],
+                                 kit_rack=kit_rack,
+                                 mmix_rack=mmix_rack,
+                                 primer_mix_rack=primer_mix_rack,
+                                 primer_rack=primer_rack,
+                                 protocol=self)
         # Show the check_list GUI to the user for possible small changes
 
         self.check_list()
