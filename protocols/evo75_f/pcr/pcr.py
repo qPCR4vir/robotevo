@@ -104,8 +104,10 @@ class PCR(Evo75_FLI):
         Reagent('Quantitect-SYBR RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
         Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2)
         Reagent('H2O', labware='BufferTubes', num_of_aliquots=1)
-        Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
+        Reagent('TE 100x', labware='BufferTubes', num_of_aliquots=1)
+        Reagent('TE 10x', labware='BufferTubes', num_of_aliquots=1)
         Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
+        Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
 
         exp = PCRexperimentRtic(exp,
                                 plates=pcr_plates[0],
