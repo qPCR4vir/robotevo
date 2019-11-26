@@ -1696,6 +1696,8 @@ class PCRexperiment:
     Represent abstract information, like an item in some table summarizing PCR experiments
     """
 
+    mixes = {}  #: connect each PCR master mix with the total of well reactions
+
     def __init__(self,
                  id_ = None,
                  name = None,
@@ -1730,6 +1732,8 @@ class PCRexperiment:
                 else:
                     pcr_reaction.mix = mmix
         self.mixes.setdefault(pcr_reaction.mix, []).append(pcr_reaction)
+        PCRexperiment.mixes.setdefault(pcr_reaction.mix, 0)
+        PCRexperiment.mixes[pcr_reaction.mix] += 1
         pass
 
     def load_excel_list(self, exp_sheet: ExpSheet, load_PCRmix: bool = True):
@@ -1853,6 +1857,15 @@ class PCRexperimentRtic:
         assert len(self.pcr_exp) <= len(self.plates)
         self.protocol = protocol
         self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
+        for pcr_mix, pcr_reactions in PCRexperiment.mixes.items():
+
+            mix = PCRMasterMixReagent(pcr_mix=pcr_mix,
+                                      min_vol= pcr_mix.
+                                      mmix_rack=mmix_rack,
+                                      primer_mix_rack=primer_mix_rack,
+                                      kit_rack=kit_rack,
+                                      primer_rack=primer_rack)  # todo: it could be reused from another plate !!???????
+            self.mixes[mix]=[]
 
         for exp, plate in zip(self.pcr_exp, self.plates):  # iterate each PCR plate for which we have PCR mixes declared
             assert isinstance(exp, PCRexperiment)
