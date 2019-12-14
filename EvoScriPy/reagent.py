@@ -105,20 +105,21 @@ class Reagent:
         than the percent of the well volumen indicated by fill_limit_aliq.
 
         :param name:            Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
-        :param labware:         Labware or his label in the worktable; if None will be deduced from `wells`.
+        :param labware:         :py:class:`lab.Labware` or his label in the worktable; if None will be deduced from `wells`.
         :param volpersample:    how much is needed per sample, if applicable, in uL
-        :param single_use;      Not a "per sample" multiple use? Set then here the volume for one single use
+        :param single_use:      Not a "per sample" multiple use? Set then here the volume for one single use
         :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells in labware
-        :param num_of_aliquots;        def min_num_of_replica(), number of replicas
-        :param def_liq_class;     the name of the Liquid class, as it appears in your own EVOware database.
+        :param num_of_aliquots: def min_num_of_replica(), number of replicas
+        :param def_liq_class:   the name of the Liquid class, as it appears in your own EVOware database.
                                 instructions.def_liquidClass if None
         :param excess;          in %
-        :param initial_vol;     is set for each replica. If default (=None) is calculated als minimum.
-        :param min_vol;         force a minimum volume to be expected or prepared.
-        :param fill_limit_aliq;    maximo allowed volume in % of the wells capacity
-        :param num_of_samples;  if None, the number of samples of the current protocol will be assumed
-        :param minimize_aliquots;  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
+        :param initial_vol:     is set for each replica. If default (=None) is calculated als minimum.
+        :param min_vol:         force a minimum volume to be expected or prepared.
+        :param fill_limit_aliq:    maximo allowed volume in % of the wells capacity
+        :param num_of_samples:  if None, the number of samples of the current protocol will be assumed
+        :param minimize_aliquots:  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
+
         """
         self.concentration = concentration
         logging.debug("Creating Reagent " + name)
@@ -1858,8 +1859,8 @@ class PCRexperimentRtic:
         """
 
 
-        :param pcr_exp: [PCRexperiment] abstarct information about the "plate" PCR experiemnts
-        :param plates: [lab.Labware] where to set the PCR reactions.
+        :param pcr_exp: [:py:class:`PCRexperiment`] abstarct information about the "plate" PCR experiemnts
+        :param plates: [:py:class:`lab.Labware`] where to set the PCR reactions.
         :param kit_rack: [racks] in the prefered order to put the PCR kit reagents (stocks solutions)
         :param mmix_rack: [racks] in the prefered order to put the PCR mastermix reagents specially created for this experiments
         :param primer_mix_rack: [racks] in the prefered order to put the primer mix reagents (stocks solutions)s
@@ -1873,7 +1874,7 @@ class PCRexperimentRtic:
             raise RuntimeError("Not sufficient plates (", len(self.plates), ") provided for ",
                                len(self.pcr_exp), " PCR experiments.")
         self.protocol = protocol
-        self.mixes = {}  #: connect each PCRMasterMix in the experiment with the PCR wells into which will be pippeted
+        self.mixes = {}  #: connect each :py:class:`PCRMasterMix` in the experiment with the PCR wells into which will be pippeted
         mixes = {}
         for pcr_mix, pcr_reactions in PCRexperiment.mixes.items():
             if not pcr_mix:  # empty reaction wells are market with None mix.
