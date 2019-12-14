@@ -105,7 +105,7 @@ class Reagent:
         than the percent of the well volumen indicated by fill_limit_aliq.
 
         :param name:            Reagent name. Ex: "Buffer 1", "forward primer", "IC MS2"
-        :param labware:         :py:class:`lab.Labware` or his label in the worktable; if None will be deduced from `wells`.
+        :param labware:         :py:class:`labware.Labware` or his label in the worktable; if None will be deduced from `wells`.
         :param volpersample:    how much is needed per sample, if applicable, in uL
         :param single_use:      Not a "per sample" multiple use? Set then here the volume for one single use
         :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells in labware
@@ -1845,7 +1845,7 @@ class PCRexperimentRtic:
     """
     Organize a PCR setup on a robot.
     From a list of abstract information about PCR plate/experiments creates sufficient volume of each of the
-    PCRMasterMixReagent listed in the global PCRexperiment.mixes
+    :py:class:`PCRMasterMixReagent` listed in the global PCRexperiment.mixes
     """
 
     def __init__(self,
@@ -1860,12 +1860,12 @@ class PCRexperimentRtic:
 
 
         :param pcr_exp: [:py:class:`PCRexperiment`] abstarct information about the "plate" PCR experiemnts
-        :param plates: [:py:class:`lab.Labware`] where to set the PCR reactions.
+        :param plates: [:py:class:`labware.Labware`] where to set the PCR reactions.
         :param kit_rack: [racks] in the prefered order to put the PCR kit reagents (stocks solutions)
-        :param mmix_rack: [racks] in the prefered order to put the PCR mastermix reagents specially created for this experiments
+        :param mmix_rack: [racks] in the prefered order to put the PCR mastermix reagents specially created for these experiments
         :param primer_mix_rack: [racks] in the prefered order to put the primer mix reagents (stocks solutions)s
         :param primer_rack:  [racks] in the prefered order to put the primers reagents (stocks solutions)s
-        :param protocol: who invoque this PCR, provide a worktable and the rest of the "environment"
+        :param protocol: who invoke this PCR, provide a worktable and the rest of the "environment"
         """
         logging.debug("Creating a PCRexperimentRtic from " + repr(pcr_exp))
         self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]  #: abstract info
@@ -1875,7 +1875,7 @@ class PCRexperimentRtic:
                                len(self.pcr_exp), " PCR experiments.")
         self.protocol = protocol
         self.mixes = {}  #: connect each :py:class:`PCRMasterMix` in the experiment with the PCR wells into which will be pippeted
-        mixes = {}
+        mixes = {}  # connect each PCRMasterMix with the corresponding PCRMasterMixReagent
         for pcr_mix, pcr_reactions in PCRexperiment.mixes.items():
             if not pcr_mix:  # empty reaction wells are market with None mix.
                 continue
@@ -1886,7 +1886,7 @@ class PCRexperimentRtic:
                                       primer_mix_rack=primer_mix_rack,
                                       kit_rack=kit_rack,
                                       primer_rack=primer_rack)
-            self.mixes[mix]=[]
+            self.mixes[mix] = []
             mixes[pcr_mix] = mix
 
         for exp, plate in zip(self.pcr_exp, self.plates):  # iterate each PCR plate for which we have PCR mixes declared

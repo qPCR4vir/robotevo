@@ -7,17 +7,17 @@
 Worktable and labwares
 ======================
 
- - Worktable
- - Worktable.Location
- - Labware.Type
+ - :py:class:`Worktable`
+ - :py:class:`Worktable.Location`
+ - :py:class:`Labware.Type`
    + Specialized types:
-     + DiTiRackType
-     + CuvetteType 
- - Labware.Type.Series
- - Labware
+     + :py:class:`DiTiRackType`
+     + :py:class:`CuvetteType`
+ - :py:class:`Labware.Type.Series`
+ - :py:class:`Labware`
    + Specialized labwares:
-     + DitiRack
-     + Cuvette
+     + :py:class:`DitiRack`
+     + :py:class:`Cuvette`
 
 ---------
 
@@ -142,8 +142,8 @@ class WorkTable:
 
     def __init__(self, template_file, robot_protocol=None, grids=67, sites=127):
 
-        self.labware_series   = {}  # typeName: Series. For each type - a series of labwares (with self have locations)
-        self.reagents         = {}  # connect each reagent name with the reagent self
+        self.labware_series   = {}  #: typeName: Series. For each type - a series of labwares (with self have locations)
+        self.reagents         = {}  #: connect each reagent name with the reagent self
         self.carriers_grid    = []
         self.carriers_no_grid = []  # in reality in grid with index > real number of grids?
 

@@ -3,6 +3,19 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
+"""
+Robots and arms
+===============
+
+ - :py:class:`Arm`
+ - :py:class:`Robot`: track state to make organizations previous to the actual instruction call, and change that state
+ after each instruction.
+
+
+---------
+
+"""
+
 
 __author__ = 'qPCR4vir'
 

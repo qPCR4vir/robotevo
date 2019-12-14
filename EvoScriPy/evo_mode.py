@@ -3,6 +3,31 @@
 #
 # author Ariel Vina-Rodriguez (qPCR4vir)
 # 2014-2019
+"""
+RobotEvo "modes" for execution of basic instructions
+====================================================
+
+Define how we want to "interact" with the physical robot, or what kind of output we want from
+    this script generator.
+
+ - :py:class:`Mode`
+ - :py:class:`ToString`: an string representation of the instructions.
+ - :py:class:`Multiple`: A collection (list) of all the "modes" to be generated in a single run
+ - :py:class:`ToFile`:
+ - :py:class:`Comments`:
+ - :py:class:`AdvancedWorkList`:
+ - :py:class:`ScriptBody`:
+ - :py:class:`Script`:
+ - :py:class:`iRobot`: update the state of the "internal" robot to track changes produced by the execution of the instructions.
+ after each instruction.
+ - :py:class:`AdvancedWorkList`:
+
+
+
+
+ ---------
+
+"""
 
 __author__ = 'qPCR4vir'
 
