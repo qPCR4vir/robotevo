@@ -123,7 +123,7 @@ import logging
 
 import EvoScriPy.robot as robot
 import EvoScriPy.instructions as instructions
-from EvoScriPy.reagent import Reagent, PreMixReagent
+from EvoScriPy.reagent import Reagent, PreMixReagent, MixReagent, PrimerReagent
 import EvoScriPy.labware as labware
 import EvoScriPy.evo_mode as mode
 
@@ -854,6 +854,143 @@ class Protocol (Executable):
                         self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
                         reagent_vol -= d_v
                 self.mix_reagent(pre_mix, maxTips=ctips)
+
+
+    def make_mix(self,
+                 mix: MixReagent,
+                 volume: float=None,
+                 force_replies: bool = False):
+        """
+        A MixReagent is just that: a mix of reagents (aka - components)
+        which have been already defined to add some vol mix.
+        Uses one new tip per component.
+        It calculates and checks self the minimum and maximum number of aliquots of the resulting Mix
+
+        :param mix: what to make, a predefined Mix
+        :param volume:
+        :param bool force_replies: use all the preMix predefined replicas
+
+        """
+
+        assert isinstance(mix, MixReagent)
+        mxn_tips    = self.robot.cur_arm().n_tips  # max number of Tips
+        ncomp       = len(mix.components)
+        nt          = min(mxn_tips, ncomp)
+        labw        = mix.labware
+        t_vol       = volume or mix.min_vol()  # todo ???
+        mxnrepl     = len(mix.Replicas)                             # max number of aliquots
+        mnnrepl     = mix.min_num_of_replica()                      # min number of aliquots
+        assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, mix.name)
+        nrepl       = mxnrepl if force_replies else mnnrepl
+        if nrepl < mxnrepl:
+            logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, mix.name))
+            mix.Replicas = mix.Replicas[:nrepl]
+
+        msg = "Mix: {:.1f} µL of {:s}".format(t_vol, mix.name)
+        with group(msg):
+            msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
+                                .format(labw.location.grid,
+                                        labw.location.site + 1,
+                                        str([str(well) for well in mix.Replicas]),
+                                        ncomp)
+            instructions.comment(msg).exec()
+            num_samples = 100  # just to test
+            # todo substrate the among already in aliquots wells (from initial_vol for example)
+            # with can be : - replica.vol // volumepersample
+            samples_per_replicas = [(num_samples + nrepl - (ridx + 1)) // nrepl for ridx in range(nrepl)]
+            # the real num of samples to prepare will be:
+            # for ns in samples_per_replicas:
+            #    num_samples += ns
+
+            samples_to_prepare = 0
+            samples_per_replicas_to_prepare = []
+            for ridx, rp in enumerate(mix.Replicas):
+                ns = (num_samples + nrepl - (ridx + 1)) // nrepl
+                ns -= rp.vol // (t_vol/num_samples)
+                samples_per_replicas_to_prepare.append(ns)
+                samples_to_prepare += ns
+
+
+            with self.tips(robot.mask_tips[nt], tip_type=""):   # want to use preserved ?? selected=??
+                tip = -1
+                ctips = nt
+                for ridx, reagent_component in enumerate(mix.components):       # iterate MixComponentReagent
+                    labw = reagent_component.reagent.labware
+                    msg = "   {idx:d}- {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}"\
+                                 .format(idx = ridx + 1,
+                                         v   = reagent_component.vol,
+                                         g   = labw.location.grid,
+                                         st  = labw.location.site + 1,
+                                         w   = str([str(well) for well in reagent_component.reagent.Replicas]))
+                    instructions.comment(msg).exec()
+                    tip += 1  # use the next tip
+                    if tip >= nt:
+                        ctips = min(nt, ncomp - ridx)                    # how many tips to use for the next gruop
+                        tips_type = self.robot.cur_arm().Tips[0].type    # only the 0 ??
+                        self.drop_tips(robot.mask_tips[ctips])
+                        self.get_tips(robot.mask_tips[ctips], tips_type)
+                        tip = 0
+                    max_vol = self.robot.cur_arm().Tips[tip].type.max_vol
+                    # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
+                    # but also if there is not sufficient reagent in the current component replica
+                    current_comp_repl = 0
+                    while reagent_vol > 0:
+                        while reagent_component.Replicas[current_comp_repl].vol < 1:      # todo define min vol
+                            current_comp_repl += 1
+                        d_v = min(reagent_vol, max_vol, reagent_component.Replicas[current_comp_repl].vol)
+
+                        self.aspirate_one(tip,
+                                          reagent_component,
+                                          d_v,
+                                          offset=reagent_component.Replicas[current_comp_repl].offset)
+
+                        self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
+                        reagent_vol -= d_v
+                self.mix_reagent(pre_mix, maxTips=ctips)
+
+    def dilute_primer(self,
+                      primer: PrimerReagent,
+                      volume: float):
+        """
+
+
+        :param primer:
+
+        """
+
+        assert isinstance(primer, PrimerReagent)
+        labw = primer.labware
+
+        msg = "Diluting Primer: {:.1f} µL of {:s}".format(volume, str(primer))
+        with group(msg):
+            msg += " into grid:{:d} site:{:d} {:s}:" \
+                .format(labw.location.grid,
+                        labw.location.site + 1,
+                        str([str(well) for well in primer.Replicas]))
+            instructions.comment(msg).exec()
+            ctips = 1
+            with self.tips(robot.mask_tips[ctips], tip_type=""):  # want to use preserved ?? selected=??
+                labw = primer.diluent.labware
+                msg = "   {v:.1f} µL from grid:{g:d} site:{st:d}:{w:s}" \
+                      .format(v=volume,
+                              g=labw.location.grid,
+                              st=labw.location.site + 1,
+                              w=str([str(well) for well in primer.diluent.Replicas]))
+                instructions.comment(msg).exec()
+                tips_type = self.robot.cur_arm().Tips[0].type  # only the 0 ??
+                self.drop_tips(robot.mask_tips[ctips])
+                self.get_tips(robot.mask_tips[ctips], tips_type)
+                tip = 0
+                max_vol = self.robot.cur_arm().Tips[tip].type.max_vol
+                # aspirate/dispense multiple times if rVol don't fit in the tip (mV)
+                # but also if there is not sufficient reagent in the current component replica
+                current_comp_repl = 0
+                self.aspirate_one(tip,
+                                  primer.diluent,
+                                  volume,
+                                  offset=primer.diluent.Replicas[current_comp_repl].offset)
+                self.dispense_one(current_comp_repl, primer, volume)
+                self.mix_reagent(primer, maxTips=ctips)
 
     def get_tips(self,
                  TIP_MASK         = None,

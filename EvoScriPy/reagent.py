@@ -249,7 +249,11 @@ class Reagent:
         :param num_of_samples:
         :return:
         """
-        return int(self.min_vol(num_of_samples) / (self.labware.type.max_vol * self.fill_limit_aliq)) + 1
+        min_vol = self.min_vol(num_of_samples)
+        if min_vol is None:
+            logging.warning("Calculating min_num_of_replica for " + str(self) + " before setting any volume.")
+            min_vol = 0.0
+        return int(min_vol / (self.labware.type.max_vol * self.fill_limit_aliq)) + 1
 
     @staticmethod
     def set_reagent_list(protocol):
@@ -267,23 +271,32 @@ class Reagent:
 
     def min_vol(self, num_samples=None, volume: float = None, add_volume: float = None) -> float:
         """
-        A minimal volume will be calculated based on either the number of samples
-        and the volume per sample to use (todo or the volume per single use.)???
-        :param num_samples:
-        :return:
+        The minimal needed volume will be calculated based on either the number of samples
+        and the volume per sample to use, or  as an accumulation of all the volume "requested" by add_volume from the
+        preparation of other components of the protocol(todo or the volume per single use.)???
+
+        :param num_samples: total number of samples to prepare. Use this only for "per sample" reagents, in which case
+                            this can be set to None to use the protocols' number of samples.
+        :param volume: just set this volume as the minimal required
+        :param add_volume: add this to the minimum
+        :return: the minimal needed volume calculated (this is also "saved" in member self.need_vol)
         """
 
         if self.volpersample:
-            assert not (volume or add_volume)
+            assert not (volume or add_volume), "This is a 'per sample' reagent, " + str(self) + \
+                                               "don't try to set or change the needed volume directly"
             num_samples = num_samples or Reagent.current_protocol.num_of_samples or 0
             self.need_vol = self.volpersample * num_samples * self.excess
         else:
-            assert not num_samples
+            assert not num_samples, "This is not a 'per sample' reagent, " + str(self) + \
+                                    "don't try to set the number of samples to calculate the needed volume"
             if volume:
                 assert not add_volume
                 self.need_vol = volume * self.excess
             elif add_volume:
                 assert not volume
+                if self.need_vol is None:
+                    self.need_vol = 0.0
                 self.need_vol += add_volume * self.excess
 
         return self.need_vol
@@ -293,7 +306,7 @@ class Reagent:
         To initialize the among of reagent in each well. First put what the user inform he had put, then
         put additionally the minimum the protocol need.
         :param num_samples:
-        :param initial_vol:
+        :param initial_vol: what the user inform he had put on each aliquot well.
         :return:
         """
         if initial_vol is not None:
@@ -314,11 +327,15 @@ class Reagent:
         """
         Force you to put an initial volume of reagent that can be used to distribute into samples,
         aspiring equal number of complete doses for each sample from each replica,
-        exept the firsts replicas that can be used to aspirate one more dose for the last/rest of samples.
-        That is: all replica have equal volumen (number) of doses or the firsts have one more dose
+        except the firsts replicas that can be used to aspirate one more dose for the last/rest of samples.
+        That is: all replica have equal volume (number) of doses or the firsts have one more dose
         :param num_samples:
         :return:
         """
+        if self.need_vol is None:
+            logging.warning("Puting put_min_vol for " + str(self) + " before setting any volume.")
+            self.need_vol = 0.0
+
         need_vol = max(self.need_vol, self.user_min_vol, 0.0)
         if self.volpersample:
             if num_samples is None:
@@ -368,7 +385,7 @@ class MixComponent:
 
         :param id_:
         :param name:
-        :param init_conc:  todo Really??
+        :param init_conc:  todo Really?? explore None for lyo
         :param final_conc:
         """
         self.id = id_
@@ -578,7 +595,7 @@ class DilutionComponentReagent(MixComponentReagent):
 
 class Dilution(MixReagent):
     """
-    A Reagent composed of others, diluted Reagents, that the robot may prepare.
+    A Reagent mix composed of others - to be diluted - Reagents and a diluter, that the robot may prepare.
     """
 
     def __init__(self,
@@ -602,7 +619,7 @@ class Dilution(MixReagent):
         :param name:
         :param labware:
         :param wells:
-        :param components:
+        :param components: [list of :py:class:`DilutionComponentReagent` 's]
         :param num_of_aliquots:
         :param minimize_aliquots:
         :param def_liq_class:
@@ -614,10 +631,17 @@ class Dilution(MixReagent):
         """
         ex = def_mix_excess if excess is None else excess
         vol = 0.0
+        self.diluent = None
+        assert isinstance(components, list)
         for comp in components:
+            if comp is diluent:
+                self.diluent = diluent
+                continue
             assert isinstance(comp, DilutionComponentReagent)
             vol += comp.volume(min_vol - initial_vol, ex)
-        self.diluent = diluent
+        if self.diluent is None:
+            self.diluent = diluent
+            components.append(diluent)
         diluent.min_vol(add_volume= (min_vol - initial_vol)*ex - vol)
 
         if initial_vol is None:
@@ -653,74 +677,6 @@ class Dilution(MixReagent):
 
     def make(self, protocol, volume=None):  # todo deprecate?
         if self.Replicas[0].vol is None:  # ????
-            self.put_min_vol(volume)
-            assert False
-        protocol.make_mix(self, volume)
-
-
-class MixReagent(Reagent):
-    """
-    A Reagent composed of other Reagents, that the robot may prepare.
-    """
-
-    def __init__(self,
-                 name          : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
-                 labware       : (lab.Labware, str, [])    = None,
-                 wells         : (int, [int], [lab.Well])  = None,
-                 components    : [MixComponentReagent]     = None,
-                 num_of_aliquots: int                      = None,
-                 minimize_aliquots: bool                   = None,
-                 def_liq_class : (str, (str, str))         = None,
-                 excess        : float                     = 1.0,
-                 initial_vol   : float                     = 0.0,
-                 min_vol       : float                     = 0.0,
-                 fill_limit_aliq : float                   = 100,
-                 concentration : float                     = None
-                 ):
-        """
-
-        :param name:
-        :param labware:
-        :param wells:
-        :param components:
-        :param num_of_aliquots:
-        :param minimize_aliquots:
-        :param def_liq_class:
-        :param excess:
-        :param initial_vol:
-        :param min_vol:
-        :param fill_limit_aliq:
-        :param concentration:
-        """
-        vol = 0.0
-        for comp in components:
-            assert isinstance(comp, MixComponentReagent)
-            vol += comp.volume()
-            comp.reagent.put_min_vol()
-
-        if initial_vol is None:
-            initial_vol = 0.0
-
-        Reagent.__init__(self, name,
-                         labware,
-                         wells= wells,
-                         num_of_aliquots= num_of_aliquots,
-                         def_liq_class = def_liq_class,
-                         excess = excess,
-                         initial_vol = initial_vol,
-                         fill_limit_aliq= fill_limit_aliq)
-
-        self.components = components  #: list of reagent components
-        # self.init_vol()
-
-    def __str__(self):  # todo ?
-        return "{name:s}".format(name=self.name)
-
-    def __repr__(self):  # todo ?
-        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
-
-    def make(self, protocol, volume=None):      # todo deprecate?
-        if self.Replicas[0].vol is None:   # ????
             self.put_min_vol(volume)
             assert False
         protocol.make_mix(self, volume)
@@ -894,7 +850,7 @@ class Primer:
                  id_: str=None,
                  prepared: float=None,
                  mass: float=None,  #: ug
-                 moles: float=None,  #: nmoles
+                 nmoles: float=None,  #: nmoles
                  molec_w: float=None,  #: g/mol
                  mod_5p: str=None,
                  mod_3p: str=None,
@@ -910,7 +866,7 @@ class Primer:
         :param prepared: volume (typically in uL) already in solution or need to be prepared (=None) from
                the originally provided lyophilized primer?
         :param mass: how much was synthesised, ugr.
-        :param moles: how much was synthesised, mmoles.
+        :param nmoles: how much was synthesised, mmoles.
         :param molec_w: molecular weight, gr/mol
         :param mod_5p: chemical modification, like flourecent FAM, or biotin
         :param mod_3p: chemical modification, like BHQ1, etc.
@@ -923,7 +879,7 @@ class Primer:
         self.prepared = prepared
         self.proposed_stock_conc = proposed_stock_conc
         self.mass = mass
-        self.moles = moles
+        self.nmoles = nmoles
         self.molec_w = molec_w
         self.mod_5p = mod_5p
         self.mod_3p = mod_3p
@@ -1009,7 +965,7 @@ class Primer:
                          proposed_stock_conc=r[col['conc']].value,
                          id_=r[col['id']].value,
                          mass=r[col['mass']].value,
-                         moles=r[col['moles']].value,
+                         nmoles=r[col['moles']].value,
                          molec_w=r[col['mol_w']].value,
                          mod_5p=r[col['mod_5p']].value,
                          mod_3p=r[col['mod_3p']].value,
@@ -1020,7 +976,7 @@ class Primer:
         return p
 
 
-class PrimerReagent(MixReagent):
+class PrimerReagent(Dilution):
     """
     Manipulate a Primer Reagent on a robot.
     """
@@ -1031,6 +987,7 @@ class PrimerReagent(MixReagent):
                  primer_rack: (lab.Labware, list),
                  pos=None,
                  initial_vol=None,
+                 diluent: Reagent=None,
                  PCR_conc=0.8,
                  stk_conc=100,
                  def_liq_class=None,
@@ -1045,6 +1002,7 @@ class PrimerReagent(MixReagent):
         :param primer_rack: labware rack where to put this primer. If a list - provide first the preferred racks.
         :param pos: an optional position where to put the primer in the rack. If =None one position will be proposed
         :param initial_vol: in uL
+        :param diluent: optionally the dilution Reagent to be used, if None - will be "deduced" from primer
         :param PCR_conc: optional, used by default, but normally overrides by the primer mix reagent.
         :param stk_conc:
         :param def_liq_class:
@@ -1054,15 +1012,21 @@ class PrimerReagent(MixReagent):
 
         self.stk_conc = stk_conc
         self.primer = primer
+        if not diluent:
+            pass  # todo identify or create diluent Reagent
 
-        Reagent.__init__(self,
-                         name=primer.name,
-                         labware=primer_rack or lab.stock,
-                         wells=pos,
-                         initial_vol=initial_vol or primer.prepared,
-                         excess=excess or PrimerReagent.excess,
-                         fill_limit_aliq=fill_limit_aliq,
-                         def_liq_class=def_liq_class)
+        Dilution.__init__(self,
+                          name=primer.name,
+                          diluent=diluent,
+                          labware=primer_rack,  # or lab.stock, ??
+                          wells=pos,
+                          components=[diluent],
+                          num_of_aliquots=1,
+                          initial_vol=initial_vol or primer.prepared,
+                          excess=excess or PrimerReagent.excess,
+                          fill_limit_aliq=fill_limit_aliq,
+                          def_liq_class=def_liq_class,
+                          concentration=stk_conc)
 
         # todo prepare unprepared Primers  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1072,6 +1036,8 @@ class PrimerReagent(MixReagent):
     def __repr__(self):
         return "primer " + (self.primer.name or '-') + '[' + str(self.primer.id or '-') + ']'
 
+    def dilute(self):
+        Reagent.current_protocol.dilute_primer(self, 1000 * self.primer.nmoles / self.stk_conc)
 
 class PrimerMixComponent(MixComponent):
     """
