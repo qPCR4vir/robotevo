@@ -45,6 +45,12 @@ Robot classes:
  - :py:class:`PCReactionReagent`: Define a PCR reaction in a well or tube.
  - :py:class:`PCRexperimentRtic`: Organize a PCR setup on a robot.
 
+ todo: set in code when a Reagent is an stock solution: it will be "prepared" following an small sequence of
+ instructions, mostly independent of the current protocol. Examples: buffer TE 1x, primers, primers mixes, etc.
+ (one critical difference is that the total volume to prepare is set independentl< of the number samples, volume or
+ concentration, etc. need in the current protocol).
+ This in contrast to solution specially prepared for the current protocol, like the "extraction" pre-mix in an RNA
+ extraction protocol or a PCR "master mix"
 
 """
 
@@ -873,10 +879,10 @@ class Primer:
     Represent abstract information, like an item in some table summarizing primer sequences, synthesis, etc.
     """
 
-    ids = {}  #: connect each existing Primer ID with the corresponding Primer
-    seqs = {}  #: connect each existing Primer sequence with the corresponding list of Primer
-    names = {}  #: connect each existing Primer name with the corresponding list of Primer
-    key_words = {}  #: connect each existing Primer key_word with the corresponding list of Primer
+    ids = {}  #: connect each existing Primer ID with the corresponding Primer 's
+    seqs = {}  #: connect each existing Primer sequence with the corresponding list of Primer synthesis
+    names = {}  #: connect each existing Primer name with the corresponding list of Primer synthesis
+    key_words = {}  #: connect each existing Primer key_word with the corresponding list of Primer 's
     ids_synt = {}  #: connect each existing Primer synthesis ID with the corresponding Primer
 
     next_internal_id = 0
@@ -884,12 +890,12 @@ class Primer:
     def __init__(self,
                  name: str,
                  seq: str,
-                 proposed_stock_conc: float=100,  # uM
+                 proposed_stock_conc: float=100,  #: uM
                  id_: str=None,
                  prepared: float=None,
-                 mass: float=None,  # ug
-                 moles: float=None,  # nmoles
-                 molec_w: float=None,  # g/mol
+                 mass: float=None,  #: ug
+                 moles: float=None,  #: nmoles
+                 molec_w: float=None,  #: g/mol
                  mod_5p: str=None,
                  mod_3p: str=None,
                  id_synt: str=None,
@@ -897,19 +903,21 @@ class Primer:
                  diluent: str='TE 1x'):
         """
 
-        :param name:
-        :param seq:
-        :param proposed_stock_conc:
-        :param id_:
-        :param prepared:
-        :param mass:
-        :param moles:
-        :param molec_w:
-        :param mod_5p:
-        :param mod_3p:
-        :param id_synt:
-        :param kws:
-        :param diluent:
+        :param name: the external "human readable name"
+        :param seq: the nucleotide sequence
+        :param proposed_stock_conc: typically 100 (100 uM, or ~100x more than in PCR)
+        :param id_: the external ID, typically a number string aimed to be unique
+        :param prepared: volume (typically in uL) already in solution or need to be prepared (=None) from
+               the originally provided lyophilized primer?
+        :param mass: how much was synthesised, ugr.
+        :param moles: how much was synthesised, mmoles.
+        :param molec_w: molecular weight, gr/mol
+        :param mod_5p: chemical modification, like flourecent FAM, or biotin
+        :param mod_3p: chemical modification, like BHQ1, etc.
+        :param id_synt: the external synthesis number provided by the supplier firm (unique)
+        :param kws: any collection of key-words the user want to attach to this primer
+                   (name of targets, virus, gen, project, owner, etc.)
+        :param diluent: name of the reagent used to dilute the lyophilized primer.
         """
         self.diluent = diluent
         self.prepared = prepared
@@ -923,7 +931,7 @@ class Primer:
         self.name = name
         self.seq = seq
         self.id = id_
-        self._internal_id = Primer.next_internal_id
+        self._internal_id = Primer.next_internal_id #: internal unique ID
         Primer.next_internal_id += 1
         Primer.names.setdefault(name, []).append(self)
 
@@ -1031,17 +1039,17 @@ class PrimerReagent(MixReagent):
         """
         Construct a robot-usable PrimerReagent from an abstract Primer.
         You can reuse "old" aliquots by passing primer.prepared volume > 0.
-        If no  primer.prepared volume is passed, it will be prepared.
+        If no  primer.prepared volume is passed, it will be prepared (diluted) from the lyophilized primer.
 
-        :param primer:
-        :param primer_rack:
-        :param pos:
-        :param initial_vol:
-        :param PCR_conc:
+        :param primer: :py:class:`Primer`
+        :param primer_rack: labware rack where to put this primer. If a list - provide first the preferred racks.
+        :param pos: an optional position where to put the primer in the rack. If =None one position will be proposed
+        :param initial_vol: in uL
+        :param PCR_conc: optional, used by default, but normally overrides by the primer mix reagent.
         :param stk_conc:
         :param def_liq_class:
         :param fill_limit_aliq:
-        :param excess:
+        :param excess: optional, % to prepare in excess
         """
 
         self.stk_conc = stk_conc
