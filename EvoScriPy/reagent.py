@@ -37,12 +37,12 @@ Robot classes:
 
  - :py:class:`Reagent`: homogeneous liquid solution in some wells
  - :py:class:`MixReagent`: a Reagent composed of other Reagents
- - :py:class:`Dilution`
+ - :py:class:`Dilution`: A mix defined by the dilutionn of one or more components with a diluent.
  - :py:class:`PreMixReagent`: A pre-MixReagent of otherwise independent reagents
  - :py:class:`PrimerReagent`: Manipulate a Primer Reagent on a robot.
  - :py:class:`PrimerMixReagent`: Manipulate a Primer-Mix Reagent on a robot.
  - :py:class:`PCRMasterMixReagent`: Manipulate a PCR Master-Mix Reagent on a robot.
- - :py:class:`PCReactionReagent`
+ - :py:class:`PCReactionReagent`: Define a PCR reaction in a well or tube.
  - :py:class:`PCRexperimentRtic`: Organize a PCR setup on a robot.
 
 
@@ -592,6 +592,7 @@ class Dilution(MixReagent):
                  ):
         """
 
+        :param diluent:
         :param name:
         :param labware:
         :param wells:
