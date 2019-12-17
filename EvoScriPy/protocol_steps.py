@@ -855,7 +855,6 @@ class Protocol (Executable):
                         reagent_vol -= d_v
                 self.mix_reagent(pre_mix, maxTips=ctips)
 
-
     def make_mix(self,
                  mix: MixReagent,
                  volume: float=None,

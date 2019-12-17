@@ -77,7 +77,6 @@ class PCR(Evo75_FLI):
         sheet4 = ExpSheet(file_name=Path('PCR.xlsx'), page='Exp 308', cell_rows=6, sample_line=6)
         sheet5 = ExpSheet(file_name=Path('PCR.xlsx'), page='Exp 424', cell_rows=3, sample_line=3)
 
-
         exp = PCRexperiment().load_excel_list(sheet5)
 
         self.initialize()
@@ -106,12 +105,12 @@ class PCR(Evo75_FLI):
         h2o = Reagent('H2O', labware='BufferTubes', num_of_aliquots=5, minimize_aliquots=False)
         te100x = Reagent('TE 100x', labware='BufferTubes', num_of_aliquots=1, concentration=100)
         TE_10x_fixed = MixReagent('TE 10x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                   components=[MixComponentReagent(te100x, volume=300),
-                               MixComponentReagent(h2o, volume=2700)])
+                   components=[MixComponentReagent(te100x, volume=500),
+                               MixComponentReagent(h2o, volume=4500)])
         a = 1
         TE_1x_fixed = MixReagent('TE 1x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                   components=[MixComponentReagent(TE_10x_fixed, volume=300),
-                               MixComponentReagent(h2o, volume=2700)])
+                   components=[MixComponentReagent(TE_10x_fixed, volume=500),
+                               MixComponentReagent(h2o, volume=4500)])
         """
         te10x = Dilution('TE 10x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
                  components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
@@ -133,6 +132,8 @@ class PCR(Evo75_FLI):
 
         self.check_list()
         self.set_EvoMode()
+
+        expr.dilute_primers()
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 

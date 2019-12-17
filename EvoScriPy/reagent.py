@@ -94,7 +94,7 @@ class Reagent:
                  excess        : float                     = None,  #: todo move to MixComponent
                  initial_vol   : (float, list)             = 0.0,
                  min_vol       : float                     = 0.0,
-                 fill_limit_aliq : float                   = 100,
+                 fill_limit_aliq: float                    = 100,
                  concentration : float                     = None   # todo implement use. Absolut vs. relative? Units?
                  ):
         """
@@ -532,8 +532,9 @@ class MixReagent(Reagent):
             self.reserve(need_vol)
         return self.need_vol
 
-    def reserve(self, need_vol:float):
-        raise Exception("Prepare " + str(need_vol) + " more uL of " + str(self))
+    def reserve(self, need_vol: float):
+        # raise Exception("Prepare " + str(need_vol) + " more uL of " + str(self))
+        pass
 
 
     def __str__(self):  # todo ?
@@ -982,6 +983,7 @@ class PrimerReagent(Dilution):
     """
     excess = def_mix_excess
 
+
     def __init__(self,
                  primer: Primer,
                  primer_rack: (lab.Labware, list),
@@ -1038,6 +1040,7 @@ class PrimerReagent(Dilution):
 
     def dilute(self):
         Reagent.current_protocol.dilute_primer(self, 1000 * self.primer.nmoles / self.stk_conc)
+
 
 class PrimerMixComponent(MixComponent):
     """
@@ -1845,7 +1848,7 @@ class PCRexperimentRtic:
         logging.debug("Creating a PCRexperimentRtic from " + repr(pcr_exp))
         self.pcr_exp = pcr_exp if isinstance(pcr_exp, list) else [pcr_exp]  #: abstract info
         self.plates = plates if isinstance(plates, list) else [plates]
-        if len(self.pcr_exp) <= len(self.plates):
+        if len(self.pcr_exp) > len(self.plates):
             raise RuntimeError("Not sufficient plates (", len(self.plates), ") provided for ",
                                len(self.pcr_exp), " PCR experiments.")
         self.protocol = protocol
@@ -1888,6 +1891,12 @@ class PCRexperimentRtic:
 
     def pippete_samples(self):
         pass
+
+    def dilute_primers(self):
+        for reagent in self.protocol.reagents:
+            if isinstance(reagent, PrimerReagent):
+                if not reagent.primer.prepared:
+                    reagent.dilute()
 
     def vol (self, vol, vol_sample):
         self.vol = vol
