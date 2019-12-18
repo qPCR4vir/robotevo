@@ -157,6 +157,7 @@ class Reagent:
             if Reagent.current_protocol:
                 worktable = Reagent.current_protocol.worktable                         # todo temporal
 
+        # todo: raise
         assert name not in worktable.reagents, "The reagent " + name + " was already in the worktable"
         worktable.reagents[name] = self
         ex = def_reagent_excess if excess is None else excess
@@ -404,7 +405,7 @@ class MixComponent:
 class MixComponentReagent:
     """
     Components of some MixReagent.
-    This is not just a Reagent, but some "reserved" volume of some Reagent.
+    This is not just a Reagent, but some "reserved" volume of those Reagent.
 
     """
 
@@ -414,7 +415,7 @@ class MixComponentReagent:
         """
 
         :param reagent:
-        :param volume:
+        :param volume: volume of Reagent to be used as component
         """
         self.reagent = reagent
         self.vol = 0.0
@@ -428,6 +429,13 @@ class MixComponentReagent:
         return (self.reagent.name or '-') + '[' + str(self.volume or '-') + ']'
 
     def volume(self, vol: float = None, excess: float = None):  # todo put_min_vol in reagent?
+        """
+        Return (and possibly set) the volume of Reagent to be used.
+
+        :param vol:
+        :param excess:
+        :return: the volume of Reagent to be used.
+        """
         old_vol = self.vol * self.excess
         if vol is None and excess is None:
             return old_vol
@@ -439,6 +447,9 @@ class MixComponentReagent:
             self.vol = vol
 
         new_vol = self.vol * self.excess
+        add_volume = new_vol - old_vol
+        if abs(add_volume) < 0.05:
+            return old_vol
 
         self.reagent.min_vol(add_volume=new_vol - old_vol)
         self.reagent.init_vol()
@@ -472,12 +483,14 @@ class MixReagent(Reagent):
         :param name:
         :param labware:
         :param wells:
-        :param components:
+        :param components: the lis of :py:class:`MixComponentReagent` which form this Mix
         :param num_of_aliquots:
         :param minimize_aliquots:
         :param def_liq_class:
         :param excess:
-        :param initial_vol:
+        :param initial_vol: if this is set to 0 explicitly, the user signal it will be explicitly
+                            prepared during this protocol run. Only in this case the needed volume of components
+                            are "reserved".
         :param min_vol:
         :param fill_limit_aliq:
         :param concentration:
@@ -501,7 +514,7 @@ class MixReagent(Reagent):
             vol = 0.0
             for comp in components:
                 assert isinstance(comp, MixComponentReagent)
-                vol += comp.volume(ex)
+                vol += comp.volume(ex)  # which means we will need this additional volume of each of the components
                 # comp.reagent.put_min_vol()
             self.min_vol(add_volume=-vol)
         self.components = components  #: list of reagent components
@@ -513,11 +526,11 @@ class MixReagent(Reagent):
     def __repr__(self):  # todo ?
         return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
 
-    def make(self, protocol, volume=None):      # todo deprecate?
+    def make(self, protocol):      # todo deprecate?
         if self.Replicas[0].vol is None:   # ????
-            self.put_min_vol(volume)
+            self.put_min_vol()  # todo here?? too late ??
             assert False
-        protocol.make_mix(self, volume)
+        protocol.make_mix(self)
 
 
 class DilutionComponentReagent(MixComponentReagent):
@@ -539,13 +552,15 @@ class DilutionComponentReagent(MixComponentReagent):
         self.dilution = dilution
         self.final_conc = final_conc
         if dilution:
-            assert not final_conc
+            assert not final_conc  # todo raise
         else:
-            assert reagent.concentration
+            # todo allow diluent to be set here?
+            assert reagent.concentration  # todo raise
+            assert final_conc  # todo raise
             self.dilution = reagent.concentration / final_conc
         assert self.dilution >= 1.0
         # vol = final_vol / dilution
-        MixComponentReagent.__init__(self, reagent)  # , volume=vol
+        MixComponentReagent.__init__(self, reagent)  # , volume= will be set by self.volume(vol)
 
     def __str__(self):
         return self.reagent.name
@@ -554,13 +569,21 @@ class DilutionComponentReagent(MixComponentReagent):
         return (self.reagent.name or '-') + '[1/' + str(self.dilution or '-') + ']'
 
     def volume(self, vol: float = None, excess: float = None):
+        """
+        Calculate needed volume of this reagent to make this final volume of the dilution.
+        Make sure not to call this for the diluent.
+
+        :param vol: the total dilution volume to be prepared. If not set, the last computation will be returned
+        :param excess:
+        :return: the volume of this component used to prepare the dilution
+        """
         if vol is not None:
             if not self.dilution:
                 assert self.reagent.concentration
                 self.dilution = self.reagent.concentration / self.final_conc
             assert self.dilution >= 1.0
             vol = vol / self.dilution
-            MixComponentReagent.volume(self, vol=vol)
+            MixComponentReagent.volume(self, vol=vol, excess=excess)
         return self.vol
 
 
@@ -579,7 +602,7 @@ class Dilution(MixReagent):
                  minimize_aliquots: bool = None,
                  def_liq_class: (str, (str, str)) = None,
                  excess: float = None,
-                 initial_vol: float = 0.0,
+                 initial_vol: float = None,
                  min_vol: float = 0.0,
                  fill_limit_aliq: float = 100,
                  concentration: float = None
@@ -590,33 +613,31 @@ class Dilution(MixReagent):
         :param name:
         :param labware:
         :param wells:
-        :param components: [list of :py:class:`DilutionComponentReagent` 's]
+        :param components: [list of :py:class:`DilutionComponentReagent` 's], do not include the diluent
         :param num_of_aliquots:
         :param minimize_aliquots:
         :param def_liq_class:
         :param excess:
-        :param initial_vol:
+        :param initial_vol: if this is set to 0 explicitly, the user signal it will be explicitly
+                            prepared during this protocol run. Only in this case the needed volume of components
+                            are "reserved".
         :param min_vol:
         :param fill_limit_aliq:
         :param concentration:
         """
         ex = def_mix_excess if excess is None else excess
-        vol = 0.0
-        self.diluent = None
-        assert isinstance(components, list)
-        for comp in components:
-            if comp is diluent:
-                self.diluent = diluent
-                continue
-            assert isinstance(comp, DilutionComponentReagent)
-            vol += comp.volume(min_vol - initial_vol, ex)
-        if self.diluent is None:
-            self.diluent = diluent
-            components.append(diluent)
-        diluent.min_vol(add_volume= (min_vol - initial_vol)*ex - vol)
+        assert isinstance(diluent, Reagent)  # todo raise
+        self.diluent = diluent
+        self.diluent_comp = MixComponentReagent(diluent)
 
-        if initial_vol is None:
-            initial_vol = 0.0
+        assert isinstance(components, list)
+        if initial_vol == 0.0:  # the user signal it will be prepared
+            vol = 0.0
+            for comp in components:
+                assert isinstance(comp, DilutionComponentReagent)
+                vol += comp.volume(min_vol - initial_vol, ex)
+            diluent.min_vol(add_volume= (min_vol - initial_vol)*ex - vol)
+        components.append(self.diluent_comp)
 
         MixReagent.__init__(self, name,
                             labware,
@@ -631,14 +652,15 @@ class Dilution(MixReagent):
                             min_vol=min_vol,
                             minimize_aliquots=minimize_aliquots)
 
-        # self.components = components  #: list of reagent components
-        # self.init_vol()
-
-    def reserve(self, need_vol: float):
+    def reserve(self, need_vol: float):  # todo as it is now: use only once!
         vol = 0.0
         for comp in self.components:
+            if comp is self.diluent_comp:
+                continue
             assert isinstance(comp, DilutionComponentReagent)
             vol += comp.volume(need_vol)
+        assert need_vol - vol > 0  # todo raise
+        MixComponentReagent.volume(self.diluent_comp, vol=need_vol - vol, excess=self.excess)
 
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)
@@ -947,7 +969,7 @@ class Primer:
         return p
 
 
-class PrimerReagent(Dilution):
+class PrimerReagent(MixReagent):
     """
     Manipulate a Primer Reagent on a robot.
     """
@@ -987,9 +1009,8 @@ class PrimerReagent(Dilution):
         if not diluent:
             pass  # todo identify or create diluent Reagent
 
-        Dilution.__init__(self,
+        MixReagent.__init__(self,
                           name=primer.name,
-                          diluent=diluent,
                           labware=primer_rack,  # or lab.stock, ??
                           wells=pos,
                           components=[diluent],

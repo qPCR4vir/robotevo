@@ -104,20 +104,20 @@ class PCR(Evo75_FLI):
         Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2, concentration=2)
         h2o = Reagent('H2O', labware='BufferTubes', num_of_aliquots=5, minimize_aliquots=False)
         te100x = Reagent('TE 100x', labware='BufferTubes', num_of_aliquots=1, concentration=100)
+        Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
+        Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
+
         TE_10x_fixed = MixReagent('TE 10x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
                    components=[MixComponentReagent(te100x, volume=500),
                                MixComponentReagent(h2o, volume=4500)])
-        a = 1
         TE_1x_fixed = MixReagent('TE 1x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                   components=[MixComponentReagent(TE_10x_fixed, volume=500),
-                               MixComponentReagent(h2o, volume=4500)])
-        te10x = Dilution('TE 10x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                 components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
+                                 components=[MixComponentReagent(TE_10x_fixed, volume=500),
+                                             MixComponentReagent(h2o, volume=4500)])
 
-        te1x = Dilution('TE 1x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                 components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
-        Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
-        Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
+        te10x = Dilution('TE 10x dil', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
+                         components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
+        te1x = Dilution('TE 1x dil', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
+                        components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
 
         expr = PCRexperimentRtic(exp,
                                  plates=pcr_plates[0],
@@ -131,8 +131,8 @@ class PCR(Evo75_FLI):
         self.check_list()
         self.set_EvoMode()
 
-        TE_10x_fixed.make(self, volume=15000)
-        TE_1x_fixed.make(self, volume=15000)
+        TE_10x_fixed.make(self)
+        TE_1x_fixed.make(self)
         te10x.make(self, volume=15000)
         te1x.make(self, volume=15000)
 
