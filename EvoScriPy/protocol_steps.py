@@ -664,7 +664,7 @@ class Protocol (Executable):
             optimize          : bool       = True):
 
         """
-        MixReagent the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
+        Mix the reagents in each of the wells selected `in_labware_region`, `using_liquid_class` and `volume`
 
         :param in_labware_region:
         :param using_liquid_class:
@@ -860,13 +860,13 @@ class Protocol (Executable):
                  volume: float=None,
                  force_replies: bool = False):
         """
-        A MixReagent is just that: a mix of reagents (aka - components)
-        which have been already defined to add some vol mix.
+        A MixReagent is a mix of reagents (aka - components)
+        which have been already defined to add some volume to this mix.
         Uses one new tip per component.
         It calculates and checks self the minimum and maximum number of aliquots of the resulting Mix
 
-        :param mix: what to make, a predefined Mix
-        :param volume:
+        :param mix: what to make, a predefined MixReagent
+        :param volume: todo ??
         :param bool force_replies: use all the preMix predefined replicas
 
         """
@@ -910,7 +910,7 @@ class Protocol (Executable):
                 samples_to_prepare += ns
 
 
-            with self.tips(robot.mask_tips[nt], tip_type=""):   # want to use preserved ?? selected=??
+            with self.tips(robot.mask_tips[nt]):  # todo: decide tip_type, and want to use preserved ?? selected=??
                 tip = -1
                 ctips = nt
                 for ridx, reagent_component in enumerate(mix.components):       # iterate MixComponentReagent

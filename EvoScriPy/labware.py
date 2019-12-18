@@ -596,6 +596,8 @@ class WorkTable:
 
     def set_def_DiTi(self, tips):                 # :Labware.DITIrackType) ->Labware.DITIrackType:
         old = self.def_DiTi_type
+        if isinstance(tips, str):
+            tips = Labware.types[tips]
         self.def_DiTi_type = tips
         return old
 
@@ -847,9 +849,8 @@ class usedTip(Tip):
 class Labware:
 
     # typeName label-string from template worktable file: labwares class-name.
-    # Mountain a list of labwares types
-    # like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
-    types = {}
+    types = {}  #: dict of labwares types, like:  {'Trough 100ml': <class 'EvoScriPy.Labware.Labware.CuvetteType'>}
+
 
     class Type:
 
