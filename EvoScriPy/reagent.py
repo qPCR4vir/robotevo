@@ -461,10 +461,11 @@ class MixReagent(Reagent):
                  minimize_aliquots: bool                   = None,
                  def_liq_class : (str, (str, str))         = None,
                  excess        : float                     = None,
-                 initial_vol   : float                     = 0.0,
+                 initial_vol   : float                     = None,
                  min_vol       : float                     = 0.0,  # todo ??
-                 fill_limit_aliq : float                   = 100,
-                 concentration : float                     = None
+                 fill_limit_aliq: float                    = 100,
+                 concentration : float                     = None,
+                 volpersample  : float                     = None
                  ):
         """
 
@@ -482,14 +483,6 @@ class MixReagent(Reagent):
         :param concentration:
         """
         ex = def_mix_excess if excess is None else excess
-        vol = 0.0
-        for comp in components:
-            assert isinstance(comp, MixComponentReagent)
-            vol += comp.volume(ex)
-            comp.reagent.put_min_vol()
-
-        if initial_vol is None:
-            initial_vol = 0.0
 
         Reagent.__init__(self, name,
                          labware,
@@ -501,41 +494,18 @@ class MixReagent(Reagent):
                          fill_limit_aliq= fill_limit_aliq,
                          concentration=concentration,
                          min_vol=min_vol,
-                         minimize_aliquots=minimize_aliquots)
-        self.min_vol(add_volume=-vol)
+                         minimize_aliquots=minimize_aliquots,
+                         volpersample=volpersample)
+
+        if initial_vol == 0.0:  # the user signal it will be prepared
+            vol = 0.0
+            for comp in components:
+                assert isinstance(comp, MixComponentReagent)
+                vol += comp.volume(ex)
+                # comp.reagent.put_min_vol()
+            self.min_vol(add_volume=-vol)
         self.components = components  #: list of reagent components
         # self.init_vol()
-
-
-    def min_vol(self, num_samples=None, volume: float = None, add_volume: float = None) -> float:
-        """
-        A minimal volume will be calculated based on either the number of samples
-        and the volume per sample to use (todo or the volume per single use.)???
-        :param num_samples:
-        :return:
-        """
-        old_need = max(self.need_vol, 0.0)
-        if self.volpersample:
-            assert not (volume or add_volume)
-            num_samples = num_samples or Reagent.current_protocol.num_of_samples or 0
-            self.need_vol = self.volpersample * num_samples * self.excess
-        else:
-            assert not num_samples
-            if volume:
-                assert not add_volume
-                self.need_vol = volume * self.excess
-            elif add_volume:
-                assert not volume
-                self.need_vol += add_volume * self.excess
-        need_vol = max (0.0, self.need_vol-old_need)
-        if need_vol > 0.05:
-            self.reserve(need_vol)
-        return self.need_vol
-
-    def reserve(self, need_vol: float):
-        # raise Exception("Prepare " + str(need_vol) + " more uL of " + str(self))
-        pass
-
 
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)
@@ -649,19 +619,19 @@ class Dilution(MixReagent):
             initial_vol = 0.0
 
         MixReagent.__init__(self, name,
-                         labware,
-                         components=components,
-                         wells=wells,
-                         num_of_aliquots=num_of_aliquots,
-                         def_liq_class=def_liq_class,
-                         excess=ex,
-                         initial_vol=initial_vol,
-                         fill_limit_aliq=fill_limit_aliq,
-                         concentration=concentration,
-                         min_vol=min_vol,
-                         minimize_aliquots=minimize_aliquots)
+                            labware,
+                            components=components,
+                            wells=wells,
+                            num_of_aliquots=num_of_aliquots,
+                            def_liq_class=def_liq_class,
+                            excess=ex,
+                            initial_vol=initial_vol,
+                            fill_limit_aliq=fill_limit_aliq,
+                            concentration=concentration,
+                            min_vol=min_vol,
+                            minimize_aliquots=minimize_aliquots)
 
-        self.components = components  #: list of reagent components
+        # self.components = components  #: list of reagent components
         # self.init_vol()
 
     def reserve(self, need_vol: float):

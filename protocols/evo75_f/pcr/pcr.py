@@ -111,13 +111,11 @@ class PCR(Evo75_FLI):
         TE_1x_fixed = MixReagent('TE 1x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
                    components=[MixComponentReagent(TE_10x_fixed, volume=500),
                                MixComponentReagent(h2o, volume=4500)])
-        """
         te10x = Dilution('TE 10x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
                  components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
 
-        Dilution('TE 1x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
+        te1x = Dilution('TE 1x', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
                  components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
-        """
         Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
         Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
 
@@ -132,6 +130,11 @@ class PCR(Evo75_FLI):
 
         self.check_list()
         self.set_EvoMode()
+
+        TE_10x_fixed.make(self, volume=15000)
+        TE_1x_fixed.make(self, volume=15000)
+        te10x.make(self, volume=15000)
+        te1x.make(self, volume=15000)
 
         expr.dilute_primers()
 
