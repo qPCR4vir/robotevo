@@ -228,6 +228,7 @@ class Pipette(Instruction):
         """
         Evoware visual script generator enforce a compatibility between the arguments mask_tip and well selection.
         If they are not compatible the robot crash.
+
         :return:
 
         """
@@ -320,9 +321,16 @@ class Pipetting(Pipette):
     def validate_arg(self):
         Pipette.validate_arg(self)
         if isinstance(self.liquidClass, str):
+            if self.liquidClass not in self.robot.liquid_clases.all:
+                err = "There is no Liquid Class with the name " + self.liquidClass
+                logging.error(err)
+                raise RuntimeError(err)
             self.liquidClass   = self.robot.liquid_clases.all[self.liquidClass]
         # todo use LiqC of the reagents in wells ?
-        assert isinstance(self.liquidClass  .name, str), "Set the liquid class to be used (for the reagent?)"
+        if not isinstance(self.liquidClass, labware_.LiquidClass):
+            err = "Set the liquid class to be used with the reagent " + self.liquidClass
+            logging.error(err)
+            raise RuntimeError(err)
 
         self.arg[1:1] = [String1(self.liquidClass)]                              # arg 2
 

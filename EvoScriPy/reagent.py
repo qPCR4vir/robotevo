@@ -130,7 +130,6 @@ class Reagent:
         logging.debug("Creating Reagent " + name)
         self.concentration = concentration
 
-
         self.user_min_vol = min_vol or 0.0
         self.need_vol = 0.0  #: calculated volume needed during the execution of the protocol
         if labware is None:
@@ -165,7 +164,7 @@ class Reagent:
 
         self.fill_limit_aliq = 1.0 if fill_limit_aliq is None else fill_limit_aliq / 100.0
         self.excess = 1.0 + ex/100.0
-        self.def_liq_class = def_liq_class
+        self.def_liq_class = def_liq_class or Reagent.current_protocol.Std_liquidClass
         self.name = name
         self.volpersample = volpersample
         self.components = []                                # todo reserved for future use ??
