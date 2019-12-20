@@ -127,8 +127,9 @@ class Reagent:
                                    This default value can be temporally change by setting that global.
 
         """
-        self.concentration = concentration
         logging.debug("Creating Reagent " + name)
+        self.concentration = concentration
+
 
         self.user_min_vol = min_vol or 0.0
         self.need_vol = 0.0  #: calculated volume needed during the execution of the protocol
@@ -217,14 +218,14 @@ class Reagent:
                                 + " that the minimum number of replicas you need(" + str(self.min_num_aliq) + " )")
 
         try:
-            self.Replicas   = self.labware.put(self, wells, self.min_num_aliq if self.minimize_aliquots else num_of_aliquots)
+            self.aliquots   = self.labware.put(self, wells, self.min_num_aliq if self.minimize_aliquots else num_of_aliquots)
         except lab.NoFreeWells as er:
             logging.warning("No free wells: " + str(er))
             for lwre in self.labwares:
                 if lwre is self.labware:
                     continue
                 try:
-                    self.Replicas = lwre.put(self, wells,
+                    self.aliquots = lwre.put(self, wells,
                                                      self.min_num_aliq if self.minimize_aliquots else num_of_aliquots)
                     self.labware = lwre
                     break
@@ -236,7 +237,7 @@ class Reagent:
                 logging.warning(str(er))
                 raise er
 
-        self.pos        = self.Replicas[0].offset                                   # ??
+        self.pos        = self.aliquots[0].offset                                   # ??
 
         self.initial_vol = None
         self.init_vol(num_samples=num_of_samples, initial_vol=initial_vol)            # put the minimal initial volume
@@ -268,7 +269,7 @@ class Reagent:
         return "{name:s}".format(name=self.name)
 
     def __repr__(self):
-        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+        return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
     def min_vol(self, num_samples=None, volume: float = None, add_volume: float = None) -> float:
         """
@@ -313,12 +314,12 @@ class Reagent:
         if initial_vol is not None:
             assert isinstance(initial_vol, list)
             self.initial_vol = []
-            for w, v in zip(self.Replicas, initial_vol):  # todo and the rest wells? 0?
+            for w, v in zip(self.aliquots, initial_vol):  # todo and the rest wells? 0?
                 w.vol = v if v else 0
                 assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for ' + str(w)
                 self.initial_vol.append(w.vol)
         else:
-            for w, v in zip(self.Replicas, self.initial_vol):  # todo and the rest wells? 0?
+            for w, v in zip(self.aliquots, self.initial_vol):  # todo and the rest wells? 0?
                 w.vol = v if v else 0
                 assert w.labware.type.max_vol >= w.vol, 'Excess initial volume for ' + str(w)
 
@@ -345,23 +346,23 @@ class Reagent:
                 return
             v_per_sample = self.volpersample * self.excess
             num_samples = max(num_samples, (need_vol + 0.5) // v_per_sample )
-            replicas=len(self.Replicas)
-            for i, w in enumerate(self.Replicas):
+            replicas=len(self.aliquots)
+            for i, w in enumerate(self.aliquots):
                 v = v_per_sample * (num_samples + replicas - (i + 1)) // replicas
                 if v > w.vol:  w.vol += (v-w.vol)
                 assert w.labware.type.max_vol >= w.vol, 'Add one more replica for ' + w.reagent.name
         else:
-            vr = need_vol * self.excess / len(self.Replicas)
-            for w in self.Replicas:
+            vr = need_vol * self.excess / len(self.aliquots)
+            for w in self.aliquots:
                 if vr > w.vol:  w.vol += (vr-w.vol)
                 assert w.labware.type.max_vol >= w.vol, 'Add one more replica for ' + w.reagent.name
 
     def autoselect(self, maxTips=1, offset=None, replicas = None):
-        # todo revise !!!!!!!!! we know the wells = Replicas
-        return self.labware.autoselect(offset or self.pos, maxTips, len(self.Replicas) if offset is None else 1)
+        # todo revise !!!!!!!!! we know the wells = aliquots
+        return self.labware.autoselect(offset or self.pos, maxTips, len(self.aliquots) if offset is None else 1)
 
     def select_all(self):
-        return self.labware.selectOnly([w.offset for w in self.Replicas])
+        return self.labware.selectOnly([w.offset for w in self.aliquots])
 
 
 class NoReagentFound(Exception):
@@ -524,10 +525,10 @@ class MixReagent(Reagent):
         return "{name:s}".format(name=self.name)
 
     def __repr__(self):  # todo ?
-        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+        return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
     def make(self, protocol):      # todo deprecate?
-        if self.Replicas[0].vol is None:   # ????
+        if self.aliquots[0].vol is None:   # ????
             self.put_min_vol()  # todo here?? too late ??
             assert False
         protocol.make_mix(self)
@@ -666,10 +667,10 @@ class Dilution(MixReagent):
         return "{name:s}".format(name=self.name)
 
     def __repr__(self):  # todo ?
-        return (self.name or '-') + '[' + str(self.Replicas or '-') + ']'
+        return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
     def make(self, protocol, volume=None):  # todo deprecate?
-        if self.Replicas[0].vol is None:  # ????
+        if self.aliquots[0].vol is None:  # ????
             self.put_min_vol(volume)
             assert False
         protocol.make_mix(self, volume)
@@ -786,7 +787,7 @@ class PreMixReagent(Reagent):  # todo rewrite to be a MixReagent
         # self.put_min_vol(num_samples)
 
     def make(self, protocol, NumSamples=None):      # todo deprecate? not used
-        if self.Replicas[0].vol is None:   # todo ????
+        if self.aliquots[0].vol is None:   # todo ????
             self.put_min_vol(NumSamples)   # todo ????
             assert False
         protocol.make_pre_mix(self, NumSamples)  # used directly?
@@ -1871,7 +1872,7 @@ class PCRexperimentRtic:
                 react_wells = []
                 for rx in pcr_reactions:
                     r = PCReactionReagent(rx, plate)
-                    react_wells.extend(r.Replicas)
+                    react_wells.extend(r.aliquots)
                 self.mixes.setdefault(mix, []).extend(react_wells)                     # just samples?
                 pass
 

@@ -368,7 +368,7 @@ class App(tkinter.Frame):
                                                    textvariable=self.RackSite, width=2).grid(row=0, column=4, padx=5,
                                                                                              sticky=tkinter.W)
 
-                self.ReplicaFrames = [App.GUI_protocol.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(reagent.Replicas)]
+                self.ReplicaFrames = [App.GUI_protocol.ReplicaFrame(self, reply, rn) for rn, reply in enumerate(reagent.aliquots)]
 
             def setVol(self, *args):
 

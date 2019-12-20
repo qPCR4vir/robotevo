@@ -438,7 +438,7 @@ class Protocol (Executable):
                         .format(v  = reagent.min_vol(),
                                 fg = lf.location.grid,
                                 fs = lf.location.site+1,
-                                fw = str([str(well) for well in reagent.Replicas]),
+                                fw = str([str(well) for well in reagent.aliquots]),
                                 do = str([i+1 for i in to]),
                                 to = lt.label,
                                 tg = lt.location.grid,
@@ -786,20 +786,20 @@ class Protocol (Executable):
         num_samples = num_samples or self.num_of_samples
         labw        = pre_mix.labware
         t_vol       = pre_mix.min_vol(num_samples)  # todo ???
-        mxnrepl     = len(pre_mix.Replicas)                        # max number of replies
+        mxnrepl     = len(pre_mix.aliquots)                        # max number of replies
         mnnrepl     = pre_mix.min_num_of_replica(num_samples)       # min number of replies
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
             logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, pre_mix.name))
-            pre_mix.Replicas = pre_mix.Replicas[:nrepl]
+            pre_mix.aliquots = pre_mix.aliquots[:nrepl]
 
         msg = "PreMix: {:.1f} µL of {:s}".format(t_vol, pre_mix.name)
         with group(msg):
             msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
                                 .format(labw.location.grid,
                                         labw.location.site + 1,
-                                        str([str(well) for well in pre_mix.Replicas]),
+                                        str([str(well) for well in pre_mix.aliquots]),
                                         ncomp)
             instructions.comment(msg).exec()
             # todo substrate the among already in aliquots wells (from initial_vol for example)
@@ -810,7 +810,7 @@ class Protocol (Executable):
             #    num_samples += ns
             samples_to_prepare = 0
             samples_per_replicas_to_prepare = []
-            for ridx, rp in enumerate(pre_mix.Replicas):
+            for ridx, rp in enumerate(pre_mix.aliquots):
                 ns = (num_samples + nrepl - (ridx + 1)) // nrepl
                 ns -= rp.vol // pre_mix.volpersample
                 samples_per_replicas_to_prepare.append(ns)
@@ -828,7 +828,7 @@ class Protocol (Executable):
                                          v   = reagent_vol,
                                          g   = labw.location.grid,
                                          st  = labw.location.site + 1,
-                                         w   = str([str(well) for well in reagent_component.Replicas]))
+                                         w   = str([str(well) for well in reagent_component.aliquots]))
                     instructions.comment(msg).exec()
                     tip += 1  # use the next tip
                     if tip >= nt:
@@ -842,14 +842,14 @@ class Protocol (Executable):
                     # but also if there is not sufficient reagent in the current component replica
                     current_comp_repl = 0
                     while reagent_vol > 0:
-                        while reagent_component.Replicas[current_comp_repl].vol < 1:      # todo define min vol
+                        while reagent_component.aliquots[current_comp_repl].vol < 1:      # todo define min vol
                             current_comp_repl += 1
-                        d_v = min(reagent_vol, max_vol, reagent_component.Replicas[current_comp_repl].vol)
+                        d_v = min(reagent_vol, max_vol, reagent_component.aliquots[current_comp_repl].vol)
 
                         self.aspirate_one(tip,
                                           reagent_component,
                                           d_v,
-                                          offset=reagent_component.Replicas[current_comp_repl].offset)
+                                          offset=reagent_component.aliquots[current_comp_repl].offset)
 
                         self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
                         reagent_vol -= d_v
@@ -877,20 +877,20 @@ class Protocol (Executable):
         nt          = min(mxn_tips, ncomp)
         labw        = mix.labware
         t_vol       = volume or mix.min_vol()  # todo ???
-        mxnrepl     = len(mix.Replicas)                             # max number of aliquots
+        mxnrepl     = len(mix.aliquots)                             # max number of aliquots
         mnnrepl     = mix.min_num_of_replica()                      # min number of aliquots
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
             logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, mix.name))
-            mix.Replicas = mix.Replicas[:nrepl]
+            mix.aliquots = mix.aliquots[:nrepl]
 
         msg = "Mix: {:.1f} µL of {:s}".format(t_vol, mix.name)
         with group(msg):
             msg += " into grid:{:d} site:{:d} {:s} from {:d} components:"\
                                 .format(labw.location.grid,
                                         labw.location.site + 1,
-                                        str([str(well) for well in mix.Replicas]),
+                                        str([str(well) for well in mix.aliquots]),
                                         ncomp)
             instructions.comment(msg).exec()
             num_samples = 100  # just to test
@@ -903,7 +903,7 @@ class Protocol (Executable):
 
             samples_to_prepare = 0
             samples_per_replicas_to_prepare = []
-            for ridx, rp in enumerate(mix.Replicas):
+            for ridx, rp in enumerate(mix.aliquots):
                 ns = (num_samples + nrepl - (ridx + 1)) // nrepl
                 ns -= rp.vol // (t_vol/num_samples)
                 samples_per_replicas_to_prepare.append(ns)
@@ -920,7 +920,7 @@ class Protocol (Executable):
                                          v   = reagent_component.vol,
                                          g   = labw.location.grid,
                                          st  = labw.location.site + 1,
-                                         w   = str([str(well) for well in reagent_component.reagent.Replicas]))
+                                         w   = str([str(well) for well in reagent_component.reagent.aliquots]))
                     instructions.comment(msg).exec()
                     tip += 1  # use the next tip
                     if tip >= nt:
@@ -934,14 +934,14 @@ class Protocol (Executable):
                     # but also if there is not sufficient reagent in the current component replica
                     current_comp_repl = 0
                     while reagent_vol > 0:
-                        while reagent_component.Replicas[current_comp_repl].vol < 1:      # todo define min vol
+                        while reagent_component.aliquots[current_comp_repl].vol < 1:      # todo define min vol
                             current_comp_repl += 1
-                        d_v = min(reagent_vol, max_vol, reagent_component.Replicas[current_comp_repl].vol)
+                        d_v = min(reagent_vol, max_vol, reagent_component.aliquots[current_comp_repl].vol)
 
                         self.aspirate_one(tip,
                                           reagent_component,
                                           d_v,
-                                          offset=reagent_component.Replicas[current_comp_repl].offset)
+                                          offset=reagent_component.aliquots[current_comp_repl].offset)
 
                         self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
                         reagent_vol -= d_v
@@ -965,7 +965,7 @@ class Protocol (Executable):
             msg += " into grid:{:d} site:{:d} {:s}:" \
                 .format(labw.location.grid,
                         labw.location.site + 1,
-                        str([str(well) for well in primer.Replicas]))
+                        str([str(well) for well in primer.aliquots]))
             instructions.comment(msg).exec()
             ctips = 1
             with self.tips(robot.mask_tips[ctips], tip_type=""):  # want to use preserved ?? selected=??
@@ -974,7 +974,7 @@ class Protocol (Executable):
                       .format(v=volume,
                               g=labw.location.grid,
                               st=labw.location.site + 1,
-                              w=str([str(well) for well in primer.diluent.Replicas]))
+                              w=str([str(well) for well in primer.diluent.aliquots]))
                 instructions.comment(msg).exec()
                 tips_type = self.robot.cur_arm().Tips[0].type  # only the 0 ??
                 self.drop_tips(robot.mask_tips[ctips])
@@ -987,7 +987,7 @@ class Protocol (Executable):
                 self.aspirate_one(tip,
                                   primer.diluent,
                                   volume,
-                                  offset=primer.diluent.Replicas[current_comp_repl].offset)
+                                  offset=primer.diluent.aliquots[current_comp_repl].offset)
                 self.dispense_one(current_comp_repl, primer, volume)
                 self.mix_reagent(primer, maxTips=ctips)
 
@@ -1162,7 +1162,7 @@ class Protocol (Executable):
         """
         for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
-                reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.Replicas])}"
+                reagent_msg = f"Check {reagent.name}in {str([str(well) for well in reagent.aliquots])}"
                 logging.info(reagent_msg)
                 self.check_reagent_level(reagent)
 
@@ -1176,7 +1176,7 @@ class Protocol (Executable):
         prompt_msg = ""
         for reagent in self.worktable.reagents.values():
             if reagent.include_in_check:
-                reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.Replicas])}"
+                reagent_msg = f"Check {reagent.name} in {str([str(well) for well in reagent.aliquots])}"
                 logging.info(reagent_msg)
                 prompt_msg += reagent_msg + ""
 
@@ -1319,7 +1319,7 @@ class Protocol (Executable):
         :param vol:
         """
         assert isinstance(vol, list)
-        re = reagent.Replicas
+        re = reagent.aliquots
         assert len(vol) <= len(re)
         for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
             instructions.dispense(robot.mask_tip[tip], self.robot.cur_arm().Tips[tip].origin.reagent.def_liq_class,

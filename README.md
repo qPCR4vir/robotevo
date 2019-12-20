@@ -21,7 +21,7 @@ Code organization - here are some directories / files you will encounter in this
 
  - `EvoScripts` TECAN Evoware templates and scripts. Includes our old, "manually" generated TECAN Evoware scripts for RNA extraction.
 
- - `tests.py`, `tests_output` are the test-scripts and corresponding outputs includimg englisch-commented protocols sintetized by 
+ - `tests.py`, `tests_output` are the test-scripts and corresponding outputs including englisch-commented protocols synthesized by 
  running most of the exixting RobotEvo python scripts, both demo- and user-protocols.
 
 ---------------------------------------------------------------------------------------------
