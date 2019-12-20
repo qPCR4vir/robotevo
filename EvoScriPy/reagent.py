@@ -668,11 +668,12 @@ class Dilution(MixReagent):
     def __repr__(self):  # todo ?
         return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
-    def make(self, protocol, volume=None):  # todo deprecate?
+    def make(self, protocol, volume=None):
         if self.aliquots[0].vol is None:  # ????
             self.put_min_vol(volume)
             assert False
-        protocol.make_mix(self, volume)
+        self.reserve(need_vol=volume)
+        protocol.make_mix(self)
 
 
 class PreMixComponent(MixComponent):

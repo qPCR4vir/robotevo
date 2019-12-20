@@ -857,7 +857,6 @@ class Protocol (Executable):
 
     def make_mix(self,
                  mix: MixReagent,
-                 volume: float = None,
                  force_replies: bool = False):
         """
         A MixReagent is a mix of reagents (aka - components)
@@ -876,7 +875,12 @@ class Protocol (Executable):
         ncomp       = len(mix.components)
         nt          = min(mxn_tips, ncomp)
         labw        = mix.labware
-        t_vol       = volume or mix.min_vol()  # todo ???
+
+        t_vol = 0
+        for r in mix.components:
+            # assert isinstance(r, MixComponentReagent)
+            t_vol += r.volume()
+
         mxnrepl     = len(mix.aliquots)                             # max number of aliquots
         mnnrepl     = mix.min_num_of_aliquots()                     # min number of aliquots
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, mix.name)
