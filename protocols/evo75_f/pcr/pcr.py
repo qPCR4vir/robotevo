@@ -136,8 +136,8 @@ class PCR(Evo75_FLI):
         with self.tips(tip_type="DiTi 1000ul"):
             TE_10x_fixed.make(self)
             TE_1x_fixed.make(self)
-            te10x.make(self, volume=15000)
-            te1x.make(self, volume=15000)
+            te10x.make(self, volume=12000)
+            te1x.make(self, volume=12000)
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 

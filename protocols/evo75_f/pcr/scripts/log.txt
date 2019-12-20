@@ -494,24 +494,24 @@ DEBUG:root:drop_tips_test return mask= 1
 DEBUG:root:drop_tips_executed called with mask= 1
 DEBUG:root:drop_tips_executed return mask= 1
 DEBUG:root:GroupEnd();
-DEBUG:root:Group("Mix: 16080.0 킠 of TE 10x dil");
-DEBUG:root:Comment("Mix: 16080.0 킠 of TE 10x dil into grid:12 site:1 ['well 11[K01] in labware BufferTubes:  with 5400.0 uL of reagent TE 10x dil'] from 2 components:");
+DEBUG:root:Group("Mix: 12864.0 킠 of TE 10x dil");
+DEBUG:root:Comment("Mix: 12864.0 킠 of TE 10x dil into grid:12 site:1 ['well 11[K01] in labware BufferTubes:  with 5400.0 uL of reagent TE 10x dil'] from 2 components:");
 DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
 INFO:root:Pick tip 5 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Comment("   1- 1500.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 2163.2 uL of reagent TE 100x']");
+DEBUG:root:Comment("   1- 1200.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 1838.7 uL of reagent TE 100x']");
 DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
 DEBUG:root:pipette_on_i_robot called with mask= 1
 DEBUG:root:pipette_on_i_robot return= 1
 DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
 DEBUG:root:pipette_on_i_robot called with mask= 1
 DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","560.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:Aspirate(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
 DEBUG:root:pipette_on_i_robot called with mask= 1
 DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","560.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:Dispense(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
 DEBUG:root:pipette_on_i_robot called with mask= 1
 DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Comment("   2- 14580.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 12327.3 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 12327.3 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 12327.3 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 12327.3 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 12327.3 uL of reagent H2O']");
+DEBUG:root:Comment("   2- 11664.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 10520.8 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 10520.8 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 10520.8 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 10520.8 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 10520.8 uL of reagent H2O']");
 DEBUG:root:drop_tips_test called with mask= 1
 DEBUG:root:eject_tips_test called with mask= 1
 DEBUG:root:eject_tips_test return mask= 1
@@ -598,3 +598,4 @@ DEBUG:root:pipette_on_i_robot called with mask= 1
 DEBUG:root:pipette_on_i_robot return= 1
 DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
 DEBUG:root:pipette_on_i_robot called with mask= 1
+ERROR:root:trying to change the volume of well 11[K01] in labware BufferTubes:  with 14120.0 uL of reagent TE 10x dil to 15060.0 but the maximum volume is 15000

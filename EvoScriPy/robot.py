@@ -488,9 +488,12 @@ class Robot:
                                                               labware_selection.label))
                     nv = wells[w].vol - dv
 
-                    assert  nv <= wells[w].labware.type.max_vol, ("Error trying to change the volume of " + str(wells[w])
-                                                                  + " to " + str(nv) + " but the maximun volumen is "
-                                                                  + str(wells[w].labware.type.max_vol) )
+                    if nv > wells[w].labware.type.max_vol:
+                        err = ("trying to change the volume of " + str(wells[w])
+                               + " to " + str(nv) + " but the maximum volume is "
+                               + str(wells[w].labware.type.max_vol))
+                        logging.error(err)
+                        raise RuntimeError(err)
 
                     assert nv > -self.allow_air, "Error !!! trying to change the volume of " + str (wells[w])   \
                             + " to " + str(nv) + "uL. But only " + str(self.allow_air) + "uL of air are allowed"
