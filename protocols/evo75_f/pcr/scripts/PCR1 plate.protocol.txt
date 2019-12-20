@@ -2,3 +2,8 @@ PCR 1 plates for 96 samples.
 
 Mix: 540.0 킠 of TE 10x fixed
     Mix: 540.0 킠 of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 5400.0 uL of reagent TE 10x fixed'] from 2 components:
+       1- 500.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 540.8 uL of reagent TE 100x']
+       2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 3294.7 uL of reagent H2O']
+
+Mix: 0.0 킠 of TE 1x fixed
+    Mix: 0.0 킠 of TE 1x fixed into grid:12 site:1 ['well 10[J01] in labware BufferTubes:  with 5400.0 uL of reagent TE 1x fixed'] from 2 components:

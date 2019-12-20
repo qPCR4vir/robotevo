@@ -258,4 +258,247 @@ DEBUG:root:Creating Reagent H2O.PCRG10
 DEBUG:root:Created Reagent H2O.PCRG10
 DEBUG:root:Group("Mix: 540.0 킠 of TE 10x fixed");
 DEBUG:root:Comment("Mix: 540.0 킠 of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 5400.0 uL of reagent TE 10x fixed'] from 2 components:");
-ERROR:root:No DiTi racks type registered with label: DiTi 1000ul
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 1 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 500.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 540.8 uL of reagent TE 100x']");
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","120.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","120.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 3294.7 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 3294.7 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 2 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","64.72",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","64.72",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","190",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","190.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","65.28",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","65.28",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","171.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 0.0 킠 of TE 1x fixed");
+DEBUG:root:Comment("Mix: 0.0 킠 of TE 1x fixed into grid:12 site:1 ['well 10[J01] in labware BufferTubes:  with 5400.0 uL of reagent TE 1x fixed'] from 2 components:");
