@@ -133,7 +133,7 @@ class PCR(Evo75_FLI):
 
         expr.dilute_primers()
 
-        with self.tips():  # todo add tip_type="DiTi 1000ul" to the worktable !!
+        with self.tips(tip_type="DiTi 1000ul"):
             TE_10x_fixed.make(self)
             TE_1x_fixed.make(self)
             te10x.make(self, volume=15000)
