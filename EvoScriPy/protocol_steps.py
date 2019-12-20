@@ -943,7 +943,7 @@ class Protocol (Executable):
                                           d_v,
                                           offset=reagent_component.aliquots[current_comp_repl].offset)
 
-                        self._multidispense_in_replicas(ridx, pre_mix, [sp / num_samples * d_v for sp in samples_per_replicas])
+                        self._multidispense_in_replicas(tip, mix, [sp / num_samples * d_v for sp in samples_per_aliquot])
                         reagent_vol -= d_v
                 self.mix_reagent(pre_mix, maxTips=ctips)
 
@@ -1319,9 +1319,8 @@ class Protocol (Executable):
         :param vol:
         """
         assert isinstance(vol, list)
-        re = reagent.aliquots
-        assert len(vol) <= len(re)
-        for v, w in zip(vol, re):                              # zip continues until the shortest iterable is exhausted
+        assert len(vol) <= len(reagent.aliquots)
+        for v, w in zip(vol, reagent.aliquots):                 # zip continues until the shortest iterable is exhausted
             instructions.dispense(robot.mask_tip[tip], self.robot.cur_arm().Tips[tip].origin.reagent.def_liq_class,
                                   # reagent.def_liq_class,
                                   v, w.labware.selectOnly([w.offset])).exec()
