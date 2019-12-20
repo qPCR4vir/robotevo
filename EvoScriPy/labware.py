@@ -603,17 +603,20 @@ class WorkTable:
 
     def get_DITI_series(self, rack =None):
         """
+        Find and return the series of DiTi racks of the type specified by argument rack.
 
+        :param rack:
         :type rack:(str, DITIrackType, DITIrack, DITIrackTypeSeries)
+        :return: the serie of DiTi racks of the type specified by argument rack
         """
+        if rack is None:
+            rack = self.def_DiTi_type
+
         if isinstance(rack, DITIrackTypeSeries):  # get the series directly
             return rack
 
         if isinstance(rack, DITIrack):
             return rack.series
-
-        if rack is None:
-            rack = self.def_DiTi_type.name
 
         if isinstance(rack, DITIrackType):
             rack = rack.name
@@ -621,9 +624,12 @@ class WorkTable:
         assert isinstance(rack, str)
 
         if rack in self.labware_series:
-            return self.labware_series[rack]
+            series = self.labware_series[rack]
+            assert isinstance(series, DITIrackTypeSeries)
+            return series
 
-        logging.warning("No labware type registered with label: " + rack)
+        logging.error("No DiTi racks type registered with label: " + rack)
+        raise RuntimeError("In this worktable there is no DiTi racks type registered with label: " + rack)
 
 
 class Frezeer (WorkTable):

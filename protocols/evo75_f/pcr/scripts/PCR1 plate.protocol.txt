@@ -2,4 +2,3 @@ PCR 1 plates for 96 samples.
 
 Mix: 540.0 µL of TE 10x fixed
     Mix: 540.0 µL of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 5400.0 uL of reagent TE 10x fixed'] from 2 components:
-       1- 500.0 µL from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 540.8 uL of reagent TE 100x']

@@ -857,7 +857,7 @@ class Protocol (Executable):
 
     def make_mix(self,
                  mix: MixReagent,
-                 volume: float=None,
+                 volume: float = None,
                  force_replies: bool = False):
         """
         A MixReagent is a mix of reagents (aka - components)

@@ -127,5 +127,3 @@ V;200
 Comment("PCR 1 plates for 96 samples.");
 Group("Mix: 540.0 µL of TE 10x fixed");
 Comment("Mix: 540.0 µL of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 5400.0 uL of reagent TE 10x fixed'] from 2 components:");
-GetDITI2(1,"DiTi 200 ul",0,0,0,300);
-Comment("   1- 500.0 µL from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 540.8 uL of reagent TE 100x']");
