@@ -787,7 +787,7 @@ class Protocol (Executable):
         labw        = pre_mix.labware
         t_vol       = pre_mix.min_vol(num_samples)  # todo ???
         mxnrepl     = len(pre_mix.aliquots)                        # max number of replies
-        mnnrepl     = pre_mix.min_num_of_replica(num_samples)       # min number of replies
+        mnnrepl     = pre_mix.min_num_of_aliquots(num_samples)       # min number of replies
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, pre_mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
@@ -878,7 +878,7 @@ class Protocol (Executable):
         labw        = mix.labware
         t_vol       = volume or mix.min_vol()  # todo ???
         mxnrepl     = len(mix.aliquots)                             # max number of aliquots
-        mnnrepl     = mix.min_num_of_replica()                      # min number of aliquots
+        mnnrepl     = mix.min_num_of_aliquots()                      # min number of aliquots
         assert mxnrepl >= mnnrepl, 'Please choose at least {:d} replies for {:s}'.format(mnnrepl, mix.name)
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:

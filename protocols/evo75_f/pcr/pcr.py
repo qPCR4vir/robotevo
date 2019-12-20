@@ -131,13 +131,13 @@ class PCR(Evo75_FLI):
         self.check_list()
         self.set_EvoMode()
 
-        with self.tips(tip_type="DiTi 1000ul"):  # todo add tip_type="DiTi 1000ul" to the worktable !!
+        expr.dilute_primers()
+
+        with self.tips():  # todo add tip_type="DiTi 1000ul" to the worktable !!
             TE_10x_fixed.make(self)
             TE_1x_fixed.make(self)
             te10x.make(self, volume=15000)
             te1x.make(self, volume=15000)
-
-        expr.dilute_primers()
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 

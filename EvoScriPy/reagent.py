@@ -115,7 +115,7 @@ class Reagent:
         :param volpersample:    how much is needed per sample, if applicable, in uL
         :param single_use:      Not a "per sample" multiple use? Set then here the volume for one single use
         :param wells:           or offset to begging to put replica. If None will try to assign consecutive wells in labware
-        :param num_of_aliquots: def min_num_of_replica(), number of replicas
+        :param num_of_aliquots: def min_num_of_aliquots(), number of replicas
         :param def_liq_class:   the name of the Liquid class, as it appears in your own EVOware database.
                                 instructions.def_liquidClass if None
         :param excess;          in %
@@ -185,7 +185,7 @@ class Reagent:
             if volpersample and num_of_samples is None:
                 num_of_samples = Reagent.current_protocol.num_of_samples or 0
 
-        self.min_num_aliq = self.min_num_of_replica(num_of_samples=num_of_samples)
+        self.min_num_aliq = self.min_num_of_aliquots(num_of_samples=num_of_samples)
 
         # coordinate: min_num_aliq, wells, num_of_aliquots, initial_vol. todo fine-tune warnings.
         if num_of_aliquots is None:
@@ -244,7 +244,7 @@ class Reagent:
         self.include_in_check = True
         logging.debug("Created Reagent " + str(self))
 
-    def min_num_of_replica(self, num_of_samples: int = None) -> int:
+    def min_num_of_aliquots(self, num_of_samples: int = None) -> int:
         """
         A minimal number of replicas (wells, aliquots) will be calculated based on the minimal volume,
         taking into account the maximum allowed volume per well and the excess specified.
@@ -253,7 +253,7 @@ class Reagent:
         """
         min_vol = self.min_vol(num_of_samples)
         if min_vol is None:
-            logging.warning("Calculating min_num_of_replica for " + str(self) + " before setting any volume.")
+            logging.warning("Calculating min_num_of_aliquots for " + str(self) + " before setting any volume.")
             min_vol = 0.0
         return int(min_vol / (self.labware.type.max_vol * self.fill_limit_aliq)) + 1
 
