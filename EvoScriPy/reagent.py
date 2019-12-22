@@ -543,14 +543,16 @@ class MixReagent(Reagent):
                          adjust_init_vol=adjust_init_vol,
                          to_be_prepared=to_be_prepared)
 
+        """
         if initial_vol == 0.0:  # the user signal it will be prepared
             vol = 0.0
             for comp in components:
                 assert isinstance(comp, MixComponentReagent)
-                vol += comp.volume(ex)  # which means we will need this additional volume of each of the components
+                vol += comp.volume(excess=self.excess)  # which means we will need this additional volume of each of the components
                 # comp.reagent.put_min_vol()
             self.min_vol(add_volume=-vol)
         # self.init_vol()
+        """
 
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)

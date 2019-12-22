@@ -1,19 +1,19 @@
 PCR 1 plates for 96 samples.
 
-Mix: 16.0 킠 of TE 10x fixed
-    Mix: 16.0 킠 of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x fixed'] from 2 components:
-       1- 8.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 15.6 uL of reagent TE 100x']
-       2- 8.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 6.9 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 6.9 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 6.9 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 6.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6.9 uL of reagent H2O']
+Mix: 5000.0 킠 of TE 10x fixed
+    Mix: 5000.0 킠 of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x fixed'] from 2 components:
+       1- 500.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 540.8 uL of reagent TE 100x']
+       2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 1946.9 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 1946.9 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 1946.9 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 1946.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 1946.9 uL of reagent H2O']
 
-Mix: 16.0 킠 of TE 1x fixed
-    Mix: 16.0 킠 of TE 1x fixed into grid:12 site:1 ['well 10[J01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x fixed'] from 2 components:
-       1- 8.0 킠 from grid:12 site:1:['well 9[I01] in labware BufferTubes:  with 16.0 uL of reagent TE 10x fixed']
-       2- 8.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 5.8 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 6.9 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 6.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6.9 uL of reagent H2O']
+Mix: 5000.0 킠 of TE 1x fixed
+    Mix: 5000.0 킠 of TE 1x fixed into grid:12 site:1 ['well 10[J01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x fixed'] from 2 components:
+       1- 500.0 킠 from grid:12 site:1:['well 9[I01] in labware BufferTubes:  with 5000.0 uL of reagent TE 10x fixed']
+       2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 1340.6 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 1946.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 1946.9 uL of reagent H2O']
 
 Mix: 13936.0 킠 of TE 10x dil
     Mix: 13936.0 킠 of TE 10x dil into grid:12 site:1 ['well 11[K01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x dil'] from 2 components:
-       1- 1300.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 11257.3 uL of reagent TE 100x']
-       2- 12636.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 2738.6 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 2738.6 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 2738.6 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 2738.6 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 2738.6 uL of reagent H2O']
+       1- 1300.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 11789.4 uL of reagent TE 100x']
+       2- 12636.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 4680.3 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 4680.3 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 4680.3 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 4680.3 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 4680.3 uL of reagent H2O']
 
 Mix: 15008.0 킠 of TE 1x dil
     Mix: 15008.0 킠 of TE 1x dil into grid:12 site:1 ['well 12[L01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x dil'] from 2 components:
