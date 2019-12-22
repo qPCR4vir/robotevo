@@ -173,7 +173,7 @@ class RNAextr_MN_Vet_Kit(Evo100_FLI):
 
             pK_cRNA_MS2 = PreMixReagent("ProtK+cRNA+IC-MS2 mix ",
                                         Reagents,
-                                        pos            = 8,
+                                        wells          = 8,
                                         components     = [cRNA, ProtK, IC_MS2],
                                         def_liq_class  = self.W_liquidClass,
                                         excess         = 20)

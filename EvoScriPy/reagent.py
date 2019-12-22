@@ -82,20 +82,22 @@ class Reagent:
     use_minimal_number_of_aliquots = True
 
     def __init__(self,
-                 name          : str,
-                 labware       : (lab.Labware, str, [])    = None,
-                 wells         : (int, [int], [lab.Well])  = None,
-                 num_of_aliquots: int                      = None,
-                 minimize_aliquots: bool                   = None,
-                 def_liq_class : (str, (str, str))         = None,
-                 volpersample  : float                     = 0.0,   #: todo move to PreMixComponent
-                 num_of_samples: int                       = None,  #: todo move to Exp? to prepare?
-                 single_use    : float                     = None,  #: todo move to MixComponent
-                 excess        : float                     = None,  #: todo move to MixComponent
-                 initial_vol   : (float, list)             = 0.0,
-                 min_vol       : float                     = 0.0,
-                 fill_limit_aliq: float                    = 100,
-                 concentration : float                     = None   # todo implement use. Absolut vs. relative? Units?
+                 name           : str,
+                 labware        : (lab.Labware, str, [])    = None,
+                 wells          : (int, [int], [lab.Well])  = None,
+                 num_of_aliquots: int                       = None,
+                 minimize_aliquots: bool                    = None,
+                 fill_limit_aliq: float                     = 100,
+                 def_liq_class  : (str, (str, str))         = None,
+                 volpersample   : float                     = 0.0,   #: todo move to PreMixComponent?
+                 num_of_samples : int                       = None,  #: todo move to Exp? to prepare?
+                 single_use     : float                     = None,  #: todo move to MixComponent
+                 excess         : float                     = None,  #: todo move to MixComponent
+                 initial_vol    : (float, list)             = 0.0,
+                 min_vol        : float                     = 0.0,
+                 adjust_init_vol: bool                      = True,
+                 to_be_prepared : bool                      = False,
+                 concentration  : float                     = None   # todo Absolut vs. relative? Units?
                  ):
         """
         This is a named set of aliquots of an homogeneous solution.
@@ -125,9 +127,16 @@ class Reagent:
         :param num_of_samples:  if None, the number of samples of the current protocol will be assumed
         :param minimize_aliquots:  use minimal number of aliquots? Defaults to `Reagent.use_minimal_number_of_aliquots`,
                                    This default value can be temporally change by setting that global.
+        :param adjust_init_vol:
+        :param to_be_prepared:
+        :param concentration:
 
         """
+
         logging.debug("Creating Reagent " + name)
+
+        self.adjust_init_vol = adjust_init_vol
+        self.to_be_prepeared = to_be_prepared
         self.concentration = concentration
 
         self.user_min_vol = min_vol or 0.0
@@ -147,7 +156,7 @@ class Reagent:
 
         # add self to the list of reagents of the worktable were the labware is.
         worktable = None
-        assert isinstance(self.labware.location.worktable,   lab.WorkTable)                                   # todo temporal
+        assert  isinstance(self.labware.location.worktable,  lab.WorkTable)            # todo temporal
         if (    isinstance(self.labware,                     lab.Labware)
             and isinstance(self.labware.location,            lab.WorkTable.Location)
             and isinstance(self.labware.location.worktable,  lab.WorkTable)):
@@ -167,7 +176,7 @@ class Reagent:
         self.def_liq_class = def_liq_class or Reagent.current_protocol.Std_liquidClass
         self.name = name
         self.volpersample = volpersample
-        self.components = []                                # todo reserved for future use ??
+        # self.components = []                                # todo reserved for future use ??
         if minimize_aliquots is not None:
             self.minimize_aliquots = minimize_aliquots
         else:
@@ -300,12 +309,21 @@ class Reagent:
                     self.need_vol = 0.0
                 self.need_vol += add_volume * self.excess
 
+        if not self.adjust_init_vol and not self.to_be_prepeared:
+            vol = 0.0
+            for aliquot in self.aliquots:
+                vol += aliquot.vol
+            if self.need_vol > vol + 0.05:
+                err = "There is no sufcient " + str(self) + " to reserve " + str(self.need_vol)
+                logging.error(err)
+                raise RuntimeError(err)
         return self.need_vol
 
     def init_vol(self, num_samples=None, initial_vol=None):
         """
         To initialize the among of reagent in each well. First put what the user inform he had put, then
         put additionally the minimum the protocol need.
+
         :param num_samples:
         :param initial_vol: what the user inform he had put on each aliquot well.
         :return:
@@ -326,18 +344,24 @@ class Reagent:
 
     def put_min_vol(self, num_samples=None):          # todo create num_of_aliquots if needed !!!!
         """
-        Force you to put an initial volume of reagent that can be used to distribute into samples,
+        Force you to put the initial volume of reagent that need to be used to
+        prepare other reagent mixes, or to distribute into samples
         aspiring equal number of complete doses for each sample from each replica,
-        except the firsts replicas that can be used to aspirate one more dose for the last/rest of samples.
-        That is: all replica have equal volume (number) of doses or the firsts have one more dose
+        except the firsts aliquots that can be used to aspirate one more dose for the last/rest of samples.
+        That is: all aliquots have equal volume (number) of doses or the firsts have one more dose
+
         :param num_samples:
         :return:
         """
-        if self.need_vol is None:
+        if self.need_vol is None:  # todo ??
             logging.warning("Puting put_min_vol for " + str(self) + " before setting any volume.")
             self.need_vol = 0.0
 
-        need_vol = max(self.need_vol, self.user_min_vol, 0.0)
+        need_vol = max(self.min_vol(num_samples=num_samples), self.user_min_vol, 0.0)
+
+        if not self.adjust_init_vol:
+            return
+
         if self.volpersample:
             if num_samples is None:
                 num_samples = Reagent.current_protocol.num_of_samples
@@ -464,19 +488,23 @@ class MixReagent(Reagent):
     """
 
     def __init__(self,
-                 name          : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
-                 labware       : (lab.Labware, str, [])    = None,
-                 wells         : (int, [int], [lab.Well])  = None,
-                 components    : [MixComponentReagent]     = None,
-                 num_of_aliquots: int                      = None,
-                 minimize_aliquots: bool                   = None,
-                 def_liq_class : (str, (str, str))         = None,
-                 excess        : float                     = None,
-                 initial_vol   : float                     = None,
-                 min_vol       : float                     = 0.0,  # todo ??
-                 fill_limit_aliq: float                    = 100,
-                 concentration : float                     = None,
-                 volpersample  : float                     = None
+                 name           : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
+                 labware        : (lab.Labware, str, [])    = None,
+                 wells          : (int, [int], [lab.Well])  = None,
+                 components     : [MixComponentReagent]     = None,
+                 num_of_aliquots: int                       = None,
+                 minimize_aliquots: bool                    = None,
+                 fill_limit_aliq: float                     = 100,
+                 def_liq_class  : (str, (str, str))         = None,
+                 volpersample   : float                     = None,
+                 num_of_samples : int                       = None,  #: todo move to Exp? to prepare?
+                 single_use     : float                     = None,  #: todo move to MixComponent
+                 excess         : float                     = None,  #: todo move to MixComponent
+                 initial_vol    : (float, list)             = 0.0,
+                 min_vol        : float                     = 0.0,
+                 adjust_init_vol: bool                      = False,
+                 to_be_prepared : bool                      = True,
+                 concentration  : float                     = None   # todo Absolut vs. relative? Units?
                  ):
         """
 
@@ -496,6 +524,7 @@ class MixReagent(Reagent):
         :param concentration:
         """
         ex = def_mix_excess if excess is None else excess
+        self.components = components  #: list of reagent components
 
         Reagent.__init__(self, name,
                          labware,
@@ -508,7 +537,11 @@ class MixReagent(Reagent):
                          concentration=concentration,
                          min_vol=min_vol,
                          minimize_aliquots=minimize_aliquots,
-                         volpersample=volpersample)
+                         volpersample=volpersample,
+                         num_of_samples=num_of_samples,
+                         single_use=single_use,
+                         adjust_init_vol=adjust_init_vol,
+                         to_be_prepared=to_be_prepared)
 
         if initial_vol == 0.0:  # the user signal it will be prepared
             vol = 0.0
@@ -517,7 +550,6 @@ class MixReagent(Reagent):
                 vol += comp.volume(ex)  # which means we will need this additional volume of each of the components
                 # comp.reagent.put_min_vol()
             self.min_vol(add_volume=-vol)
-        self.components = components  #: list of reagent components
         # self.init_vol()
 
     def __str__(self):  # todo ?
@@ -593,19 +625,24 @@ class Dilution(MixReagent):
     """
 
     def __init__(self,
-                 name: str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
-                 diluent: Reagent,
-                 labware: (lab.Labware, str, []) = None,
-                 wells: (int, [int], [lab.Well]) = None,
-                 components: [DilutionComponentReagent] = None,
-                 num_of_aliquots: int = None,
-                 minimize_aliquots: bool = None,
-                 def_liq_class: (str, (str, str)) = None,
-                 excess: float = None,
-                 initial_vol: float = None,
-                 min_vol: float = 0.0,
-                 fill_limit_aliq: float = 100,
-                 concentration: float = None
+                 name           : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
+                 diluent        : Reagent,
+                 labware        : (lab.Labware, str, [])    = None,
+                 wells          : (int, [int], [lab.Well])  = None,
+                 components     : [DilutionComponentReagent]= None,
+                 num_of_aliquots: int                       = None,
+                 minimize_aliquots: bool                    = None,
+                 fill_limit_aliq: float                     = 100,
+                 def_liq_class  : (str, (str, str))         = None,
+                 volpersample   : float                     = None,
+                 num_of_samples : int                       = None,  #: todo move to Exp? to prepare?
+                 single_use     : float                     = None,  #: todo move to MixComponent
+                 excess         : float                     = None,  #: todo move to MixComponent
+                 initial_vol    : (float, list)             = 0.0,
+                 min_vol        : float                     = 0.0,
+                 adjust_init_vol: bool                      = False,
+                 to_be_prepared : bool                      = True,
+                 concentration  : float                     = None   # todo Absolut vs. relative? Units?
                  ):
         """
 
@@ -640,17 +677,22 @@ class Dilution(MixReagent):
         components.append(self.diluent_comp)
 
         MixReagent.__init__(self, name,
-                            labware,
+                            labware=labware,
                             components=components,
                             wells=wells,
                             num_of_aliquots=num_of_aliquots,
                             def_liq_class=def_liq_class,
+                            volpersample=volpersample,
                             excess=ex,
                             initial_vol=initial_vol,
                             fill_limit_aliq=fill_limit_aliq,
                             concentration=concentration,
                             min_vol=min_vol,
-                            minimize_aliquots=minimize_aliquots)
+                            minimize_aliquots=minimize_aliquots,
+                            num_of_samples=num_of_samples,
+                            single_use=single_use,
+                            adjust_init_vol=adjust_init_vol,
+                            to_be_prepared=to_be_prepared)
 
     def reserve(self, need_vol: float):  # todo as it is now: use only once!
         vol = 0.0
@@ -720,16 +762,22 @@ class PreMixReagent(Reagent):  # todo rewrite to be a MixReagent
     """
 
     def __init__(self,
-                 name,
-                 labware: (lab.Labware, list),
-                 components,
-                 pos = None,
-                 num_of_aliquots = None,
-                 initial_vol = None,
-                 def_liq_class = None,
-                 excess = None,
-                 fill_limit_aliq =None,
-                 num_of_samples = None  # todo here?
+                 name           : str,  # todo introduce abstract info class MixReagent and rename this MixReagent?
+                 labware        : (lab.Labware, str, [])     ,
+                 components     : [Reagent]                  ,
+                 wells          : (int, [int], [lab.Well])  = None,
+                 num_of_aliquots: int                       = None,
+                 minimize_aliquots: bool                    = None,
+                 fill_limit_aliq: float                     = None,
+                 def_liq_class  : (str, (str, str))         = None,
+                 num_of_samples : int                       = None,  #: todo move to Exp? to prepare?
+                 single_use     : float                     = None,  #: todo move to MixComponent
+                 excess         : float                     = None,  #: todo move to MixComponent
+                 initial_vol    : (float, list)             = None,
+                 min_vol        : float                     = 0.0,
+                 adjust_init_vol: bool                      = False,
+                 to_be_prepared : bool                      = True,
+                 concentration  : float                     = None   # todo Absolut vs. relative? Units?
                  ):
         """
 
@@ -746,6 +794,8 @@ class PreMixReagent(Reagent):  # todo rewrite to be a MixReagent
         """
         ex = def_mix_excess if excess is None else excess
         vol = 0.0
+        self.components = components  #: list of reagent components
+
         for reagent in components:
             vol += reagent.volpersample
             reagent.excess += ex/100.0      # todo revise! best to calculate at the moment of making?
@@ -756,16 +806,21 @@ class PreMixReagent(Reagent):  # todo rewrite to be a MixReagent
 
         Reagent.__init__(self, name,
                          labware,
-                         volpersample= vol,
-                         wells= pos,
+                         wells= wells,
                          num_of_aliquots= num_of_aliquots,
                          def_liq_class = def_liq_class,
                          excess = ex,
                          initial_vol = initial_vol,
                          fill_limit_aliq= fill_limit_aliq,
-                         num_of_samples = num_of_samples)
+                         concentration=concentration,
+                         min_vol=min_vol,
+                         minimize_aliquots=minimize_aliquots,
+                         volpersample=vol,
+                         num_of_samples=num_of_samples,
+                         single_use=single_use,
+                         adjust_init_vol=adjust_init_vol,
+                         to_be_prepared=to_be_prepared)
 
-        self.components = components  #: list of reagent components
         # self.init_vol()
 
     def init_vol(self, num_samples=None, initial_vol=None):
@@ -1580,16 +1635,16 @@ class PCRMasterMixReagent(PreMixReagent):
             components.append(component_r)
 
         PreMixReagent.__init__(self,
-                        pcr_mix.name + "-PCRMMix",
-                        mmix_rack,
-                        components,
-                        pos=pos,
-                        num_of_aliquots=num_of_aliquots,
-                        initial_vol=initial_vol,
-                        def_liq_class=def_liq_class,
-                        excess=excess or PCRMasterMixReagent.excess,
-                        fill_limit_aliq=fill_limit_aliq,
-                        num_of_samples=num_of_samples)
+                               name=pcr_mix.name + "-PCRMMix",
+                               labware=mmix_rack,
+                               components=components,
+                               wells=pos,
+                               num_of_aliquots=num_of_aliquots,
+                               initial_vol=initial_vol,
+                               def_liq_class=def_liq_class,
+                               excess=excess or PCRMasterMixReagent.excess,
+                               fill_limit_aliq=fill_limit_aliq,
+                               num_of_samples=num_of_samples)
 
 
 class PCReaction:

@@ -107,17 +107,23 @@ class PCR(Evo75_FLI):
         Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
         Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
 
-        TE_10x_fixed = MixReagent('TE 10x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
-                   components=[MixComponentReagent(te100x, volume=500),
-                               MixComponentReagent(h2o, volume=4500)])
-        TE_1x_fixed = MixReagent('TE 1x fixed', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
+        TE_10x_fixed = MixReagent('TE 10x fixed', labware='BufferTubes', num_of_aliquots=1,  # min_vol=5000,
+                                  components=[MixComponentReagent(te100x, volume=500),
+                                              MixComponentReagent(h2o, volume=4500)])
+        TE_1x_fixed = MixReagent('TE 1x fixed', labware='BufferTubes', num_of_aliquots=1,  # min_vol=5000,
                                  components=[MixComponentReagent(TE_10x_fixed, volume=500),
                                              MixComponentReagent(h2o, volume=4500)])
 
-        te10x = Dilution('TE 10x dil', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
+        te10x = Dilution('TE 10x dil', labware='BufferTubes', num_of_aliquots=1, # min_vol=5000,
                          components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
-        te1x = Dilution('TE 1x dil', labware='BufferTubes', num_of_aliquots=1, min_vol=5000,
+        te1x = Dilution('TE 1x dil', labware='BufferTubes', num_of_aliquots=1, # min_vol=5000,
                         components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
+
+        with self.tips(tip_type="DiTi 1000ul"):
+            TE_10x_fixed.make(self)
+            TE_1x_fixed.make(self)
+            te10x.make(self, volume=13000)
+            te1x.make(self, volume=14000)
 
         expr = PCRexperimentRtic(exp,
                                  plates=pcr_plates[0],
@@ -132,12 +138,6 @@ class PCR(Evo75_FLI):
         self.set_EvoMode()
 
         expr.dilute_primers()
-
-        with self.tips(tip_type="DiTi 1000ul"):
-            TE_10x_fixed.make(self)
-            TE_1x_fixed.make(self)
-            te10x.make(self, volume=12000)
-            te1x.make(self, volume=12000)
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 

@@ -130,40 +130,40 @@ class PreKingFisher_RNAextNucleoMag_EtOH80p(Evo100_FLI):
 
         if self.add_preMix:                             # we need to add ProtK+cRNA+MS2 mix
             ProtK       = Reagent("Proteinase K ",
-                                      Reagents,
-                                      num_of_aliquots= 2,
-                                      minimize_aliquots=False,
-                                      wells= [15, 16],
-                                      volpersample = ProtKVolume,
-                                      def_liq_class  = self.Small_vol_disp)
+                                  Reagents,
+                                  num_of_aliquots= 2,
+                                  minimize_aliquots=False,
+                                  wells= [15, 16],
+                                  volpersample = ProtKVolume,
+                                  def_liq_class  = self.Small_vol_disp)
 
             cRNA        = Reagent("Carrier RNA ",
-                                      Reagents,
-                                      wells= 14,
-                                      volpersample  = cRNAVolume,
-                                      def_liq_class   = self.Small_vol_disp)
+                                  Reagents,
+                                  wells= 14,
+                                  volpersample  = cRNAVolume,
+                                  def_liq_class   = self.Small_vol_disp)
 
             IC_MS2      = Reagent("IC MS2 phage culture ",
-                                      Reagents,
-                                      wells= 13,
-                                      volpersample  = IC_MS2Volume,
-                                      def_liq_class   = self.Small_vol_disp)
+                                  Reagents,
+                                  wells= 13,
+                                  volpersample  = IC_MS2Volume,
+                                  def_liq_class   = self.Small_vol_disp)
 
             # IC2         = Reagent("IC2 - synthetic RNA " ,  Reagents, pos=13,
             #                           volpersample=  IC2Volume ,def_liq_class=W_liquidClass)
 
-            pK_cRNA_MS2 = PreMixReagent  ("ProtK+cRNA+IC-MS2 mix ",
-                                   Reagents,
-                                   pos          = 8,
-                                   components   = [cRNA, ProtK, IC_MS2],
-                                   def_liq_class= self.W_liquidClass,
-                                   excess       = 20)
+            pK_cRNA_MS2 = PreMixReagent("ProtK+cRNA+IC-MS2 mix ",
+                                        Reagents,
+                                        wells        = 8,
+                                        components   = [cRNA, ProtK, IC_MS2],
+                                        def_liq_class= self.W_liquidClass,
+                                        excess       = 20)
 
         if self.add_VL:
             LysisBuffer = Reagent("VL - Lysis Buffer ",
-                                      LysBuf,
-                                      volpersample  = LysisBufferVolume,
-                                      def_liq_class   = 'MN VL')
+                                  LysBuf,
+                                  volpersample  = LysisBufferVolume,
+                                  def_liq_class   = 'MN VL')
 
         if self.do_extraction:
             B_Beads         = Reagent("B - Beads ",
