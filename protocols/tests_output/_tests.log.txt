@@ -14,7 +14,7 @@ INFO:root:
 ************ protocols\tests_output\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s **************
 
 INFO:root:Parsing: protocols\evo100_f\DefaultLCs.txt
-INFO:root:Parsing: C:\prog\robotevo\protocols\evo100_f\CustomLCs.txt
+INFO:root:Parsing: C:\Prog\RobotEvo\protocols\evo100_f\CustomLCs.txt
 INFO:root:Parsing carriers types from protocols\evo100_f\Carrier.cfg
 INFO:root:Opened file for script: protocols\tests_output\Prefill_plates_VEW1_ElutionBuffer_VEW2_test_96s.esc
 INFO:root:Carrier: DiTi 3Pos found in line carrier-grid for grid 1
@@ -3339,7 +3339,7 @@ INFO:root:
 ************ protocols\tests_output\demo-two.mixes_test_4s_mix_1_2 **************
 
 INFO:root:Parsing: protocols\evo200_f\DefaultLCs.txt
-INFO:root:Parsing: C:\prog\robotevo\protocols\evo200_f\CustomLCs.txt
+INFO:root:Parsing: C:\Prog\RobotEvo\protocols\evo200_f\CustomLCs.txt
 INFO:root:Parsing carriers types from protocols\evo200_f\Carrier.cfg
 INFO:root:Opened file for script: protocols\tests_output\demo-two.mixes_test_4s_mix_1_2.esc
 INFO:root:Carrier: MP 3Pos found in line carrier-grid for grid 5
