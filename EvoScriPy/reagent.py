@@ -1965,10 +1965,13 @@ class PCRexperimentRtic:
                 self.mixes.setdefault(mix, []).extend(react_wells)                     # just samples?
                 pass
 
-        pass
+        for pcr_master_mix, reactions in self.mixes.items():
+            pcr_master_mix.reserve(need_vol=pcr_master_mix.volpersample * len(reactions), adjust_volume=True)
 
     def pippete_mix(self):
-        pass
+        for pcr_master_mix, reactions in self.mixes.items():
+            pcr_master_mix.make(protocol=self.protocol, volume=pcr_master_mix.volpersample * len(reactions))
+
 
     def pippete_samples(self):
         pass

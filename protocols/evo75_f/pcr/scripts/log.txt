@@ -99,568 +99,6 @@ DEBUG:root:Creating Reagent TE 10x dil
 DEBUG:root:Created Reagent TE 10x dil
 DEBUG:root:Creating Reagent TE 1x dil
 DEBUG:root:Created Reagent TE 1x dil
-DEBUG:root:Group("Mix: 12000.0 킠 of TE 10x dil");
-DEBUG:root:Comment("Mix: 12000.0 킠 of TE 10x dil into grid:12 site:1 ['well 11[K01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x dil'] from 2 components:");
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 1 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Comment("   1- 1200.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 2055.0 uL of reagent TE 100x']");
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Comment("   2- 10800.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7398.1 uL of reagent H2O']");
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 2 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","818.14",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","818.14",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","581.86",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","581.86",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",3,0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GroupEnd();
-DEBUG:root:Group("Mix: 12000.0 킠 of TE 1x dil");
-DEBUG:root:Comment("Mix: 12000.0 킠 of TE 1x dil into grid:12 site:1 ['well 12[L01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x dil'] from 2 components:");
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 3 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Comment("   1- 1200.0 킠 from grid:12 site:1:['well 11[K01] in labware BufferTubes:  with 12000.0 uL of reagent TE 10x dil']");
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Comment("   2- 10800.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 3996.3 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7398.1 uL of reagent H2O']");
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 4 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","236.29",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","236.29",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","223.71",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","223.71",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",3,0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GroupEnd();
-DEBUG:root:Group("Mix: 5000.0 킠 of TE 10x fixed");
-DEBUG:root:Comment("Mix: 5000.0 킠 of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x fixed'] from 2 components:");
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 5 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Comment("   1- 500.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 855.0 uL of reagent TE 100x']");
-DEBUG:root:Aspirate(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Comment("   2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 594.4 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 7398.1 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7398.1 uL of reagent H2O']");
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 6 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Aspirate(1,"Water free dispense","594.43",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","594.43",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","145.57",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","145.57",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",3,0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GroupEnd();
-DEBUG:root:Group("Mix: 5000.0 킠 of TE 1x fixed");
-DEBUG:root:Comment("Mix: 5000.0 킠 of TE 1x fixed into grid:12 site:1 ['well 10[J01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x fixed'] from 2 components:");
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 7 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Comment("   1- 500.0 킠 from grid:12 site:1:['well 9[I01] in labware BufferTubes:  with 5000.0 uL of reagent TE 10x fixed']");
-DEBUG:root:Aspirate(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Comment("   2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 3492.6 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7398.1 uL of reagent H2O']");
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
-INFO:root:Pick tip 8 from rack site 3 named: 1000-1 have 1 but need 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","672.58",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","672.58",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Aspirate(1,"Water free dispense","67.42",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Dispense(1,"Water free dispense","67.42",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",3,0,0);
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:pipette_on_i_robot called with mask= 1
-DEBUG:root:pipette_on_i_robot return= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:DropDITI(1,14,3,0.00,300,0);
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_test called with mask= 1
-DEBUG:root:eject_tips_test called with mask= 1
-DEBUG:root:eject_tips_test return mask= 1
-DEBUG:root:drop_tips_test return mask= 1
-DEBUG:root:drop_tips_executed called with mask= 1
-DEBUG:root:drop_tips_executed return mask= 1
-DEBUG:root:GroupEnd();
 DEBUG:root:Creating a PCRexperimentRtic from -[PCR]
 DEBUG:root:Creating Reagent RT-Mix
 DEBUG:root:Created Reagent RT-Mix
@@ -821,4 +259,2180 @@ DEBUG:root:Creating Reagent WNV.NY-4.PCRF10
 DEBUG:root:Created Reagent WNV.NY-4.PCRF10
 DEBUG:root:Creating Reagent H2O.PCRG10
 DEBUG:root:Created Reagent H2O.PCRG10
+DEBUG:root:Group("Mix: 12000.0 킠 of TE 10x dil");
+DEBUG:root:Comment("Mix: 12000.0 킠 of TE 10x dil into grid:12 site:1 ['well 11[K01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x dil'] from 2 components:");
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 1 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Comment("   1- 1200.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 2055.0 uL of reagent TE 100x']");
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 10800.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7499.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 2 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","919.90",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","919.90",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","480.10",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","480.10",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 12000.0 킠 of TE 1x dil");
+DEBUG:root:Comment("Mix: 12000.0 킠 of TE 1x dil into grid:12 site:1 ['well 12[L01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x dil'] from 2 components:");
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 3 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Comment("   1- 1200.0 킠 from grid:12 site:1:['well 11[K01] in labware BufferTubes:  with 12000.0 uL of reagent TE 10x dil']");
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","260.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 10800.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 4199.8 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7499.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 4 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","439.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","439.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","20.20",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","20.20",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"01100@0",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 5000.0 킠 of TE 10x fixed");
+DEBUG:root:Comment("Mix: 5000.0 킠 of TE 10x fixed into grid:12 site:1 ['well 9[I01] in labware BufferTubes:  with 0.0 uL of reagent TE 10x fixed'] from 2 components:");
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 5 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Comment("   1- 500.0 킠 from grid:12 site:1:['well 6[F01] in labware BufferTubes:  with 855.0 uL of reagent TE 100x']");
+DEBUG:root:Aspirate(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 899.7 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 7499.9 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7499.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 6 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","899.70",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","899.70",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","780.30",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","780.30",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 5000.0 킠 of TE 1x fixed");
+DEBUG:root:Comment("Mix: 5000.0 킠 of TE 1x fixed into grid:12 site:1 ['well 10[J01] in labware BufferTubes:  with 0.0 uL of reagent TE 1x fixed'] from 2 components:");
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 7 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Comment("   1- 500.0 킠 from grid:12 site:1:['well 9[I01] in labware BufferTubes:  with 5000.0 uL of reagent TE 10x fixed']");
+DEBUG:root:Aspirate(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","500.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 4500.0 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 3899.6 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 7499.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 1000ul",0,0,0,300);
+INFO:root:Pick tip 8 from rack site 3 named: 1000-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","940",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","940.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","139.60",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","139.60",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Aspirate(1,"Water free dispense","600.40",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","600.40",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","846.00",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110040",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of MIDV_PA.228-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of MIDV_PA.228-PCRMMix into grid:13 site:1 ['well 1[A01] in labware PrimerMix:  with 0.0 uL of reagent MIDV_PA.228-PCRMMix', 'well 2[B01] in labware PrimerMix:  with 0.0 uL of reagent MIDV_PA.228-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 1 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 2[B01] in labware PCRkits+MMix:  with 324.5 uL of reagent Quantitect-Probe RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 13.0 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 2 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 4[D01] in labware PCRkits+MMix:  with 13.0 uL of reagent MIDV_PA.228']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 3 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6899.5 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 4 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110100",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of MIDVNS4.231-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of MIDVNS4.231-PCRMMix into grid:13 site:1 ['well 3[C01] in labware PrimerMix:  with 0.0 uL of reagent MIDVNS4.231-PCRMMix', 'well 4[D01] in labware PrimerMix:  with 0.0 uL of reagent MIDVNS4.231-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 5 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 2[B01] in labware PCRkits+MMix:  with 264.5 uL of reagent Quantitect-Probe RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 11.8 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 6 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 5[E01] in labware PCRkits+MMix:  with 13.0 uL of reagent MIDVNS4.231']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 7 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6852.7 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 8 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110800",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110400",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of PA.Dg+MID.229-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of PA.Dg+MID.229-PCRMMix into grid:13 site:1 ['well 5[E01] in labware PrimerMix:  with 0.0 uL of reagent PA.Dg+MID.229-PCRMMix', 'well 6[F01] in labware PrimerMix:  with 0.0 uL of reagent PA.Dg+MID.229-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 9 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 1[A01] in labware PCRkits+MMix:  with 324.5 uL of reagent Quantitect-SYBR RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 10.6 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 10 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 6[F01] in labware PCRkits+MMix:  with 13.0 uL of reagent PA.Dg+MID.229']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 11 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6805.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 12 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110P00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110@00",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of AlphaEEV Mix-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of AlphaEEV Mix-PCRMMix into grid:13 site:1 ['well 7[G01] in labware PrimerMix:  with 0.0 uL of reagent AlphaEEV Mix-PCRMMix', 'well 8[H01] in labware PrimerMix:  with 0.0 uL of reagent AlphaEEV Mix-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 13 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 1[A01] in labware PCRkits+MMix:  with 264.5 uL of reagent Quantitect-SYBR RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110p00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110010",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 9.4 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 14 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110p00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110010",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 9.6 킠 from grid:20 site:1:['well 7[G01] in labware PCRkits+MMix:  with 10.4 uL of reagent AlphaEEV Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 15 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","9.60",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110p00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","4.80",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110p00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","4.80",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110010",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 49.2 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6759.1 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 16 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","49.20",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","24.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110p00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","24.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110010",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110p00",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 240.0 킠 of PaFl.DgBt.224-PCRMMix");
+DEBUG:root:Comment("Mix: 240.0 킠 of PaFl.DgBt.224-PCRMMix into grid:13 site:1 ['well 9[I01] in labware PrimerMix:  with 0.0 uL of reagent PaFl.DgBt.224-PCRMMix', 'well 10[J01] in labware PrimerMix:  with 0.0 uL of reagent PaFl.DgBt.224-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 17 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 120.0 킠 from grid:20 site:1:['well 1[A01] in labware PCRkits+MMix:  with 204.5 uL of reagent Quantitect-SYBR RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","120.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 2.4 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 8.2 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 18 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","2.40",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 24.0 킠 from grid:20 site:1:['well 8[H01] in labware PCRkits+MMix:  with 26.0 uL of reagent PaFl.DgBt.224']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 19 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","24.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110010",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 93.6 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6709.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 20 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","93.60",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","108.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110020",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of WESSV.226-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of WESSV.226-PCRMMix into grid:13 site:1 ['well 11[K01] in labware PrimerMix:  with 0.0 uL of reagent WESSV.226-PCRMMix', 'well 12[L01] in labware PrimerMix:  with 0.0 uL of reagent WESSV.226-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 21 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 2[B01] in labware PCRkits+MMix:  with 204.5 uL of reagent Quantitect-Probe RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 5.8 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 22 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 9[I01] in labware PCRkits+MMix:  with 13.0 uL of reagent WESSV.226']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 23 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110020",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6616.3 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 24 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110080",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of WESSV_NS5.227-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of WESSV_NS5.227-PCRMMix into grid:13 site:1 ['well 13[M01] in labware PrimerMix:  with 0.0 uL of reagent WESSV_NS5.227-PCRMMix', 'well 14[N01] in labware PrimerMix:  with 0.0 uL of reagent WESSV_NS5.227-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 25 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 2[B01] in labware PCRkits+MMix:  with 144.5 uL of reagent Quantitect-Probe RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 4.6 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 26 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 10[J01] in labware PCRkits+MMix:  with 13.0 uL of reagent WESSV_NS5.227']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 27 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110040",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6569.5 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 28 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"01100P0",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of WESSVNS5.225-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of WESSVNS5.225-PCRMMix into grid:13 site:1 ['well 15[O01] in labware PrimerMix:  with 0.0 uL of reagent WESSVNS5.225-PCRMMix', 'well 16[P01] in labware PrimerMix:  with 0.0 uL of reagent WESSVNS5.225-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 29 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 2[B01] in labware PCRkits+MMix:  with 84.5 uL of reagent Quantitect-Probe RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110200",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110001",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110002",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 3.4 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 30 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110001",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110002",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 11[K01] in labware PCRkits+MMix:  with 13.0 uL of reagent WESSVNS5.225']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 31 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110080",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110001",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110002",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6522.7 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 32 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110001",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110002",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,13,0,1,"0110001",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
+DEBUG:root:Group("Mix: 120.0 킠 of PaFl.Dg+WESS.Bt-PCRMMix");
+DEBUG:root:Comment("Mix: 120.0 킠 of PaFl.Dg+WESS.Bt-PCRMMix into grid:20 site:1 ['well 13[M01] in labware PCRkits+MMix:  with 0.0 uL of reagent PaFl.Dg+WESS.Bt-PCRMMix', 'well 14[N01] in labware PCRkits+MMix:  with 0.0 uL of reagent PaFl.Dg+WESS.Bt-PCRMMix'] from 4 components:");
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 33 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Comment("   1- 60.0 킠 from grid:20 site:1:['well 1[A01] in labware PCRkits+MMix:  with 84.5 uL of reagent Quantitect-SYBR RT-PCR Master Mix']");
+DEBUG:root:Aspirate(1,"Water free dispense","60.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110100",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","30.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   2- 1.2 킠 from grid:20 site:1:['well 3[C01] in labware PCRkits+MMix:  with 2.2 uL of reagent RT-Mix']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 34 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","1.20",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"0110400",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","0.60",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   3- 12.0 킠 from grid:20 site:1:['well 12[L01] in labware PCRkits+MMix:  with 13.0 uL of reagent PaFl.Dg+WESS.Bt']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 35 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","12.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100@0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","6.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Comment("   4- 46.8 킠 from grid:12 site:1:['well 1[A01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 2[B01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 3[C01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 4[D01] in labware BufferTubes:  with 0.0 uL of reagent H2O', 'well 5[E01] in labware BufferTubes:  with 6475.9 uL of reagent H2O']");
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GetDITI2(1,"DiTi 200 ul",0,0,0,300);
+INFO:root:Pick tip 36 from rack site 1 named: 200-1 have 1 but need 1
+DEBUG:root:Aspirate(1,"Water free dispense","46.80",0,0,0,0,0,0,0,0,0,0,0,12,0,1,"0110@00",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100P0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Dispense(1,"Water free dispense","23.40",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100p0",0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:Mix(1,"Water free dispense","54.00",0,0,0,0,0,0,0,0,0,0,0,20,0,1,"01100P0",3,0,0);
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:pipette_on_i_robot called with mask= 1
+DEBUG:root:pipette_on_i_robot return= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:DropDITI(1,14,3,0.00,300,0);
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_test called with mask= 1
+DEBUG:root:eject_tips_test called with mask= 1
+DEBUG:root:eject_tips_test return mask= 1
+DEBUG:root:drop_tips_test return mask= 1
+DEBUG:root:drop_tips_executed called with mask= 1
+DEBUG:root:drop_tips_executed return mask= 1
+DEBUG:root:GroupEnd();
 DEBUG:root:Wash(1,27,1,27,0,"5",50,"10",50,0.00,50,100,1,0,0,0);

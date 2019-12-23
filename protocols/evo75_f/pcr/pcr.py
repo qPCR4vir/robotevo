@@ -119,12 +119,6 @@ class PCR(Evo75_FLI):
         te1x = Dilution('TE 1x dil', labware='BufferTubes', num_of_aliquots=1,  min_vol=14000,
                         components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
 
-        with self.tips(tip_type="DiTi 1000ul"):
-            te10x.make(self, volume=12000)
-            te1x.make(self, volume=12000)
-            TE_10x_fixed.make(self)
-            TE_1x_fixed.make(self)
-
         expr = PCRexperimentRtic(exp,
                                  plates=pcr_plates[0],
                                  kit_rack=kit_rack,
@@ -137,7 +131,14 @@ class PCR(Evo75_FLI):
         self.check_list()
         self.set_EvoMode()
 
+        with self.tips(tip_type="DiTi 1000ul"):
+            te10x.make(self, volume=12000)
+            te1x.make(self, volume=12000)
+            TE_10x_fixed.make(self)
+            TE_1x_fixed.make(self)
+
         expr.dilute_primers()
+        expr.pippete_mix()
 
         instructions.wash_tips(wasteVol=5, FastWash=True).exec()
 
