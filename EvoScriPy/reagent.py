@@ -1587,7 +1587,7 @@ class PCRMasterMix:
         return pmix
 
 
-class PCRMasterMixReagent(PreMixReagent):
+class PCRMasterMixReagent(Dilution):
     """
     Manipulate a PCR Master-Mix Reagent on a robot.
     """
@@ -1597,10 +1597,10 @@ class PCRMasterMixReagent(PreMixReagent):
     def __init__(self,
                  pcr_mix: PCRMasterMix,
                  mmix_rack: (lab.Labware, list),
-                 num_of_samples: int,
+                 num_of_samples: int= None,  # todo ??
                  pos=None,
                  num_of_aliquots=None,
-                 initial_vol=None,
+                 initial_vol=0.0,
                  def_liq_class=None,
                  excess=None,
                  fill_limit_aliq=None,
@@ -1626,18 +1626,14 @@ class PCRMasterMixReagent(PreMixReagent):
         """
         self.pcr_mix = pcr_mix
         components = []
-        vol = 0
         lw = mmix_rack[0] if isinstance(mmix_rack, list) else mmix_rack
         reagents = lw.location.worktable.reagents
-        diluent_vol = pcr_mix.reaction_vol - pcr_mix.sample_vol
-        # num_samples = len(exp.mixes[pcr_mix])
+        vol_per_reaction = pcr_mix.reaction_vol - pcr_mix.sample_vol
+        # num_reactions = len(exp.mixes[pcr_mix])
+        # vol_total = vol_per_reaction * num_reactions
+        diluent = None
         for component in pcr_mix.components:
             assert isinstance(component, MixComponent)
-            if component is pcr_mix.diluent:
-                vol_per_reaction = diluent_vol
-            else:
-                vol_per_reaction = pcr_mix.reaction_vol * component.final_conc / float(component.init_conc)
-                diluent_vol -= vol_per_reaction
             if component.name in reagents:
                 component_r = reagents[component.name]
                 assert isinstance(component_r, Reagent)
@@ -1663,21 +1659,26 @@ class PCRMasterMixReagent(PreMixReagent):
                 else:  # todo for now let consider this a kit component - but it could be a Primer  !!!!
                     component_r = Reagent(component.name,
                                           labware=kit_rack,
-                                          volpersample=vol_per_reaction,
-                                          num_of_samples=0)
-            components.append(component_r)
+                                          concentration=component.init_conc)
 
-        PreMixReagent.__init__(self,
-                               name=pcr_mix.name + "-PCRMMix",
-                               labware=mmix_rack,
-                               components=components,
-                               wells=pos,
-                               num_of_aliquots=num_of_aliquots,
-                               initial_vol=initial_vol,
-                               def_liq_class=def_liq_class,
-                               excess=excess or PCRMasterMixReagent.excess,
-                               fill_limit_aliq=fill_limit_aliq,
-                               num_of_samples=num_of_samples)
+            if component is pcr_mix.diluent:
+                diluent = component_r
+            else:
+                components.append(DilutionComponentReagent(component_r, final_conc=component.final_conc))
+
+        Dilution.__init__(self,
+                          name=pcr_mix.name + "-PCRMMix",
+                          volpersample=vol_per_reaction,
+                          # num_of_samples=num_reactions,
+                          diluent=diluent,
+                          labware=mmix_rack,
+                          components=components,
+                          wells=pos,
+                          num_of_aliquots=num_of_aliquots,
+                          initial_vol=initial_vol,
+                          def_liq_class=def_liq_class,
+                          excess=excess or PCRMasterMixReagent.excess,
+                          fill_limit_aliq=fill_limit_aliq)
 
 
 class PCReaction:
