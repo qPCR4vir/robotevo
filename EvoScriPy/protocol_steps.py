@@ -887,7 +887,7 @@ class Protocol (Executable):
         nrepl       = mxnrepl if force_replies else mnnrepl
         if nrepl < mxnrepl:
             logging.warning("The last {:d} replies of {:s} will not be used.".format(mxnrepl - nrepl, mix.name))
-            mix.aliquots = mix.aliquots[:nrepl]
+            mix.aliquots = mix.aliquots[:nrepl]  # todo ?????????????
 
         msg = "Mix: {:.1f} µL of {:s}".format(t_vol, mix.name)
         with group(msg):
@@ -940,6 +940,12 @@ class Protocol (Executable):
                     while reagent_vol > 0:
                         while reagent_component.reagent.aliquots[current_comp_repl].vol < 1:      # todo define min vol
                             current_comp_repl += 1
+                            if current_comp_repl >= len(reagent_component.reagent.aliquots):
+                                err = "You need " + str(reagent_vol) + " uL more of " \
+                                      + str(reagent_component.reagent) + " to prepare " + str(mix)
+                                logging.error(err)
+                                raise RuntimeError(err)
+
                         d_v = min(reagent_vol, max_vol, reagent_component.reagent.aliquots[current_comp_repl].vol)
 
                         self.aspirate_one(tip,

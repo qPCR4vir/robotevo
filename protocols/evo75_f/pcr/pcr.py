@@ -114,16 +114,16 @@ class PCR(Evo75_FLI):
                                  components=[MixComponentReagent(TE_10x_fixed, volume=500),
                                              MixComponentReagent(h2o, volume=4500)])
 
-        te10x = Dilution('TE 10x dil', labware='BufferTubes', num_of_aliquots=1, # min_vol=5000,
+        te10x = Dilution('TE 10x dil', labware='BufferTubes', num_of_aliquots=1, min_vol=14000,
                          components=[DilutionComponentReagent(te100x, dilution=10)], diluent=h2o)
-        te1x = Dilution('TE 1x dil', labware='BufferTubes', num_of_aliquots=1, # min_vol=5000,
+        te1x = Dilution('TE 1x dil', labware='BufferTubes', num_of_aliquots=1,  min_vol=14000,
                         components=[DilutionComponentReagent(te10x, dilution=10)], diluent=h2o)
 
         with self.tips(tip_type="DiTi 1000ul"):
+            te10x.make(self, volume=12000)
+            te1x.make(self, volume=12000)
             TE_10x_fixed.make(self)
             TE_1x_fixed.make(self)
-            te10x.make(self, volume=13000)
-            te1x.make(self, volume=14000)
 
         expr = PCRexperimentRtic(exp,
                                  plates=pcr_plates[0],

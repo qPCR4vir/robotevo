@@ -344,11 +344,15 @@ class Reagent:
 
     def put_min_vol(self, num_samples=None):          # todo create num_of_aliquots if needed !!!!
         """
-        Force you to put the initial volume of reagent that need to be used to
+        Inform you how much initial volume of reagent you need put, to be used to
         prepare other reagent mixes, or to distribute into samples
-        aspiring equal number of complete doses for each sample from each replica,
+        (aspiring equal number of complete doses for each sample from each replica,
         except the firsts aliquots that can be used to aspirate one more dose for the last/rest of samples.
-        That is: all aliquots have equal volume (number) of doses or the firsts have one more dose
+        That is: all aliquots have equal volume (number) of doses or the firsts have one more dose)
+        This function can be called only before any real pippeting, normally as a result of constructors defining
+        new Reagents that need some volume of this reagent to be prepared
+        (that is during the proses of predicting how much to use,
+        but not during the proses of using and pippeting the reagent)
 
         :param num_samples:
         :return:
@@ -371,12 +375,20 @@ class Reagent:
             num_samples = max(num_samples, (need_vol + 0.5) // v_per_sample )
             replicas=len(self.aliquots)
             for i, w in enumerate(self.aliquots):
+                if len(w.actions) > 0:
+                    err = str(w) + " have been already used for " + str(w.actions[-1]) + " and can not be initialized again"
+                    logging.error(err)
+                    raise RuntimeError(err)
                 v = v_per_sample * (num_samples + replicas - (i + 1)) // replicas
                 if v > w.vol:  w.vol += (v-w.vol)
                 assert w.labware.type.max_vol >= w.vol, 'Add one more replica for ' + w.reagent.name
         else:
             vr = need_vol * self.excess / len(self.aliquots)
             for w in self.aliquots:
+                if len(w.actions) > 0:
+                    err = str(w) + " have been already used for " + str(w.actions[-1]) + " and can not be initialized again"
+                    logging.error(err)
+                    raise RuntimeError(err)
                 if vr > w.vol:  w.vol += (vr-w.vol)
                 assert w.labware.type.max_vol >= w.vol, 'Add one more replica for ' + w.reagent.name
 
@@ -444,15 +456,15 @@ class MixComponentReagent:
         self.reagent = reagent
         self.vol = 0.0
         self.excess = 1.0
-        self.volume(volume)
+        self.volume(volume, adjust_volume=True)
 
     def __str__(self):
         return self.reagent.name
 
     def __repr__(self):
-        return (self.reagent.name or '-') + '[' + str(self.volume or '-') + ']'
+        return (self.reagent.name or '-') + '[' + str(self.vol or '-') + ']'
 
-    def volume(self, vol: float = None, excess: float = None):  # todo put_min_vol in reagent?
+    def volume(self, vol: float = None, excess: float = None, adjust_volume: bool = False):
         """
         Return (and possibly set) the volume of Reagent to be used.
 
@@ -476,7 +488,8 @@ class MixComponentReagent:
             return old_vol
 
         self.reagent.min_vol(add_volume=new_vol - old_vol)
-        self.reagent.init_vol()
+        if adjust_volume:
+            self.reagent.init_vol()
         return new_vol
 
 
@@ -602,7 +615,7 @@ class DilutionComponentReagent(MixComponentReagent):
     def __repr__(self):
         return (self.reagent.name or '-') + '[1/' + str(self.dilution or '-') + ']'
 
-    def volume(self, vol: float = None, excess: float = None):
+    def volume(self, vol: float = None, excess: float = None, adjust_volume: bool = False):
         """
         Calculate needed volume of this reagent to make this final volume of the dilution.
         Make sure not to call this for the diluent.
@@ -617,7 +630,7 @@ class DilutionComponentReagent(MixComponentReagent):
                 self.dilution = self.reagent.concentration / self.final_conc
             assert self.dilution >= 1.0
             vol = vol / self.dilution
-            MixComponentReagent.volume(self, vol=vol, excess=excess)
+            MixComponentReagent.volume(self, vol=vol, excess=excess, adjust_volume=adjust_volume)
         return self.vol
 
 
@@ -665,17 +678,25 @@ class Dilution(MixReagent):
         :param concentration:
         """
         ex = def_mix_excess if excess is None else excess
+        ex_ = 1.0  # + ex/100.0
         assert isinstance(diluent, Reagent)  # todo raise
         self.diluent = diluent
-        self.diluent_comp = MixComponentReagent(diluent)
+        int_vol = 0.0
+        if not isinstance(initial_vol, list):
+            initial_vol = [initial_vol]
+        for v in initial_vol:
+            int_vol += v
 
+        vol = 0.0
+        need_vol = max(0.0, min_vol - int_vol)
         assert isinstance(components, list)
-        if initial_vol == 0.0:  # the user signal it will be prepared
-            vol = 0.0
+        if to_be_prepared:  # or int_vol == 0.0:  # todo the user signal it will be prepared ???
             for comp in components:
                 assert isinstance(comp, DilutionComponentReagent)
-                vol += comp.volume(min_vol - initial_vol, ex)
-            diluent.min_vol(add_volume= (min_vol - initial_vol)*ex - vol)
+                vol += comp.volume(need_vol, ex_, adjust_volume=True)
+            # diluent.min_vol(add_volume= need_vol - vol, ex_)
+        self.diluent_comp = MixComponentReagent(diluent, need_vol - vol)
+
         components.append(self.diluent_comp)
 
         MixReagent.__init__(self, name,
@@ -696,15 +717,15 @@ class Dilution(MixReagent):
                             adjust_init_vol=adjust_init_vol,
                             to_be_prepared=to_be_prepared)
 
-    def reserve(self, need_vol: float):  # todo as it is now: use only once!
+    def reserve(self, need_vol: float, adjust_volume: bool = False):
         vol = 0.0
         for comp in self.components:
             if comp is self.diluent_comp:
                 continue
             assert isinstance(comp, DilutionComponentReagent)
-            vol += comp.volume(need_vol)
+            vol += comp.volume(need_vol, adjust_volume=adjust_volume)
         assert need_vol - vol > 0  # todo raise
-        MixComponentReagent.volume(self.diluent_comp, vol=need_vol - vol, excess=self.excess)
+        MixComponentReagent.volume(self.diluent_comp, vol=need_vol - vol, adjust_volume=adjust_volume)   #, excess=self.excess)
 
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)
@@ -713,9 +734,19 @@ class Dilution(MixReagent):
         return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
     def make(self, protocol, volume=None):
+        """
+
+        :param protocol:
+        :param volume:
+        :return:
+        """
+
+        """
         if self.aliquots[0].vol is None:  # ????
             self.put_min_vol(volume)
             assert False
+        """
+
         self.reserve(need_vol=volume)
         protocol.make_mix(self)
 
