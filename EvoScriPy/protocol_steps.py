@@ -879,7 +879,7 @@ class Protocol (Executable):
         t_vol = 0
         for r in mix.components:
             # assert isinstance(r, MixComponentReagent)
-            t_vol += r.volume()
+            t_vol += r.volume(excess=mix.excess)
 
         mxnrepl     = len(mix.aliquots)                             # max number of aliquots
         mnnrepl     = mix.min_num_of_aliquots()                     # min number of aliquots

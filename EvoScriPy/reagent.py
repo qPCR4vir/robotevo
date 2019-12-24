@@ -447,7 +447,8 @@ class MixComponentReagent:
 
     def __init__(self,
                  reagent: Reagent,
-                 volume: float = None):
+                 volume: float = None,
+                 excess: float = 1.0):
         """
 
         :param reagent:
@@ -456,7 +457,7 @@ class MixComponentReagent:
         self.reagent = reagent
         self.vol = 0.0
         self.excess = 1.0
-        self.volume(volume, adjust_volume=True)
+        self.volume(volume, excess=excess, adjust_volume=True)
 
     def __str__(self):
         return self.reagent.name
@@ -490,6 +491,7 @@ class MixComponentReagent:
         self.reagent.min_vol(add_volume=new_vol - old_vol)
         if adjust_volume:
             self.reagent.init_vol()
+
         return new_vol
 
 
@@ -537,7 +539,14 @@ class MixReagent(Reagent):
         :param concentration:
         """
         ex = def_mix_excess if excess is None else excess
+        ex_ = 1.0 + ex/100.0
         self.components = components  #: list of reagent components
+        vol = 0.0
+        if to_be_prepared:
+            for comp in components:
+                assert isinstance(comp, MixComponentReagent)
+                vol += comp.volume(excess=ex_, adjust_volume=True)
+        min_vol = max(vol, min_vol or 0)
 
         Reagent.__init__(self, name,
                          labware,
@@ -556,17 +565,6 @@ class MixReagent(Reagent):
                          adjust_init_vol=adjust_init_vol,
                          to_be_prepared=to_be_prepared)
 
-        """
-        if initial_vol == 0.0:  # the user signal it will be prepared
-            vol = 0.0
-            for comp in components:
-                assert isinstance(comp, MixComponentReagent)
-                vol += comp.volume(excess=self.excess)  # which means we will need this additional volume of each of the components
-                # comp.reagent.put_min_vol()
-            self.min_vol(add_volume=-vol)
-        # self.init_vol()
-        """
-
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)
 
@@ -574,9 +572,6 @@ class MixReagent(Reagent):
         return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
     def make(self, protocol):      # todo deprecate?
-        if self.aliquots[0].vol is None:   # ????
-            self.put_min_vol()  # todo here?? too late ??
-            assert False
         protocol.make_mix(self)
 
 
@@ -589,7 +584,8 @@ class DilutionComponentReagent(MixComponentReagent):
     def __init__(self,
                  reagent: Reagent,
                  dilution: float = None,
-                 final_conc: float = None):
+                 final_conc: float = None,
+                 excess: float = 1.0):
         """
 
         :param reagent:
@@ -607,7 +603,7 @@ class DilutionComponentReagent(MixComponentReagent):
             self.dilution = reagent.concentration / final_conc
         assert self.dilution >= 1.0
         # vol = final_vol / dilution
-        MixComponentReagent.__init__(self, reagent)  # , volume= will be set by self.volume(vol)
+        MixComponentReagent.__init__(self, reagent, excess=excess)  # , volume= will be set by self.volume(vol)
 
     def __str__(self):
         return self.reagent.name
@@ -630,8 +626,8 @@ class DilutionComponentReagent(MixComponentReagent):
                 self.dilution = self.reagent.concentration / self.final_conc
             assert self.dilution >= 1.0
             vol = vol / self.dilution
-            MixComponentReagent.volume(self, vol=vol, excess=excess, adjust_volume=adjust_volume)
-        return self.vol
+        vol = MixComponentReagent.volume(self, vol=vol, excess=excess, adjust_volume=adjust_volume)
+        return vol
 
 
 class Dilution(MixReagent):
@@ -650,6 +646,7 @@ class Dilution(MixReagent):
                  fill_limit_aliq: float                     = 100,
                  def_liq_class  : (str, (str, str))         = None,
                  volpersample   : float                     = None,
+                 sample_volume  : float                     = 0.0,
                  num_of_samples : int                       = None,  #: todo move to Exp? to prepare?
                  single_use     : float                     = None,  #: todo move to MixComponent
                  excess         : float                     = None,  #: todo move to MixComponent
@@ -677,8 +674,9 @@ class Dilution(MixReagent):
         :param fill_limit_aliq:
         :param concentration:
         """
+        self.sample_volume = sample_volume
         ex = def_mix_excess if excess is None else excess
-        ex_ = 1.0  # + ex/100.0
+        ex_ = 1.0 + ex/100.0
         assert isinstance(diluent, Reagent)  # todo raise
         self.diluent = diluent
         int_vol = 0.0
@@ -688,14 +686,25 @@ class Dilution(MixReagent):
             int_vol += v
 
         vol = 0.0
-        need_vol = max(0.0, min_vol - int_vol)
+        need_vol = 0.0
+
+        target_vol = 0.0
+        ext_vol = 1.0
+        if volpersample:
+            if num_of_samples:
+                need_vol = volpersample * num_of_samples
+            if sample_volume:
+                ext_vol = (volpersample + sample_volume) / volpersample
+
+        need_vol = max(0.0, min_vol - int_vol, need_vol)
+        target_vol = need_vol * ext_vol
         assert isinstance(components, list)
         if to_be_prepared:  # or int_vol == 0.0:  # todo the user signal it will be prepared ???
             for comp in components:
                 assert isinstance(comp, DilutionComponentReagent)
-                vol += comp.volume(need_vol, ex_, adjust_volume=True)
+                vol += comp.volume(target_vol, ex_, adjust_volume=True)
             # diluent.min_vol(add_volume= need_vol - vol, ex_)
-        self.diluent_comp = MixComponentReagent(diluent, need_vol - vol)
+        self.diluent_comp = MixComponentReagent(diluent, need_vol - vol / ex_, excess=ex_)
 
         components.append(self.diluent_comp)
 
@@ -717,15 +726,23 @@ class Dilution(MixReagent):
                             adjust_init_vol=adjust_init_vol,
                             to_be_prepared=to_be_prepared)
 
-    def reserve(self, need_vol: float, adjust_volume: bool = False):
+    def reserve(self, need_vol: float = None, adjust_volume: bool = False, num_of_samples: int = None):
+        ext_vol = 1.0
+        if self.volpersample:
+            assert not need_vol
+            if num_of_samples:
+                need_vol = self.volpersample * num_of_samples
+            if self.sample_volume:
+                ext_vol = (self.sample_volume + self.volpersample) / self.volpersample
+        target_vol = need_vol * ext_vol
         vol = 0.0
         for comp in self.components:
             if comp is self.diluent_comp:
                 continue
             assert isinstance(comp, DilutionComponentReagent)
-            vol += comp.volume(need_vol, adjust_volume=adjust_volume)
+            vol += comp.volume(target_vol, adjust_volume=adjust_volume, excess=self.excess)
         assert need_vol - vol > 0  # todo raise
-        MixComponentReagent.volume(self.diluent_comp, vol=need_vol - vol, adjust_volume=adjust_volume)   #, excess=self.excess)
+        MixComponentReagent.volume(self.diluent_comp, vol=need_vol - vol / self.excess, excess=self.excess, adjust_volume=adjust_volume)
 
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)
@@ -733,7 +750,7 @@ class Dilution(MixReagent):
     def __repr__(self):  # todo ?
         return (self.name or '-') + '[' + str(self.aliquots or '-') + ']'
 
-    def make(self, protocol, volume=None):
+    def make(self, protocol, volume=None, num_of_samples: int = None):
         """
 
         :param protocol:
@@ -747,7 +764,7 @@ class Dilution(MixReagent):
             assert False
         """
 
-        self.reserve(need_vol=volume)
+        self.reserve(need_vol=volume, num_of_samples=num_of_samples)
         protocol.make_mix(self)
 
 
@@ -1669,6 +1686,7 @@ class PCRMasterMixReagent(Dilution):
         Dilution.__init__(self,
                           name=pcr_mix.name + "-PCRMMix",
                           volpersample=vol_per_reaction,
+                          sample_volume= pcr_mix.sample_vol,
                           # num_of_samples=num_reactions,
                           diluent=diluent,
                           labware=mmix_rack,
@@ -1966,12 +1984,11 @@ class PCRexperimentRtic:
                 pass
 
         for pcr_master_mix, reactions in self.mixes.items():
-            pcr_master_mix.reserve(need_vol=pcr_master_mix.volpersample * len(reactions), adjust_volume=True)
+            pcr_master_mix.reserve(num_of_samples=len(reactions), adjust_volume=True)
 
     def pippete_mix(self):
         for pcr_master_mix, reactions in self.mixes.items():
-            pcr_master_mix.make(protocol=self.protocol, volume=pcr_master_mix.volpersample * len(reactions))
-
+            pcr_master_mix.make(protocol=self.protocol, num_of_samples=len(reactions))
 
     def pippete_samples(self):
         pass

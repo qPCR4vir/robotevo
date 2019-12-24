@@ -102,7 +102,7 @@ class PCR(Evo75_FLI):
         # Define the reagents in each labware (Cuvette, eppys, etc.)
         Reagent('Quantitect-SYBR RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2, concentration=2)
         Reagent('Quantitect-Probe RT-PCR Master Mix', labware='PCRkits+MMix', num_of_aliquots=2, concentration=2)
-        h2o = Reagent('H2O', labware='BufferTubes', num_of_aliquots=5, minimize_aliquots=False)
+        h2o = Reagent('H2O', labware='BufferTubes', num_of_aliquots=6, minimize_aliquots=False)
         te100x = Reagent('TE 100x', labware='BufferTubes', num_of_aliquots=1, concentration=100)
         Reagent('TE 1x', labware='BufferTubes', num_of_aliquots=1)
         Reagent('TE 0,1 x', labware='BufferTubes', num_of_aliquots=1)
