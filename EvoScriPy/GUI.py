@@ -22,7 +22,6 @@ from pathlib import Path
 from protocols.registre_protocols import available
 
 
-
 GUI4parameters = {}  # map { 'protocol class name' : GUI_init_parameters class to use }
 av_prot_names = []   # list of "protocol names+: + run names" with the same index as available executables
 
@@ -145,16 +144,16 @@ class App(tkinter.Frame):
             # First tip (in the first tip rack)
             tkinter.Label(self.protocol.GUI.GUI_parameters, text='First tip:').grid(row=2, column=0, columnspan=1,
                                                                                           sticky=tkinter.N + tkinter.W)
-            self.firstTip_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters)
-            self.firstTip_v.set(protocol.firstTip)
-            tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.firstTip_v).grid(row=2, column=1, columnspan=1,
+            self.first_tip_v = tkinter.StringVar(self.protocol.GUI.GUI_parameters)
+            self.first_tip_v.set(protocol.first_tip)
+            tkinter.Entry(self.protocol.GUI.GUI_parameters, textvariable=self.first_tip_v).grid(row=2, column=1, columnspan=1,
                                                                                                      sticky=tkinter.N + tkinter.E + tkinter.W)
-            self.firstTip_v.trace("w", self.set_firstTip)
+            self.first_tip_v.trace("w", self.set_first_tip)
 
-        def set_firstTip(self, *args):
-            self.protocol.firstTip = self.firstTip_v.get()
-            if self.protocol.firstTip == "None":
-                self.protocol.firstTip = None
+        def set_first_tip(self, *args):
+            self.protocol.first_tip = self.first_tip_v.get()
+            if self.protocol.first_tip == "None":
+                self.protocol.first_tip = None
 
         def set_WT_FN(self, *args):
             self.protocol.worktable_template_filename = self.worktable_filename_v.get()
@@ -174,7 +173,7 @@ class App(tkinter.Frame):
             self.output_filename_v.set( tkinter.filedialog.asksaveasfilename(title='Select the output filename') )
 
         def update_parameters(self):
-            self.set_firstTip()
+            self.set_first_tip()
             self.set_WT_FN()
             self.set_O_FN()
 
@@ -227,7 +226,7 @@ class App(tkinter.Frame):
     from protocols.evo100_f.Prefill_plates_LysisBuffer.Prefill_plates_LysisBuffer_and_ProtKpreMix import Prefill_plates_LysisBuffer_and_ProtKpreMix
     GUI4parameters[Prefill_plates_LysisBuffer_and_ProtKpreMix.name]=GUI_init_RNAext_parameters
 
-    from protocols.demos.hello_world import HelloWorld
+    from protocols.demos.hello_world.hello_world import HelloWorld
     GUI4parameters[HelloWorld.name]=GUI_init_RNAext_parameters
 
     class GUI_protocol(tkinter.Frame):

@@ -164,9 +164,9 @@ class WorkTable:
             self.template = template_file
             logging.debug("Template file is a list.")
         else:
-            logging.debug("Set template file: " + str(template_file.relative_to(base_dir)))
-            self.template = self.parse_worktable_file(template_file, robot_protocol)
-            self.template_file_name = template_file
+            self.template_file_name = Path(template_file)
+            logging.debug("Set template file: " + self.template_file_name.relative_to(base_dir))
+            self.template = self.parse_worktable_file(self.template_file_name, robot_protocol)
 
     class Location:
         """
