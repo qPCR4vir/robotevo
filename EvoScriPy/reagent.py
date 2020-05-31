@@ -134,6 +134,7 @@ class Reagent:
         """
 
         logging.debug("Creating Reagent " + name)
+        self.components = False  #: no list of reagent components
 
         self.adjust_init_vol = adjust_init_vol
         self.to_be_prepeared = to_be_prepared
@@ -564,6 +565,7 @@ class MixReagent(Reagent):
                          single_use=single_use,
                          adjust_init_vol=adjust_init_vol,
                          to_be_prepared=to_be_prepared)
+        self.components = components  #: list of reagent components
 
     def __str__(self):  # todo ?
         return "{name:s}".format(name=self.name)
